@@ -1,0 +1,54 @@
+StatementType,Statement_Bucket
+Abort ,Admin
+Alter Table ,Admin
+Begin Loading ,Load
+Begin Mload ,Load
+Begin Transaction ,Transaction
+Call,Call SP
+Check Workload,Load
+CheckPoint Loading,Load
+Collect Statistics,Collect Stats
+Comment Get/Set ,Admin
+Commit Work ,Transaction
+Create Database/User,Create Object
+Create Index,Create Object
+Create Join Index ,Create Object
+Create Table,Create Table
+Create View ,Create Object
+Database,Modify Session
+Delete,Delete
+Drop Database ,Drop Object
+Drop Index,Drop Object
+Drop Join Index ,Drop Object
+Drop Macro,Drop Object
+Drop Statistics ,Drop Object
+Drop Table,Drop Table
+Drop View ,Drop Object
+End Edit,Other
+End Loading ,Load
+End Transaction ,Transaction
+Exec,Exec Macro
+Execute Mload ,Load
+Flush Query Logging ,Admin
+Grant ,Admin
+Grant/Revoke Logon,Admin
+Help,Other
+Insert,Insert
+Merge Into,Merge
+Mload ,Load
+Modify Database ,Admin
+Not Applicable,Other
+Null,Other
+Release Mload ,Load
+Rename Table,Admin
+Replace Macro ,Create Object
+Replace Procedure ,Create Object
+Replace View,Create Object
+Revoke,Admin
+Select,Select
+Set Query_Band,Modify Session
+Set Session ,Modify Session
+Show,Other
+UCAbort ,Admin
+Unrecognized type ,Other
+Update,Update

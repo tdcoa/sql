@@ -1,0 +1,82 @@
+﻿SiteID,AppID,App_Bucket,Use_Bucket,Priority,Record_Status,Process_ID
+Default,ATANASUITE,Atanasuite,Analytic,10010,Initial,0
+Default,WIREPORTSERVER,BOBJ,Analytic,10020,Initial,0
+Default,BTEQ,BTEQ,ETL,10030,Initial,0
+Default,HTTPD,HTTPD,Application,10040,Initial,0
+Default,JMP,JMP,Application,10050,Initial,0
+Default,DTSRUN,MS SSIS,ETL,10060,Initial,0
+Default,EXCEL,MS Office,Analytic,10070,Initial,0
+Default,PHP,PHP,Application,10080,Initial,0
+Default,RSESSION,R,Analytic,10090,Initial,0
+Default,SAS,SAS,Analytic,10100,Initial,0
+Default,Queryman,SQLAssistant,Analytic,10110,Initial,0
+Default,SQLA,SQLAssistant,Analytic,10120,Initial,0
+Default,ARCMain,TD-BAR,Backup,10130,Initial,0
+Default,DSMain,TD-BAR,Backup,10140,Initial,0
+Default,MULTILOAD,TPT,ETL,10150,Initial,0
+Default,TBUILDEXE,TPT,ETL,10160,Initial,0
+Default,TDLOADEXE,TPT,ETL,10170,Initial,0
+Default,TPTSTRM,TPT,ETL,10180,Initial,0
+Default,TPTUPD,TPT,ETL,10190,Initial,0
+Default,TPUMPEXE,TPT,ETL,10200,Initial,0
+Default,AGINITY.NETEZZAWORKBENCH%,Netezza,Analytic,10210,Initial,0
+Default,ADEPTRA_SELFSERVREPORT%,Adeptra,Analytic,10220,Initial,0
+Default,BIBUSTKSERVERMAIN%,Cognos,Analytic,10230,Initial,0
+Default,M_DB.TER.GCC4P64%,Ab Initio,ETL,10240,Initial,0
+Default,LOADIPSHARETABLE%,Unknown,Unknown,10250,Initial,0
+Default,AGINIT~1:NET:SS%,Netezza,Analytic,10260,Initial,0
+Default,DTSDEBUGHOST%,MS SSIS,ETL,10270,Initial,0
+Default,ISSERVEREXEC%,SSIS,ETL,10280,Initial,0
+Default,NODEDBQUERY%,LavaStorm,Analytic,10290,Initial,0
+Default,QVCONNECT32%,QlikView,Analytic,10300,Initial,0
+Default,QVCONNECT64%,QlikView,Analytic,10310,Initial,0
+Default,AL_DESIGNER%,SAP BODS,Analytic,10320,Initial,0
+Default,TABPROTOSRV%,Tableau,Analytic,10330,Initial,0
+Default,NODEDBEXEC%,LavaStorm,Analytic,10340,Initial,0
+Default,DTSBUGHOST%,MS SSIS,Analytic,10350,Initial,0
+Default,AL_ENGINE%,SAP BODS,Analytic,10360,Initial,0
+Default,ISSERVICE%,Teradata,ETL,10370,Initial,0
+Default,M8MULPRC%,Microstrategy,Analytic,10380,Initial,0
+Default,QUERYMAN%,SQLAssistant,Analytic,10390,Initial,0
+Default,SQLA:NET%,SQLAssistant,Analytic,10400,Initial,0
+Default,EXECUTOR%,TPT,ETL,10410,Initial,0
+Default,FASTLOAD%,TPT,ETL,10420,Initial,0
+Default,MULTLOAD%,TPT,ETL,10430,Initial,0
+Default,RUNDLL32%,Unknown,Unknown,10440,Initial,0
+Default,ALTERYX%,Alteryx,Analytic,10450,Initial,0
+Default,TRANSDA%,Cognos,Analytic,10460,Initial,0
+Default,MSQRY32%,MS Office,Analytic,10470,Initial,0
+Default,TDWMDIP%,Teradata,Internal,10480,Initial,0
+Default,FASTEXP%,TPT,ETL/Export,10490,Initial,0
+Default,OLELOAD%,TPT,ETL,10500,Initial,0
+Default,TPTLOAD%,TPT,ETL,10510,Initial,0
+Default,ARCMAIN%,TTU,Backup,10520,Initial,0
+Default,DTEXEC%,MS SSIS,ETL,10530,Initial,0
+Default,DEVENV%,MS VisualStudio,Application,10540,Initial,0
+Default,NVTERA%,NetVault,Backup,10550,Initial,0
+Default,TPTEXP%,TPT,ETL/Export,10560,Initial,0
+Default,VECOMP%,TTU,ETL,10570,Initial,0
+Default,WINDDI%,TTU,ETL,10580,Initial,0
+Default,%INFORMATICA%,Informatica,ETL,10590,Initial,0
+Default,PMDTM,Informatica,ETL,10600,Initial,0
+Default,PMDESIGN,Informatica,ETL,10610,Initial,0
+Default,BIBUS%,Cognos,Analytic,10620,Initial,0
+Default,COGTR%,Cognos,Analytic,10630,Initial,0
+Default,TM1SD%,Cognos,Analytic,10640,Initial,0
+Default,CRW32%,Crystal Reports,Analytic,10650,Initial,0
+Default,DBVIS%,DbVisualizer,Analytic,10660,Initial,0
+Default,UWSGI%,Teradata,Unknown,10670,Initial,0
+Default,TIWIZ%,TPT,ETL,10680,Initial,0
+Default,UNICA%,Unica,Application,10690,Initial,0
+Default,JDBC%,JDBC,Application,10700,Initial,0
+Default,%/JMP,JMP,Application,10710,Initial,0
+Default,W3WP%,MS IIS,Application,10720,Initial,0
+Default,%ANACONDA%,Python,Analytic,10730,Initial,0
+Default,%SASFound%,SAS,Analytic,10740,Initial,0
+Default,TSET%,TTU,Support,10750,Initial,0
+Default,%POWERBI%,PowerBI,Analytic,10760,Initial,0
+Default,%TABLEAU%,Tableau,Analytic,10770,Initial,0
+Default,BMT%,Cognos,Analytic,10780,Initial,0
+Default,%PYT,Python,Analytic,10790,Initial,0
+Default,%PYTHON%,Python,Analytic,10800,Initial,0
+Default,DUL%,Teradata,Analytic,10810,Initial,0
