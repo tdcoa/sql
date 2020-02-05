@@ -24,3 +24,5 @@ Select *
 from Sys_Calendar.Calendar
 where Calendar_date in(select vdate from valid_dates)
 ;
+
+/*{{temp:{siteid}.dates.csv}}*/
