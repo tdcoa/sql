@@ -106,18 +106,16 @@ Create volatile Table coat_dat_DBQL_Detail as
     Where LogDate between {startdate} and {enddate}
 
 ) with Data
-Primary Index ( LogDate ,QueryID )  /* -- keep same PI as DBQL, for fastest table-copy & distribution */
+Primary Index (LogDate ,QueryID )  /* -- keep same PI as DBQL, for fastest table-copy & distribution */
 partition by range_n (LogDate between {startdate} and {enddate} each interval '1' day)
-on commit preserve rows
-;
-
+on commit preserve rows;
 collect stats on coat_dat_dbql_detail column ( LogDate ,QueryID );
 collect stats on coat_dat_dbql_detail column ( LogDate );
 
 
 
 
-/*{{temp:00901.coat_dim_statement.coa.csv}}*/
+/*{{temp:00901.coat_dim_statement.coa.csv}}*/;
 
 /*{{temp:00900.coat_dim_app.coa.csv}}*/
 
