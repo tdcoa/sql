@@ -1,10 +1,11 @@
 /* Pulls all DBQL Data Required for CSM - CONSUMPTION ANALYTICS (COA)
    see comments about each SQL step inline below.
 
-   DEPENDENCIES:
-   - 00900.coat_dim_app.coa.csv   must exist
+Parameters:
+{table_dbqlogtbl} = [dbc||pdcrinfo||other].dbqlogtbl[_hst]
+{startdate}       = start date logic
+{enddate}         = end date logic
 */
-
 
 
 Database {defaultdatabase};
@@ -14,12 +15,9 @@ DBQL - CORE PULL
 -------------------
 Pull from DBQL the core performance data set (subset of all DBQL).
 All other SQL / Processes below use this volatile table instead of
-perm DBQL table, in order to isolate change.
-
-i.e., if PDCR does not exist, replace with DBC here. If customer has
-other non-standard approach, you can rewrite/replace this singular
-"create volatile table" statement, and assuming all data types and
-column names remain the same, all other SQL below will work.
+perm DBQL table, in order to isolate change (dbc, pdcr, other, etc.)
+to this single statement.  i.e., if specific column/logic changes are
+needed, they can be done once here, and allowed to propogate.
 */
 
 Create volatile Table coat_dat_DBQL_Detail as
@@ -106,18 +104,15 @@ Create volatile Table coat_dat_DBQL_Detail as
     Where LogDate between {startdate} and {enddate}
 
 ) with Data
-Primary Index (LogDate ,QueryID )  /* -- keep same PI as DBQL, for fastest table-copy & distribution */
-partition by range_n (LogDate between {startdate} and {enddate} each interval '1' day)
+NO Primary Index
 on commit preserve rows;
-collect stats on coat_dat_dbql_detail column ( LogDate ,QueryID );
-collect stats on coat_dat_dbql_detail column ( LogDate );
 
 
 
 
-/*{{temp:00901.coat_dim_statement.coa.csv}}*/;
+/*{{temp:dim_statement.coa.csv}}*/;
 
-/*{{temp:00900.coat_dim_app.coa.csv}}*/
+/*{{temp:dim_app.coa.csv}}*/
 
 /* #2) LEFT OUTER JOIN with DAT table to get all possible DIM values */
 insert into "00900.coat_dim_app.coa.csv"
