@@ -20,4 +20,6 @@ Default,Like,CALLREP_USER%,Analytic,no    ,dept,subdept,rgn,4300
 Default,Like,AM_USER%,Analytic,no    ,dept,subdept,rgn,4400
 Default,Like,ENT_AC_USER%,Analytic,no    ,dept,subdept,rgn,4500
 Default,Like,%ETL%,ETL,no    ,dept,subdept,rgn,6000
-Default,RegEx,[a-z]{2}[0-9]{6},User (QLID),yes,dept,subdept,rgn,7000
+Transcend%,RegEx,[a-z]{2}[0-9]{6},User (QLID),yes,dept,subdept,rgn,7000
+Apple%,RegEx,[a-z]{1}[0-9]{4},Adhoc User,yes,Uknown,Unknown,CA,10000
+Apple%,Like,APAY%USER,App User,No    ,Apple Pay,Unknown,CA,9000
