@@ -1,4 +1,4 @@
-﻿SiteID,Pattern_Type,AppID_Pattern,App_Bucket,Use_Bucket,Priority
+﻿SiteID,Pattern_Type,Pattern,App_Bucket,Use_Bucket,Priority
 Default,Equal,ATANASUITE,Atanasuite,Analytic,1000
 Default,Equal,WIREPORTSERVER,BOBJ,Analytic,1010
 Default,Equal,BTEQ,BTEQ,ETL,1020

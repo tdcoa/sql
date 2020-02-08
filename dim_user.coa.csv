@@ -1,4 +1,4 @@
-SiteID,Pattern_Type,UserName_Pattern,User_Bucket,Is_Discrete_Human,User_Department,User_SubDepartment,User_Region,Priority
+SiteID,Pattern_Type,Pattern,User_Bucket,Is_Discrete_Human,User_Department,User_SubDepartment,User_Region,Priority
 Default,Equal,Viewpoint,TDInternal,no    ,dept,subdept,rgn,100
 Default,Equal,TDWM,TDInternal,no    ,dept,subdept,rgn,100
 Default,Equal,CRASHDUMPS,TDInternal,no    ,dept,subdept,rgn,100
@@ -20,4 +20,4 @@ Default,Like,CALLREP_USER%,Analytic,no    ,dept,subdept,rgn,4300
 Default,Like,AM_USER%,Analytic,no    ,dept,subdept,rgn,4400
 Default,Like,ENT_AC_USER%,Analytic,no    ,dept,subdept,rgn,4500
 Default,Like,%ETL%,ETL,no    ,dept,subdept,rgn,6000
-Default,RegEx,[a-z]{2}[0-9]{5},User (QLID),yes,dept,subdept,rgn,7000
+Default,RegEx,[a-z]{2}[0-9]{6},User (QLID),yes,dept,subdept,rgn,7000

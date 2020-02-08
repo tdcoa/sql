@@ -1,54 +1,42 @@
-SiteID,StatementType,Statement_Bucket
-Default,Abort ,Admin
-Default,Alter Table ,Admin
-Default,Begin Loading ,Load
-Default,Begin Mload ,Load
-Default,Begin Transaction ,Other
-Default,Call,Call SP
-Default,Check Workload,Load
-Default,CheckPoint Loading,Load
-Default,Collect Statistics,Collect Stats
-Default,Comment Get/Set ,Admin
-Default,Commit Work ,Transaction
-Default,Create Database/User,Create Object
-Default,Create Index,Create Object
-Default,Create Join Index ,Create Object
-Default,Create Table,Create Table
-Default,Create View ,Create Object
-Default,Database,Modify Session
-Default,Delete,Delete
-Default,Drop Database ,Drop Object
-Default,Drop Index,Drop Object
-Default,Drop Join Index ,Drop Object
-Default,Drop Macro,Drop Object
-Default,Drop Statistics ,Drop Object
-Default,Drop Table,Drop Table
-Default,Drop View ,Drop Object
-Default,End Edit,Other
-Default,End Loading ,Load
-Default,End Transaction ,Other
-Default,Exec,Exec Macro
-Default,Execute Mload ,Load
-Default,Flush Query Logging ,Admin
-Default,Grant ,Admin
-Default,Grant/Revoke Logon,Admin
-Default,Help,Other
-Default,Insert,Insert
-Default,Merge Into,Merge
-Default,Mload ,Load
-Default,Modify Database ,Admin
-Default,Not Applicable,Other
-Default,Null,Other
-Default,Release Mload ,Load
-Default,Rename Table,Admin
-Default,Replace Macro ,Create Object
-Default,Replace Procedure ,Create Object
-Default,Replace View,Create Object
-Default,Revoke,Admin
-Default,Select,Select
-Default,Set Query_Band,Other
-Default,Set Session ,Other
-Default,Show,Other
-Default,UCAbort ,Admin
-Default,Unrecognized type ,Other
-Default,Update,Update
+SiteID,Pattern_Type,Pattern,Statement_Bucket,Priority
+Default,Equal,Abort ,Admin,100
+Default,Equal,Alter Table ,Admin,110
+Default,Equal,Alter Table Map,Admin,115
+Default,Equal,Call,Call SP,120
+Default,Equal,Check Point,Load,130
+Default,Equal,Collect Statistics,Collect Stats,140
+Default,Equal,Comment Get/Set ,Admin,150
+Default,Equal,Commit Work ,Transaction,160
+Default,Equal,Create Table,Create Table,170
+Default,Equal,Database,Set Session,180
+Default,Equal,Delete,Delete,190
+Default,Equal,Drop Table,Drop Table,200
+Default,Equal,Dump Database,Admin,210
+Default,Equal,End Edit,Other,220
+Default,Equal,Exec,Exec Macro,230
+Default,Equal,Flush Query Logging ,Admin,240
+Default,Equal,Give,Admin,250
+Default,Equal,Help,Other,260
+Default,Equal,Insert,Insert,270
+Default,Equal,Merge Into,Merge,280
+Default,Equal,Not Applicable,Other,290
+Default,Equal,Null,Other,300
+Default,Equal,Release Lock,Admin,310
+Default,Equal,Restore,Admin,320
+Default,Equal,Revoke,Admin,330
+Default,Equal,Select,Select,340
+Default,Equal,Set Query_Band,Set Session,350
+Default,Equal,Set Session ,Set Session,360
+Default,Equal,Set Time Zone,Set Session,365
+Default,Equal,Show,Other,370
+Default,Equal,UCAbort ,Admin,380
+Default,Equal,Unrecognized type ,Other,390
+Default,Equal,Update,Update,400
+Default,Like,%load%,Load,10000
+Default,Like,%Transaction%,Transaction,10010
+Default,Like,Create%,Create Object,10020
+Default,Like,Drop%,Drop Object,10030
+Default,Like,Grant%,Admin,10040
+Default,Like,Modify%,Admin,10050
+Default,Like,Rename%,Admin,10060
+Default,Like,Replace%,Create Object,10070
