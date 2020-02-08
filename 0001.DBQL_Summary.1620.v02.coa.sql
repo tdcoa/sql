@@ -2,9 +2,13 @@
    see comments about each SQL step inline below.
 
 Parameters:
-  - table_dbqlogtbl:  "[dbc||pdcrinfo||other].dbqlogtbl[_hst]"
   - startdate:        "start date logic"
   - enddate:          "end date logic"
+  - siteid:           "CIS site id for the system running this query set"
+  - account:          "CIS account name"
+  - default_database: "only needed  if you don't qualify tables below"
+  - dbqlogtbl_hst:    "table name: [dbc||pdcrinfo||other].dbqlogtbl[_hst]"
+  - resusagescpu_hst: "table name: [dbc||pdcrinfo||other].resusagescpu_hst"
 */
 
 
@@ -99,7 +103,7 @@ Create volatile Table dat_DBQL_Detail as
 
     ,QueryID  /* -- For PI / Joining */
 
-    From {table_dbqlogtbl} as dbql
+    From {dbqlogtbl_hst} as dbql
 
     Where LogDate between {startdate} and {enddate}
 
