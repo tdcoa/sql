@@ -1,82 +1,82 @@
-﻿SiteID,AppID,App_Bucket,Use_Bucket,Priority
-Default,ATANASUITE,Atanasuite,Analytic,1000
-Default,WIREPORTSERVER,BOBJ,Analytic,1010
-Default,BTEQ,BTEQ,ETL,1020
-Default,HTTPD,HTTPD,Application,1030
-Default,JMP,JMP,Application,1040
-Default,DTSRUN,MS SSIS,ETL,1050
-Default,EXCEL,MS Office,Analytic,1060
-Default,PHP,PHP,Application,1070
-Default,RSESSION,R,Analytic,1080
-Default,SAS,SAS,Analytic,1090
-Default,Queryman,SQLAssistant,Analytic,1100
-Default,SQLA,SQLAssistant,Analytic,1110
-Default,ARCMain,TD-BAR,Backup,1120
-Default,DSMain,TD-BAR,Backup,1130
-Default,MULTILOAD,TPT,ETL,1140
-Default,TBUILDEXE,TPT,ETL,1150
-Default,TDLOADEXE,TPT,ETL,1160
-Default,TPTSTRM,TPT,ETL,1170
-Default,TPTUPD,TPT,ETL,1180
-Default,TPUMPEXE,TPT,ETL,1190
-Default,AGINITY.NETEZZAWORKBENCH%,Netezza,Analytic,10000
-Default,ADEPTRA_SELFSERVREPORT%,Adeptra,Analytic,10100
-Default,BIBUSTKSERVERMAIN%,Cognos,Analytic,10200
-Default,M_DB.TER.GCC4P64%,Ab Initio,ETL,10300
-Default,LOADIPSHARETABLE%,Unknown,Unknown,10400
-Default,AGINIT~1:NET:SS%,Netezza,Analytic,10500
-Default,DTSDEBUGHOST%,MS SSIS,ETL,10600
-Default,ISSERVEREXEC%,SSIS,ETL,10700
-Default,NODEDBQUERY%,LavaStorm,Analytic,10800
-Default,QVCONNECT32%,QlikView,Analytic,10900
-Default,QVCONNECT64%,QlikView,Analytic,11000
-Default,AL_DESIGNER%,SAP BODS,Analytic,11100
-Default,TABPROTOSRV%,Tableau,Analytic,11200
-Default,NODEDBEXEC%,LavaStorm,Analytic,11300
-Default,DTSBUGHOST%,MS SSIS,Analytic,11400
-Default,AL_ENGINE%,SAP BODS,Analytic,11500
-Default,ISSERVICE%,Teradata,ETL,11600
-Default,M8MULPRC%,Microstrategy,Analytic,11700
-Default,QUERYMAN%,SQLAssistant,Analytic,11800
-Default,SQLA:NET%,SQLAssistant,Analytic,11900
-Default,EXECUTOR%,TPT,ETL,12000
-Default,FASTLOAD%,TPT,ETL,12100
-Default,MULTLOAD%,TPT,ETL,12200
-Default,RUNDLL32%,Unknown,Unknown,12300
-Default,ALTERYX%,Alteryx,Analytic,12400
-Default,TRANSDA%,Cognos,Analytic,12500
-Default,MSQRY32%,MS Office,Analytic,12600
-Default,TDWMDIP%,Teradata,Internal,12700
-Default,FASTEXP%,TPT,ETL/Export,12800
-Default,OLELOAD%,TPT,ETL,12900
-Default,TPTLOAD%,TPT,ETL,13000
-Default,ARCMAIN%,TTU,Backup,13100
-Default,DTEXEC%,MS SSIS,ETL,13200
-Default,DEVENV%,MS VisualStudio,Application,13300
-Default,NVTERA%,NetVault,Backup,13400
-Default,TPTEXP%,TPT,ETL/Export,13500
-Default,VECOMP%,TTU,ETL,13600
-Default,WINDDI%,TTU,ETL,13700
-Default,%INFORMATICA%,Informatica,ETL,13800
-Default,PMDTM,Informatica,ETL,13900
-Default,PMDESIGN,Informatica,ETL,14000
-Default,BIBUS%,Cognos,Analytic,14100
-Default,COGTR%,Cognos,Analytic,14200
-Default,TM1SD%,Cognos,Analytic,14300
-Default,CRW32%,Crystal Reports,Analytic,14400
-Default,DBVIS%,DbVisualizer,Analytic,14500
-Default,UWSGI%,Teradata,Unknown,14600
-Default,TIWIZ%,TPT,ETL,14700
-Default,UNICA%,Unica,Application,14800
-Default,JDBC%,JDBC,Application,14900
-Default,%/JMP,JMP,Application,15000
-Default,W3WP%,MS IIS,Application,15100
-Default,%ANACONDA%,Python,Analytic,15200
-Default,%SASFound%,SAS,Analytic,15300
-Default,TSET%,TTU,Support,15400
-Default,%POWERBI%,PowerBI,Analytic,15500
-Default,%TABLEAU%,Tableau,Analytic,15600
-Default,BMT%,Cognos,Analytic,15700
-Default,%PYT,Python,Analytic,15800
-Default,%PYTHON%,Python,Analytic,15900
-Default,DUL%,Teradata,Analytic,16000
+﻿SiteID,Pattern_Type,AppID_Pattern,App_Bucket,Use_Bucket,Priority
+Default,Equal,ATANASUITE,Atanasuite,Analytic,1000
+Default,Equal,WIREPORTSERVER,BOBJ,Analytic,1010
+Default,Equal,BTEQ,BTEQ,ETL,1020
+Default,Equal,HTTPD,HTTPD,Application,1030
+Default,Equal,JMP,JMP,Application,1040
+Default,Equal,DTSRUN,MS SSIS,ETL,1050
+Default,Equal,EXCEL,MS Office,Analytic,1060
+Default,Equal,PHP,PHP,Application,1070
+Default,Equal,RSESSION,R,Analytic,1080
+Default,Equal,SAS,SAS,Analytic,1090
+Default,Equal,Queryman,SQLAssistant,Analytic,1100
+Default,Equal,SQLA,SQLAssistant,Analytic,1110
+Default,Equal,ARCMain,TD-BAR,Backup,1120
+Default,Equal,DSMain,TD-BAR,Backup,1130
+Default,Equal,MULTILOAD,TPT,ETL,1140
+Default,Equal,TBUILDEXE,TPT,ETL,1150
+Default,Equal,TDLOADEXE,TPT,ETL,1160
+Default,Equal,TPTSTRM,TPT,ETL,1170
+Default,Equal,TPTUPD,TPT,ETL,1180
+Default,Equal,TPUMPEXE,TPT,ETL,1190
+Default,Like,AGINITY.NETEZZAWORKBENCH%,Netezza,Analytic,10000
+Default,Like,ADEPTRA_SELFSERVREPORT%,Adeptra,Analytic,10100
+Default,Like,BIBUSTKSERVERMAIN%,Cognos,Analytic,10200
+Default,Like,M_DB.TER.GCC4P64%,Ab Initio,ETL,10300
+Default,Like,LOADIPSHARETABLE%,Unknown,Unknown,10400
+Default,Like,AGINIT~1:NET:SS%,Netezza,Analytic,10500
+Default,Like,DTSDEBUGHOST%,MS SSIS,ETL,10600
+Default,Like,ISSERVEREXEC%,SSIS,ETL,10700
+Default,Like,NODEDBQUERY%,LavaStorm,Analytic,10800
+Default,Like,QVCONNECT32%,QlikView,Analytic,10900
+Default,Like,QVCONNECT64%,QlikView,Analytic,11000
+Default,Like,AL_DESIGNER%,SAP BODS,Analytic,11100
+Default,Like,TABPROTOSRV%,Tableau,Analytic,11200
+Default,Like,NODEDBEXEC%,LavaStorm,Analytic,11300
+Default,Like,DTSBUGHOST%,MS SSIS,Analytic,11400
+Default,Like,AL_ENGINE%,SAP BODS,Analytic,11500
+Default,Like,ISSERVICE%,Teradata,ETL,11600
+Default,Like,M8MULPRC%,Microstrategy,Analytic,11700
+Default,Like,QUERYMAN%,SQLAssistant,Analytic,11800
+Default,Like,SQLA:NET%,SQLAssistant,Analytic,11900
+Default,Like,EXECUTOR%,TPT,ETL,12000
+Default,Like,FASTLOAD%,TPT,ETL,12100
+Default,Like,MULTLOAD%,TPT,ETL,12200
+Default,Like,RUNDLL32%,Unknown,Unknown,12300
+Default,Like,ALTERYX%,Alteryx,Analytic,12400
+Default,Like,TRANSDA%,Cognos,Analytic,12500
+Default,Like,MSQRY32%,MS Office,Analytic,12600
+Default,Like,TDWMDIP%,Teradata,Internal,12700
+Default,Like,FASTEXP%,TPT,ETL/Export,12800
+Default,Like,OLELOAD%,TPT,ETL,12900
+Default,Like,TPTLOAD%,TPT,ETL,13000
+Default,Like,ARCMAIN%,TTU,Backup,13100
+Default,Like,DTEXEC%,MS SSIS,ETL,13200
+Default,Like,DEVENV%,MS VisualStudio,Application,13300
+Default,Like,NVTERA%,NetVault,Backup,13400
+Default,Like,TPTEXP%,TPT,ETL/Export,13500
+Default,Like,VECOMP%,TTU,ETL,13600
+Default,Like,WINDDI%,TTU,ETL,13700
+Default,Like,%INFORMATICA%,Informatica,ETL,13800
+Default,Like,PMDTM,Informatica,ETL,13900
+Default,Like,PMDESIGN,Informatica,ETL,14000
+Default,Like,BIBUS%,Cognos,Analytic,14100
+Default,Like,COGTR%,Cognos,Analytic,14200
+Default,Like,TM1SD%,Cognos,Analytic,14300
+Default,Like,CRW32%,Crystal Reports,Analytic,14400
+Default,Like,DBVIS%,DbVisualizer,Analytic,14500
+Default,Like,UWSGI%,Teradata,Unknown,14600
+Default,Like,TIWIZ%,TPT,ETL,14700
+Default,Like,UNICA%,Unica,Application,14800
+Default,Like,JDBC%,JDBC,Application,14900
+Default,Like,%/JMP,JMP,Application,15000
+Default,Like,W3WP%,MS IIS,Application,15100
+Default,Like,%ANACONDA%,Python,Analytic,15200
+Default,Like,%SASFound%,SAS,Analytic,15300
+Default,Like,TSET%,TTU,Support,15400
+Default,Like,%POWERBI%,PowerBI,Analytic,15500
+Default,Like,%TABLEAU%,Tableau,Analytic,15600
+Default,Like,BMT%,Cognos,Analytic,15700
+Default,Like,%PYT,Python,Analytic,15800
+Default,Like,%PYTHON%,Python,Analytic,15900
+Default,Like,DUL%,Teradata,Analytic,16000

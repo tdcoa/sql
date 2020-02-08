@@ -1,54 +1,54 @@
-StatementType,Statement_Bucket
-Abort ,Admin
-Alter Table ,Admin
-Begin Loading ,Load
-Begin Mload ,Load
-Begin Transaction ,Transaction
-Call,Call SP
-Check Workload,Load
-CheckPoint Loading,Load
-Collect Statistics,Collect Stats
-Comment Get/Set ,Admin
-Commit Work ,Transaction
-Create Database/User,Create Object
-Create Index,Create Object
-Create Join Index ,Create Object
-Create Table,Create Table
-Create View ,Create Object
-Database,Modify Session
-Delete,Delete
-Drop Database ,Drop Object
-Drop Index,Drop Object
-Drop Join Index ,Drop Object
-Drop Macro,Drop Object
-Drop Statistics ,Drop Object
-Drop Table,Drop Table
-Drop View ,Drop Object
-End Edit,Other
-End Loading ,Load
-End Transaction ,Transaction
-Exec,Exec Macro
-Execute Mload ,Load
-Flush Query Logging ,Admin
-Grant ,Admin
-Grant/Revoke Logon,Admin
-Help,Other
-Insert,Insert
-Merge Into,Merge
-Mload ,Load
-Modify Database ,Admin
-Not Applicable,Other
-Null,Other
-Release Mload ,Load
-Rename Table,Admin
-Replace Macro ,Create Object
-Replace Procedure ,Create Object
-Replace View,Create Object
-Revoke,Admin
-Select,Select
-Set Query_Band,Modify Session
-Set Session ,Modify Session
-Show,Other
-UCAbort ,Admin
-Unrecognized type ,Other
-Update,Update
+SiteID,StatementType,Statement_Bucket
+Default,Abort ,Admin
+Default,Alter Table ,Admin
+Default,Begin Loading ,Load
+Default,Begin Mload ,Load
+Default,Begin Transaction ,Other
+Default,Call,Call SP
+Default,Check Workload,Load
+Default,CheckPoint Loading,Load
+Default,Collect Statistics,Collect Stats
+Default,Comment Get/Set ,Admin
+Default,Commit Work ,Transaction
+Default,Create Database/User,Create Object
+Default,Create Index,Create Object
+Default,Create Join Index ,Create Object
+Default,Create Table,Create Table
+Default,Create View ,Create Object
+Default,Database,Modify Session
+Default,Delete,Delete
+Default,Drop Database ,Drop Object
+Default,Drop Index,Drop Object
+Default,Drop Join Index ,Drop Object
+Default,Drop Macro,Drop Object
+Default,Drop Statistics ,Drop Object
+Default,Drop Table,Drop Table
+Default,Drop View ,Drop Object
+Default,End Edit,Other
+Default,End Loading ,Load
+Default,End Transaction ,Other
+Default,Exec,Exec Macro
+Default,Execute Mload ,Load
+Default,Flush Query Logging ,Admin
+Default,Grant ,Admin
+Default,Grant/Revoke Logon,Admin
+Default,Help,Other
+Default,Insert,Insert
+Default,Merge Into,Merge
+Default,Mload ,Load
+Default,Modify Database ,Admin
+Default,Not Applicable,Other
+Default,Null,Other
+Default,Release Mload ,Load
+Default,Rename Table,Admin
+Default,Replace Macro ,Create Object
+Default,Replace Procedure ,Create Object
+Default,Replace View,Create Object
+Default,Revoke,Admin
+Default,Select,Select
+Default,Set Query_Band,Other
+Default,Set Session ,Other
+Default,Show,Other
+Default,UCAbort ,Admin
+Default,Unrecognized type ,Other
+Default,Update,Update

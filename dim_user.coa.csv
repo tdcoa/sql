@@ -1,22 +1,23 @@
-,artPI,SiteID,UserName_Pattern,User_Bucket,Is_Discrete_Human,User_Department,User_SubDepartment,User_Region,Priority,Record_Status,Process_ID,Process_TS
-0,4,Default,DAP_%USER,Application-DAP,no    ,dept,subdept,rgn,2050,Initial Load                                    ,0,2020-01-29 23:32:27
-1,4,Default,%STG_%USER%,ETL,no    ,dept,subdept,rgn,2100,Initial Load                                    ,0,2020-01-29 23:32:28
-2,4,Default,%ETL%,ETL,no    ,dept,subdept,rgn,10000,Initial Load                                    ,0,2020-01-29 23:32:29
-3,4,Default,BARUSER%,Admin,no    ,dept,subdept,rgn,2200,Initial Load                                    ,0,2020-01-29 23:32:31
-4,4,Default,%REPL_%USER%,Admin,no    ,dept,subdept,rgn,2400,Initial Load                                    ,0,2020-01-29 23:32:32
-5,4,Default,DBADMIN%,Admin,no    ,dept,subdept,rgn,2500,Initial Load                                    ,0,2020-01-29 23:32:33
-6,4,Default,%_ADMIN,Admin,no    ,dept,subdept,rgn,2600,Initial Load                                    ,0,2020-01-29 23:32:34
-7,4,Default,%_DBA,Admin,no    ,dept,subdept,rgn,2800,Initial Load                                    ,0,2020-01-29 23:32:36
-8,4,Default,ACSE_USER%,Analytic,no    ,dept,subdept,rgn,4000,Initial Load                                    ,0,2020-01-29 23:32:37
-9,4,Default,ACA_USER%,Analytic,no    ,dept,subdept,rgn,4100,Initial Load                                    ,0,2020-01-29 23:32:38
-10,4,Default,ARTEMIS_USER%,Analytic,no    ,dept,subdept,rgn,4200,Initial Load                                    ,0,2020-01-29 23:32:39
-11,4,Default,CALLREP_USER%,Analytic,no    ,dept,subdept,rgn,4300,Initial Load                                    ,0,2020-01-29 23:32:40
-12,4,Default,AM_USER%,Analytic,no    ,dept,subdept,rgn,4400,Initial Load                                    ,0,2020-01-29 23:32:42
-13,4,Default,ENT_AC_USER%,Analytic,no    ,dept,subdept,rgn,4500,Initial Load                                    ,0,2020-01-29 23:32:43
-14,4,Default,Viewpoint,TDInternal,no    ,dept,subdept,rgn,100,Initial Load                                    ,0,2020-01-29 23:32:44
-15,4,Default,TDWM,TDInternal,no    ,dept,subdept,rgn,100,Initial Load                                    ,0,2020-01-29 23:32:45
-16,4,Default,CRASHDUMPS,TDInternal,no    ,dept,subdept,rgn,100,Initial Load                                    ,0,2020-01-29 23:32:47
-17,4,Default,DBC,TDInternal-DBC,no    ,dept,subdept,rgn,100,Initial Load                                    ,0,2020-01-29 23:32:48
-18,4,Default,DBMON,TDInternal,no    ,dept,subdept,rgn,100,Initial Load                                    ,0,2020-01-29 23:32:49
-19,4,Default,Perf_User,Consumption Analytics,no    ,dept,subdept,rgn,100,Initial Load                                    ,0,2020-01-29 23:32:50
-20,4,Default,BENCHMARK_USER,Consumption Analytics,no    ,dept,subdept,rgn,100,Initial Load                                    ,0,2020-01-29 23:32:51
+SiteID,Pattern_Type,UserName_Pattern,User_Bucket,Is_Discrete_Human,User_Department,User_SubDepartment,User_Region,Priority
+Default,Equal,Viewpoint,TDInternal,no    ,dept,subdept,rgn,100
+Default,Equal,TDWM,TDInternal,no    ,dept,subdept,rgn,100
+Default,Equal,CRASHDUMPS,TDInternal,no    ,dept,subdept,rgn,100
+Default,Equal,DBC,TDInternal-DBC,no    ,dept,subdept,rgn,100
+Default,Equal,DBMON,TDInternal,no    ,dept,subdept,rgn,100
+Default,Equal,PerfAnalysis,Admin,no    ,dept,subdept,rgn,100
+Default,Equal,BENCHMARK_USER,Admin ,no    ,dept,subdept,rgn,100
+Default,Like,DAP_%USER,Application-DAP,no    ,dept,subdept,rgn,2050
+Default,Like,%STG_%USER%,ETL,no    ,dept,subdept,rgn,2100
+Default,Like,BARUSER%,Admin,no    ,dept,subdept,rgn,2200
+Default,Like,%REPL_%USER%,Admin,no    ,dept,subdept,rgn,2400
+Default,Like,DBADMIN%,Admin,no    ,dept,subdept,rgn,2500
+Default,Like,%_ADMIN,Admin,no    ,dept,subdept,rgn,2600
+Default,Like,%_DBA,Admin,no    ,dept,subdept,rgn,2800
+Default,Like,ACSE_USER%,Analytic,no    ,dept,subdept,rgn,4000
+Default,Like,ACA_USER%,Analytic,no    ,dept,subdept,rgn,4100
+Default,Like,ARTEMIS_USER%,Analytic,no    ,dept,subdept,rgn,4200
+Default,Like,CALLREP_USER%,Analytic,no    ,dept,subdept,rgn,4300
+Default,Like,AM_USER%,Analytic,no    ,dept,subdept,rgn,4400
+Default,Like,ENT_AC_USER%,Analytic,no    ,dept,subdept,rgn,4500
+Default,Like,%ETL%,ETL,no    ,dept,subdept,rgn,6000
+Default,RegEx,[a-z]{2}[0-9]{5},User (QLID),yes,dept,subdept,rgn,7000
