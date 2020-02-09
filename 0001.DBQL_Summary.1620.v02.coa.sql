@@ -347,7 +347,7 @@ create volatile Table coat_dat_DBQL  as
       on dbql.StatementType = stm.StatementType
 
     join dim_user usr
-      on dbql.UserName = usr.UserName_Pattern
+      on dbql.UserName = usr.UserName
 
     Group by
          dbql.LogDate
