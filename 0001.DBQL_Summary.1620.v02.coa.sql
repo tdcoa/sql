@@ -247,7 +247,8 @@ in Transcend.
 */
 
 /*{{save:{siteid}.FINAL_dat_DBQL.csv}}*/
-/*{{load:adlste_coa.tmp_dat_DBQL}}*/
+/*{{load:adlste_coa.stg_dat_DBQL}}*/
+/*{{call:adlste_coa.sp_dat_dbql()}}*/
 select
  dbql.LogDate
 ,dbql.LogHour
