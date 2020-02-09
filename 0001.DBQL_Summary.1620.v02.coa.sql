@@ -114,7 +114,7 @@ PARTITION BY RANGE_N(LogDate between cast({startdate} as date) and cast({enddate
   EACH INTERVAL '1' DAY )
 on commit preserve rows;
 
-collect summary statistics on dat_DBQL_Detail;
+collect statistics on dat_DBQL_Detail index(LogDate,QueryID);
 
 
 /* create volatile table dat_cpu_seconds
@@ -143,8 +143,6 @@ no primary index
 on commit preserve rows
 ;
 
-collect summary statistics on dat_cpu_seconds;
-
 
 /*{{temp:dim_app.coa.csv}}*/
 create volatile table dim_app as
@@ -172,7 +170,6 @@ no primary index
 on commit preserve rows;
 
 drop table "dim_app.coa.csv";
-collect summary statistics on dim_app;
 
 
 /*{{temp:dim_statement.coa.csv}}*/
@@ -200,7 +197,6 @@ no primary index
 on commit preserve rows;
 
 drop table "dim_statement.coa.csv";
-collect summary statistics on dim_statement;
 
 
 /*{{temp:dim_user.coa.csv}}*/
@@ -232,7 +228,6 @@ no primary index
 on commit preserve rows;
 
 drop table "dim_user.coa.csv";
-collect summary statistics on dim_user;
 
 
 
