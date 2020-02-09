@@ -105,10 +105,13 @@ Create volatile Table dat_DBQL_Detail as
 
     From {dbqlogtbl_hst} as dbql
 
-    Where LogDate between {startdate} and {enddate}
+    Where LogDate between date {startdate} and date {enddate}
 
 ) with Data
-NO Primary Index
+/* match source table for optimal copy speed */
+PRIMARY INDEX ( LogDate ,QueryID )
+PARTITION BY RANGE_N(LogDate between date {startdate} and date {enddate}
+  EACH INTERVAL '1' DAY )
 on commit preserve rows;
 
 
@@ -166,6 +169,8 @@ create volatile table dim_app as
 no primary index
 on commit preserve rows;
 
+drop table "dim_app.coa.csv";
+
 
 /*{{temp:dim_statement.coa.csv}}*/
 create volatile table dim_statement as
@@ -190,6 +195,8 @@ create volatile table dim_statement as
 ) with data
 no primary index
 on commit preserve rows;
+
+drop table "dim_statement.coa.csv";
 
 
 /*{{temp:dim_user.coa.csv}}*/
@@ -220,7 +227,7 @@ create volatile table dim_user as
 no primary index
 on commit preserve rows;
 
-
+drop table "dim_user.coa.csv";
 
 
 
@@ -239,19 +246,119 @@ size.  As these fields are easily calculated, they will be re-constituted
 in Transcend.
 */
 
-create volatile Table coat_dat_DBQL  as
-(
-    select
+/*{{save:{siteid}.FINAL_dat_DBQL.csv}}*/
+/*{{load:adlste_coa.tmp_dat_DBQL}}*/
+select
+ dbql.LogDate
+,dbql.LogHour
+,cast(cast(dbql.LogDate as char(10)) ||' '||
+ cast(cast(dbql.LogHour as INT format '99') as char(2))||':00:00.000000'  as timestamp(6)) as LogTS
+,'{account}' as AccountName
+,'{siteid}'  as SiteID
+,avg(cpumax.Node_Cnt) as Node_Cnt
+,avg(cpumax.vCores_per_Node) as vCores_per_Node
+
+/*--------- Workload Buckets: */
+,app.App_Bucket
+,app.Use_Bucket
+,stm.Statement_Bucket
+,usr.User_Bucket
+,usr.Is_Discrete_Human
+,usr.User_Department
+,usr.User_SubDepartment
+,usr.User_Region
+,dbql.WDName as Workload_Name
+
+,case when  dbql.StatementType = 'Select'
+        and dbql.AppID not in ('TPTEXP', 'FASTEXP')
+        and dbql.Runtime_AMP_Sec < 1
+        and dbql.NumOfActiveAMPs < dbql.Total_AMPs
+      then 'Tactical'
+      else 'Non-Tactical'
+      /* TODO: flesh out this logic to further refine Query_Types */
+ end as Query_Type
+
+/* -------- Query Metrics */
+,sum(Query_Count) as Query_Cnt
+,sum(Request_Count) as Request_Cnt
+,avg(Query_Complexity_Score) as Query_Complexity_Score_Avg
+,cast(sum(Returned_Row_Cnt) as decimal(18,0)) as Returned_Row_Cnt
+,sum(Query_Error_Cnt) as Query_Error_Cnt
+,sum(Query_Abort_Cnt) as Query_Abort_Cnt
+,sum(Explain_Plan_Row_Cnt) as Explain_Plan_Row_Cnt
+,sum(Explain_Plan_Runtime_Sec) as Explain_Plan_Runtime_Sec
+
+
+/* --------- Metrics: RunTimes */
+,round( sum(DelayTime_Sec)     ,2) as DelayTime_Sec
+,round( sum(Runtime_Parse_Sec) ,2) as Runtime_Parse_Sec
+,round( sum(Runtime_AMP_Sec)   ,2) as Runtime_AMP_Sec
+,round( sum(TransferTime_Sec)  ,2) as TransferTime_Sec
+/*-- Runtime_Parse_Sec + Runtime_AMP_Sec = Runtime_Execution_Sec
+-- DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
+
+
+
+/*---------- Metrics: CPU & IO */
+,cast( sum(dbql.CPU_Parse_Sec) as decimal(18,2)) as CPU_Parse
+,cast( sum(dbql.CPU_AMP_Sec) as decimal(18,2)) as CPU_AMP
+/* -- ,CPU_Parse + CPU_AMP as CPU_Total_DBS */
+,cast( sum(cpumax.CPU_MaxAvailable) as decimal(18,2)) as CPU_MaxAvailable_perHour
+/* -- ,vCores_Per_Node * Node_Cnt * Runtime_Total_Sec    as CPU_MaxAvailable_perRuntime */
+,cast(avg(cpumax.CPU_DBS_Pct) as decimal(18,6))    as CPU_DBS_Pct
+,cast(avg(cpumax.CPU_OS_Pct)  as decimal(18,6))    as CPU_OS_Pct
+,cast(avg(cpumax.CPU_IoWait_Pct) as decimal(18,6)) as CPU_IoWait_Pct
+,cast(avg(cpumax.CPU_Idle_Pct) as decimal(18,6))   as CPU_Idle_Pct
+
+
+
+,sum(IOCntM_Physical) as IOCntM_Physical
+,sum(IOCntM_Cached)   as IOCntM_Cached
+,sum(IOCntM_Total)    as IOCntM_Total
+,sum(IOGB_Physical)   as IOGB_Physical
+,sum(IOGB_Cached)     as IOGB_Cached
+,sum(IOGB_Total)      as IOGB_Total
+,sum(IOGB_Cache_Pct)  as IOGB_Cache_Pct
+
+,NULL as IOGB_Total_Max   /* TODO */
+
+
+/* ---------- Metrics: Other */
+,sum(Spool_GB) as Spool_GB
+,avg(Spool_GB) as Spool_GB_Avg
+,sum(Memory_MaxUsed_MB) as Memory_Max_Used_MB
+,avg(Memory_MaxUsed_MB) as Memory_Max_Used_MB_Avg
+,avg(CPU_Skew_Pct) as CPUSec_Skew_AvgPCt
+,avg(IOCnt_Skew_Pct)  as IOCnt_Skew_AvgPct
+,avg(VeryHot_IOcnt_Cache_Pct) as VeryHot_IOcnt_Cache_AvgPct
+,avg(VeryHot_IOGB_Cache_Pct) as VeryHot_IOGB_Cache_AvgPct
+
+/* ---------- Multi-Statement Break-Out, if interested: */
+,count(tmpSG) as MultiStatement_Count
+,sum(cast(trim(substr(tmpSG, index(tmpSG,'Del=')+4, index(tmpSG,'Ins=')-index(tmpSG,'Del=')-4)) as INT))       as MultiStatement_Delete
+,sum(cast(trim(substr(tmpSG, index(tmpSG,'Ins=')+4, index(tmpSG,'InsSel=')-index(tmpSG,'Ins=')-4)) as INT))    as MultiStatement_Insert
+,sum(cast(trim(substr(tmpSG, index(tmpSG,'InsSel=')+7, index(tmpSG,'Upd=')-index(tmpSG,'InsSel=')-7)) as INT)) as MultiStatement_InsertSel
+,sum(cast(trim(substr(tmpSG, index(tmpSG,'Upd=')+4, index(tmpSG,' Sel=')-index(tmpSG,'Upd=')-4)) as INT))      as MultiStatement_Update
+,sum(cast(trim(substr(tmpSG, index(tmpSG,' Sel=')+5, 10)) as INT)) as MultiStatement_Select
+
+From dat_DBQL_detail as dbql
+
+join dat_cpu_seconds as cpumax
+  on dbql.LogDate = cpumax.LogDate
+ and dbql.LogHour = cpumax.LogHour
+
+join dim_app as app
+  on dbql.AppID = app.AppID
+
+join dim_Statement stm
+  on dbql.StatementType = stm.StatementType
+
+join dim_user usr
+  on dbql.UserName = usr.UserName
+
+Group by
      dbql.LogDate
     ,dbql.LogHour
-    ,cast(cast(dbql.LogDate as char(10)) ||' '||
-     cast(cast(dbql.LogHour as INT format '99') as char(2))||':00:00.000000'  as timestamp(6)) as LogTS
-    ,'{account}' as AccountName
-    ,'{siteid}'  as SiteID
-    ,avg(cpumax.Node_Cnt) as Node_Cnt
-    ,avg(cpumax.vCores_per_Node) as vCores_per_Node
-
-    /*--------- Workload Buckets: */
     ,app.App_Bucket
     ,app.Use_Bucket
     ,stm.Statement_Bucket
@@ -260,121 +367,14 @@ create volatile Table coat_dat_DBQL  as
     ,usr.User_Department
     ,usr.User_SubDepartment
     ,usr.User_Region
-    ,dbql.WDName as Workload_Name
+    ,dbql.WDName
+    ,Query_Type
+;
 
-    ,case when  dbql.StatementType = 'Select'
-            and dbql.AppID not in ('TPTEXP', 'FASTEXP')
-            and dbql.Runtime_AMP_Sec < 1
-            and dbql.NumOfActiveAMPs < dbql.Total_AMPs
-          then 'Tactical'
-          else 'Non-Tactical'
-          /* TODO: flesh out this logic to further refine Query_Types */
-     end as Query_Type
-
-    /* -------- Query Metrics */
-    ,sum(Query_Count) as Query_Cnt
-    ,sum(Request_Count) as Request_Cnt
-    ,avg(Query_Complexity_Score) as Query_Complexity_Score_Avg
-    ,cast(sum(Returned_Row_Cnt) as decimal(18,0)) as Returned_Row_Cnt
-    ,sum(Query_Error_Cnt) as Query_Error_Cnt
-    ,sum(Query_Abort_Cnt) as Query_Abort_Cnt
-    ,sum(Explain_Plan_Row_Cnt) as Explain_Plan_Row_Cnt
-    ,sum(Explain_Plan_Runtime_Sec) as Explain_Plan_Runtime_Sec
-
-
-    /* --------- Metrics: RunTimes */
-    ,round( sum(DelayTime_Sec)     ,2) as DelayTime_Sec
-    ,round( sum(Runtime_Parse_Sec) ,2) as Runtime_Parse_Sec
-    ,round( sum(Runtime_AMP_Sec)   ,2) as Runtime_AMP_Sec
-    ,round( sum(TransferTime_Sec)  ,2) as TransferTime_Sec
-    /*-- Runtime_Parse_Sec + Runtime_AMP_Sec = Runtime_Execution_Sec
-    -- DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
-
-
-
-    /*---------- Metrics: CPU & IO */
-    ,cast( sum(dbql.CPU_Parse_Sec) as decimal(18,2)) as CPU_Parse
-    ,cast( sum(dbql.CPU_AMP_Sec) as decimal(18,2)) as CPU_AMP
-    /* -- ,CPU_Parse + CPU_AMP as CPU_Total_DBS */
-    ,cast( sum(cpumax.CPU_MaxAvailable) as decimal(18,2)) as CPU_MaxAvailable_perHour
-    /* -- ,vCores_Per_Node * Node_Cnt * Runtime_Total_Sec    as CPU_MaxAvailable_perRuntime */
-    ,cast(avg(cpumax.CPU_DBS_Pct) as decimal(18,6))    as CPU_DBS_Pct
-    ,cast(avg(cpumax.CPU_OS_Pct)  as decimal(18,6))    as CPU_OS_Pct
-    ,cast(avg(cpumax.CPU_IoWait_Pct) as decimal(18,6)) as CPU_IoWait_Pct
-    ,cast(avg(cpumax.CPU_Idle_Pct) as decimal(18,6))   as CPU_Idle_Pct
-
-
-
-    ,sum(IOCntM_Physical) as IOCntM_Physical
-    ,sum(IOCntM_Cached)   as IOCntM_Cached
-    ,sum(IOCntM_Total)    as IOCntM_Total
-    ,sum(IOGB_Physical)   as IOGB_Physical
-    ,sum(IOGB_Cached)     as IOGB_Cached
-    ,sum(IOGB_Total)      as IOGB_Total
-    ,sum(IOGB_Cache_Pct)  as IOGB_Cache_Pct
-
-    ,NULL as IOGB_Total_Max   /* TODO */
-
-
-    /* ---------- Metrics: Other */
-    ,sum(Spool_GB) as Spool_GB
-    ,avg(Spool_GB) as Spool_GB_Avg
-    ,sum(Memory_MaxUsed_MB) as Memory_Max_Used_MB
-    ,avg(Memory_MaxUsed_MB) as Memory_Max_Used_MB_Avg
-    ,avg(CPU_Skew_Pct) as CPUSec_Skew_AvgPCt
-    ,avg(IOCnt_Skew_Pct)  as IOCnt_Skew_AvgPct
-    ,avg(VeryHot_IOcnt_Cache_Pct) as VeryHot_IOcnt_Cache_AvgPct
-    ,avg(VeryHot_IOGB_Cache_Pct) as VeryHot_IOGB_Cache_AvgPct
-
-    /* ---------- Multi-Statement Break-Out, if interested: */
-    ,count(tmpSG) as MultiStatement_Count
-    ,sum(cast(trim(substr(tmpSG, index(tmpSG,'Del=')+4, index(tmpSG,'Ins=')-index(tmpSG,'Del=')-4)) as INT))       as MultiStatement_Delete
-    ,sum(cast(trim(substr(tmpSG, index(tmpSG,'Ins=')+4, index(tmpSG,'InsSel=')-index(tmpSG,'Ins=')-4)) as INT))    as MultiStatement_Insert
-    ,sum(cast(trim(substr(tmpSG, index(tmpSG,'InsSel=')+7, index(tmpSG,'Upd=')-index(tmpSG,'InsSel=')-7)) as INT)) as MultiStatement_InsertSel
-    ,sum(cast(trim(substr(tmpSG, index(tmpSG,'Upd=')+4, index(tmpSG,' Sel=')-index(tmpSG,'Upd=')-4)) as INT))      as MultiStatement_Update
-    ,sum(cast(trim(substr(tmpSG, index(tmpSG,' Sel=')+5, 10)) as INT)) as MultiStatement_Select
-
-    From dat_DBQL_detail as dbql
-
-    join dat_cpu_seconds as cpumax
-      on dbql.LogDate = cpumax.LogDate
-     and dbql.LogHour = cpumax.LogHour
-
-    join dim_app as app
-      on dbql.AppID = app.AppID
-
-    join dim_Statement stm
-      on dbql.StatementType = stm.StatementType
-
-    join dim_user usr
-      on dbql.UserName = usr.UserName
-
-    Group by
-         dbql.LogDate
-        ,dbql.LogHour
-        ,app.App_Bucket
-        ,app.Use_Bucket
-        ,stm.Statement_Bucket
-        ,usr.User_Bucket
-        ,usr.Is_Discrete_Human
-        ,usr.User_Department
-        ,usr.User_SubDepartment
-        ,usr.User_Region
-        ,dbql.WDName
-        ,Query_Type
-
-) with data
-no primary index
-on commit preserve rows;
-
-/*{{save:{siteid}.FINAL_dat_DBQL.Record_Count.csv}}*/
-Select count(*) as FINAL_DAT_DBQL_Record_Count from coat_dat_DBQL;
-
-/*{{save:{siteid}.FINAL_dat_DBQL.csv}}*/
-/*{{load:adlste_coa.tmp_dat_DBQL}}*/
-Select * from coat_dat_DBQL order by LogTS, App_Bucket,User_Bucket;
-
-
+drop table dat_cpu_seconds;
+drop table dim_app;
+drop table dim_statement;
+drop table dim_user;
 
 
 
@@ -384,7 +384,7 @@ Select * from coat_dat_DBQL order by LogTS, App_Bucket,User_Bucket;
 Generate ranks for most active users, both with ALL accounts,
 then again for all UserNames known to be discrete_humans.
 */
-Create Volatile Table coat_dat_user_ranks as
+Create Volatile Table dat_user_ranks as
 (
  select a.*, rank() over(Order by Overall_Score, Query_Count, CPU_Total_DBS_Sec) as Overall_Rank
  from (
@@ -437,3 +437,7 @@ Insert into coat_dat_user_ranks
 /*{{load:adlste_coa.tmp_user_ranks}}*/
 select * from coat_dat_user_ranks order by Rank_Bucket, Overall_Rank
 ;
+
+
+drop table dat_DBQL_Detail;
+drop table coat_dat_user_ranks;
