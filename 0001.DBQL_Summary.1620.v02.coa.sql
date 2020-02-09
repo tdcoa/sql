@@ -114,6 +114,7 @@ PARTITION BY RANGE_N(LogDate between cast({startdate} as date) and cast({enddate
   EACH INTERVAL '1' DAY )
 on commit preserve rows;
 
+collect summary statistics on dat_DBQL_Detail;
 
 
 /* create volatile table dat_cpu_seconds
@@ -142,6 +143,7 @@ no primary index
 on commit preserve rows
 ;
 
+collect summary statistics on dat_cpu_seconds;
 
 
 /*{{temp:dim_app.coa.csv}}*/
@@ -170,6 +172,7 @@ no primary index
 on commit preserve rows;
 
 drop table "dim_app.coa.csv";
+collect summary statistics on dim_app;
 
 
 /*{{temp:dim_statement.coa.csv}}*/
@@ -197,6 +200,7 @@ no primary index
 on commit preserve rows;
 
 drop table "dim_statement.coa.csv";
+collect summary statistics on dim_statement;
 
 
 /*{{temp:dim_user.coa.csv}}*/
@@ -228,6 +232,7 @@ no primary index
 on commit preserve rows;
 
 drop table "dim_user.coa.csv";
+collect summary statistics on dim_user;
 
 
 
@@ -374,7 +379,6 @@ Group by
 drop table dat_cpu_seconds;
 drop table dim_app;
 drop table dim_statement;
-drop table dim_user;
 
 
 
@@ -441,3 +445,4 @@ select * from coat_dat_user_ranks order by Rank_Bucket, Overall_Rank
 
 drop table dat_DBQL_Detail;
 drop table coat_dat_user_ranks;
+drop table dim_user;
