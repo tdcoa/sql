@@ -409,7 +409,7 @@ No Primary Index
 on commit preserve rows
 ;
 
-Insert into coat_dat_user_ranks
+Insert into dat_user_ranks
  select a.*, rank() over(Order by Overall_Score, Query_Count, CPU_Total_DBS_Sec) as Overall_Rank
  from (
     Select UserName
@@ -434,10 +434,10 @@ Insert into coat_dat_user_ranks
 
 /*{{save:{siteid}.dat_user_ranks.csv}}*/
 /*{{load:adlste_coa.tmp_user_ranks}}*/
-select * from coat_dat_user_ranks order by Rank_Bucket, Overall_Rank
+select * from dat_user_ranks order by Rank_Bucket, Overall_Rank
 ;
 
 
 drop table dat_DBQL_Detail;
-drop table coat_dat_user_ranks;
+drop table dat_user_ranks;
 drop table dim_user;
