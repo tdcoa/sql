@@ -113,7 +113,8 @@ on commit preserve rows;
 
 
 
-/* we do need ResUsage for CPU max seconds (kinda), and
+/* create volatile table dat_cpu_seconds
+   we do need ResUsage for CPU max seconds (kinda), and
    to find the percent of DBS / OS / IOWait / Idle.
    This is interesting enough to export & keep */
 /*{{save:{siteid}.cpu_seconds.csv}}*/
@@ -138,10 +139,6 @@ no primary index
 on commit preserve rows
 ;
 
-
-
-/* load the three dim tables from csv
-    into volatile tables for later join */
 
 
 /*{{temp:dim_app.coa.csv}}*/
@@ -253,25 +250,25 @@ create volatile Table coat_dat_DBQL  as
     ,'{siteid}'  as SiteID
     ,avg(cpumax.Node_Cnt) as Node_Cnt
     ,avg(cpumax.vCores_per_Node) as vCores_per_Node
-    ,Node_Cnt  * vCores_per_Node * (3600 /* sec per hr */) as CPU_Sec
 
     /*--------- Workload Buckets: */
-    ,coalesce(app.App_Bucket, 'Unknown') as App_Bucket
-    ,coalesce(app.Use_Bucket, 'Unknown') as Use_Bucket
-    ,coalesce(stm.Statement_Bucket, 'Unknown') as Statement_Bucket
+    ,app.App_Bucket
+    ,app.Use_Bucket
+    ,stm.Statement_Bucket
     ,usr.User_Bucket
     ,usr.Is_Discrete_Human
-    ,dbql.WDName as Workload_Name
     ,usr.User_Department
     ,usr.User_SubDepartment
     ,usr.User_Region
+    ,dbql.WDName as Workload_Name
 
-    ,case when dbql.StatementType = 'Select'
+    ,case when  dbql.StatementType = 'Select'
             and dbql.AppID not in ('TPTEXP', 'FASTEXP')
             and dbql.Runtime_AMP_Sec < 1
             and dbql.NumOfActiveAMPs < dbql.Total_AMPs
           then 'Tactical'
           else 'Non-Tactical'
+          /* TODO: flesh out this logic to further refine Query_Types */
      end as Query_Type
 
     /* -------- Query Metrics */
@@ -363,7 +360,7 @@ create volatile Table coat_dat_DBQL  as
         ,usr.User_Department
         ,usr.User_SubDepartment
         ,usr.User_Region
-        ,Workload_Name
+        ,dbql.WDName
         ,Query_Type
 
 ) with data
