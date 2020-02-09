@@ -186,7 +186,7 @@ create volatile table dim_statement as
         when p.Pattern_Type = 'Equal' and o.StatementType = p.Pattern then 1
         when p.Pattern_Type = 'Like'  and o.StatementType like p.Pattern then 1
         when p.Pattern_Type = 'RegEx'
-         and character_length(regexp_substr(o.AppID, p.Pattern,1,1,'i'))>0 then 1
+         and character_length(regexp_substr(o.StatementType, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
   qualify Priority_ = min(Priority_)over(partition by o.StatementType)
   where SiteID_ in('default','None') or SiteID_ like '{siteid}'
@@ -215,7 +215,7 @@ create volatile table dim_user as
         when p.Pattern_Type = 'Equal' and o.UserName = p.Pattern then 1
         when p.Pattern_Type = 'Like'  and o.UserName like p.Pattern then 1
         when p.Pattern_Type = 'RegEx'
-         and character_length(regexp_substr(o.AppID, p.Pattern,1,1,'i'))>0 then 1
+         and character_length(regexp_substr(o.UserName, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
   qualify Priority_ = min(Priority_)over(partition by o.UserName)
   where SiteID_ in('default','None') or SiteID_ like '{siteid}'
