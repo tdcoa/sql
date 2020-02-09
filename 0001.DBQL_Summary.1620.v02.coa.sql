@@ -105,12 +105,12 @@ Create volatile Table dat_DBQL_Detail as
 
     From {dbqlogtbl_hst} as dbql
 
-    Where LogDate between date {startdate} and date {enddate}
+    Where LogDate between cast({startdate} as date) and cast({enddate} as date)
 
 ) with Data
 /* match source table for optimal copy speed */
 PRIMARY INDEX ( LogDate ,QueryID )
-PARTITION BY RANGE_N(LogDate between date {startdate} and date {enddate}
+PARTITION BY RANGE_N(LogDate between cast({startdate} as date) and cast({enddate} as date)
   EACH INTERVAL '1' DAY )
 on commit preserve rows;
 
