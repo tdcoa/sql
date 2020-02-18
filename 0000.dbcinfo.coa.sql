@@ -19,13 +19,13 @@ on commit preserve rows
 insert into valid_dates values( '{date_string}' )
 ;
 
+/*{{temp:0000.dates.csv}}*/
+Select *
+from "0000.dates.csv"
+;
+
 /*{{save:{siteid}.dates.csv}}*/
 Select *
 from Sys_Calendar.Calendar
 where Calendar_date in(select vdate from valid_dates)
-;
-
-/*{{temp:0000.dates.csv}}*/
-Select *
-from "0000.dates.csv"
 ;
