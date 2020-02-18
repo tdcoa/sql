@@ -99,9 +99,7 @@ create volatile table dim_user as
 no primary index
 on commit preserve rows;
 
-/*{{temp:dim_user.csv}}*/
 drop table "dim_user.csv";
-
 
 
 
@@ -139,19 +137,18 @@ select
 ,dbql.WDName
 
 ,case
-when  dbql.StatementType = 'Select'
-and dbql.AppID not in ('TPTEXP', 'FASTEXP')
-and dbql.Runtime_AMP_Sec < 1
-and dbql.NumOfActiveAMPs < Total_AMPs
-then 'Tactical'
-
-else 'Non-Tactical'
-      /* TODO: flesh out this logic to further refine Query_Types */
+ when  dbql.StatementType = 'Select'
+  and dbql.AppID not in ('TPTEXP', 'FASTEXP')
+  and dbql.Runtime_AMP_Sec < 1
+  and dbql.NumOfActiveAMPs < Total_AMPs
+ then 'Tactical'
+ else 'Non-Tactical'
+      /* TODO: Query_Type */
  end as Query_Type
- ,HashAmp()+1 as Total_AMPs
 
 
 /* -------- Query Metrics */
+ ,HashAmp()+1 as Total_AMPs
 ,sum(dbql.Statements) as Query_Cnt
 ,count(1) as Request_Cnt
 ,avg(NumSteps * character_length(QueryText)/100) as Query_Complexity_Score_Avg
@@ -164,6 +161,12 @@ else 'Non-Tactical'
 
 /* --------- Metrics: RunTimes */
 ,sum(round(sum(DelayTime),2)) as DelayTime_Sec
+
+/* TODO: RunTimes */
+,100 as Runtime_Parse_Sec
+,1e6 as Runtime_AMP_Sec
+,1e6 as TransferTime_Sec
+
 /*
 ,((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) AS Runtime_Parse
 ,((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) AS Runtime_AMP
@@ -183,6 +186,7 @@ else 'Non-Tactical'
                + EXTRACT(SECOND FROM TransferTime) as FLOAT)) AS TransferTime_Sec
 */
 
+
 /*-- Runtime_Parse_Sec + Runtime_AMP_Sec = Runtime_Execution_Sec
 -- DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
 
@@ -191,12 +195,15 @@ else 'Non-Tactical'
 /*---------- Metrics: CPU & IO */
 ,cast( sum(dbql.ParserCPUTime) as decimal(18,2)) as CPU_Parse_Sec
 ,cast( sum(dbql.AMPCPUtime) as decimal(18,2)) as CPU_AMP_Sec
+,
 ,sum(ReqPhysIO/1e6)    as IOCntM_Physical
 ,sum(TotalIOCount/1e6) as IOCntM_Total
 ,sum(ReqPhysIOKB/1e6)  as IOGB_Physical
 ,sum(ReqIOKB/1e6)      as IOGB_Total
 
-,NULL as IOGB_Total_Max   /* TODO: IOTAs  */
+/* TODO: IOTAs  */
+,1e9 as IOTA_Total
+,1e9 as IOGB_Total_Max
 
 
 /* ---------- Metrics: Other */
@@ -213,12 +220,19 @@ else 'Non-Tactical'
 /* ---------- Multi-Statement Break-Out, if interested: */
 ,count(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end) as MultiStatement_Count
 /*
+,case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end as tmpSG
 ,sum(cast(trim(substr(tmpSG, index(tmpSG,'Del=')+4, index(tmpSG,'Ins=')-index(tmpSG,'Del=')-4)) as INT))       as MultiStatement_Delete
 ,sum(cast(trim(substr(tmpSG, index(tmpSG,'Ins=')+4, index(tmpSG,'InsSel=')-index(tmpSG,'Ins=')-4)) as INT))    as MultiStatement_Insert
 ,sum(cast(trim(substr(tmpSG, index(tmpSG,'InsSel=')+7, index(tmpSG,'Upd=')-index(tmpSG,'InsSel=')-7)) as INT)) as MultiStatement_InsertSel
 ,sum(cast(trim(substr(tmpSG, index(tmpSG,'Upd=')+4, index(tmpSG,' Sel=')-index(tmpSG,'Upd=')-4)) as INT))      as MultiStatement_Update
 ,sum(cast(trim(substr(tmpSG, index(tmpSG,' Sel=')+5, 10)) as INT)) as MultiStatement_Select
 */
+
+/* TODO: Multi-Statement */
+,100 as MultiStatement_Delete
+,100 as MultiStatement_Insert
+,100 as MultiStatement_InsertSel
+,100 as MultiStatement_Update
 
 From {dbqlogtbl_hst} as dbql
 
@@ -230,6 +244,9 @@ join dim_Statement stm
 
 join dim_user usr
   on dbql.UserName = usr.UserName
+
+left outer join dim_querytype qry
+  on dbql.CPU_AMP_Sec between coalesce(CPU_Pct_Ceiling,1) *
 
 Group by
  dbql.LogDate

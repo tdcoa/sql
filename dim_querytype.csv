@@ -1,3 +1,0 @@
-﻿SiteID,QueryType_Bucket,Priority,Statement_Bucket_IN,Statement_Bucket_NOT_IN,App_Bucket_IN,App_Bucket_NOT_IN,Runtime_Sec_Ceiling,Runtime_Sec_Floor,CPU_Pct_Ceiling,CPU_Pct_Floor,IOTAs_Pct_Ceiling,IOTAs_Pct_Floor,ActiveAMP_Pct_Ceiling,ActiveAMP_Pct_Floor
-TypeDefine,do not use,1000000,asdf,asdf,asdf,asdf,1000,0,0.999999,0.999999,0.999999,0.999999,0.999999,0.999999
-Default,Tactical,100,Select, , ,"TPTEXP, FASTEXP",1,0,,,,,0.1,0
