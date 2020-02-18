@@ -123,7 +123,8 @@ in Transcend.
 select
  dbql.LogDate
 ,dbql.LogHour
-,dbql.StartTime as LogTS
+,cast(cast(dbql.LogDate as char(10)) ||' '||
+ cast(cast(dbql.LogHour as INT format '99') as char(2))||':00:00.000000'  as timestamp(6)) as LogTS
 ,'{siteid}'  as SiteID
 
 ,app.App_Bucket
@@ -195,7 +196,7 @@ select
 /*---------- Metrics: CPU & IO */
 ,cast( sum(dbql.ParserCPUTime) as decimal(18,2)) as CPU_Parse_Sec
 ,cast( sum(dbql.AMPCPUtime) as decimal(18,2)) as CPU_AMP_Sec
-,
+
 ,sum(ReqPhysIO/1e6)    as IOCntM_Physical
 ,sum(TotalIOCount/1e6) as IOCntM_Total
 ,sum(ReqPhysIOKB/1e6)  as IOGB_Physical
@@ -245,13 +246,12 @@ join dim_Statement stm
 join dim_user usr
   on dbql.UserName = usr.UserName
 
-left outer join dim_querytype qry
-  on dbql.CPU_AMP_Sec between coalesce(CPU_Pct_Ceiling,1) *
+where dbql.logdate between {startdate} and {enddate}
 
 Group by
  dbql.LogDate
 ,dbql.LogHour
-,dbql.StartTime as LogTS
+,LogTS
 ,SiteID
 ,app.App_Bucket
 ,app.Use_Bucket
