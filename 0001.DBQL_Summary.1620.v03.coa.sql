@@ -106,8 +106,8 @@ drop table "dim_user.csv";
 /*
 ------- DAT_DBQL  (Final Output)
 ---------------------------------------------------------------
-Aggregates earlier DBQL snapshot into a per-day, per-hour, per-DIM bucket
-as defined above.  The intention is this to be a much smaller table than the
+Aggregates DBQL into a per-day, per-hour, per-DIM (app/statement/user) buckets
+as defined above.  The intention is this to be a smaller table than the
 detail, however, this assumption largely relies on how well the bucketing
 logic is defined / setup above.  If the result set is too large, try
 revisiting the Bucket definitions above, and make groups smaller / less varied.
@@ -120,12 +120,12 @@ in Transcend.
 /*{{save:0001.DBQL_Summary.OUTPUT-{siteid}.csv}}*/
 /*{{load:adlste_coa.stg_dat_DBQL}}*/
 /*{{call:adlste_coa.sp_dat_dbql()}}*/
-select
- dbql.LogDate
+select top 20
+ '{siteid}'  as SiteID
+,dbql.LogDate
 ,cast(extract(HOUR from StartTime) as INT format '99') as LogHour
 ,cast(cast(dbql.LogDate as char(10)) ||' '||
  cast(LogHour as char(2))||':00:00.000000'  as timestamp(6)) as LogTS
-,'{siteid}'  as SiteID
 
 ,app.App_Bucket
 ,app.Use_Bucket
@@ -138,71 +138,69 @@ select
 ,dbql.WDName
 
 ,case
- when  dbql.StatementType = 'Select'
-  and dbql.AppID not in ('TPTEXP', 'FASTEXP')
-  and dbql.Runtime_AMP_Sec < 1
+ when stm.Statement_Bucket = 'Select'
+  and app.App_Bucket not in ('TPTEXP', 'FASTEXP')
+  and (ZEROIFNULL(CAST(
+     (EXTRACT(HOUR   FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) * 3600)
+    +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
+    +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
+     as FLOAT))) < 1  /* Runtime_AMP_Sec */
   and dbql.NumOfActiveAMPs < Total_AMPs
  then 'Tactical'
  else 'Non-Tactical'
-      /* TODO: Query_Type */
+/* TODO: Query_Type -- design other query types */
  end as Query_Type
 
+/* TODO: add COD columns */
 
 /* -------- Query Metrics */
  ,HashAmp()+1 as Total_AMPs
 ,sum(dbql.Statements) as Query_Cnt
 ,count(1) as Request_Cnt
-,avg(NumSteps * character_length(QueryText)/100) as Query_Complexity_Score_Avg
-,sum(cast(NumResultRows as decimal(18,0))) as Returned_Row_Cnt
-,sum(case when ErrorCode=0 then 0 else 1 end) as Query_Error_Cnt
-,sum(case when Abortflag='Y' then 1  else 0 end) as Query_Abort_Cnt
-,sum(cast(EstResultRows/1e6 as decimal(18,0))) as Explain_Row_Cnt
-,sum(EstProcTime) as Explain_Runtime_Sec
+,avg(dbql.NumSteps * character_length(dbql.QueryText)/100) as Query_Complexity_Score_Avg
+,sum(cast(dbql.NumResultRows as decimal(18,0))) as Returned_Row_Cnt
+,sum(case when dbql.ErrorCode=0 then 0 else 1 end) as Query_Error_Cnt
+,sum(case when dbql.Abortflag='Y' then 1  else 0 end) as Query_Abort_Cnt
+,sum(cast(dbql.EstResultRows/1e6 as decimal(18,0))) as Explain_Row_Cnt
+,sum(dbql.EstProcTime) as Explain_Runtime_Sec
 
 
 /* --------- Metrics: RunTimes */
-,sum(round(sum(DelayTime),2)) as DelayTime_Sec
-
-/* TODO: RunTimes */
-,100 as Runtime_Parse_Sec
-,1e6 as Runtime_AMP_Sec
-,1e6 as TransferTime_Sec
-
-/*
-,((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) AS Runtime_Parse
-,((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) AS Runtime_AMP
-,((FirstRespTime - StartTime) HOUR(3) TO SECOND(6)) as Runtime_Total
-,case when LastRespTime is not null then ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) end as TransferTime
-
-,DelayTime as DelayTime_Sec
-,ZEROIFNULL(CAST(EXTRACT(HOUR   FROM Runtime_Parse) * 3600
-               + EXTRACT(MINUTE FROM Runtime_Parse) * 60
-               + EXTRACT(SECOND FROM Runtime_Parse) as FLOAT)) as Runtime_Parse_Sec
-,ZEROIFNULL(CAST(EXTRACT(HOUR   FROM Runtime_AMP) * 3600
-               + EXTRACT(MINUTE FROM Runtime_AMP) * 60
-               + EXTRACT(SECOND FROM Runtime_AMP) as FLOAT)) as Runtime_AMP_Sec
-,TotalFirstRespTime  as Runtime_Total_Sec
-,ZEROIFNULL(CAST(EXTRACT(HOUR   FROM TransferTime) * 3600
-               + EXTRACT(MINUTE FROM TransferTime) * 60
-               + EXTRACT(SECOND FROM TransferTime) as FLOAT)) AS TransferTime_Sec
-*/
+,sum(round(dbql.DelayTime,2)) as DelayTime_Sec
+,sum(ZEROIFNULL(CAST(
+   (EXTRACT(HOUR   FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) * 3600)
+  +(EXTRACT(MINUTE FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) *   60)
+  +(EXTRACT(SECOND FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) *    1)
+   as FLOAT))) as Runtime_Parse_Sec
+,sum(ZEROIFNULL(CAST(
+   (EXTRACT(HOUR   FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) * 3600)
+  +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
+  +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
+   as FLOAT))) as Runtime_AMP_Sec
+,sum(TotalFirstRespTime)  as Runtime_Total_Sec
+,sum(ZEROIFNULL(CAST(
+   case when LastRespTime is not null then
+   (EXTRACT(HOUR   FROM ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) ) * 3600)
+  +(EXTRACT(MINUTE FROM ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) ) *   60)
+  +(EXTRACT(SECOND FROM ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) ) *    1)
+  else 0 end as FLOAT))) AS TransferTime_Sec
 
 
 /*-- Runtime_Parse_Sec + Runtime_AMP_Sec = Runtime_Execution_Sec
 -- DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
 
 
-
 /*---------- Metrics: CPU & IO */
 ,cast( sum(dbql.ParserCPUTime) as decimal(18,2)) as CPU_Parse_Sec
 ,cast( sum(dbql.AMPCPUtime) as decimal(18,2)) as CPU_AMP_Sec
+/* TODO: check if failed queries log CPU consumption */
 
 ,sum(ReqPhysIO/1e6)    as IOCntM_Physical
 ,sum(TotalIOCount/1e6) as IOCntM_Total
 ,sum(ReqPhysIOKB/1e6)  as IOGB_Physical
 ,sum(ReqIOKB/1e6)      as IOGB_Total
 
-/* TODO: IOTAs  */
+/* TODO: IOTAs -- Terry */
 ,1e9 as IOTA_Total
 ,1e9 as IOGB_Total_Max
 
@@ -220,22 +218,35 @@ select
 
 /* ---------- Multi-Statement Break-Out, if interested: */
 ,count(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end) as MultiStatement_Count
-/*
-,case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end as tmpSG
-,sum(cast(trim(substr(tmpSG, index(tmpSG,'Del=')+4, index(tmpSG,'Ins=')-index(tmpSG,'Del=')-4)) as INT))       as MultiStatement_Delete
-,sum(cast(trim(substr(tmpSG, index(tmpSG,'Ins=')+4, index(tmpSG,'InsSel=')-index(tmpSG,'Ins=')-4)) as INT))    as MultiStatement_Insert
-,sum(cast(trim(substr(tmpSG, index(tmpSG,'InsSel=')+7, index(tmpSG,'Upd=')-index(tmpSG,'InsSel=')-7)) as INT)) as MultiStatement_InsertSel
-,sum(cast(trim(substr(tmpSG, index(tmpSG,'Upd=')+4, index(tmpSG,' Sel=')-index(tmpSG,'Upd=')-4)) as INT))      as MultiStatement_Update
-,sum(cast(trim(substr(tmpSG, index(tmpSG,' Sel=')+5, 10)) as INT)) as MultiStatement_Select
-*/
+,sum(cast(trim(
+    substr(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'Del=')+4,
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'Ins=')-
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'Del=')-4)) as INT))
+    as MultiStatement_Delete
+,sum(cast(trim(substr(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'Ins=')+4,
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'InsSel=')-
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'Ins=')-4)) as INT))
+    as MultiStatement_Insert
+,sum(cast(trim(substr(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'InsSel=')+7,
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'Upd=')-
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'InsSel=')-7)) as INT))
+    as MultiStatement_InsertSel
+,sum(cast(trim(substr(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'Upd=')+4,
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,' Sel=')-
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,'Upd=')-4)) as INT))
+    as MultiStatement_Update
+,sum(cast(trim(substr(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,
+    index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,' Sel=')+5, 10)) as INT))
+    as MultiStatement_Select
 
-/* TODO: Multi-Statement */
-,100 as MultiStatement_Delete
-,100 as MultiStatement_Insert
-,100 as MultiStatement_InsertSel
-,100 as MultiStatement_Update
 
 From {dbqlogtbl_hst} as dbql
+--From pdcrinfo.dbqlogtbl_hst as dbql
+/* TODO: union with DBQL_Summary table -- Paul */
 
 join dim_app as app
   on dbql.AppID = app.AppID
@@ -247,6 +258,7 @@ join dim_user usr
   on dbql.UserName = usr.UserName
 
 where dbql.logdate between {startdate} and {enddate}
+--where dbql.logdate between DATE-2 and DATE-1
 
 Group by
  dbql.LogDate
