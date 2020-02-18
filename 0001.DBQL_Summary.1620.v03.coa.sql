@@ -99,6 +99,7 @@ create volatile table dim_user as
 no primary index
 on commit preserve rows;
 
+/*{{temp:dim_user.csv}}*/
 drop table "dim_user.csv";
 
 
@@ -137,12 +138,14 @@ select
 ,usr.User_Region
 ,dbql.WDName
 
-,case when  dbql.StatementType = 'Select'
-        and dbql.AppID not in ('TPTEXP', 'FASTEXP')
-        and dbql.Runtime_AMP_Sec < 1
-        and dbql.NumOfActiveAMPs < Total_AMPs
-      then 'Tactical'
-      else 'Non-Tactical'
+,case
+when  dbql.StatementType = 'Select'
+and dbql.AppID not in ('TPTEXP', 'FASTEXP')
+and dbql.Runtime_AMP_Sec < 1
+and dbql.NumOfActiveAMPs < Total_AMPs
+then 'Tactical'
+
+else 'Non-Tactical'
       /* TODO: flesh out this logic to further refine Query_Types */
  end as Query_Type
  ,HashAmp()+1 as Total_AMPs
