@@ -122,9 +122,9 @@ in Transcend.
 /*{{call:adlste_coa.sp_dat_dbql()}}*/
 select
  dbql.LogDate
-,dbql.LogHour
+,cast(extract(HOUR from StartTime) as INT format '99') as LogHour
 ,cast(cast(dbql.LogDate as char(10)) ||' '||
- cast(cast(dbql.LogHour as INT format '99') as char(2))||':00:00.000000'  as timestamp(6)) as LogTS
+ cast(LogHour as char(2))||':00:00.000000'  as timestamp(6)) as LogTS
 ,'{siteid}'  as SiteID
 
 ,app.App_Bucket
@@ -250,7 +250,7 @@ where dbql.logdate between {startdate} and {enddate}
 
 Group by
  dbql.LogDate
-,dbql.LogHour
+,LogHour
 ,LogTS
 ,SiteID
 ,app.App_Bucket
