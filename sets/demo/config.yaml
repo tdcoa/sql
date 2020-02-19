@@ -1,0 +1,29 @@
+
+substitutions:
+  - account:     "Teradata"
+  - startdate:   "'2020-02-01'"
+  - enddate:     "Current_Date - 1"
+  - whatever:    "anything you want"
+
+siteids:
+  - Altans_VDB:  "teradatasql://{username}:{password}@tdap278t1.labs.teradata.com"
+
+transcend:
+  - TranscendIFX:  "teradatasql://{quicklook}:{td_password}@tdprdcop3.td.teradata.com/?logmech=LDAP"
+
+settings:
+  - githost: "https://raw.githubusercontent.com/tdcoa/sql/master/"
+  - gitrepo: "https://github.com/tdcoa/sql.git"
+
+folders:
+  - download:  "_demo_sql" # download_files step saves downloaded sql to this folder
+  - sql:       "_demo_sql" # prepare_sql step pulls static sql from here, applies substitution, and saves to the run folder
+  - run:       "_run" # execute_run step reads prepared sql from here and executes against database
+  - output:    "_output" # historical run (dated) folders, including all csv output, completed sql files, and logs
+
+
+gitfilesets:
+  - demo
+  
+gitfiles:
+  - motd.txt
