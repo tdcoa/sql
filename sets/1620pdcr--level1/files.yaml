@@ -1,4 +1,4 @@
 files:
-  - 0001.v12.cpu_detail_spma.coa.sql
-  - 0002.v12.io_detail_sldv_80pct.coa.sql
-  - 0003.v12.storage_detail.coa.sql
+  - 0001.v11.cpu_trend_spma_avg_cpu_busy.coa.sql
+  - 0002.v12.io_trend_sldv_80pct.coa.sql
+  - 0003.v11.storage_trend.coa.sql
