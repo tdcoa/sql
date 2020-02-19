@@ -1,0 +1,25 @@
+SiteID,Pattern_Type,Pattern,User_Bucket,Is_Discrete_Human,User_Department,User_SubDepartment,User_Region,Priority
+Default,Equal,Viewpoint,TDInternal,no    ,dept,subdept,rgn,100
+Default,Equal,TDWM,TDInternal,no    ,dept,subdept,rgn,100
+Default,Equal,CRASHDUMPS,TDInternal,no    ,dept,subdept,rgn,100
+Default,Equal,DBC,TDInternal-DBC,no    ,dept,subdept,rgn,100
+Default,Equal,DBMON,TDInternal,no    ,dept,subdept,rgn,100
+Default,Equal,PerfAnalysis,Admin,no    ,dept,subdept,rgn,100
+Default,Equal,BENCHMARK_USER,Admin ,no    ,dept,subdept,rgn,100
+Default,Like,DAP_%USER,Application-DAP,no    ,dept,subdept,rgn,2050
+Default,Like,%STG_%USER%,ETL,no    ,dept,subdept,rgn,2100
+Default,Like,BARUSER%,Admin,no    ,dept,subdept,rgn,2200
+Default,Like,%REPL_%USER%,Admin,no    ,dept,subdept,rgn,2400
+Default,Like,DBADMIN%,Admin,no    ,dept,subdept,rgn,2500
+Default,Like,%_ADMIN,Admin,no    ,dept,subdept,rgn,2600
+Default,Like,%_DBA,Admin,no    ,dept,subdept,rgn,2800
+Default,Like,ACSE_USER%,Analytic,no    ,dept,subdept,rgn,4000
+Default,Like,ACA_USER%,Analytic,no    ,dept,subdept,rgn,4100
+Default,Like,ARTEMIS_USER%,Analytic,no    ,dept,subdept,rgn,4200
+Default,Like,CALLREP_USER%,Analytic,no    ,dept,subdept,rgn,4300
+Default,Like,AM_USER%,Analytic,no    ,dept,subdept,rgn,4400
+Default,Like,ENT_AC_USER%,Analytic,no    ,dept,subdept,rgn,4500
+Default,Like,%ETL%,ETL,no    ,dept,subdept,rgn,6000
+Transcend%,RegEx,[a-z]{2}[0-9]{6},User (QLID),yes,dept,subdept,rgn,7000
+Apple%,RegEx,[a-z]{1}[0-9]{4},Adhoc User,yes,Uknown,Unknown,CA,10000
+Apple%,Like,APAY%USER,App User,No    ,Apple Pay,Unknown,CA,9000
