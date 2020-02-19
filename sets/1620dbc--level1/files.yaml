@@ -1,0 +1,3 @@
+files:
+  - 0001.v11.cpu_trend_spma_avg_cpu_busy.coa.sql
+  - 0002.v12.io_trend_sldv_80pct.coa.sql
