@@ -58,6 +58,8 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 
 
 ----- SQL ----- ----- ----- ----- -----*/
+/*{{save:{siteid}--io_trend_sldv.coa.csv}}*/
+/*{{load:adlste_westcomm.consumption_io_forecast_stg}}*/
 LOCK ROW FOR ACCESS
 SELECT
  SiteID as SiteID  /* Enter the Customer SiteID */

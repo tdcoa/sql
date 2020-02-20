@@ -47,6 +47,8 @@ Select these columns for charting in Excel:
 
 
 ----- SQL ----- ----- ----- ----- -----*/
+/*{{save:{siteid}--storage_trend.coa.csv}}*/
+/*{{load:adlste_westcomm.consumption_storage_forecast_stg}}*/
 LOCK ROW FOR ACCESS
 SELECT
  'SiteID'  /* Enter the Customer SiteID */
