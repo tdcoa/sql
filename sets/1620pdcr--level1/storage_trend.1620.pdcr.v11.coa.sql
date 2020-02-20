@@ -52,7 +52,7 @@ Select these columns for charting in Excel:
 /*{{call:adlste_westcomm.consumption_storage_forecast_sp()}}*/
 LOCK ROW FOR ACCESS
 SELECT
- 'SiteID'  /* Enter the Customer SiteID */
+ SiteID
 ,Current_Date (format'YYYY-MM-DD') (CHAR(10)) as "Report Date"
 ,TheDate(format'YYYY-MM-DD') (CHAR(10)) as "Log Date"
 ,TotalMaxPerm as "Total Max Perm"
@@ -130,7 +130,7 @@ SELECT
   ,ROW_NUMBER() OVER (ORDER BY LogDate) AS Period_Number
 FROM (
 SELECT
-  'SiteID' as SiteID
+  '{siteid}' as SiteID
   ,LogDate
   ,SUM(MAXPERM)                      AS TotalMaxPerm
   ,SUM(CURRENTPERM)                  AS TotalCurPerm
@@ -182,7 +182,7 @@ SELECT
   ,ROW_NUMBER() OVER (ORDER BY LogDate) AS Period_Number
 FROM (
 SELECT
-  'SiteID' as SiteID
+  '{siteid}' as SiteID
   ,LogDate
   ,SUM(MAXPERM)                      AS TotalMaxPerm
   ,SUM(CURRENTPERM)                  AS TotalCurPerm
