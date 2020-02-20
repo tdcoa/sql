@@ -74,11 +74,9 @@ SELECT
 ,ReserveX
 ,CASE WHEN Trend >= ReserveX THEN Trend ELSE NULL END (DECIMAL(18,4)) AS "Reserve Horizon"
 ,SlopeX (DECIMAL(18,4))as SlopeX
-
 FROM
 (
 SELECT
---(a6)
  SiteID
 ,COUNT(*) OVER (ORDER BY calendar_date ROWS UNBOUNDED PRECEDING ) AS Period_Number
 ,Month_Of_Calendar
@@ -87,7 +85,6 @@ SELECT
 ,PeakEnd
 ,VPeakAvgIOPct AS AvgIOPct
 ,AVG(VPeakAvgIOPct ) OVER (ORDER BY  Calendar_Date ROWS 21 PRECEDING) AS MovingAvg
-
 ,CASE WHEN VPeakAvgIOPct IS NOT NULL THEN 1 ELSE 0 END AS CountX
 ,SUM(CountX) OVER ( ) AS CountAll
 ,MIN(Trend*CountX) OVER ( ) AS MINTrend
@@ -98,9 +95,7 @@ SELECT
 ,MAX(Month_Of_Calendar) OVER () AS MAXMonthAll
 ,(MAXMonthAll - MINMOnthAll) + 1 AS MonthsNumber
 ,SlopeX
-
 FROM (
---UNION-1 Forecast
 SELECT
  a5.SiteID
 ,a5.Period_Number
@@ -117,10 +112,8 @@ SELECT
 ,a5.TrendX + (a5.SlopeX * SequenceNbr) AS ForecastX
 ,VPeakAvgIOPct AS ExtVPeakAvgIOPct
 ,COUNT(*) OVER ( ) AS CountAll
-
 FROM
 (
---(a5)
 SELECT
  SiteID
 ,Period_Number
@@ -134,7 +127,6 @@ SELECT
 ,PeakEnd
 ,TheHour
 FROM (
---(a4)
 SELECT
  SiteID
 ,TheDate
@@ -145,7 +137,6 @@ SELECT
 ,VPeakAvgIOPct
 ,ROW_NUMBER() OVER (ORDER BY TheDate) AS Period_Number
 FROM (
---(a3)
 SELECT
  SiteID
 ,TheDate
@@ -156,22 +147,19 @@ SELECT
 ,HourlyAvgIOPct
 ,VPeakAvgIOPct
 FROM (
---(a2)
 SELECT
  SiteID
 ,TheDate
 ,Month_Of_Calendar
 ,TheHour
 ,( TheDate (DATE, FORMAT 'YYYY-MM-DD'))||' '||TRIM(TheHour (FORMAT '99')) AS PeakEnd
---,COUNT(*) AS LUNCount
 ,AVG(MinDiskPct) AS HourlyAvgIOPct
 ,AVG(HourlyAvgIOPct) OVER (ORDER BY  SiteID, TheDate ,TheHour ROWS 3 PRECEDING) AS VPeakAvgIOPct  /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 ,MIN((TheDate (DATE, FORMAT 'YYYY-MM-DD')) ||' '||TRIM(TheHour (FORMAT '99'))) OVER  (ORDER BY  SiteID, TheDate ,TheHour ROWS 3 PRECEDING) AS PeakStart  /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 from
 (
 Select
---(CC) Identify 1st device with NumDiskPct >=0.80, eliminate all others
- '{siteid}' as SiteID
+'{siteid}' as SiteID
 ,Month_Of_Calendar
 ,TheDate
 ,TheHour
@@ -183,10 +171,8 @@ Select
 ,MIN(TotalCount3 ) - 1 as CountDevicesBelow80th
 ,Count(*) as CountDevicesAbove80th
 ,(CountDevicesBelow80th(DECIMAL(18,4)))/TotalActiveDevices as PctDevicesBelow80th
---,MIN(NumDiskPct) as PctDevicesBelow80th
 ,1-PctDevicesBelow80th as PctDevicesAbove80th
 from (
---(BB) Reduce result to 20% most busy devices (i.e., 1st device with NumDiskPct >=0.80
 Select
 TheDate
 ,TheHour
@@ -203,9 +189,6 @@ TheDate
  ROWS UNBOUNDED PRECEDING))  as TotalCount3
 ,(TotalCount3 (DECIMAL(18,4)))/(TotalCount2 (DECIMAL(18,4))) as NumDiskPct
 FROM (
---(AA) SELECT qualifying data from Sldv
---ldvreads > 0
---ldvtype = 'DISK'
 select
  s1.TheDate
 ,c1.Month_Of_Calendar
@@ -216,8 +199,8 @@ select
 ,s1.LdvID
 ,(cast(s1.ldvOutReqTime as decimal(18,4))/secs) as DiskPct
 ,AVG(DiskPct) over (partition by TheDate, TheHour, TheMinute) as AvgDiskPct2
---from dbc.ResUsageSldv s1,
---from PDCRINFO.ResUsageSldv_hst s1,
+/* from dbc.ResUsageSldv s1,
+   from PDCRINFO.ResUsageSldv_hst s1, */
 from {resusagesldv} s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
@@ -228,7 +211,6 @@ AND s1.TheDate BETWEEN {startdate} and {enddate}
 ) as AA
 Qualify NumDiskPct >= .80
 group by TheDate, Month_Of_Calendar, TheHour, TheMinute, AvgDiskPct2, NodeID, CtlID, LdvID, DiskPct
---Order by TheDate, TheHour, TheMinute, AvgDiskPct2, TotalCount3
 ) as BB
 group by 1,2,3,4,5
 ) as CC
@@ -242,13 +224,12 @@ QUALIFY ROW_NUMBER () OVER (ORDER BY TheDate  DESC) = 1
 sys_calendar.CALENDAR c2
 WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + (365*2)  /* Enter number of days for future forecast.  Typically 365*2  */
 AND c2.day_of_week IN (2,3,4,5,6)
------ ----- -----
------ ----- -----
+/*----- ----- -----
+  ----- ----- ----- */
 UNION
------ ----- -----
------ ----- -----
+/*----- ----- -----
+  ----- ----- ----- */
 SELECT
---UNION-2 Historical Trend Line
  SiteID
 ,Period_Number
 ,Month_Of_Calendar
@@ -292,15 +273,13 @@ SELECT
 ,Month_Of_Calendar
 ,TheHour
 ,( TheDate (DATE, FORMAT 'YYYY-MM-DD'))||' '||TRIM(TheHour (FORMAT '99')) AS PeakEnd
---,COUNT(*) AS LUNCount
 ,AVG(MinDiskPct) AS HourlyAvgIOPct
 ,AVG(HourlyAvgIOPct) OVER (ORDER BY  SiteID, TheDate ,TheHour ROWS 3 PRECEDING) AS VPeakAvgIOPct /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 ,MIN((TheDate (DATE, FORMAT 'YYYY-MM-DD')) ||' '||TRIM(TheHour (FORMAT '99'))) OVER  (ORDER BY  SiteID, TheDate ,TheHour ROWS 3 PRECEDING) AS PeakStart /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 from
 (
 Select
---(CC) Identify 1st device with NumDiskPct >=0.80, eliminate all others
- '{siteid}' as SiteID
+'{siteid}' as SiteID
 ,Month_Of_Calendar
 ,TheDate
 ,TheHour
@@ -312,10 +291,8 @@ Select
 ,MIN(TotalCount3 ) - 1 as CountDevicesBelow80th
 ,Count(*) as CountDevicesAbove80th
 ,(CountDevicesBelow80th(DECIMAL(18,4)))/TotalActiveDevices as PctDevicesBelow80th
---,MIN(NumDiskPct) as PctDevicesBelow80th
 ,1-PctDevicesBelow80th as PctDevicesAbove80th
 from (
---(BB) Reduce result to 20% most busy devices (i.e., 1st device with NumDiskPct >=0.80
 Select
 TheDate
 ,TheHour
@@ -332,9 +309,6 @@ TheDate
  ROWS UNBOUNDED PRECEDING))  as TotalCount3
 ,(TotalCount3 (DECIMAL(18,4)))/(TotalCount2 (DECIMAL(18,4))) as NumDiskPct
 FROM (
---(AA) SELECT qualifying data from Sldv
---ldvreads > 0
---ldvtype = 'DISK'
 select
  s1.TheDate
 ,c1.Month_Of_Calendar
@@ -345,8 +319,8 @@ select
 ,s1.LdvID
 ,(cast(s1.ldvOutReqTime as decimal(18,4))/secs) as DiskPct
 ,AVG(DiskPct) over (partition by TheDate, TheHour, TheMinute) as AvgDiskPct2
---from dbc.ResUsageSldv s1,
---from PDCRINFO.ResUsageSldv_hst s1,
+/* from dbc.ResUsageSldv s1,
+   from PDCRINFO.ResUsageSldv_hst s1, */
 from {resusagesldv} s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
@@ -357,7 +331,6 @@ AND s1.TheDate BETWEEN  {startdate} and {enddate}
 ) as AA
 Qualify NumDiskPct >= .80
 group by TheDate, Month_Of_Calendar, TheHour, TheMinute, AvgDiskPct2, NodeID, CtlID, LdvID, DiskPct
---Order by TheDate, TheHour, TheMinute, AvgDiskPct2, TotalCount3
 ) as BB
 group by 1,2,3,4,5
 ) as CC
@@ -370,4 +343,3 @@ QUALIFY ROW_NUMBER () OVER (PARTITION BY TheDate ORDER BY VPeakAvgIOPct  DESC) =
 WHERE ForecastX < 100  /* Enter percentage of forecast capacity (in whole numbers).  Typically 100  */
 ) a7
 ORDER BY 1,2,3;
--

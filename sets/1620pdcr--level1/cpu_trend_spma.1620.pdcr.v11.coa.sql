@@ -154,8 +154,8 @@ SELECT
 ,AVG((HourlyAvgCPUPct (DECIMAL(38,6)))
 ) OVER (ORDER BY  TheDate ,TheHour ROWS 3 PRECEDING) AS VPeakAvgCPUPct /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 ,MIN((TheDate (DATE, FORMAT 'YYYY-MM-DD')) ||' '||TRIM(TheHour (FORMAT '99'))) OVER  (ORDER BY  TheDate ,TheHour ROWS 3 PRECEDING) AS PeakStart /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
---FROM DBC.ResUsageSPMA s1,
---FROM PDCRINFO.ResUsageSPMA_hst s1,
+/* FROM DBC.ResUsageSPMA s1,
+   FROM PDCRINFO.ResUsageSPMA_hst s1, */
 FROM {resusagespma} s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
@@ -221,8 +221,8 @@ SELECT
 ,AVG((HourlyAvgCPUPct (DECIMAL(38,6)))
 ) OVER (ORDER BY  TheDate ,TheHour ROWS 3 PRECEDING) AS VPeakAvgCPUPct /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 ,MIN((TheDate (DATE, FORMAT 'YYYY-MM-DD')) ||' '||TRIM(TheHour (FORMAT '99'))) OVER  (ORDER BY  TheDate ,TheHour ROWS 3 PRECEDING) AS PeakStart /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
---FROM DBC.ResUsageSPMA s1,
---FROM PDCRINFO.ResUsageSPMA_hst s1,
+/* FROM DBC.ResUsageSPMA s1,
+   FROM PDCRINFO.ResUsageSPMA_hst s1, */
 FROM {resusagespma} s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate

@@ -66,7 +66,6 @@ SELECT
 ,ReserveX (DECIMAL(18,4)) as ReserveX
 ,CASE WHEN Trend >= ReserveX THEN Trend ELSE NULL END (DECIMAL(18,4)) AS "Reserve Horizon"
 ,SlopeX (DECIMAL(18,4)) as SlopeX
-
 FROM
 (
 SELECT
@@ -100,7 +99,6 @@ SELECT
   ,TrendX
   ,SlopeX
   ,TrendX + (SlopeX * SequenceNbr) AS ForecastX
-
 FROM
 (
 SELECT
@@ -137,7 +135,7 @@ SELECT
   ,TotalMaxPerm-TotalCurPerm         AS TotalAvailPerm
   ,TotalCurPerm/(TotalMaxPerm (DECIMAL(38,4))) * 100   AS TotalCurPct
   ,TotalAvailPerm/(TotalMaxPerm (DECIMAL(38,4)))* 100 AS TotalAvailPct
-  --FROM  ss160000.DatabaseSpace s1,
+  /* FROM  ss160000.DatabaseSpace s1, */
   FROM  PDCRINFO.DatabaseSpace_Hst s1,
       sys_calendar.CALENDAR c1
   WHERE  c1.calendar_date= s1.LogDate
@@ -189,8 +187,8 @@ SELECT
   ,TotalMaxPerm-TotalCurPerm         AS TotalAvailPerm
   ,TotalCurPerm/(TotalMaxPerm (DECIMAL(38,4))) * 100   AS TotalCurPct
   ,TotalAvailPerm/(TotalMaxPerm (DECIMAL(38,4)))* 100 AS TotalAvailPct
-  --FROM  ss160000.DatabaseSpace s1,
-  --FROM  PDCRINFO.DatabaseSpace_Hst s1,
+  /* FROM  ss160000.DatabaseSpace s1,
+     FROM  PDCRINFO.DatabaseSpace_Hst s1,  */
   FROM {databasespace} s1,
        sys_calendar.CALENDAR c1
   WHERE  c1.calendar_date= s1.LogDate
