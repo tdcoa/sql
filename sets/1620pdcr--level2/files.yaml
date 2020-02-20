@@ -1,4 +1,4 @@
 files:
-  - 0010.v01.Feature_Usage.coa.sql
-  - 0011.v02.Part-1.coa.sql
-  - 0012.v01.Concurrency.coa.sql
+  - Concurrency.1620.pdcr.v02.coa.sql
+  - Feature_Usage.1620.pdcr.v02.coa.sql
+  - Workload_Analysis.1620.pdcr.v02.coa.sql

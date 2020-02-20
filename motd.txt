@@ -3,27 +3,33 @@ USAGE NOTES and NOTICES:
 tdcsm (teradata csm tools) is a collection of tools intended for use by Teradata customer success managers /engineers.
 This includes the following classes:
 
+
 tdcoa (consumption analytics)
 usage:
 >>> from tdcsm.tdcoa import tdcoa
->>> coa = tdcoa()         # setup the execution framework in CWD
->>> coa.download_files()  # refresh files from online sources
->>> coa.prepare_sql()     # perform all loops and substitutions and save to _run dir
->>> coa.execute_run()     # execute all coa.sql files found in  _run dir
->>> coa.upload_to_transcend  # parse upload_manifest and upload csv to Transcend
+>>> coa = tdcoa()             # setup the execution framework in CWD
+>>> coa.download_file_sets()  # refresh files from online sources
+>>> coa.prepare_sql()         # perform all loops and substitutions and save to _run dir
+>>> coa.execute_run()         # execute all coa.sql files found in  _run dir
+>>> coa.upload_to_transcend   # parse upload_manifest and upload csv to Transcend
+
+Issues:
+ - cannot use "--" comments in sql, need to use /* */ until addressed
 
 
-in more detail:
 
-** download_files()
+TDCOA, in more detail:
+
+** download_file_sets()
  - no VPN requirements, just need to be online
  - expects a config.yaml file in same directory
  - creates any missing subdirectories, as defined in config.yaml
    - "run" directory
    - "output" directory
    - "download" directory
- - downloads Bludger collateral from github to "download" directory
-   - exact download file list can be founnd in config.yaml
+   - "sql" directory
+ - by default "download" and "sql" directories are the same location, 
+   meaning the next execution will always happen last downloaded sql.
 
 <manual review, create new custom_sql folders here>
 

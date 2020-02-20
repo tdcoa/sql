@@ -1,44 +1,34 @@
+/*
+Parameters:
+  {dbqlogtbl} = PDCRINFO.DBQLogTbl_Hst
+  {siteid}
+  {startdate}
+  {enddate}
+*/
+
 SELECT
-     'SiteID'  as SiteID --<----Enter Customer SiteID here
+     '{siteid}'  as SiteID
 	,LogDate
     ,LogHour
-    --,DayOfWeek as "Day Of Week"
     ,WorkLoadType as "Workload Type"
     ,QueryOrigin as "Query Origin"
     ,DelaySeconds_Class as "Delay Seconds Group"
-	,Parse_Time_Class as "Parse Time Group"	
+	,Parse_Time_Class as "Parse Time Group"
     ,Execution_Time_Class as "Execution Time Group"
     ,Transfer_Time_Class as "Transfer Time Group"
 	,AMPCPUTime_Class  as "CPU Group"
 	,ParserCPUTime_Class as "Parse CPU Group"
 	,TotalIOCount_Class as "I/O Group"
-	--,IO_Optimization as "I/O Optimization"
-	,CacheMissIOPSScore as "Cache Miss Count Score"   	
+
+	,CacheMissIOPSScore as "Cache Miss Count Score"
 	,CacheMissKBScore   as "Cache Miss Volume Score"
 	,Complexity_Effect as "Complexity Effect"
-	--,COMPLEXITY_CPU as "CPU Complexity"
-	--,COMPLEXITY_IO as "I/O Complexity"
-    ,COUNT(*) AS "Request Count" 
+    ,COUNT(*) AS "Request Count"
     ,SUM(AMPCPUTime) AS "Total AMPCPUTime"
     ,SUM(TotalIOCount) AS "Total IOCount"
 	,SUM(ReqIOKB) AS "Total ReqIOKB"
     ,SUM(ReqPhysIO) AS "Total ReqPhysIO"
     ,SUM(ReqPhysIOKB) AS "Total ReqPhysIOKB"
-	--,AVG(AMPCPUTime) AS "AVG AMPCPUTime"		
-	--,AVG(TotalIOCount) AS "AVG IOCount"	
-	--,AVG(ReqIOKB) AS "AVG ReqIOKB"
-    --,AVG(ReqPhysIO) AS "AVG ReqPhysIO"
-    --,AVG(ReqPhysIOKB) AS "AVG ReqPhysIOKB"
-	--,MIN(AMPCPUTime) AS "MIN AMPCPUTime"		
-	--,MIN(TotalIOCount) AS "MIN IOCount"	
-	--,MIN(ReqIOKB) AS "MIN ReqIOKB"
-    --,MIN(ReqPhysIO) AS "MIN ReqPhysIO"
-    --,MIN(ReqPhysIOKB) AS "MIN ReqPhysIOKB"	
-	--,MAX(AMPCPUTime) AS "MAX AMPCPUTime"		
-	--,MAX(TotalIOCount) AS "MAX IOCount"	
-	--,MAX(ReqIOKB) AS "MAX ReqIOKB"
-    --,MAX(ReqPhysIO) AS "MAX ReqPhysIO"
-    --,MAX(ReqPhysIOKB) AS "MAX ReqPhysIOKB"
 	,SUM(TotalServerByteCount) AS "Total Server Byte Count"
 FROM
     (
@@ -66,7 +56,7 @@ FROM
             ,QryLog.AcctString
             ,QryLog.AppID
 			,QryLog.NumSteps
-			,QryLog.NumStepswPar 
+			,QryLog.NumStepswPar
             ,QryLog.MaxStepsInPar
             ,HASHAMP() + 1 AS Total_AMPs
             ,QryLog.QueryID
@@ -77,13 +67,13 @@ FROM
 					OR QryLog.AppID LIKE ANY('TPTLOAD%', 'TPTUPD%', 'FASTLOAD%', 'MULTLOAD%', 'EXECUTOR%', 'JDBCL%'))
                     THEN 'ETL/ELT'
                 WHEN QryLog.StatementType = 'Select'
-                    AND (AppID IN ('TPTEXP', 'FASTEXP') or appid like  'JDBCE%')   
+                    AND (AppID IN ('TPTEXP', 'FASTEXP') or appid like  'JDBCE%')
                     THEN 'EXPORT'
                 WHEN QryLog.StatementType = 'Select'
                     AND QryLog.AppID NOT LIKE ANY('TPTLOAD%', 'TPTUPD%', 'FASTLOAD%', 'MULTLOAD%', 'EXECUTOR%', 'JDBCL%', 'JDBCE%')
                     THEN 'QUERY'
-				--WHEN QryLog.StatementType in ('Dump Database','Unrecognized type','Release Lock','Collect Statistics')
-				    --THEN 'ADMIN'					
+
+
                 ELSE
                     'OTHER'
             END AS WorkLoadType
@@ -108,62 +98,44 @@ FROM
             ,QryLog.AMPCPUTime
 
             ,QryLog.TotalIOCount
-			,QryLog.ReqIOKB 
-            ,QryLog.ReqPhysIO 
-            ,QryLog.ReqPhysIOKB 
+			,QryLog.ReqIOKB
+            ,QryLog.ReqPhysIO
+            ,QryLog.ReqPhysIOKB
 			,QryLog.ParserCPUTime
 			,QryLog.CacheFlag
 			,QryLog.DelayTime
 			,QryLog.TotalServerByteCount
-			,(select MAX(QryLog.AMPCPUTime) FROM PDCRINFO.DBQLogTbl_Hst QryLog WHERE LogDate BETWEEN current_date - 30  AND current_date - 1 AND StartTime IS NOT NULL) as MAXCPU   --Observed CPU Cieling
-			,(select MAX(QryLog.TotalIOCount) FROM PDCRINFO.DBQLogTbl_Hst QryLog WHERE LogDate BETWEEN current_date - 30  AND current_date - 1 AND StartTime IS NOT NULL) as MAXIO  --Observed I/O Ceiling
-			--,(select MAX(QryLog.NumSteps) FROM PDCRINFO.DBQLogTbl_Hst QryLog WHERE LogDate BETWEEN current_date - 30  AND current_date - 1 AND StartTime IS NOT NULL) as MAXSTEPS --Observed NumSteps Ceiling
-
+			,(select MAX(QryLog.AMPCPUTime) FROM PDCRINFO.DBQLogTbl_Hst QryLog WHERE LogDate BETWEEN {startdate}  AND {enddate} AND StartTime IS NOT NULL) as MAXCPU
+			,(select MAX(QryLog.TotalIOCount) FROM PDCRINFO.DBQLogTbl_Hst QryLog WHERE LogDate BETWEEN {startdate}  AND {enddate} AND StartTime IS NOT NULL) as MAXIO
 			,
-			CASE  
+			CASE
 			    WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*0)  and ((MAXCPU/10)*1) THEN 0
 				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*1)  and ((MAXCPU/10)*2) THEN 1
-				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*2)  and ((MAXCPU/10)*3) THEN 2				
-				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*3)  and ((MAXCPU/10)*4) THEN 3				
-				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*4)  and ((MAXCPU/10)*5) THEN 4				
-				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*5)  and ((MAXCPU/10)*6) THEN 5				
-				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*6)  and ((MAXCPU/10)*7) THEN 6				
+				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*2)  and ((MAXCPU/10)*3) THEN 2
+				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*3)  and ((MAXCPU/10)*4) THEN 3
+				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*4)  and ((MAXCPU/10)*5) THEN 4
+				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*5)  and ((MAXCPU/10)*6) THEN 5
+				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*6)  and ((MAXCPU/10)*7) THEN 6
 				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*7)  and ((MAXCPU/10)*8) THEN 7
-				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*8)  and ((MAXCPU/10)*9) THEN 8				
-				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*9)  and ((MAXCPU/10)*10) THEN 9			
+				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*8)  and ((MAXCPU/10)*9) THEN 8
+				WHEN QryLog.AMPCPUTime BETWEEN ((MAXCPU/10)*9)  and ((MAXCPU/10)*10) THEN 9
 				WHEN QryLog.AMPCPUTime > ((MAXCPU/10)*10) THEN 10
-			END as COMPLEXITY_CPU	
+			END as COMPLEXITY_CPU
 			,
-			CASE  
+			CASE
 			    WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*0)  and ((MAXIO/10)*1) THEN 0
 				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*1)  and ((MAXIO/10)*2) THEN 1
-				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*2)  and ((MAXIO/10)*3) THEN 2				
-				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*3)  and ((MAXIO/10)*4) THEN 3				
-				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*4)  and ((MAXIO/10)*5) THEN 4				
-				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*5)  and ((MAXIO/10)*6) THEN 5				
-				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*6)  and ((MAXIO/10)*7) THEN 6				
+				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*2)  and ((MAXIO/10)*3) THEN 2
+				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*3)  and ((MAXIO/10)*4) THEN 3
+				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*4)  and ((MAXIO/10)*5) THEN 4
+				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*5)  and ((MAXIO/10)*6) THEN 5
+				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*6)  and ((MAXIO/10)*7) THEN 6
 				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*7)  and ((MAXIO/10)*8) THEN 7
-				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*8)  and ((MAXIO/10)*9) THEN 8				
-				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*9)  and ((MAXIO/10)*10) THEN 9			
+				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*8)  and ((MAXIO/10)*9) THEN 8
+				WHEN QryLog.TotalIOCount BETWEEN ((MAXIO/10)*9)  and ((MAXIO/10)*10) THEN 9
 				WHEN QryLog.TotalIOCount > ((MAXIO/10)*10) THEN 10
-			END as COMPLEXITY_IO	
-			--,
-			--CASE  
-			--    WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*0)  and ((MAXSTEPS/10)*1) THEN 0
-			--	WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*1)  and ((MAXSTEPS/10)*2) THEN 1
-			--	WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*2)  and ((MAXSTEPS/10)*3) THEN 2				
-			--	WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*3)  and ((MAXSTEPS/10)*4) THEN 3				
-			--	WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*4)  and ((MAXSTEPS/10)*5) THEN 4				
-			--	WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*5)  and ((MAXSTEPS/10)*6) THEN 5				
-			--	WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*6)  and ((MAXSTEPS/10)*7) THEN 6				
-			--	WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*7)  and ((MAXSTEPS/10)*8) THEN 7
-			--	WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*8)  and ((MAXSTEPS/10)*9) THEN 8				
-			--	WHEN QryLog.NumSteps BETWEEN ((MAXSTEPS/10)*9)  and ((MAXSTEPS/10)*10) THEN 9			
-			--	WHEN QryLog.NumSteps > ((MAXSTEPS/10)*10) THEN 10
-			--END as COMPLEXITY_NUMSTEPS				
-			
-			--,(COMPLEXITY_CPU + COMPLEXITY_IO + COMPLEXITY_NUMSTEPS)/3 as COMPLEXITY
-			,(((COMPLEXITY_CPU + COMPLEXITY_IO +0.5)/2) (DECIMAL(6,0))) as COMPLEXITY_Effect			
+			END as COMPLEXITY_IO
+			,(((COMPLEXITY_CPU + COMPLEXITY_IO +0.5)/2) (DECIMAL(6,0))) as COMPLEXITY_Effect
 			,
             CASE
                 WHEN DelayTime is NULL
@@ -190,7 +162,7 @@ FROM
                     THEN '3600+'
             END AS DelaySeconds_Class
             ,((FirstRespTime - StartTime) HOUR(3) TO SECOND(6)) AS Execution_Time
-            ,((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) AS Parse_Time			
+            ,((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) AS Parse_Time
             ,((COALESCE(LastRespTime,FirstRespTime) - FirstRespTime) HOUR(3) TO SECOND(6)) AS Transfer_Time
             ,ZEROIFNULL(CAST(EXTRACT(HOUR FROM Execution_Time) * 3600 + EXTRACT(MINUTE FROM Execution_Time) * 60 + EXTRACT(SECOND FROM Execution_Time) AS FLOAT)) AS Execution_Time_Secs
             ,ZEROIFNULL(CAST(EXTRACT(HOUR FROM Transfer_Time) * 3600 + EXTRACT(MINUTE FROM Transfer_Time) * 60 + EXTRACT(SECOND FROM Transfer_Time) AS FLOAT)) AS Transfer_Time_Secs
@@ -263,7 +235,7 @@ FROM
                     THEN '05000 - 10000'
                 WHEN ParserCPUTime > 10000.0
                     THEN '10000+'
-            END AS ParserCPUTime_Class		
+            END AS ParserCPUTime_Class
 			,
             CASE
                 WHEN TotalIOCount IS NULL
@@ -278,7 +250,7 @@ FROM
                     THEN '1e8-1e10'
                 WHEN TotalIOCount > 1e10
                     THEN '1e10+'
-            END AS TotalIOCount_Class					
+            END AS TotalIOCount_Class
             ,
             CASE
                 WHEN Execution_Time_Secs IS NULL
@@ -305,38 +277,38 @@ FROM
                 WHEN TotalIOCount > 0 AND ReqPhysIO > 0
                     THEN 'Physical I/O'
             END AS IO_Optimization
-			
- 
+
+
  /*   IOPS  Metrics  */
 , (totaliocount)/1000 SumKio
 , (ReqPhysIO)/1000  SumPhysKioCnt
 , zeroifnull( SumPhysKioCnt/nullifzero(SumKio) )  CacheMissPctIOPS
-                    
+
 /*  IO Bytes Metrics  */
 , (ReqIOKB)/1e6 SumLogIO_GB
 , (ReqPhysIOKB)/1e6 SumPhysIO_GB
 , zeroifnull(SumPhysIO_GB/nullifzero(SumLogIO_GB))  CacheMissPctGB
- 
- /* METRIC:   Cache Miss Rate IOPS.  normal cache miss rate <20%,   set score = 0  for  miss rate < 20%,  increments of 10%, range 0 -80 */  
+
+ /* METRIC:   Cache Miss Rate IOPS.  normal cache miss rate <20%,   set score = 0  for  miss rate < 20%,  increments of 10%, range 0 -80 */
 			,
 			case
-				when  SumPhysKioCnt = 0 then 0   
+				when  SumPhysKioCnt = 0 then 0
                 when   zeroifnull(SumPhysKioCnt/ nullifzero(SumKio)) <= 0.20 then 0                         /* set score = 0 when less than industry average 20% */
                 when   SumPhysKioCnt > SumKio then 80                                                       /* sometimes get Physical > Logical, set ceiling at 80*/
                 else (cast( 100 * zeroifnull (SumPhysKioCnt/ nullifzero(SumKio)) /10 as  integer) * 10) - 20  /* only count above 20%, round to bin size 10*/
-            end as CacheMissIOPSScore                    
-                    
- /* METRIC:   Cache Miss Rate KB.  normal cache miss rate <20%,   set score = 0  for  miss rate < 20%,  increments of 10%, range 0 -80 */  
-   			,  
-   			case 
-				when  SumPhysIO_GB = 0 then 0   
+            end as CacheMissIOPSScore
+
+ /* METRIC:   Cache Miss Rate KB.  normal cache miss rate <20%,   set score = 0  for  miss rate < 20%,  increments of 10%, range 0 -80 */
+   			,
+   			case
+				when  SumPhysIO_GB = 0 then 0
                 when   zeroifnull(SumPhysIO_GB/ nullifzero(SumLogIO_GB)) <= 0.20 then 0                   /* set score = 0 when less than industry average 20% */
                 when   SumPhysIO_GB > SumLogIO_GB then 80                                  /* sometimes get Physical > Logical, set ceiling at 80*/
                 else  (cast( 100 * zeroifnull (SumPhysIO_GB/ nullifzero(SumLogIO_GB)) /10 as  integer) * 10) - 20   /* only count above 20%, round to bin size 10*/
-            end as CacheMissKBScore   
+            end as CacheMissKBScore
             ,
             CASE
-                WHEN Transfer_Time_Secs IS NULL 
+                WHEN Transfer_Time_Secs IS NULL
                     THEN '0000 - 0000'
 				WHEN Transfer_Time_Secs < 1.0
                     THEN '0000 - 0001'
@@ -360,16 +332,16 @@ FROM
                     THEN '3600+'
             END AS Transfer_Time_Class
         FROM
-            PDCRINFO.DBQLogTbl_Hst QryLog
+            {dbqlogtbl} QryLog
             INNER JOIN
             Sys_Calendar.CALENDAR QryCal
                 ON QryCal.calendar_date = QryLog.LogDate
         WHERE
-            LogDate BETWEEN current_date - 90  AND current_date - 1
+            LogDate BETWEEN {startdate}  AND {enddate}
             AND StartTime IS NOT NULL
     ) AS QryDetails
 GROUP BY
-     1  --X
+     1
     ,2
     ,3
     ,4
@@ -385,8 +357,8 @@ GROUP BY
 	,13
 	,14
 	,15
-	--,16
-	--,17
-	--,18
-	--,19
+
+
+
+
 order by LogDate, LogHour, "Total AMPCPUTime" desc;
