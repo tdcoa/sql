@@ -4,7 +4,11 @@
 Storage Trend DatabaseSpace AvgCurrentPermPct
 PDCR Option (uses PDCRINFO.DatabaseSpace_Hst)
 Version 11 (2019-05-07)
-Current-365 days history & Current+365 days forecast
+Parameters:
+  {databasespace}
+  {siteid}
+  {startdate}
+  {enddate}
 
 Storage Trend & Forecast
 •	Simple linear regression is used to determine trend line with slope & intercept.
@@ -32,12 +36,6 @@ Changes can be made by modifying the SQL below (change the yellow highlighted va
        AND s1.Logdate BETWEEN (Current_Date - 365) AND Current_Date
 (4) Future forecast - number of days into the future for extended trend line – two changes required.
 WHERE  c2.calendar_date BETWEEN a3.LogDate+1 AND (a3.LogDate + 365)
-
-
-
-
-
-
 
 Select these columns for charting in Excel:
 •	TheDate (x-axis)
@@ -144,7 +142,7 @@ SELECT
       sys_calendar.CALENDAR c1
   WHERE  c1.calendar_date= s1.LogDate
     AND c1.day_of_week IN (2,3,4,5,6)
-    AND s1.Logdate BETWEEN Current_Date - 365 AND Current_Date /* Enter the number days history */
+    AND s1.Logdate BETWEEN {startdate} and {enddate}
   Group by 1,2
 ) a1
 ) a2
@@ -192,11 +190,12 @@ SELECT
   ,TotalCurPerm/(TotalMaxPerm (DECIMAL(38,4))) * 100   AS TotalCurPct
   ,TotalAvailPerm/(TotalMaxPerm (DECIMAL(38,4)))* 100 AS TotalAvailPct
   --FROM  ss160000.DatabaseSpace s1,
-  FROM  PDCRINFO.DatabaseSpace_Hst s1,
-      sys_calendar.CALENDAR c1
+  --FROM  PDCRINFO.DatabaseSpace_Hst s1,
+  FROM {databasespace} s1,
+       sys_calendar.CALENDAR c1
   WHERE  c1.calendar_date= s1.LogDate
     AND c1.day_of_week IN (2,3,4,5,6)
-    AND s1.Logdate BETWEEN Current_Date - 365 AND Current_Date /* Enter the number days history */
+    AND s1.Logdate BETWEEN {startdate} and {enddate}
   Group by 1,2
 ) a1
 ) a2

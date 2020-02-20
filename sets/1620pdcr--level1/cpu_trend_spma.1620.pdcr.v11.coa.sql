@@ -4,7 +4,11 @@
 CPU Trend Spma AvgCPUBusyPct
 DBC Option (uses PDCRINFO.ResusageSpma_hst)
 Version 11 (2019-05-07)
-Current-365 days history & Current+365 days forecast
+Parameters:
+  {resusagespma}
+  {siteid}
+  {startdate}
+  {enddate}
 
 CPU Utilization 4-Hour Variable Peak from ResusageSpma (Viewpoint CPU Utilization Method).
 •	Evaluates the percentage of time CPU’s in the collection period that CPU’s were busy processing requests (CPUUServ + CPUUExec ??CPUNice??
@@ -39,11 +43,6 @@ o	Release COD or system expansion
 o	Is there enough time for performance optimization (probably requires 3 to 6 month runway).
 
 
-
-
-
-
-
 Configurable parameters
 Changes can be made by modifying the SQL below (change the yellow highlighted values):
 (1) Change the literal ‘SiteID’ to the actual SiteID for the customer system.
@@ -61,7 +60,7 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 ----- SQL ----- ----- ----- ----- -----*/
 LOCK ROW FOR ACCESS
 SELECT
-'SiteId' as SiteID /* Enter the Customer SiteID */
+'{siteid}' as SiteID /* Enter the Customer SiteID */
 ,Current_Date (format'YYYY-MM-DD') (CHAR(10)) as "Report Date"
 ,TheDate(format'YYYY-MM-DD') (CHAR(10)) as "Log Date"
 ,PeakStart ||':00:00' as "Peak Start"
@@ -144,7 +143,7 @@ SELECT
 ,VPeakAvgCPUPct
 FROM (
 SELECT
- 'SiteID' as SiteID
+ '{siteid}' as SiteID
 ,TheDate
 ,c1.Month_Of_Calendar
 ,(TheTime/10000 (SMALLINT)) AS TheHour
@@ -156,11 +155,12 @@ SELECT
 ) OVER (ORDER BY  TheDate ,TheHour ROWS 3 PRECEDING) AS VPeakAvgCPUPct /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 ,MIN((TheDate (DATE, FORMAT 'YYYY-MM-DD')) ||' '||TRIM(TheHour (FORMAT '99'))) OVER  (ORDER BY  TheDate ,TheHour ROWS 3 PRECEDING) AS PeakStart /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 --FROM DBC.ResUsageSPMA s1,
-FROM PDCRINFO.ResUsageSPMA_hst s1,
+--FROM PDCRINFO.ResUsageSPMA_hst s1,
+FROM {resusagespma} s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
 AND c1.day_of_week IN (2,3,4,5,6)
-AND s1.TheDate BETWEEN (CURRENT_DATE - 365) AND CURRENT_DATE  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN {startdate} AND {enddate}
 GROUP BY 1,2,3,4) a1
 QUALIFY ROW_NUMBER () OVER (PARTITION BY TheDate ORDER BY VPeakAvgCPUPct  DESC) = 1) a2
 ) a3
@@ -210,7 +210,7 @@ SELECT
 ,VPeakAvgCPUPct
 FROM (
 SELECT
-'SiteID' as SiteID
+'{siteid}' as SiteID
 ,TheDate
 ,c1.Month_Of_Calendar
 ,(TheTime/10000 (SMALLINT)) AS TheHour
@@ -222,11 +222,12 @@ SELECT
 ) OVER (ORDER BY  TheDate ,TheHour ROWS 3 PRECEDING) AS VPeakAvgCPUPct /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 ,MIN((TheDate (DATE, FORMAT 'YYYY-MM-DD')) ||' '||TRIM(TheHour (FORMAT '99'))) OVER  (ORDER BY  TheDate ,TheHour ROWS 3 PRECEDING) AS PeakStart /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 --FROM DBC.ResUsageSPMA s1,
-FROM PDCRINFO.ResUsageSPMA_hst s1,
+--FROM PDCRINFO.ResUsageSPMA_hst s1,
+FROM {resusagespma} s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
 AND c1.day_of_week IN (2,3,4,5,6)
-AND s1.TheDate BETWEEN (CURRENT_DATE - 365) AND CURRENT_DATE  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN {startdate} AND {enddate}
 GROUP BY 1,2,3,4) a1
 QUALIFY ROW_NUMBER () OVER (PARTITION BY TheDate ORDER BY VPeakAvgCPUPct  DESC) = 1) a2
 ) a3

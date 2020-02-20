@@ -4,7 +4,12 @@
 I/O Trend Sldv 80Pct
 DBC Option (uses dbc.ResusageSldv)
 Version 12 (2019-05-09)
-Current-365 days history & Current+365 days forecast
+Parameters:
+  {resusagesldv}
+  {siteid}
+  {startdate}
+  {enddate}
+
 
 I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilization Method).
 •	Evaluates the percentage of time in the collection period that devices were busy processing I/O requests (ldvOutReqTime) for ldvreads > 0 & ldvtype = 'DISK' (no need for Archie or I/O capacity estimates).
@@ -38,18 +43,6 @@ o	Customer submits more Performance P1’s – “queries are slow – my system
 •	Teradata can help address the risk of not having enough resources to meet workload demand
 o	Release COD or system expansion
 o	Is there enough time for performance optimization (probably requires 3 to 6 month runway).
-
-
-
-
-
-
-
-
-
-
-
-
 
 Configurable parameters
 Changes can be made by modifying the SQL below (change the yellow highlighted values):
@@ -179,7 +172,7 @@ from
 (
 Select
 --(CC) Identify 1st device with NumDiskPct >=0.80, eliminate all others
- 'SiteID' as SiteID
+ '{siteid}' as SiteID
 ,Month_Of_Calendar
 ,TheDate
 ,TheHour
@@ -224,13 +217,14 @@ select
 ,s1.LdvID
 ,(cast(s1.ldvOutReqTime as decimal(18,4))/secs) as DiskPct
 ,AVG(DiskPct) over (partition by TheDate, TheHour, TheMinute) as AvgDiskPct2
-from dbc.ResUsageSldv s1,
+from {resusagesldv} s1,
+--from dbc.ResUsageSldv s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
 AND c1.day_of_week IN (2,3,4,5,6)
 and s1.LdvType='DISK'
 AND s1.ldvreads > 0
-AND s1.TheDate BETWEEN (Current_Date - 365) AND Current_Date  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN {startdate} and {enddate}
 ) as AA
 Qualify NumDiskPct >= .80
 group by TheDate, Month_Of_Calendar, TheHour, TheMinute, AvgDiskPct2, NodeID, CtlID, LdvID, DiskPct
@@ -306,7 +300,7 @@ from
 (
 Select
 --(CC) Identify 1st device with NumDiskPct >=0.80, eliminate all others
- 'SiteID' as SiteID
+ '{siteid}' as SiteID
 ,Month_Of_Calendar
 ,TheDate
 ,TheHour
@@ -351,13 +345,14 @@ select
 ,s1.LdvID
 ,(cast(s1.ldvOutReqTime as decimal(18,4))/secs) as DiskPct
 ,AVG(DiskPct) over (partition by TheDate, TheHour, TheMinute) as AvgDiskPct2
-from dbc.ResUsageSldv s1,
+from {resusagesldv} s1,
+--from dbc.ResUsageSldv s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
 AND c1.day_of_week IN (2,3,4,5,6)
 and s1.LdvType='DISK'
 AND s1.ldvreads > 0
-AND s1.TheDate BETWEEN (Current_Date - 365) AND Current_Date  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN {startdate} and {enddate}
 ) as AA
 Qualify NumDiskPct >= .80
 group by TheDate, Month_Of_Calendar, TheHour, TheMinute, AvgDiskPct2, NodeID, CtlID, LdvID, DiskPct
