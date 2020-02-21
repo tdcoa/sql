@@ -7,6 +7,9 @@ Parameters:
   {enddate}
 */
 
+/*{{save:consumption_feature_usage.csv}}*/
+/*{{load:adlste_westcomm.consumption_feature_usage_stg}}*/
+/*{{call:adlste_westcomm.consumption_feature_usage_sp()}}*/
 SELECT
  '{siteid}' (VARCHAR(100)) as SiteID,
  A.LogDate as LogDate,
@@ -27,7 +30,7 @@ GROUP BY
 CREATE SET TABLE consumption_feature_usage_v1
 ( SiteID VARCHAR(100) CHARACTER SET UNICODE NOT CASESPECIFIC,
   LogDate DATE FORMAT 'yyyy-mm-dd',
-  MaskedUserName BYTE(4),
+  MaskedUserName BYTE(8),
   FeatureName VARCHAR(100) CHARACTER SET LATIN NOT CASESPECIFIC,
   FeatureUseCount INTEGER
 )
