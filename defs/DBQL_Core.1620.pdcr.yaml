@@ -1,0 +1,5 @@
+files:
+  - /sets/dbql_core/dbql_core.v3.1620.pdcr.coa.sql
+  - /sets/dim_lookups/dim_app.csv
+  - /sets/dim_lookups/dim_statement.csv
+  - /sets/dim_lookups/dim_user.csv
