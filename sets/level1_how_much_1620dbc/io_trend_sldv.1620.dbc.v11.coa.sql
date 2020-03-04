@@ -1,14 +1,15 @@
 
-/*----- Description ----- ----- ----- ----- -----
+/*==== Description ==== ==== ==== ==== ====
 
 I/O Trend Sldv 80Pct
 DBC Option (uses dbc.ResusageSldv)
 Version 12 (2019-05-09)
 Parameters:
-  {resusagesldv}
-  {siteid}
-  {startdate}
-  {enddate}
+  resusagesldv    = {resusagesldv}
+  siteid          = {siteid}
+  startdate       = {startdate}
+  enddate         = {enddate}
+
 
 Stage Table:  adlste_westcomm.consumption_io_forecast_stg
 Stored Proc:  adlste_westcomm.consumption_io_forecast_sp()
@@ -61,7 +62,12 @@ AND s1.TheDate BETWEEN (Current_Date - 365) AND Current_Date
 WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 
 
------ SQL ----- ----- ----- ----- -----*/
+===== SQL ===== ===== ===== ===== =====*/
+
+/*{{save:{siteid}--iotrend_spma.coa.csv}}*/
+/*{{load:adlste_westcomm.consumption_io_forecast_stg}}*/
+/*{{call:adlste_westcomm.consumption_io_forecast_sp()}}*/
+
 LOCK ROW FOR ACCESS
 SELECT
  SiteID as SiteID  /* Enter the Customer SiteID */
@@ -245,11 +251,14 @@ QUALIFY ROW_NUMBER () OVER (ORDER BY TheDate  DESC) = 1
 sys_calendar.CALENDAR c2
 WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + (365*2)  /* Enter number of days for future forecast.  Typically 365*2  */
 AND c2.day_of_week IN (2,3,4,5,6)
------ ----- -----
------ ----- -----
+/*
+==== ==== ====
+==== ==== ==== */
 UNION
------ ----- -----
------ ----- -----
+/*
+==== ==== ====
+==== ==== ====
+*/
 SELECT
 --UNION-2 Historical Trend Line
  SiteID

@@ -1,15 +1,15 @@
 
-/*----- Description ----- ----- ----- ----- -----
+/*  === Description ====
 
 CPU Trend Spma AvgCPUBusyPct
 DBC Option (uses dbc.ResusageSpma)
 Version 11 (2019-05-07)
 Parameters:
-  {resusagespma}
-  {siteid}
-  {startdate}
-  {enddate}
-  
+  resusagespma    = {resusagespma}
+  siteid          = {siteid}
+  startdate       = {startdate}
+  enddate         = {enddate}
+
 Stage Table:  adlste_westcomm.consumption_cpu_forecast_stg
 Stored Proc:  adlste_westcomm.consumption_cpu_forecast_sp()
 Target Table: adlste_westcomm.consumption_cpu_forecast_v2
@@ -46,27 +46,22 @@ o	Customer submits more Performance P1’s – “queries are slow – my system
 o	Release COD or system expansion
 o	Is there enough time for performance optimization (probably requires 3 to 6 month runway).
 
-
-
-
-
-
-
-Configurable parameters
+Hard-Coded parameters
 Changes can be made by modifying the SQL below (change the yellow highlighted values):
-(1) Change the literal ‘SiteID’ to the actual SiteID for the customer system.
-'SiteID' as SiteID
 (2) Reserve Capacity – default is 80% of utilization (only one change required)
 ,80 AS ReserveX
 (3) Variable Peak Length (N+1) in hours (value 3 = 4 hours) – two changes required
 ,AVG(HourlyAvgIOPct) OVER (ORDER BY  SiteID, TheDate ,TheHour ROWS 3 PRECEDING) AS VPeakAvgIOPct
-(4) Historical number of days evaluated for trend line – two changes required
-AND s1.TheDate BETWEEN (Current_Date - 120) AND Current_Date
 (5) Future forecast - number of days into the future for extended trend line – two changes required.
 WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 
 
------ SQL ----- ----- ----- ----- -----*/
+==== SQL ==== ==== ==== ==== ==== */
+
+/*{{save:{siteid}--cpu_trend_spma.coa.csv}}*/
+/*{{load:adlste_westcomm.consumption_cpu_forecast_stg}}*/
+/*{{call:adlste_westcomm.consumption_cpu_forecast_sp()}}*/
+
 LOCK ROW FOR ACCESS
 SELECT
  SiteID

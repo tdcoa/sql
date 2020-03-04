@@ -1,14 +1,14 @@
 
-/*----- Description ----- ----- ----- ----- -----
+/*==== Description ==== ==== ==== ==== ====
 
 Storage Trend DatabaseSpace AvgCurrentPermPct
 PDCR Option (uses PDCRINFO.DatabaseSpace_Hst)
 Version 11 (2019-05-07)
 Parameters:
-  {databasespace}
-  {siteid}
-  {startdate}
-  {enddate}
+  databasespace   = {databasespace}
+  siteid          = {siteid}
+  startdate       = {startdate}
+  enddate         = {enddate}
 
 
 Stage Table:  adlste_westcomm.consumption_storage_forecast_stg
@@ -52,10 +52,12 @@ Select these columns for charting in Excel:
 •	ReserveHorizon (Area)
 
 
------ SQL ----- ----- ----- ----- -----*/
+==== SQL ==== ==== ==== ==== ====*/
+
 /*{{save:{siteid}--storage_trend.coa.csv}}*/
 /*{{load:adlste_westcomm.consumption_storage_forecast_stg}}*/
 /*{{call:adlste_westcomm.consumption_storage_forecast_sp()}}*/
+
 LOCK ROW FOR ACCESS
 SELECT
  SiteID
@@ -144,8 +146,7 @@ SELECT
   ,TotalMaxPerm-TotalCurPerm         AS TotalAvailPerm
   ,TotalCurPerm/(TotalMaxPerm (DECIMAL(38,4))) * 100   AS TotalCurPct
   ,TotalAvailPerm/(TotalMaxPerm (DECIMAL(38,4)))* 100 AS TotalAvailPct
-  /* FROM  ss160000.DatabaseSpace s1, */
-  FROM  PDCRINFO.DatabaseSpace_Hst s1,
+  FROM  {databasespace} s1, /* PDCRINFO.DatabaseSpace_Hst */
       sys_calendar.CALENDAR c1
   WHERE  c1.calendar_date= s1.LogDate
     AND c1.day_of_week IN (2,3,4,5,6)
