@@ -16,8 +16,8 @@ level1_how_much_1620dbc: &current_level1
   resusagesldv: "dbc.ResUsageSldv"
   resusagespma: "dbc.ResUsageSpma"
   files:
-    - "1620pdcr--level1/cpu_trend_spma.1620.pdcr.v11.coa.sql"
-    - "1620pdcr--level1/io_trend_sldv.1620.pdcr.v12.coa.sql"
+    - "level1_how_much_1620pdcr/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+    - "level1_how_much_1620pdcr/io_trend_sldv.1620.pdcr.v12.coa.sql"
 
 
 level1_how_much_1620pdcr:
@@ -29,9 +29,9 @@ level1_how_much_1620pdcr:
   resusagesldv:  "pdcrinfo.ResUsageSldv_Hst"
   resusagespma:  "pdcrinfo.ResUsageSpma_Hst"
   files:
-    - "1620pdcr--level1/cpu_trend_spma.1620.pdcr.v11.coa.sql"
-    - "1620pdcr--level1/io_trend_sldv.1620.pdcr.v12.coa.sql"
-    - "1620pdcr--level1/storage_trend.1620.pdcr.v11.coa.sql"
+    - "level1_how_much_1620pdcr/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+    - "level1_how_much_1620pdcr/io_trend_sldv.1620.pdcr.v12.coa.sql"
+    - "level1_how_much_1620pdcr/storage_trend.1620.pdcr.v11.coa.sql"
 
 
 level2_how_well_1620pdcr:
@@ -41,9 +41,9 @@ level2_how_well_1620pdcr:
   dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
   featurelistv: "dbc.QryLogFeatureListV"
   files:
-    - "1620pdcr--level2/Workload_Analysis.1620.pdcr.v02.coa.sql"
-    - "1620pdcr--level2/Feature_Usage.1620.pdcr.v02.coa.sql"
-    - "1620pdcr--level2/Concurrency.1620.pdcr.v02.coa.sql"
+    - "level2_how_well_1620pdcr/Workload_Analysis.1620.pdcr.v02.coa.sql"
+    - "level2_how_well_1620pdcr/Feature_Usage.1620.pdcr.v02.coa.sql"
+    - "level2_how_well_1620pdcr/Concurrency.1620.pdcr.v02.coa.sql"
 
 
 level1_how_much: *current_level1
