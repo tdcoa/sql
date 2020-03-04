@@ -1,0 +1,49 @@
+demo:
+  active:     "True"
+  startdate:  "Current_Date - 7"
+  enddate:    "Current_Date - 1"
+  some_value: "Pickles"
+  files:
+    - "demo/0000.dates.csv"
+    - "demo/0000.dbcinfo.coa.sql"
+
+
+level1_how_much_1620dbc: &current_level1
+  active:       "True"
+  startdate:    "Current_Date - 45"
+  enddate:      "Current_Date - 1"
+  dbqlogtbl:    "dbc.DBQLogTbl"
+  resusagesldv: "dbc.ResUsageSldv"
+  resusagespma: "dbc.ResUsageSpma"
+  files:
+    - "1620pdcr--level1/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+    - "1620pdcr--level1/io_trend_sldv.1620.pdcr.v12.coa.sql"
+
+
+level1_how_much_1620pdcr:
+  active:        "True"
+  startdate:     "Current_Date - 45"
+  enddate:       "Current_Date - 1"
+  databasespace: "pdcrinfo.databasespace"
+  dbqlogtbl:     "pdcrinfo.DBQLogTbl_Hst"
+  resusagesldv:  "pdcrinfo.ResUsageSldv_Hst"
+  resusagespma:  "pdcrinfo.ResUsageSpma_Hst"
+  files:
+    - "1620pdcr--level1/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+    - "1620pdcr--level1/io_trend_sldv.1620.pdcr.v12.coa.sql"
+    - "1620pdcr--level1/storage_trend.1620.pdcr.v11.coa.sql"
+
+
+level2_how_well_1620pdcr:
+  active:       "True"
+  startdate:    "Current_Date - 45"
+  enddate:      "Current_Date - 1"
+  dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+  featurelistv: "dbc.QryLogFeatureListV"
+  files:
+    - "1620pdcr--level2/Workload_Analysis.1620.pdcr.v02.coa.sql"
+    - "1620pdcr--level2/Feature_Usage.1620.pdcr.v02.coa.sql"
+    - "1620pdcr--level2/Concurrency.1620.pdcr.v02.coa.sql"
+
+
+level1_how_much: *current_level1

@@ -10,6 +10,11 @@ Parameters:
   {startdate}
   {enddate}
 
+Stage Table:  adlste_westcomm.consumption_cpu_forecast_stg
+Stored Proc:  adlste_westcomm.consumption_cpu_forecast_sp()
+Target Table: adlste_westcomm.consumption_cpu_forecast_v2
+
+
 CPU Utilization 4-Hour Variable Peak from ResusageSpma (Viewpoint CPU Utilization Method).
 •	Evaluates the percentage of time CPU’s in the collection period that CPU’s were busy processing requests (CPUUServ + CPUUExec ??CPUNice??
 •	AvgCPUBusyPct is an average of CPU utilization across the entire system. The premise is that when CPU’s reach 80% busy (i.e., reserve capacity level) the system will likely suffer performance impact.

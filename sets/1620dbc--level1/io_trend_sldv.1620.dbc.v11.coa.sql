@@ -10,6 +10,9 @@ Parameters:
   {startdate}
   {enddate}
 
+Stage Table:  adlste_westcomm.consumption_io_forecast_stg
+Stored Proc:  adlste_westcomm.consumption_io_forecast_sp()
+Target Table: adlste_westcomm.consumption_io_forecast_v2
 
 I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilization Method).
 •	Evaluates the percentage of time in the collection period that devices were busy processing I/O requests (ldvOutReqTime) for ldvreads > 0 & ldvtype = 'DISK' (no need for Archie or I/O capacity estimates).

@@ -10,6 +10,10 @@ Parameters:
   {startdate}
   {enddate}
 
+Stage Table:  adlste_westcomm.consumption_io_forecast_stg
+Stored Proc:  adlste_westcomm.consumption_io_forecast_sp()
+Target Table: adlste_westcomm.consumption_io_forecast_v2
+
 I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilization Method).
 •	Evaluates the percentage of time in the collection period that devices were busy processing I/O requests (ldvOutReqTime) for ldvreads > 0 & ldvtype = 'DISK' (no need for Archie or I/O capacity estimates).
 •	IOBusyPct assessment is at 80th percentile of busiest drives (not an average). 80% of devices are less busy, 20% of drives are more busy.  The premise is that when 20% of drives reach 80% busy (i.e., reserve capacity level) the system will likely suffer performance impact.

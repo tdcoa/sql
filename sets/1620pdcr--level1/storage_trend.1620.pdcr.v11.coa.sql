@@ -10,6 +10,12 @@ Parameters:
   {startdate}
   {enddate}
 
+
+Stage Table:  adlste_westcomm.consumption_storage_forecast_stg
+Stored Proc:  adlste_westcomm.consumption_storage_forecast_sp()
+Target Table: adlste_westcomm.consumption_storage_forecast_v2
+
+
 Storage Trend & Forecast
 •	Simple linear regression is used to determine trend line with slope & intercept.
 •	The slope of the trend line is used to extend anticipated usage 365 days into the future or when utilization is forecasted to exceed 100% (whichever comes first).

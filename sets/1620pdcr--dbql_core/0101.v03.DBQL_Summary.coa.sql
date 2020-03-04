@@ -117,7 +117,7 @@ size.  As these fields are easily calculated, they will be re-constituted
 in Transcend.
 */
 
-/*{{save:0001.DBQL_Summary.OUTPUT-{siteid}.csv}}*/
+/*{{save:OUTPUT.{siteid}.DBQL_Summary.csv}}*/
 /*{{load:adlste_coa.stg_dat_DBQL}}*/
 /*{{call:adlste_coa.sp_dat_dbql()}}*/
 select top 20

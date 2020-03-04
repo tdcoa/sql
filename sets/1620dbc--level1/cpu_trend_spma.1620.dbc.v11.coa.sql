@@ -9,6 +9,10 @@ Parameters:
   {siteid}
   {startdate}
   {enddate}
+  
+Stage Table:  adlste_westcomm.consumption_cpu_forecast_stg
+Stored Proc:  adlste_westcomm.consumption_cpu_forecast_sp()
+Target Table: adlste_westcomm.consumption_cpu_forecast_v2
 
 CPU Utilization 4-Hour Variable Peak from ResusageSpma (Viewpoint CPU Utilization Method).
 •	Evaluates the percentage of time CPU’s in the collection period that CPU’s were busy processing requests (CPUUServ + CPUUExec ??CPUNice??

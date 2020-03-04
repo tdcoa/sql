@@ -9,6 +9,7 @@ Parameters:
 /*{{save:adlste_westcomm.consumption_UX_P1.csv}}*/
 /*{{load:adlste_westcomm.consumption_UX_P1_stg}}*/
 /*{{call:adlste_westcomm.consumption_UX_P1_sp}}*/
+
 SELECT
      '{siteid}'  as SiteID
 	,LogDate

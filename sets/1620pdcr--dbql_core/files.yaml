@@ -1,5 +1,0 @@
-files:
-  - 0001.DBQL_Summary.v03.coa.sql
-  - dim_app.csv
-  - dim_statement.csv
-  - dim_user.csv

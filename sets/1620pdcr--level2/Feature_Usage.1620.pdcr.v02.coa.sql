@@ -1,7 +1,7 @@
 /*
 Parameters:
   {dbqlogtbl} = PDCRINFO.DBQLogTbl_Hst
-  {qrylogfeaturelistv} = DBC.QRYLOGFEATURELISTV
+  {featurelistv} = DBC.QRYLOGFEATURELISTV
   {siteid}
   {startdate}
   {enddate}
@@ -10,6 +10,7 @@ Parameters:
 /*{{save:consumption_feature_usage.csv}}*/
 /*{{load:adlste_westcomm.consumption_feature_usage_stg}}*/
 /*{{call:adlste_westcomm.consumption_feature_usage_sp()}}*/
+
 SELECT
  '{siteid}' (VARCHAR(100)) as SiteID,
  A.LogDate as LogDate,
@@ -17,7 +18,7 @@ SELECT
  CAST(B.FEATURENAME AS VARCHAR(100)) AS FeatureName,
  SUM(GETBIT(A.FEATUREUSAGE,(2047 - B.FEATUREBITPOS))) AS FeatureUseCount
 FROM {dbqlogtbl} A,
-     {qrylogfeaturelistv} B
+     {featurelistv} B
 WHERE LogDate BETWEEN {startdate} and {enddate}
 GROUP BY
     SiteID,

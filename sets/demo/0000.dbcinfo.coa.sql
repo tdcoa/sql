@@ -2,8 +2,8 @@
 /*{{load:adlste_coa.stg_dat_dbcinfo}}*/
 /*{{call:adlste_coa.sp_dat_dbcinfo()}}*/
 Select
- '{account}' as Account_Name
-,'{siteid}' as Site_ID
+ '{siteid}' as Site_ID
+,'{some_value}' as Some_Value
 ,d.InfoKey
 ,d.InfoData
 from dbc.dbcinfo as d
@@ -22,6 +22,7 @@ insert into valid_dates values( '{date_string}' )
 /*{{temp:0000.dates.csv}}*/
 Select *
 from "0000.dates.csv"
+where date_string(DATE) between {startdate} and {enddate}
 ;
 
 /*{{save:{siteid}.dates.csv}}*/
