@@ -12,7 +12,7 @@ Parameters:
 
 
 Stage Table:  adlste_westcomm.consumption_io_forecast_stg
-Stored Proc:  adlste_westcomm.consumption_io_forecast_sp()
+Stored Proc:  adlste_westcomm.consumption_io_forecast_sp('{fileset_version}')
 Target Table: adlste_westcomm.consumption_io_forecast_v2
 
 I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilization Method).
@@ -66,7 +66,7 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 
 /*{{save:{siteid}--iotrend_spma.coa.csv}}*/
 /*{{load:adlste_westcomm.consumption_io_forecast_stg}}*/
-/*{{call:adlste_westcomm.consumption_io_forecast_sp()}}*/
+/*{{call:adlste_westcomm.consumption_io_forecast_sp('{fileset_version}')}}*/
 
 LOCK ROW FOR ACCESS
 SELECT

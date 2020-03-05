@@ -12,7 +12,7 @@ Parameters:
 
 
 Stage Table:  adlste_westcomm.consumption_storage_forecast_stg
-Stored Proc:  adlste_westcomm.consumption_storage_forecast_sp()
+Stored Proc:  adlste_westcomm.consumption_storage_forecast_sp('{fileset_version}')
 Target Table: adlste_westcomm.consumption_storage_forecast_v2
 
 
@@ -56,7 +56,7 @@ Select these columns for charting in Excel:
 
 /*{{save:{siteid}--storage_trend.coa.csv}}*/
 /*{{load:adlste_westcomm.consumption_storage_forecast_stg}}*/
-/*{{call:adlste_westcomm.consumption_storage_forecast_sp()}}*/
+/*{{call:adlste_westcomm.consumption_storage_forecast_sp('{fileset_version}')}}*/
 
 LOCK ROW FOR ACCESS
 SELECT

@@ -119,7 +119,7 @@ in Transcend.
 
 /*{{save:0001.DBQL_Summary.OUTPUT-{siteid}.csv}}*/
 /*{{load:adlste_coa.stg_dat_DBQL}}*/
-/*{{call:adlste_coa.sp_dat_dbql()}}*/
+/*{{call:adlste_coa.sp_dat_dbql('{fileset_version}')}}*/
 select top 20
  '{siteid}'  as SiteID
 ,dbql.LogDate

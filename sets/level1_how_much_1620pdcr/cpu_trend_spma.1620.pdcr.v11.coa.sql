@@ -11,7 +11,7 @@ Parameters:
   enddate         = {enddate}
 
 Stage Table:  adlste_westcomm.consumption_cpu_forecast_stg
-Stored Proc:  adlste_westcomm.consumption_cpu_forecast_sp()
+Stored Proc:  adlste_westcomm.consumption_cpu_forecast_sp('{fileset_version}')
 Target Table: adlste_westcomm.consumption_cpu_forecast_v2
 
 
@@ -62,7 +62,7 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 
 /*{{save:{siteid}--cpu_trend_spma.coa.csv}}*/
 /*{{load:adlste_westcomm.consumption_cpu_forecast_stg}}*/
-/*{{call:adlste_westcomm.consumption_cpu_forecast_sp()}}*/
+/*{{call:adlste_westcomm.consumption_cpu_forecast_sp('{fileset_version}')}}*/
 LOCK ROW FOR ACCESS
 SELECT
 '{siteid}' as SiteID /* Enter the Customer SiteID */
