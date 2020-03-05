@@ -2,8 +2,8 @@
 /*{{load:adlste_coa.stg_dat_dbcinfo}}*/
 /*{{call:adlste_coa.sp_dat_dbcinfo()}}*/
 Select
- '{siteid}' as Site_ID
-,'{some_value}' as Some_Value
+ '{account}' as Account_Name
+,'{siteid}' as Site_ID
 ,d.InfoKey
 ,d.InfoData
 from dbc.dbcinfo as d
