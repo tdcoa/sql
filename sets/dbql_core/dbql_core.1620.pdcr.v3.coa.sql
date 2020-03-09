@@ -5,9 +5,7 @@ Parameters:
   - startdate:        "start date logic"
   - enddate:          "end date logic"
   - siteid:           "CIS site id for the system running this query set"
-  - account:          "CIS account name"
-  - default_database: "only needed  if you don't qualify tables below"
-  - dbqlogtbl_hst:    "table name: [dbc||pdcrinfo||other].dbqlogtbl[_hst]"
+  - dbqlogtbl:    "table name: [dbc||pdcrinfo||other].dbqlogtbl[_hst]"
 */
 
 
@@ -24,7 +22,7 @@ create volatile table dim_app as
   ,coalesce(p.Pattern_Type,'Equal')  as Pattern_Type
   ,coalesce(p.Pattern, o.AppID)      as Pattern
   ,coalesce(p.SiteID, 'None')        as SiteID_
-  from (select distinct AppID from {dbqlogtbl_hst}
+  from (select distinct AppID from {dbqlogtbl}
         where LogDate between {startdate} and {enddate}) as o
   left join "dim_app.csv" as p
     on (case
@@ -52,7 +50,7 @@ create volatile table dim_statement as
   ,coalesce(p.Pattern_Type,'Equal')  as Pattern_Type
   ,coalesce(p.Pattern, o.StatementType) as Pattern
   ,coalesce(p.SiteID, 'None')        as SiteID_
-  from (select distinct StatementType from {dbqlogtbl_hst}
+  from (select distinct StatementType from {dbqlogtbl}
         where LogDate between {startdate} and {enddate}) as o
   left join "dim_statement.csv"  as p
     on (case
@@ -84,7 +82,7 @@ create volatile table dim_user as
   ,coalesce(p.Pattern_Type,'Equal')  as Pattern_Type
   ,coalesce(p.Pattern, o.UserName) as Pattern
   ,coalesce(p.SiteID, 'None')        as SiteID_
-  from (select distinct UserName from {dbqlogtbl_hst}
+  from (select distinct UserName from {dbqlogtbl}
         where LogDate between {startdate} and {enddate}) as o
   left join "dim_user.csv" as p
     on (case
@@ -244,8 +242,8 @@ select top 20
     as MultiStatement_Select
 
 
-From {dbqlogtbl_hst} as dbql
---From pdcrinfo.dbqlogtbl_hst as dbql
+From {dbqlogtbl} as dbql
+--From pdcrinfo.dbqlogtbl as dbql
 /* TODO: union with DBQL_Summary table -- Paul */
 
 join dim_app as app
