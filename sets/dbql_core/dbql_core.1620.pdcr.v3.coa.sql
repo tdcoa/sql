@@ -97,9 +97,12 @@ create volatile table dim_user as
 no primary index
 on commit preserve rows;
 
-drop table "dim_user.csv";
+drop table "dim_user.csv"
+;
 
 
+/*{{file:custom_user_dim.sql}}*/
+;
 
 /*
 ------- DAT_DBQL  (Final Output)
