@@ -25,20 +25,7 @@ dbql_core_1620pdcr:
     - "dims/dim_user.csv"
 
 
-level1_how_much_1620dbc:
-  active:           "True"
-  fileset_version:  "1.0"
-  startdate:        "Current_Date - 45"
-  enddate:          "Current_Date - 1"
-  dbqlogtbl:        "dbc.DBQLogTbl"
-  resusagesldv:     "dbc.ResUsageSldv"
-  resusagespma:     "dbc.ResUsageSpma"
-  files:
-    - "level1_how_much_1620pdcr/cpu_trend_spma.1620.pdcr.v11.coa.sql"
-    - "level1_how_much_1620pdcr/io_trend_sldv.1620.pdcr.v12.coa.sql"
-
-
-level1_how_much_1620pdcr: &current_level1
+level1_how_much_1620pdcr:  
   active:           "True"
   fileset_version:  "1.0"
   startdate:        "Current_Date - 45"
@@ -47,10 +34,21 @@ level1_how_much_1620pdcr: &current_level1
   dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
   resusagesldv:     "pdcrinfo.ResUsageSldv_Hst"
   resusagespma:     "pdcrinfo.ResUsageSpma_Hst"
-  files:
+  files: &level1_how_much_1620pdcr_files
     - "level1_how_much_1620pdcr/cpu_trend_spma.1620.pdcr.v11.coa.sql"
     - "level1_how_much_1620pdcr/io_trend_sldv.1620.pdcr.v12.coa.sql"
     - "level1_how_much_1620pdcr/storage_trend.1620.pdcr.v11.coa.sql"
+
+
+level1_how_much_1620dbc:
+  active:           "True"
+  fileset_version:  "1.0"
+  startdate:        "Current_Date - 45"
+  enddate:          "Current_Date - 1"
+  dbqlogtbl:        "dbc.DBQLogTbl"
+  resusagesldv:     "dbc.ResUsageSldv"
+  resusagespma:     "dbc.ResUsageSpma"
+  files: *level1_how_much_1620pdcr_files
 
 
 level2_how_well_1620pdcr:
@@ -64,7 +62,3 @@ level2_how_well_1620pdcr:
     - "level2_how_well_1620pdcr/Concurrency.1620.pdcr.v02.coa.sql"
     - "level2_how_well_1620pdcr/Feature_Usage.1620.pdcr.v02.coa.sql"
     - "level2_how_well_1620pdcr/Workload_Analysis.1620.pdcr.v02.coa.sql"
-
-
-
-level1_how_much: *current_level1
