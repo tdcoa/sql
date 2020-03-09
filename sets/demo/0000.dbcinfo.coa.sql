@@ -20,6 +20,7 @@ insert into valid_dates values( '{date_string}' )
 ;
 
 /*{{file:example.sql}}*/
+;
 
 /*{{temp:0000.dates.csv}}*/
 Select *
