@@ -2,14 +2,13 @@
    see comments about each SQL step inline below.
 
 Parameters:
-  - startdate:        "start date logic"
-  - enddate:          "end date logic"
-  - siteid:           "CIS site id for the system running this query set"
-  - dbqlogtbl:    "table name: [dbc||pdcrinfo||other].dbqlogtbl[_hst]"
+  - startdate:    {startdate}
+  - enddate:      {enddate}
+  - siteid:       {siteid}
+  - dbqlogtbl:    {dbqlogtbl}
 */
 
 
-Database {default_database};
 
 /*{{temp:dim_app.csv}}*/
 create volatile table dim_app as
@@ -152,8 +151,6 @@ select top 20
 /* TODO: Query_Type -- design other query types */
  end as Query_Type
 
-/* TODO: add COD columns */
-
 /* -------- Query Metrics */
  ,HashAmp()+1 as Total_AMPs
 ,sum(dbql.Statements) as Query_Cnt
@@ -185,8 +182,6 @@ select top 20
   +(EXTRACT(MINUTE FROM ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) ) *   60)
   +(EXTRACT(SECOND FROM ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) ) *    1)
   else 0 end as FLOAT))) AS TransferTime_Sec
-
-
 /*-- Runtime_Parse_Sec + Runtime_AMP_Sec = Runtime_Execution_Sec
 -- DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
 
@@ -201,7 +196,6 @@ select top 20
 ,sum(ReqPhysIOKB/1e6)  as IOGB_Physical
 ,sum(ReqIOKB/1e6)      as IOGB_Total
 
-/* TODO: IOTAs -- Terry */
 ,1e9 as IOTA_Total
 ,1e9 as IOGB_Total_Max
 
@@ -246,7 +240,6 @@ select top 20
 
 
 From {dbqlogtbl} as dbql
---From pdcrinfo.dbqlogtbl as dbql
 /* TODO: union with DBQL_Summary table -- Paul */
 
 join dim_app as app
@@ -259,7 +252,6 @@ join dim_user usr
   on dbql.UserName = usr.UserName
 
 where dbql.logdate between {startdate} and {enddate}
---where dbql.logdate between DATE-2 and DATE-1
 
 Group by
  dbql.LogDate
