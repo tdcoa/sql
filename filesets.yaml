@@ -19,13 +19,13 @@ dbql_core_1620pdcr:
   default_database: "pdcrinfo"
   siteid:           "default"
   files:
-    - "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
+    - "dbql_core_1620pdcr/dbql_core.1620.pdcr.v3.coa.sql"
     - "dims/dim_app.csv"
     - "dims/dim_statement.csv"
     - "dims/dim_user.csv"
 
 
-level1_how_much_1620pdcr:  
+level1_how_much_1620pdcr:
   active:           "True"
   fileset_version:  "1.0"
   startdate:        "Current_Date - 45"
