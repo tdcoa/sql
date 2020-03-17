@@ -76,8 +76,6 @@ FROM
                 WHEN QryLog.StatementType = 'Select'
                     AND QryLog.AppID NOT LIKE ANY('TPTLOAD%', 'TPTUPD%', 'FASTLOAD%', 'MULTLOAD%', 'EXECUTOR%', 'JDBCL%', 'JDBCE%')
                     THEN 'QUERY'
-
-
                 ELSE
                     'OTHER'
             END AS WorkLoadType
