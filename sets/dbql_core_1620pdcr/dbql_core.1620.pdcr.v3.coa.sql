@@ -182,10 +182,8 @@ select top 20
   +(EXTRACT(MINUTE FROM ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) ) *   60)
   +(EXTRACT(SECOND FROM ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) ) *    1)
   else 0 end as FLOAT))) AS TransferTime_Sec
-/*-- Runtime_Parse_Sec + Runtime_AMP_Sec = Runtime_Execution_Sec
--- DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
-
-
+/* Runtime_Parse_Sec + Runtime_AMP_Sec = Runtime_Execution_Sec */
+/* DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
 /*---------- Metrics: CPU & IO */
 ,cast( sum(dbql.ParserCPUTime) as decimal(18,2)) as CPU_Parse_Sec
 ,cast( sum(dbql.AMPCPUtime) as decimal(18,2)) as CPU_AMP_Sec
