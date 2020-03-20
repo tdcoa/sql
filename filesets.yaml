@@ -34,7 +34,7 @@ level1_how_much_1620pdcr:
   dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
   resusagesldv:     "pdcrinfo.ResUsageSldv_Hst"
   resusagespma:     "pdcrinfo.ResUsageSpma_Hst"
-  files: &level1_how_much_1620pdcr_files
+  files:
     - "level1_how_much_1620pdcr/cpu_trend_spma.1620.pdcr.v11.coa.sql"
     - "level1_how_much_1620pdcr/io_trend_sldv.1620.pdcr.v12.coa.sql"
     - "level1_how_much_1620pdcr/storage_trend.1620.pdcr.v11.coa.sql"
@@ -48,7 +48,9 @@ level1_how_much_1620dbc:
   dbqlogtbl:        "dbc.DBQLogTbl"
   resusagesldv:     "dbc.ResUsageSldv"
   resusagespma:     "dbc.ResUsageSpma"
-  files: *level1_how_much_1620pdcr_files
+  files:
+    - "level1_how_much_1620pdcr/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+    - "level1_how_much_1620pdcr/io_trend_sldv.1620.pdcr.v12.coa.sql"
 
 
 level2_how_well_1620pdcr:
