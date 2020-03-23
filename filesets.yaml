@@ -17,7 +17,6 @@ dbql_core_1620pdcr:
   enddate:          "Current_Date - 1"
   dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
   resusagespma:     "pdcrinfo.ResUsageSPMA_Hst"
-  siteid:           "default"
   files:
     - "dbql_core_1620pdcr/dbql_core.1620.pdcr.v3.coa.sql"
     - "dims/dim_app.csv"
