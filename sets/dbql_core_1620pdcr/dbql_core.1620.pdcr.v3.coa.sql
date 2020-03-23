@@ -128,8 +128,8 @@ order by case when User_Bucket='Unknown' then '!!!' else User_Bucket end asc
 ;
 
 /*
-------- DAT_DBQL  (Final Output)
----------------------------------------------------------------
+ DAT_DBQL  (Final Output)
+=========================
 Aggregates DBQL into a per-day, per-hour, per-DIM (app/statement/user) buckets
 as defined above.  The intention is this to be a smaller table than the
 detail, however, this assumption largely relies on how well the bucketing
@@ -175,10 +175,10 @@ SELECT
   and dbql.NumOfActiveAMPs < Total_AMPs
  then 'Tactical'
  else 'Non-Tactical'
-/* TODO: Query_Type -- design other query types */
+/* TODO: Query_Type - design other query types */
  end as Query_Type
 
-/* -------- Query Metrics */
+/* ====== Query Metrics ======= */
  ,HashAmp()+1 as Total_AMPs
 ,sum(dbql.Statements) as Query_Cnt
 ,sum(case when dbql.ErrorCode <> 0  then dbql.Statements else 0 end) as Query_Error_Cnt
@@ -195,7 +195,7 @@ SELECT
 ,sum(dbql.EstProcTime) as Explain_Runtime_Sec
 
 
-/* --------- Metrics: RunTimes */
+/* ====== Metrics: RunTimes ====== */
 ,sum(round(dbql.DelayTime,2)) as DelayTime_Sec
 ,sum(ZEROIFNULL(CAST(
    (EXTRACT(HOUR   FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) * 3600)
@@ -217,7 +217,7 @@ SELECT
 /* Runtime_Parse_Sec + Runtime_AMP_Sec = Runtime_Execution_Sec */
 /* DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
 
-/*---------- Metrics: CPU & IO */
+/* ====== Metrics: CPU & IO ====== */
 ,cast( sum(dbql.ParserCPUTime) as decimal(18,2)) as CPU_Parse_Sec
 ,cast( sum(dbql.AMPCPUtime) as decimal(18,2)) as CPU_AMP_Sec
 /* TODO: check if failed queries log CPU consumption */
@@ -230,7 +230,7 @@ SELECT
 ,sum(dbql.UsedIOTA)   as IOTA_Used
 ,sum(maxiota.MaxIOTA) as IOTA_SysMax
 
-/* ---------- Metrics: Other */
+/* ====== Metrics: Other ====== */
 ,avg(NumOfActiveAMPs) as NumOfActiveAMPs_Avg
 ,sum(SpoolUsage/1e9) as Spool_GB
 ,avg(SpoolUsage/1e9) as Spool_GB_Avg
@@ -257,7 +257,7 @@ SELECT
           end) / .8    /*  scale up to 0 - 100 */
      as CacheMiss_KBScore
 
-/* ---------- Multi-Statement Break-Out, if interested: */
+/* ====== Multi-Statement Break-Out, if interested: ====== */
 ,count(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end) as MultiStatement_Count
 ,sum(cast(trim(
     substr(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,
@@ -357,7 +357,7 @@ SELECT
 
 
 From {dbqlogtbl} as dbql       /* pdcrinfo.dbqlogtbl_hst, typically */
-/* TODO: union with DBQL_Summary table -- Paul */
+/* TODO: union with DBQL_Summary table - Paul */
 
 join dim_app as app
   on dbql.AppID = app.AppID
