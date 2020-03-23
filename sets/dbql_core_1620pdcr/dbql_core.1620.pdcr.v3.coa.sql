@@ -153,7 +153,7 @@ SELECT
 ,cast(cast(dbql.LogDate as char(10)) ||' '||
  cast(LogHour as char(2))||':00:00.000000'  as timestamp(6)) as LogTS
 
-]/* all other dimennsions (bucketed for space) */
+/* all other dimennsions (bucketed for space) */
 ,app.App_Bucket
 ,app.Use_Bucket
 ,stm.Statement_Bucket
