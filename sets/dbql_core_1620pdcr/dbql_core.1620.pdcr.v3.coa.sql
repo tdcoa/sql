@@ -6,6 +6,7 @@ Parameters:
   - enddate:      {enddate}
   - siteid:       {siteid}
   - dbqlogtbl:    {dbqlogtbl}
+  - resusagespma: {resusagespma}
 */
 
 
@@ -38,6 +39,12 @@ on commit preserve rows;
 
 drop table "dim_app.csv";
 
+/*{{save:dim_app_reconcile.csv}}*/
+Select * from dim_App
+order by case when  App_Bucket='Unknown' then '!!!' else App_Bucket end asc
+;
+
+
 
 /*{{temp:dim_statement.csv}}*/
 create volatile table dim_statement as
@@ -66,12 +73,18 @@ on commit preserve rows;
 
 drop table "dim_statement.csv";
 
+/*{{save:dim_statement_reconcile.csv}}*/
+Select * from dim_statement
+order by case when  Statement_Bucket='Unknown' then '!!!' else Statement_Bucket end asc
+;
+
+
 
 /*{{temp:dim_user.csv}}*/
 create volatile table dim_user as
 (
   select
-   o.UserName
+   trim(o.UserName) as Username
   ,coalesce(p.User_Bucket,'Unknown') as User_Bucket
   ,coalesce(p.Is_Discrete_Human,'Unk') as Is_Discrete_Human
   ,coalesce(p.User_Department, 'Unknown') as User_Department
@@ -99,6 +112,17 @@ on commit preserve rows;
 drop table "dim_user.csv"
 ;
 
+/*{{save:dim_user_reconcile.csv}}*/
+Select hashrow(substr(Username,1,1))                                     /* first character  */
+    || hashrow(substr(Username,floor(character_length(Username)/2)+1,1)) /* middle character */
+    || hashrow(substr(Username,character_length(Username),1))            /* last character   */
+    || hashrow(Username)                                                 /* entire value */
+        as hash_userid
+,usr.*
+from dim_user as usr
+order by case when User_Bucket='Unknown' then '!!!' else User_Bucket end asc
+;
+
 
 /*{{file:custom_user_dim.sql}}*/
 ;
@@ -117,16 +141,19 @@ size.  As these fields are easily calculated, they will be re-constituted
 in Transcend.
 */
 
+
 /*{{save:0001.DBQL_Summary.OUTPUT-{siteid}.csv}}*/
 /*{{load:adlste_coa.stg_dat_DBQL}}*/
 /*{{call:adlste_coa.sp_dat_dbql('{fileset_version}')}}*/
-select top 20
+SELECT
  '{siteid}'  as SiteID
+ /* TIME Dimension */
 ,dbql.LogDate
 ,cast(extract(HOUR from StartTime) as INT format '99') as LogHour
 ,cast(cast(dbql.LogDate as char(10)) ||' '||
  cast(LogHour as char(2))||':00:00.000000'  as timestamp(6)) as LogTS
 
+]/* all other dimennsions (bucketed for space) */
 ,app.App_Bucket
 ,app.Use_Bucket
 ,stm.Statement_Bucket
@@ -139,12 +166,12 @@ select top 20
 
 ,case
  when stm.Statement_Bucket = 'Select'
-  and app.App_Bucket not in ('TPTEXP', 'FASTEXP')
+  and app.App_Bucket not in ('TPT')
   and (ZEROIFNULL(CAST(
      (EXTRACT(HOUR   FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) * 3600)
     +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
     +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
-     as FLOAT))) < 1  /* Runtime_AMP_Sec */
+     as FLOAT))) <= 1  /* Runtime_AMP_Sec */
   and dbql.NumOfActiveAMPs < Total_AMPs
  then 'Tactical'
  else 'Non-Tactical'
@@ -154,11 +181,16 @@ select top 20
 /* -------- Query Metrics */
  ,HashAmp()+1 as Total_AMPs
 ,sum(dbql.Statements) as Query_Cnt
+,sum(case when dbql.ErrorCode <> 0  then dbql.Statements else 0 end) as Query_Error_Cnt
+,sum(case when dbql.Abortflag = 'Y' then dbql.Statements else 0 end) as Query_Abort_Cnt
+,sum(case when TotalIOCount = 0     then dbql.Statements else 0 end) as Query_NoIO_cnt
+,sum(case when TotalIOCount > 0 AND ReqPhysIO = 0 then dbql.Statements else 0 end) as Query_InMem_Cnt
+,sum(case when TotalIOCount > 0 AND ReqPhysIO > 0 then dbql.Statements else 0 end) as Query_PhysIO_Cnt
+
 ,count(1) as Request_Cnt
 ,avg(dbql.NumSteps * character_length(dbql.QueryText)/100) as Query_Complexity_Score_Avg
 ,sum(cast(dbql.NumResultRows as decimal(18,0))) as Returned_Row_Cnt
-,sum(case when dbql.ErrorCode=0 then 0 else 1 end) as Query_Error_Cnt
-,sum(case when dbql.Abortflag='Y' then 1  else 0 end) as Query_Abort_Cnt
+
 ,sum(cast(dbql.EstResultRows/1e6 as decimal(18,0))) as Explain_Row_Cnt
 ,sum(dbql.EstProcTime) as Explain_Runtime_Sec
 
@@ -184,6 +216,7 @@ select top 20
   else 0 end as FLOAT))) AS TransferTime_Sec
 /* Runtime_Parse_Sec + Runtime_AMP_Sec = Runtime_Execution_Sec */
 /* DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
+
 /*---------- Metrics: CPU & IO */
 ,cast( sum(dbql.ParserCPUTime) as decimal(18,2)) as CPU_Parse_Sec
 ,cast( sum(dbql.AMPCPUtime) as decimal(18,2)) as CPU_AMP_Sec
@@ -194,9 +227,8 @@ select top 20
 ,sum(ReqPhysIOKB/1e6)  as IOGB_Physical
 ,sum(ReqIOKB/1e6)      as IOGB_Total
 
-,1e9 as IOTA_Total
-,1e9 as IOGB_Total_Max
-
+,sum(dbql.UsedIOTA)   as IOTA_Used
+,sum(maxiota.MaxIOTA) as IOTA_SysMax
 
 /* ---------- Metrics: Other */
 ,avg(NumOfActiveAMPs) as NumOfActiveAMPs_Avg
@@ -208,6 +240,22 @@ select top 20
 ,avg((TotalIOCount / nullifzero(MaxAmpIO*NumOfActiveAMPs))-1)  as IOCnt_Skew_AvgPct
 ,avg(VHPhysIO / nullifzero(VHLogicalIO)) as VeryHot_IOcnt_Cache_AvgPct
 ,avg(VHPhysIOKB / nullifzero(VHLogicalIOKB)) as VeryHot_IOGB_Cache_AvgPct
+
+/* METRIC:   Cache Miss Rate IOPS.  normal cache miss rate <20%,   set score = 0  for  miss rate < 20%,  increments of 10%, range 0 -80, then scaled to 0-100 */
+,avg(case when ReqPhysIO = 0 then 0
+          when zeroifnull(ReqPhysIO/ nullifzero(TotalIOCount)) <= 0.20 then 0                              /* set score = 0 when less than industry average 20% */
+          when ReqPhysIO > TotalIOCount then 80                                                            /* sometimes get Physical > Logical, set ceiling at 80*/
+          else (cast( 100 * zeroifnull (ReqPhysIO/ nullifzero(TotalIOCount)) /10 as  integer) * 10) - 20   /* only count above 20%, round to bin size 10*/
+          end) / .8    /*  scale up to 0 - 100 */
+     as CacheMiss_IOPSScore
+
+/* METRIC:   Cache Miss Rate KB.  normal cache miss rate <20%,   set score = 0  for  miss rate < 20%,  increments of 10%, range 0 -80 */
+,avg(case when  ReqPhysIOKB = 0 then 0
+          when   zeroifnull(ReqPhysIOKB/ nullifzero(ReqIOKB)) <= 0.20 then 0                             /* set score = 0 when less than industry average 20% */
+          when   ReqPhysIOKB > ReqIOKB then 80                                                           /* sometimes get Physical > Logical, set ceiling at 80*/
+          else  (cast( 100 * zeroifnull (ReqPhysIOKB/ nullifzero(ReqIOKB)) /10 as  integer) * 10) - 20   /* only count above 20%, round to bin size 10*/
+          end) / .8    /*  scale up to 0 - 100 */
+     as CacheMiss_KBScore
 
 /* ---------- Multi-Statement Break-Out, if interested: */
 ,count(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end) as MultiStatement_Count
@@ -236,8 +284,79 @@ select top 20
     index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,' Sel=')+5, 10)) as INT))
     as MultiStatement_Select
 
+/* METRIC BREAK-OUTS:  */
 
-From {dbqlogtbl} as dbql
+/* Query Runtime by [query count | cpu | iogb] */
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0000_0001
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0001_0005
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0005_0010
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0010_0030
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0030_0060
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0060_0300
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0300_0600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0600_1800
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_1800_3600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_3600_plus
+
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0000_0001
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0001_0005
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0005_0010
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0010_0030
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0030_0060
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0060_0300
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0300_0600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0600_1800
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_1800_3600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_3600_plus
+
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0000_0001
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0001_0005
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0005_0010
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0010_0030
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0030_0060
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0060_0300
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0300_0600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0600_1800
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_1800_3600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_3600_plus
+
+
+/* delaytime by [query count | cpu | iogb] */
+,SUM(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0000_0001
+,SUM(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0001_0005
+,SUM(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0005_0010
+,SUM(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0010_0030
+,SUM(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0030_0060
+,SUM(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0060_0300
+,SUM(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0300_0600
+,SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0600_1800
+,SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_1800_3600
+,SUM(CASE WHEN  dbql.delaytime  >3600                            THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_3600_plus
+
+,SUM(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0000_0001
+,SUM(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0001_0005
+,SUM(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0005_0010
+,SUM(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0010_0030
+,SUM(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0030_0060
+,SUM(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0060_0300
+,SUM(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0300_0600
+,SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0600_1800
+,SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_1800_3600
+,SUM(CASE WHEN  dbql.delaytime  >3600                            THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_3600_plus
+
+,SUM(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0000_0001
+,SUM(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0001_0005
+,SUM(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0005_0010
+,SUM(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0010_0030
+,SUM(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0030_0060
+,SUM(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0060_0300
+,SUM(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0300_0600
+,SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0600_1800
+,SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_1800_3600
+,SUM(CASE WHEN  dbql.delaytime  >3600                            THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_3600_plus
+
+
+From {dbqlogtbl} as dbql       /* pdcrinfo.dbqlogtbl_hst, typically */
 /* TODO: union with DBQL_Summary table -- Paul */
 
 join dim_app as app
@@ -249,12 +368,23 @@ join dim_Statement stm
 join dim_user usr
   on dbql.UserName = usr.UserName
 
-where dbql.logdate between {startdate} and {enddate}
+join (
+      Select TheDate as LogDate_mi, Floor(TheTime/1e4) as LogHour_mi, sum(FullPotentialIOTA) as MaxIOTA
+      from {resusagespma}  /* pdcrinfo.ResUsageSPMA_Hst */
+      where TheDate between {startdate} and {enddate}
+      Group by LogDate_mi, LogHour_mi
+     ) maxiota
+  on dbql.LogDate = maxiota.LogDate_mi
+ and LogHour = maxiota.LogHour_mi
+
+where dbql.LogDate between {startdate} and {enddate}
 
 Group by
  dbql.LogDate
 ,LogHour
 ,LogTS
+,maxiota.LogDate_mi
+,maxiota.LogHour_mi
 ,SiteID
 ,app.App_Bucket
 ,app.Use_Bucket

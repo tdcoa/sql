@@ -1,0 +1,34 @@
+
+/* {metric} by [query count | cpu | iogb] */
+,SUM(CASE WHEN  dbql.{metric}  is NULL OR  dbql.{metric} <1     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_0000_0001
+,SUM(CASE WHEN  dbql.{metric}  >=1    AND  dbql.{metric} <5     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_0001_0005
+,SUM(CASE WHEN  dbql.{metric}  >=5    AND  dbql.{metric} <10    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_0005_0010
+,SUM(CASE WHEN  dbql.{metric}  >=10   AND  dbql.{metric} <30    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_0010_0030
+,SUM(CASE WHEN  dbql.{metric}  >=30   AND  dbql.{metric} <60    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_0030_0060
+,SUM(CASE WHEN  dbql.{metric}  >=60   AND  dbql.{metric} <300   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_0060_0300
+,SUM(CASE WHEN  dbql.{metric}  >=300  AND  dbql.{metric} <600   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_0300_0600
+,SUM(CASE WHEN  dbql.{metric}  >=600  AND  dbql.{metric} <1800  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_0600_1800
+,SUM(CASE WHEN  dbql.{metric}  >=1800 AND  dbql.{metric} <3600  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_1800_3600
+,SUM(CASE WHEN  dbql.{metric}  >3600                            THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_{name}_3600_plus
+
+,SUM(CASE WHEN  dbql.{metric}  is NULL OR  dbql.{metric} <1     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_0000_0001
+,SUM(CASE WHEN  dbql.{metric}  >=1    AND  dbql.{metric} <5     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_0001_0005
+,SUM(CASE WHEN  dbql.{metric}  >=5    AND  dbql.{metric} <10    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_0005_0010
+,SUM(CASE WHEN  dbql.{metric}  >=10   AND  dbql.{metric} <30    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_0010_0030
+,SUM(CASE WHEN  dbql.{metric}  >=30   AND  dbql.{metric} <60    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_0030_0060
+,SUM(CASE WHEN  dbql.{metric}  >=60   AND  dbql.{metric} <300   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_0060_0300
+,SUM(CASE WHEN  dbql.{metric}  >=300  AND  dbql.{metric} <600   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_0300_0600
+,SUM(CASE WHEN  dbql.{metric}  >=600  AND  dbql.{metric} <1800  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_0600_1800
+,SUM(CASE WHEN  dbql.{metric}  >=1800 AND  dbql.{metric} <3600  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_1800_3600
+,SUM(CASE WHEN  dbql.{metric}  >3600                            THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_{name}_3600_plus
+
+,SUM(CASE WHEN  dbql.{metric}  is NULL OR  dbql.{metric} <1     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_0000_0001
+,SUM(CASE WHEN  dbql.{metric}  >=1    AND  dbql.{metric} <5     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_0001_0005
+,SUM(CASE WHEN  dbql.{metric}  >=5    AND  dbql.{metric} <10    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_0005_0010
+,SUM(CASE WHEN  dbql.{metric}  >=10   AND  dbql.{metric} <30    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_0010_0030
+,SUM(CASE WHEN  dbql.{metric}  >=30   AND  dbql.{metric} <60    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_0030_0060
+,SUM(CASE WHEN  dbql.{metric}  >=60   AND  dbql.{metric} <300   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_0060_0300
+,SUM(CASE WHEN  dbql.{metric}  >=300  AND  dbql.{metric} <600   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_0300_0600
+,SUM(CASE WHEN  dbql.{metric}  >=600  AND  dbql.{metric} <1800  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_0600_1800
+,SUM(CASE WHEN  dbql.{metric}  >=1800 AND  dbql.{metric} <3600  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_1800_3600
+,SUM(CASE WHEN  dbql.{metric}  >3600                            THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_{name}_3600_plus

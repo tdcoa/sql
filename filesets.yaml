@@ -15,8 +15,8 @@ dbql_core_1620pdcr:
   fileset_version:  "1.0"
   startdate:        "Current_Date - 45"
   enddate:          "Current_Date - 1"
-  dbqlogtbl:        "dbc.DBQLogTbl"
-  default_database: "pdcrinfo"
+  dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
+  resusagespma:     "pdcrinfo.ResUsageSPMA_Hst"
   siteid:           "default"
   files:
     - "dbql_core_1620pdcr/dbql_core.1620.pdcr.v3.coa.sql"

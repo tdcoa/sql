@@ -16,9 +16,9 @@ Default,Equal,DSMain,TD-BAR,Backup,1130
 Default,Equal,MULTILOAD,TPT,ETL,1140
 Default,Equal,TBUILDEXE,TPT,ETL,1150
 Default,Equal,TDLOADEXE,TPT,ETL,1160
-Default,Equal,TPTSTRM,TPT,ETL,1170
+Default,Equal,TPTSTRM,TPTStream,ETL,1170
 Default,Equal,TPTUPD,TPT,ETL,1180
-Default,Equal,TPUMPEXE,TPT,ETL,1190
+Default,Equal,TPUMPEXE,TPTSTream,ETL,1190
 Default,Like,AGINITY.NETEZZAWORKBENCH%,Netezza,Analytic,10000
 Default,Like,ADEPTRA_SELFSERVREPORT%,Adeptra,Analytic,10100
 Default,Like,BIBUSTKSERVERMAIN%,Cognos,Analytic,10200
