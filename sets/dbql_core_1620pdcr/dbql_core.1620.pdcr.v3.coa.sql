@@ -191,12 +191,12 @@ SELECT
 ,avg(dbql.NumSteps * character_length(dbql.QueryText)/100) as Query_Complexity_Score_Avg
 ,sum(cast(dbql.NumResultRows as decimal(18,0))) as Returned_Row_Cnt
 
-,sum(cast(dbql.EstResultRows/1e6 as decimal(18,0))) as Explain_Row_Cnt
-,sum(dbql.EstProcTime) as Explain_Runtime_Sec
+,sum(cast(dbql.EstResultRows/1e6 as decimal(18,0))) as Explain_Row_CntM
+,sum(cast(dbql.EstProcTime as decimal(18,0))) as Explain_Runtime_Sec
 
 
 /* ====== Metrics: RunTimes ====== */
-,sum(round(dbql.DelayTime,2)) as DelayTime_Sec
+,sum(cast(dbql.DelayTime as decimal(18,2))) as DelayTime_Sec
 ,sum(ZEROIFNULL(CAST(
    (EXTRACT(HOUR   FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) * 3600)
   +(EXTRACT(MINUTE FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) *   60)
@@ -218,17 +218,17 @@ SELECT
 /* DelayTime_Sec + Runtime_Execution_Sec + TransferTime_Sec as Runtime_UserExperience_Sec */
 
 /* ====== Metrics: CPU & IO ====== */
-,cast( sum(dbql.ParserCPUTime) as decimal(18,2)) as CPU_Parse_Sec
-,cast( sum(dbql.AMPCPUtime) as decimal(18,2)) as CPU_AMP_Sec
+,sum( cast(dbql.ParserCPUTime as decimal(18,2)) ) as CPU_Parse_Sec
+,sum( cast(dbql.AMPCPUtime    as decimal(18,2)) ) as CPU_AMP_Sec
 /* TODO: check if failed queries log CPU consumption */
 
-,sum(ReqPhysIO/1e6)    as IOCntM_Physical
-,sum(TotalIOCount/1e6) as IOCntM_Total
-,sum(ReqPhysIOKB/1e6)  as IOGB_Physical
-,sum(ReqIOKB/1e6)      as IOGB_Total
+,sum( cast(ReqPhysIO/1e6    as decimal(18,0)) ) as IOCntM_Physical
+,sum( cast(TotalIOCount/1e6 as decimal(18,0)) ) as IOCntM_Total
+,sum( cast(ReqPhysIOKB/1e6  as decimal(18,0)) ) as IOGB_Physical
+,sum( cast(ReqIOKB/1e6      as decimal(18,0)) ) as IOGB_Total
 
-,sum(dbql.UsedIOTA)   as IOTA_Used
-,sum(maxiota.MaxIOTA) as IOTA_SysMax
+,sum( cast(dbql.UsedIOTA   as decimal(18,2)) ) as IOTA_Used
+,sum( cast(maxiota.MaxIOTA as decimal(18,2)) ) as IOTA_SysMax
 
 /* ====== Metrics: Other ====== */
 ,avg(NumOfActiveAMPs) as NumOfActiveAMPs_Avg
