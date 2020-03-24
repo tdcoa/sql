@@ -167,7 +167,7 @@ SELECT
 ,case
  when stm.Statement_Bucket = 'Select'
   and app.App_Bucket not in ('TPT')
-  and (ZEROIFNULL(CAST(
+  and (ZEROIFNULL( CAST(
      (EXTRACT(HOUR   FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) * 3600)
     +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
     +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
@@ -179,20 +179,17 @@ SELECT
  end as Query_Type
 
 /* ====== Query Metrics ======= */
- ,HashAmp()+1 as Total_AMPs
-,sum(dbql.Statements) as Query_Cnt
-,sum(case when dbql.ErrorCode <> 0  then dbql.Statements else 0 end) as Query_Error_Cnt
-,sum(case when dbql.Abortflag = 'Y' then dbql.Statements else 0 end) as Query_Abort_Cnt
-,sum(case when TotalIOCount = 0     then dbql.Statements else 0 end) as Query_NoIO_cnt
-,sum(case when TotalIOCount > 0 AND ReqPhysIO = 0 then dbql.Statements else 0 end) as Query_InMem_Cnt
-,sum(case when TotalIOCount > 0 AND ReqPhysIO > 0 then dbql.Statements else 0 end) as Query_PhysIO_Cnt
+,cast(HashAmp()+1 as Integer) as Total_AMPs
+,sum(cast(dbql.Statements as BigInt)) as Query_Cnt
+,sum(cast( (case when dbql.ErrorCode <> 0                then dbql.Statements else 0 end) as bigint))  as Query_Error_Cnt
+,sum(cast( (case when dbql.Abortflag = 'Y'               then dbql.Statements else 0 end) as bigint))  as Query_Abort_Cnt
+,sum(cast( (case when TotalIOCount = 0                   then dbql.Statements else 0 end) as bigint))  as Query_NoIO_cnt
+,sum(cast( (case when TotalIOCount > 0 AND ReqPhysIO = 0 then dbql.Statements else 0 end) as bigint))  as Query_InMem_Cnt
+,sum(cast( (case when TotalIOCount > 0 AND ReqPhysIO > 0 then dbql.Statements else 0 end) as bigint))  as Query_PhysIO_Cnt
 
-,count(1) as Request_Cnt
-,avg(dbql.NumSteps * character_length(dbql.QueryText)/100) as Query_Complexity_Score_Avg
-,sum(cast(dbql.NumResultRows as decimal(18,0))) as Returned_Row_Cnt
-
-,sum(cast(dbql.EstResultRows/1e6 as decimal(18,0))) as Explain_Row_CntM
-,sum(cast(dbql.EstProcTime as decimal(18,0))) as Explain_Runtime_Sec
+,cast(count(1) as BigInt) as Request_Cnt
+,avg(cast(dbql.NumSteps * (character_length(dbql.QueryText)/100) as BigInt) ) as Query_Complexity_Score_Avg
+,sum(cast(dbql.NumResultRows as decimal(18,0)) ) as Returned_Row_Cnt
 
 
 /* ====== Metrics: RunTimes ====== */
@@ -227,8 +224,8 @@ SELECT
 ,sum( cast(ReqPhysIOKB/1e6  as decimal(18,0)) ) as IOGB_Physical
 ,sum( cast(ReqIOKB/1e6      as decimal(18,0)) ) as IOGB_Total
 
-,sum( cast(dbql.UsedIOTA   as decimal(18,2)) ) as IOTA_Used
-,sum( cast(maxiota.MaxIOTA as decimal(18,2)) ) as IOTA_SysMax
+,sum( cast(dbql.UsedIOTA/1e6 as decimal(18,0)) ) as IOTA_Used_cntM
+,sum( cast(maxiota.MaxIOTA   as decimal(18,0)) ) as IOTA_SysMax_cntM
 
 /* ====== Metrics: Other ====== */
 ,avg(NumOfActiveAMPs) as NumOfActiveAMPs_Avg
@@ -369,7 +366,8 @@ join dim_user usr
   on dbql.UserName = usr.UserName
 
 join (
-      Select TheDate as LogDate_mi, Floor(TheTime/1e4) as LogHour_mi, sum(FullPotentialIOTA) as MaxIOTA
+      Select TheDate as LogDate_mi, Floor(TheTime/1e4) as LogHour_mi
+      ,sum(cast(FullPotentialIOTA/1e6 as decimal(18,0))) as MaxIOTA_cntM
       from {resusagespma}  /* pdcrinfo.ResUsageSPMA_Hst */
       where TheDate between {startdate} and {enddate}
       Group by LogDate_mi, LogHour_mi
