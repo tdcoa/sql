@@ -224,8 +224,8 @@ SELECT
 ,sum( cast(ReqPhysIOKB/1e6  as decimal(18,0)) ) as IOGB_Physical
 ,sum( cast(ReqIOKB/1e6      as decimal(18,0)) ) as IOGB_Total
 
-,sum( cast(dbql.UsedIOTA/1e6 as decimal(18,0)) ) as IOTA_Used_cntM
-,sum( cast(maxiota.MaxIOTA   as decimal(18,0)) ) as IOTA_SysMax_cntM
+,sum( cast(dbql.UsedIOTA/1e6    as decimal(18,0)) ) as IOTA_Used_cntM
+,sum( cast(maxiota.MaxIOTA_cntM as decimal(18,0)) ) as IOTA_SysMax_cntM
 
 /* ====== Metrics: Other ====== */
 ,avg(NumOfActiveAMPs) as NumOfActiveAMPs_Avg
