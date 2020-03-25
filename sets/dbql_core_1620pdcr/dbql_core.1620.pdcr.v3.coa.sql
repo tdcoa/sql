@@ -112,6 +112,16 @@ on commit preserve rows;
 drop table "dim_user.csv"
 ;
 
+
+
+/* below override sql file allows opportunity to
+   replace dim_user.csv with ca_user_xref table
+   or a customer-specific table.  To use, review
+   and fill-in the .sql file content:
+*/
+/*{{file:override_user_dim.sql}}*/
+;
+
 /*{{save:dim_user_reconcile.csv}}*/
 Select hashrow(substr(Username,1,1))                                     /* first character  */
     || hashrow(substr(Username,floor(character_length(Username)/2)+1,1)) /* middle character */
@@ -124,8 +134,6 @@ order by case when User_Bucket='Unknown' then '!!!' else User_Bucket end asc
 ;
 
 
-/*{{file:custom_user_dim.sql}}*/
-;
 
 /*
  DAT_DBQL  (Final Output)
