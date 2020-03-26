@@ -8,8 +8,8 @@ Parameters:
 */
 
 /*{{save:consumption_feature_usage.csv}}*/
-/*{{load:adlste_westcomm.consumption_feature_usage_stg}}*/
-/*{{call:adlste_westcomm.consumption_feature_usage_sp('{fileset_version}')}}*/
+/*{{load:{db_region}.consumption_feature_usage_stg}}*/
+/*{{call:{db_region}.consumption_feature_usage_sp('{fileset_version}')}}*/
 
 SELECT
  '{siteid}' (VARCHAR(100)) as SiteID,

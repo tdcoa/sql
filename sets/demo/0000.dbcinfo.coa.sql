@@ -1,6 +1,6 @@
 /*{{save:{siteid}.dbcinfo.csv}}*/
-/*{{load:adlste_coa.stg_dat_dbcinfo}}*/
-/*{{call:adlste_coa.sp_dat_dbcinfo('{fileset_version}')}}*/
+/*{{load:{db_coa}.stg_dat_dbcinfo}}*/
+/*{{call:{db_coa}.sp_dat_dbcinfo('{fileset_version}')}}*/
 Select
  '{account}' as Account_Name
 ,'{siteid}' as Site_ID

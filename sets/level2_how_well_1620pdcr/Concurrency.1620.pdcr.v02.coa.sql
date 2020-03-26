@@ -7,8 +7,8 @@ Parameters:
 */
 
 /*{{save:consumption_UX_P2.csv}}*/
-/*{{load:adlste_westcomm.consumption_UX_P2_stg}}*/
-/*{{call:adlste_westcomm.consumption_UX_P2_sp('{fileset_version}')}}*/
+/*{{load:{db_region}.consumption_UX_P2_stg}}*/
+/*{{call:{db_region}.consumption_UX_P2_sp('{fileset_version}')}}*/
 
 Select
  '{siteid}' (VARCHAR(100)) as SiteID

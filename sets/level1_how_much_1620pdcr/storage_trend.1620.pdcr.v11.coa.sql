@@ -11,9 +11,9 @@ Parameters:
   enddate         = {enddate}
 
 
-Stage Table:  adlste_westcomm.consumption_storage_forecast_stg
-Stored Proc:  adlste_westcomm.consumption_storage_forecast_sp('{fileset_version}')
-Target Table: adlste_westcomm.consumption_storage_forecast_v2
+Stage Table:  {db_region}.consumption_storage_forecast_stg
+Stored Proc:  {db_region}.consumption_storage_forecast_sp('{fileset_version}')
+Target Table: {db_region}.consumption_storage_forecast_v2
 
 
 Storage Trend & Forecast
@@ -55,8 +55,8 @@ Select these columns for charting in Excel:
 ==== SQL ==== ==== ==== ==== ====*/
 
 /*{{save:{siteid}--storage_trend.coa.csv}}*/
-/*{{load:adlste_westcomm.consumption_storage_forecast_stg}}*/
-/*{{call:adlste_westcomm.consumption_storage_forecast_sp('{fileset_version}')}}*/
+/*{{load:{db_region}.consumption_storage_forecast_stg}}*/
+/*{{call:{db_region}.consumption_storage_forecast_sp('{fileset_version}')}}*/
 
 LOCK ROW FOR ACCESS
 SELECT

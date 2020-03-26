@@ -11,9 +11,9 @@ Parameters:
   enddate         = {enddate}
 
 
-Stage Table:  adlste_westcomm.consumption_io_forecast_stg
-Stored Proc:  adlste_westcomm.consumption_io_forecast_sp('{fileset_version}')
-Target Table: adlste_westcomm.consumption_io_forecast_v2
+Stage Table:  {db_region}.consumption_io_forecast_stg
+Stored Proc:  {db_region}.consumption_io_forecast_sp('{fileset_version}')
+Target Table: {db_region}.consumption_io_forecast_v2
 
 I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilization Method).
 •	Evaluates the percentage of time in the collection period that devices were busy processing I/O requests (ldvOutReqTime) for ldvreads > 0 & ldvtype = 'DISK' (no need for Archie or I/O capacity estimates).
@@ -65,8 +65,8 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 ===== SQL ===== ===== ===== ===== =====*/
 
 /*{{save:{siteid}--iotrend_spma.coa.csv}}*/
-/*{{load:adlste_westcomm.consumption_io_forecast_stg}}*/
-/*{{call:adlste_westcomm.consumption_io_forecast_sp('{fileset_version}')}}*/
+/*{{load:{db_region}.consumption_io_forecast_stg}}*/
+/*{{call:{db_region}.consumption_io_forecast_sp('{fileset_version}')}}*/
 
 LOCK ROW FOR ACCESS
 SELECT

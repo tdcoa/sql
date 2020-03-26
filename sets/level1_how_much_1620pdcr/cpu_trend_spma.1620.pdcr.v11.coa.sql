@@ -10,9 +10,9 @@ Parameters:
   startdate       = {startdate}
   enddate         = {enddate}
 
-Stage Table:  adlste_westcomm.consumption_cpu_forecast_stg
-Stored Proc:  adlste_westcomm.consumption_cpu_forecast_sp('{fileset_version}')
-Target Table: adlste_westcomm.consumption_cpu_forecast_v2
+Stage Table:  {db_region}.consumption_cpu_forecast_stg
+Stored Proc:  {db_region}.consumption_cpu_forecast_sp('{fileset_version}')
+Target Table: {db_region}.consumption_cpu_forecast_v2
 
 
 CPU Utilization 4-Hour Variable Peak from ResusageSpma (Viewpoint CPU Utilization Method).
@@ -61,8 +61,8 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 ===== SQL ===== ===== ===== ===== =====*/
 
 /*{{save:{siteid}--cpu_trend_spma.coa.csv}}*/
-/*{{load:adlste_westcomm.consumption_cpu_forecast_stg}}*/
-/*{{call:adlste_westcomm.consumption_cpu_forecast_sp('{fileset_version}')}}*/
+/*{{load:{db_region}.consumption_cpu_forecast_stg}}*/
+/*{{call:{db_region}.consumption_cpu_forecast_sp('{fileset_version}')}}*/
 LOCK ROW FOR ACCESS
 SELECT
 '{siteid}' as SiteID /* Enter the Customer SiteID */

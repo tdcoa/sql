@@ -151,8 +151,8 @@ in Transcend.
 
 
 /*{{save:0001.DBQL_Summary.OUTPUT-{siteid}.csv}}*/
-/*{{load:adlste_coa.stg_dat_DBQL}}*/
-/*{{call:adlste_coa.sp_dat_dbql('{fileset_version}')}}*/
+/*{{load:{db_coa}.stg_dat_DBQL}}*/
+/*{{call:{db_coa}.sp_dat_dbql('{fileset_version}')}}*/
 SELECT
  '{siteid}'  as SiteID
  /* TIME Dimension */
