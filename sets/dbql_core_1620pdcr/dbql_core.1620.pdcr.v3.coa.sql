@@ -232,8 +232,8 @@ SELECT
 ,sum( cast(ReqPhysIOKB/1e6  as decimal(18,0)) ) as IOGB_Physical
 ,sum( cast(ReqIOKB/1e6      as decimal(18,0)) ) as IOGB_Total
 
-,sum( cast(dbql.UsedIOTA/1e6    as decimal(18,0)) ) as IOTA_Used_cntM
-,sum( cast(maxiota.MaxIOTA_cntM as decimal(18,0)) ) as IOTA_SysMax_cntM
+,sum( cast(dbql.UsedIOTA/1e9    as decimal(18,4)) ) as IOTA_Used_cntB
+,sum( cast(maxiota.MaxIOTA_cntB as decimal(18,0)) ) as IOTA_SysMax_cntB
 
 /* ====== Metrics: Other ====== */
 ,avg(NumOfActiveAMPs) as NumOfActiveAMPs_Avg
@@ -375,7 +375,7 @@ join dim_user usr
 
 join (
       Select TheDate as LogDate_mi, Floor(TheTime/1e4) as LogHour_mi
-      ,sum(cast(FullPotentialIOTA/1e6 as decimal(18,0))) as MaxIOTA_cntM
+      ,sum(cast(FullPotentialIOTA/1e9 as decimal(18,0))) as MaxIOTA_cntB
       from {resusagespma}  /* pdcrinfo.ResUsageSPMA_Hst */
       where TheDate between {startdate} and {enddate}
       Group by LogDate_mi, LogHour_mi

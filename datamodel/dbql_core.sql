@@ -33,8 +33,8 @@ CREATE MULTISET GLOBAL TEMPORARY TABLE adlste_coa.stg_dat_DBQL_Core
  ,IOCntM_Total                     BIGINT
  ,IOGB_Physical                    DECIMAL(18,4)
  ,IOGB_Total                       DECIMAL(18,4)
- ,IOTA_Used_cntM                   DECIMAL(18,4)
- ,IOTA_SysMax_cntM                 DECIMAL(18,4)
+ ,IOTA_Used_cntB                   DECIMAL(18,4)
+ ,IOTA_SysMax_cntB                 DECIMAL(18,0)
  ,NumOfActiveAMPs_Avg              DECIMAL(9,4)
  ,Spool_GB                         DECIMAL(18,4)
  ,Spool_GB_Avg                     DECIMAL(9,4)
@@ -152,8 +152,8 @@ CREATE MULTISET GLOBAL TEMPORARY TABLE adlste_coa.stg_dat_DBQL_Core
   ,IOCntM_Total                     BIGINT
   ,IOGB_Physical                    DECIMAL(18,4)
   ,IOGB_Total                       DECIMAL(18,4)
-  ,IOTA_Used_cntM                   DECIMAL(18,4)
-  ,IOTA_SysMax_cntM                 DECIMAL(18,4)
+  ,IOTA_Used_cntB                   DECIMAL(18,4)
+  ,IOTA_SysMax_cntB                 DECIMAL(18,0)
   ,NumOfActiveAMPs_Avg              DECIMAL(9,4)
   ,Spool_GB                         DECIMAL(18,4)
   ,Spool_GB_Avg                     DECIMAL(9,4)
