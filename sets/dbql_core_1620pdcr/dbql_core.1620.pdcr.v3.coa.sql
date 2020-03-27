@@ -151,15 +151,15 @@ in Transcend.
 
 
 /*{{save:0001.DBQL_Summary.OUTPUT-{siteid}.csv}}*/
-/*{{load:{db_coa}.stg_dat_DBQL}}*/
-/*{{call:{db_coa}.sp_dat_dbql('{fileset_version}')}}*/
+/*{{load:{db_coa}.stg_dat_DBQL_Core}}*/
+/*{{call:{db_coa}.sp_dat_dbql_core('{fileset_version}')}}*/
 SELECT
  '{siteid}'  as SiteID
  /* TIME Dimension */
 ,dbql.LogDate
 ,cast(extract(HOUR from StartTime) as INT format '99') as LogHour
-,cast(cast(dbql.LogDate as char(10)) ||' '||
- cast(LogHour as char(2))||':00:00.000000'  as timestamp(6)) as LogTS
+/* ,cast(cast(dbql.LogDate as char(10)) ||' '||
+    cast(LogHour as char(2))||':00:00.000000'  as timestamp(6)) as LogTS */
 
 /* all other dimennsions (bucketed for space) */
 ,app.App_Bucket
@@ -388,7 +388,6 @@ where dbql.LogDate between {startdate} and {enddate}
 Group by
  dbql.LogDate
 ,LogHour
-,LogTS
 ,maxiota.LogDate_mi
 ,maxiota.LogHour_mi
 ,SiteID
