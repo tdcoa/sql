@@ -292,73 +292,73 @@ SELECT
 /* METRIC BREAK-OUTS:  */
 
 /* Query Runtime by [query count | cpu | iogb] */
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0000_0001
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0001_0005
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0005_0010
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0010_0030
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0030_0060
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0060_0300
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0300_0600
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_0600_1800
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_1800_3600
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_runtime_3600_plus
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_0000_0001
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_0001_0005
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_0005_0010
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_0010_0030
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_0030_0060
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_0060_0300
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_0300_0600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_0600_1800
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_1800_3600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_runtime_3600_plus
 
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0000_0001
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0001_0005
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0005_0010
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0010_0030
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0030_0060
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0060_0300
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0300_0600
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_0600_1800
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_1800_3600
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_runtime_3600_plus
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_0000_0001
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_0001_0005
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_0005_0010
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_0010_0030
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_0030_0060
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_0060_0300
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_0300_0600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_0600_1800
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_1800_3600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_runtime_3600_plus
 
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0000_0001
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0001_0005
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0005_0010
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0010_0030
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0030_0060
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0060_0300
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0300_0600
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_0600_1800
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_1800_3600
-,SUM(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_runtime_3600_plus
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_0000_0001
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_0001_0005
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_0005_0010
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_0010_0030
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_0030_0060
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_0060_0300
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_0300_0600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_0600_1800
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_1800_3600
+,SUM(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_runtime_3600_plus
 
 
 /* delaytime by [query count | cpu | iogb] */
-,SUM(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0000_0001
-,SUM(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0001_0005
-,SUM(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0005_0010
-,SUM(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0010_0030
-,SUM(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0030_0060
-,SUM(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0060_0300
-,SUM(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0300_0600
-,SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_0600_1800
-,SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_1800_3600
-,SUM(CASE WHEN  dbql.delaytime  >3600                            THEN CAST(dbql.Statements as integer) ELSE 0 END)   as qrycnt_in_delaytime_3600_plus
+,SUM(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_0000_0001
+,SUM(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_0001_0005
+,SUM(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_0005_0010
+,SUM(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_0010_0030
+,SUM(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_0030_0060
+,SUM(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_0060_0300
+,SUM(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_0300_0600
+,SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_0600_1800
+,SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_1800_3600
+,SUM(CASE WHEN  dbql.delaytime  >3600                             THEN CAST(dbql.Statements as BIGINT) ELSE 0 END)   as qrycnt_in_delaytime_3600_plus
 
-,SUM(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0000_0001
-,SUM(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0001_0005
-,SUM(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0005_0010
-,SUM(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0010_0030
-,SUM(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0030_0060
-,SUM(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0060_0300
-,SUM(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0300_0600
-,SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_0600_1800
-,SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_1800_3600
-,SUM(CASE WHEN  dbql.delaytime  >3600                            THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,2)) ELSE 0 END)   as cpusec_in_delaytime_3600_plus
+,SUM(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_0000_0001
+,SUM(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_0001_0005
+,SUM(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_0005_0010
+,SUM(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_0010_0030
+,SUM(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_0030_0060
+,SUM(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_0060_0300
+,SUM(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_0300_0600
+,SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_0600_1800
+,SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_1800_3600
+,SUM(CASE WHEN  dbql.delaytime  >3600                             THEN CAST(dbql.AMPCPUtime + dbql.ParserCPUTime as decimal(18,4)) ELSE 0 END)   as cpusec_in_delaytime_3600_plus
 
-,SUM(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0000_0001
-,SUM(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0001_0005
-,SUM(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0005_0010
-,SUM(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0010_0030
-,SUM(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0030_0060
-,SUM(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0060_0300
-,SUM(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0300_0600
-,SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_0600_1800
-,SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_1800_3600
-,SUM(CASE WHEN  dbql.delaytime  >3600                            THEN CAST(ReqIOKB/1e6 as decimal(18,2)) ELSE 0 END)   as iogb_in_delaytime_3600_plus
+,SUM(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_0000_0001
+,SUM(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_0001_0005
+,SUM(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_0005_0010
+,SUM(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_0010_0030
+,SUM(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_0030_0060
+,SUM(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_0060_0300
+,SUM(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_0300_0600
+,SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_0600_1800
+,SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_1800_3600
+,SUM(CASE WHEN  dbql.delaytime  >3600                             THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END)   as iogb_in_delaytime_3600_plus
 
 
 From {dbqlogtbl} as dbql       /* pdcrinfo.dbqlogtbl_hst, typically */
