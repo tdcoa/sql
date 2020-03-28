@@ -238,8 +238,12 @@ SELECT
 ,zeroifnull(avg(NumOfActiveAMPs)) as NumOfActiveAMPs_Avg
 ,zeroifnull(sum(SpoolUsage/1e9)) as Spool_GB
 ,zeroifnull(avg(SpoolUsage/1e9)) as Spool_GB_Avg
+/*
 ,zeroifnull(sum(MaxStepMemory * nullifzero(NumOfActiveAMPs))) as Memory_Max_Used_MB
 ,zeroifnull(avg(MaxStepMemory * nullifzero(NumOfActiveAMPs))) as Memory_Max_Used_MB_Avg
+*/
+,0 as Memory_Max_Used_MB
+,0 as Memory_Max_Used_MB_Avg
 ,zeroifnull(avg((AMPCPUTime / nullifzero(MaxAmpCPUTime*NumOfActiveAMPs))-1)) as CPUSec_Skew_AvgPCt
 ,zeroifnull(avg((TotalIOCount / nullifzero(MaxAmpIO*NumOfActiveAMPs))-1) ) as IOCnt_Skew_AvgPct
 ,zeroifnull(avg(VHPhysIO / nullifzero(VHLogicalIO))) as VeryHot_IOcnt_Cache_AvgPct
