@@ -163,6 +163,7 @@ FROM {resusagespma} s1,
 --FROM PDCRINFO.ResUsageSPMA_hst s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
+AND s1.vproc1 > 0
 AND c1.day_of_week IN (2,3,4,5,6)
 AND s1.TheDate BETWEEN {startdate} AND {enddate}
 GROUP BY 1,2,3,4) a1
@@ -230,6 +231,7 @@ FROM {resusagespma} s1,
 --FROM PDCRINFO.ResUsageSPMA_hst s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
+AND s1.vproc1 > 0
 AND c1.day_of_week IN (2,3,4,5,6)
 AND s1.TheDate BETWEEN {startdate} AND {enddate}
 GROUP BY 1,2,3,4) a1
