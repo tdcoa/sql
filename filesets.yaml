@@ -24,6 +24,17 @@ dbql_core_1620pdcr:
     - "dims/dim_user.csv"
 
 
+success_plan:
+  active:           "True"
+  fileset_version:  "1.0"
+  startdate:        "Current_Date - 30"
+  enddate:          "Current_Date - 1"
+  resusagescpu:     "pdcrinfo.resUsageSCPU_hst"
+  files:
+    - "success_plan/cpu_summary.coa.sql"
+    - "success_plan/cpu_summary.coa.py"
+
+
 level1_how_much_1620pdcr:
   active:           "True"
   fileset_version:  "1.0"
