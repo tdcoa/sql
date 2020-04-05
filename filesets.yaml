@@ -33,7 +33,8 @@ success_plan:
   files:
     - "success_plan/cpu_summary.coa.sql"
     - "success_plan/cpu_summary.coa.py"
-
+    - "success_plan/cpu_summary.xlsx"
+    
 
 level1_how_much_1620pdcr:
   active:           "True"
