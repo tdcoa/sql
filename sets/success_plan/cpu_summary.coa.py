@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from tdcsm import tdviz as tv
+from tdcsm.tdviz import tdviz as tv
 
-csvfile = 'test_cpu_summary.csv'
+csvfile = 'cpu_summary.csv'
 indexlist = []
 datalist = ['Idle_Used_CPU_secM','IOWait_Used_CPU_secM','OS_Used_CPU_secM','DBS_Used_CPU_secM','Total_Available_CPU_secM']
 
@@ -32,12 +32,12 @@ for metric in metrics:
 dfn.columns = ['LogTime', "Metric", "CPUsec (millions)"]
 
 sns.set(style="darkgrid")
-plt.figure(figsize=(24,6))
+plt.figure(figsize=(24,8))
 plt.xticks(
     rotation = 90,
     horizontalalignment = 'right',
     fontweight = 'light',
-    fontsize = 4
+    fontsize = 8
 )
 
 chart = sns.lineplot(data=dfn, x="LogTime", y="CPUsec (millions)", hue="Metric")
