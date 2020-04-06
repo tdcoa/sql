@@ -18,7 +18,9 @@ Select
 ,IndexCount
 ,MacroCount
 ,"SP&TrigCount"
-,UDObjectCount
+,ForeignServerCount
+,UserDefinedCount
+,FunctionCount
 ,OtherCount
 ,Current_Timestamp as RunTS
 FROM (
@@ -40,7 +42,9 @@ FROM (
     ,Sum(d.IndexCount) as IndexCount
     ,Sum(d.MacroCount) as MacroCount
     ,Sum(d."SP&TrigCount") as "SP&TrigCount"
-    ,Sum(d.UDObjectCount) as UDObjectCount
+    ,Sum(d.ForeignServerCount) as ForeignServerCount
+    ,Sum(d.UserDefinedCount) as UserDefinedCount
+    ,Sum(d.FunctionCount) as FunctionCount
     ,Sum(d.OtherCount) as OtherCount
     FROM
     (
