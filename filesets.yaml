@@ -31,10 +31,13 @@ success_plan:
   enddate:          "Current_Date - 1"
   resusagescpu:     "pdcrinfo.resUsageSCPU_hst"
   files:
+    - "dims/dim_tablekind.csv"
+    - "success_plan/cds_by_database.coa.sql"
     - "success_plan/cpu_summary.coa.sql"
     - "success_plan/cpu_summary.coa.py"
     - "success_plan/cpu_summary.xlsx"
-    
+
+
 
 level1_how_much_1620pdcr:
   active:           "True"
