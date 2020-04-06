@@ -1,27 +1,27 @@
 TableKind,Table_Bucket,TableKind_Desc
-A,Function,Aggregate Function
-B,Function,Combined aggregate and ordered analytical function
-C,Table Operator,Table operator parser contract function
-D,JAR,JAR
-E,Stored Procedure,External stored procedure
+K,Foreign Server,Foreign Server Object
+S,Function,Ordered Analytic Function
+R,Function,Table function
 F,Function,Standard Function
-G,Trigger,Trigger
-H,Other,Instance or constructor method
+B,Function,Combined aggregate and ordered analytical function
+A,Function,Aggregate Function
+D,Function,JAR
+2,Function,Function Alias Object
+C,Function,Table operator parser contract function
 I,Index,Join Index
 J,Journal,Journal
-K,Foreign Server,Foreign Server Object
-L,Table Operator,User-defined table operator
 M,Macro,Macro
-O,Table,Table with no primary index and no partitioning
-P,Stored Procedure,Stored procedure
-Q,Table,Queue Table
-R,Function,Table function
-S,Function,Ordered Analytic Function
-T,Table,Table
-U,Other,User-defined type
-V,View,View
-X,Other,Authorization
 Y,Other,GLOP set
-Z,UIF,User installed file
+X,Other,Authorization
+H,Other,Instance or constructor method
 1,Other,DataSet Schema Object
-2,Other,Function Alias Object
+P,Stored Procedure,Stored procedure
+E,Stored Procedure,External stored procedure
+T,Table,Table
+Q,Table,Queue Table
+O,Table,Table with no primary index and no partitioning
+G,Trigger,Trigger
+U,User Defined,User-defined type
+L,User Defined,User-defined table operator
+Z,User Defined,User installed file
+V,View,View
