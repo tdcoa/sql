@@ -146,6 +146,6 @@ SELECT
  COUNT(*) as Request_Count
 FROM {dbqlogtbl} /* PDCRINFO.DBQLOGTBL_HST */ as A
 WHERE LogDate BETWEEN {startdate} and {enddate}
-GROUP BY 1,2,3,4
+GROUP BY 1,2,3
 ) A
 GROUP BY 1,2,3,4 having Request_Count > 0;
