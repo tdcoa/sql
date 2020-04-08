@@ -1,27 +1,27 @@
-TableKind,Table_Bucket,TableKind_Desc
-K,Foreign Server,Foreign Server Object
-S,Function,Ordered Analytic Function
-R,Function,Table function
-F,Function,Standard Function
-B,Function,Combined aggregate and ordered analytical function
-A,Function,Aggregate Function
-D,Function,JAR
-2,Function,Function Alias Object
-C,Function,Table operator parser contract function
-I,Index,Join Index
-J,Journal,Journal
-M,Macro,Macro
-Y,Other,GLOP set
-X,Other,Authorization
-H,Other,Instance or constructor method
-1,Other,DataSet Schema Object
-P,Stored Procedure,Stored procedure
-E,Stored Procedure,External stored procedure
-T,Table,Table
-Q,Table,Queue Table
-O,Table,Table with no primary index and no partitioning
-G,Trigger,Trigger
-U,User Defined,User-defined type
-L,User Defined,User-defined table operator
-Z,User Defined,User installed file
-V,View,View
+SiteID,TableKind,Table_Bucket,TableKind_Desc
+Default,K,Foreign Server,Foreign Server Object
+Default,S,Function,Ordered Analytic Function
+Default,R,Function,Table function
+Default,F,Function,Standard Function
+Default,B,Function,Combined aggregate and ordered analytical function
+Default,A,Function,Aggregate Function
+Default,D,Function,JAR
+Default,2,Function,Function Alias Object
+Default,C,Function,Table operator parser contract function
+Default,I,Index,Join Index
+Default,J,Journal,Journal
+Default,M,Macro,Macro
+Default,Y,Other,GLOP set
+Default,X,Other,Authorization
+Default,H,Other,Instance or constructor method
+Default,1,Other,DataSet Schema Object
+Default,P,Stored Procedure,Stored procedure
+Default,E,Stored Procedure,External stored procedure
+Default,T,Table,Table
+Default,Q,Table,Queue Table
+Default,O,Table,Table with no primary index and no partitioning
+Default,G,Trigger,Trigger
+Default,U,User Defined,User-defined type
+Default,L,User Defined,User-defined table operator
+Default,Z,User Defined,User installed file
+Default,V,View,View
