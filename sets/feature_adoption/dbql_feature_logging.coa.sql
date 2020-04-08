@@ -8,6 +8,7 @@
      enddate    = {enddate}
 */
 
+/*{{save:dbql_feature_logging.csv}}*/
 
 SELECT
  '{siteid}' as SiteID
