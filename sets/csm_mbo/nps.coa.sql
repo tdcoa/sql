@@ -36,17 +36,17 @@ From (
     ,sum(case when score >=9 then 1
               when score <=6 then-1
               else 0 end) as NPS
-    from adlste_westcomm.hilton_nps
+    from adlste_westcomm.dat_NPS_West
     Group by rollup("Account Name"), Survey_Period, CSM
     ) nps
 right outer join
     (
     /* all combinations of account by quarter */
     Select Account_Name, Survey_Period, CSM from
-    (Select "Survey Period" as Survey_Period from adlste_westcomm.hilton_nps group by 1) as a1
+    (Select "Survey Period" as Survey_Period from adlste_westcomm.dat_NPS_West group by 1) as a1
     cross join
     (Select case when "Account Name" is null then '== TOTAL ==' else "Account Name" end as Account_Name, CSM
-        from adlste_westcomm.hilton_nps group by rollup("Account Name"), CSM) as a2
+        from adlste_westcomm.dat_NPS_West group by rollup("Account Name"), CSM) as a2
     ) qtr
 on  qtr.Account_Name = nps.Account_Name
 and qtr.Survey_Period = nps.Survey_Period
