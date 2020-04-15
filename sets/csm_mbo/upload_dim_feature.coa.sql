@@ -5,8 +5,8 @@
 /*{{file:create_dim_feature.sql}}*/
 
 delete from adlste_coa.dim_feature
-  where (Account, DBS_Version, BitPOS) in
-        (select Account, DBS_Version, BitPOS
+  where (Account_Name, DBS_Version, BitPOS) in
+        (select Account_Name, DBS_Version, BitPOS
          from "dim_feature.csv")
 ;
 
