@@ -81,3 +81,19 @@ level2_how_well_1620pdcr:
     - "level2_how_well_1620pdcr/Concurrency.1620.pdcr.v02.coa.sql"
     - "level2_how_well_1620pdcr/Workload_Analysis.1620.pdcr.v02.coa.sql"
     - "feature_adoption/dbql_feature_logging.coa.sql"
+
+
+level25_BUDlite_1620pdcr:
+  active:           "True"
+  fileset_version:  "1.0"
+  startdate:        "Current_Date - 365"
+  enddate:          "Current_Date - 1"
+  dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
+  dbqlsummarytbl:   "pdcrinfo.dbqlsummarytbl_hst"
+  files:
+    - "level25_bususedecode_lite/bizusedecodelite-Q1.coa.sql"
+    - "level25_bususedecode_lite/bizusedecodelite-Q2.coa.sql"
+    - "level25_bususedecode_lite/bizusedecodelite-Q3.coa.sql"
+    - "level25_bususedecode_lite/bizusedecodelite-Q3a.coa.sql"
+    - "level25_bususedecode_lite/bizusedecodelite-Q4.coa.sql"
+    - "level25_bususedecode_lite/bizusedecodelite-Q5.coa.sql"
