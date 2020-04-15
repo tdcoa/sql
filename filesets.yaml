@@ -97,3 +97,14 @@ level25_BUDlite_1620pdcr:
     - "level25_bususedecode_lite/bizusedecodelite-Q3a.coa.sql"
     - "level25_bususedecode_lite/bizusedecodelite-Q4.coa.sql"
     - "level25_bususedecode_lite/bizusedecodelite-Q5.coa.sql"
+
+
+csm_mbo:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    - "csm_mbo/create_dim_feature.sql"
+    - "csm_mbo/upload_dim_feature.coa.sql"
+    - "dim/dim_features.csv"
+    - "csm_mbo/cpu_util.coa.sql"
+    - "csm_mbo/nps.coa.sql"
