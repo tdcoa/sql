@@ -105,6 +105,6 @@ csm_mbo:
   files:
     - "csm_mbo/create_dim_feature.sql"
     - "csm_mbo/upload_dim_feature.coa.sql"
-    - "dim/dim_features.csv"
+    - "dim/dim_feature.csv"
     - "csm_mbo/cpu_util.coa.sql"
     - "csm_mbo/nps.coa.sql"
