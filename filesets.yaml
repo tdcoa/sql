@@ -33,7 +33,7 @@ success_plan_1620pdcr:
   dbqlogtbl:        "pdcrinfo.dbqLogTbl_Hst"
   files:
     - "dims/dim_tablekind.csv"
-    - "dims/dim_features.csv"
+    - "dims/dim_feature.csv"
     - "success_plan/cds_by_database.coa.sql"
     - "success_plan/cpu_summary.coa.sql"
     - "success_plan/cpu_summary.coa.py"

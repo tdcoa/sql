@@ -1,9 +1,9 @@
 ﻿Account,DBS Version,SuperCategory,FeatureCategory,Usage,MBO,Differentiator,FeatureBitPos,FeatureName,Notes
-Default,16.20.02.00,Usage Analysis,Performance Management,DDL,1,1,16,Collect Statistics,
+Default,16.20.02.00,Usage Analysis,Performance Management,DDL,1,1,16,Collect Statistics,--
 Default,16.20.02.00,High Availability,High Availability,DDL,0,0,17,Fallback,
 Default,16.20.02.00,Data Optimization,Data Management,DDL,1,1,18,SET Table,
 Default,16.20.02.00,Data Optimization,Data Management,DDL,1,0,19,MULTISET Table,
-Default,16.20.02.00,Data Optimization,Data Distribution,DDL,?,?,20,Hashed Table,
+Default,16.20.02.00,Data Optimization,Data Distribution,DDL,-9,-9,20,Hashed Table,
 Default,16.20.02.00,In-Database Analytics,In-Database Programming,DDL,1,1,21,Trigger,
 Default,16.20.02.00,Performance,Compression,REQ,0,0,22,Block Level Compression,
 Default,16.20.02.00,Performance,Compression,REQ,0,0,23,Auto Compression,
@@ -61,9 +61,9 @@ Default,16.20.02.00,In-Database Analytics,Advanced SQL Function,SQL,1,1,74,Terad
 Default,16.20.02.00,In-Database Analytics,Advanced SQL Function,SQL,1,1,75,Teradata Unpivot,
 Default,16.20.02.00,High Availability,High Availability,ENV,0,1,76,Redrive,
 Default,16.20.02.00,Usage Analysis,Usage Analysis,LOG,1,1,77,Queryband,
-Default,16.20.02.00,Usage Analysis,Performance Management,,?,?,78,Index Analysis,PM Feature Usage  Logging
-Default,16.20.02.00,Usage Analysis,Performance Management,,?,?,79,Partition Analysis,"PM Feature Usage  Logging == Priyadarshi, Ranjan"
-Default,16.20.02.00,High Availability,High Availability,ENV,?,?,80,Replication,
+Default,16.20.02.00,Usage Analysis,Performance Management,,-9,-9,78,Index Analysis,PM Feature Usage  Logging
+Default,16.20.02.00,Usage Analysis,Performance Management,,-9,-9,79,Partition Analysis,"PM Feature Usage  Logging == Priyadarshi, Ranjan"
+Default,16.20.02.00,High Availability,High Availability,ENV,-9,-9,80,Replication,
 Default,16.20.02.00,High Availability,High Availability,SQL,0,1,81,Load Isolation,
 Default,16.20.02.00,Performance,Performance - Optimizer,PE,0,1,82,Single Sender Row Re-Distribution,
 Default,16.20.02.00,High Availability,High Availability,DDL,0,0,83,Partition Level Locking,
@@ -83,7 +83,7 @@ Default,16.20.02.00,Data Optimization,Data Loading,APP,1,0,96,MloadX Protocol,
 Default,16.20.02.00,In-Database Analytics,In-Database Programming,ENV,0,0,97,Fast Path Function,
 Default,16.20.02.00,In-Database Analytics,In-Database Programming,APP,1,1,98,R Table Operator,
 Default,16.20.02.00,In-Database Analytics,In-Database Programming,SQL,1,0,99,Bit Manipulation Function,
-Default,16.20.02.00,In-Database Analytics,In-Database Programming,SQL,?,?,100,Analytics Extensions,Ordered Analytic Functions
+Default,16.20.02.00,In-Database Analytics,In-Database Programming,SQL,-9,-9,100,Analytics Extensions,Ordered Analytic Functions
 Default,16.20.02.00,Performance,Performance - Optimizer,PE,0,1,101,Partial Redistribution Partial Duplication,
 Default,16.20.02.00,Data Optimization,Data Management,DDL,1,0,102,Queryable View Column Info,Metadata Comment On…
 Default,16.20.02.00,Performance,Performance - SQL,PE,0,0,103,Multiple Count Distinct,
