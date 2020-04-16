@@ -2,7 +2,8 @@
 */
 
 /*{{temp:dim_feature.csv}}*/
-/*{{file:create_dim_feature.sql}}*/
+/* only needed if table is missing:
+ {{file:create_dim_feature.sql}}*/
 
 delete from adlste_coa.dim_feature
   where (Account_Name, DBS_Version, BitPOS) in
