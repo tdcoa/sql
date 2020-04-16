@@ -1,4 +1,4 @@
-﻿Account_Name,DBS_Version,SuperCategory,FeatureCategory,Usage,MBO,Differentiator,FeatureBitPos,FeatureName,Notes
+﻿Account_Name,DBS_Version,SuperCategory,FeatureCategory,Usage,MBO,Differentiator,BitPos,FeatureName,Notes
 Default,16.20.02.00,Usage Analysis,Performance Management,DDL,1,1,16,Collect Statistics,--
 Default,16.20.02.00,High Availability,High Availability,DDL,0,0,17,Fallback,
 Default,16.20.02.00,Data Optimization,Data Management,DDL,1,1,18,SET Table,
