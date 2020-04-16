@@ -1,3 +1,4 @@
+locking row for access 
 select
  qtr.Account_Name
 ,qtr.Survey_Period
