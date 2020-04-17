@@ -31,27 +31,27 @@ Select
  ,case when Account_Name is null then '== TOTALS ==' else Account_Name end as Account_Name
  ,case when Site_ID is null then '== SUBTOTALS ==' else Site_ID end as Site_ID
 /* cpu slope growth */
-  ,sum((last30_Time - last30_Time_avg) * (last30_CPU - last30_CPU_avg))
-      / sum((last30_Time - last30_Time_avg) * (last30_Time - last30_Time_avg)) as last30_Slope
   ,sum((last120_Time - last120_Time_avg) * (last120_CPU - last120_CPU_avg))
       / sum((last120_Time - last120_Time_avg) * (last120_Time - last120_Time_avg)) as last120_Slope
-  ,cast( (last30_Slope  / nullifzero(last120_Slope))-1 as decimal(9,4)) as  Slope_Growth
+  ,sum((last365_Time - last365_Time_avg) * (last365_CPU - last365_CPU_avg))
+      / sum((last365_Time - last365_Time_avg) * (last365_Time - last365_Time_avg)) as last365_Slope
+  ,cast( (last120_Slope  / nullifzero(last365_Slope))-1 as decimal(9,4)) as  Slope_Growth
 /* raw cpu growth, avg() to account different #of days */
-  ,avg(last30_CPU) as  last30_CPUamt
-  ,avg(last120_CPU) as last120_CPUamt
-  ,cast((last30_CPUamt / nullifzero(last120_CPUamt))-1 as decimal(9,4)) as  CPU_Growth
+  ,avg(last120_CPU) as  last120_CPUamt
+  ,avg(last365_CPU) as last365_CPUamt
+  ,cast((last120_CPUamt / nullifzero(last365_CPUamt))-1 as decimal(9,4)) as  CPU_Growth
 from
 (
     Select
      FullName, Account_Name, Site_ID, LogDate
-    ,last30_CPU
-    ,avg(last30_cpu) over(partition by Site_ID) as  last30_CPU_avg
-    ,last30_Time
-    ,avg(last30_time) over(partition by Site_ID) as  last30_Time_avg
     ,last120_CPU
     ,avg(last120_cpu) over(partition by Site_ID) as  last120_CPU_avg
     ,last120_Time
     ,avg(last120_time) over(partition by Site_ID) as  last120_Time_avg
+    ,last365_CPU
+    ,avg(last365_cpu) over(partition by Site_ID) as  last365_CPU_avg
+    ,last365_Time
+    ,avg(last365_time) over(partition by Site_ID) as  last365_Time_avg
     from
     (
         select
@@ -60,12 +60,13 @@ from
         ,Site_ID
         ,TheDate as LogDate
         ,Eff_Used_CPU_GHz as CPU
-        ,case when date_order <=30 then date_order else  null end as last30_Time
-        ,case when date_order <=30 then CPU else  null end as last30_CPU
-        ,case when date_order between 30 and 120 then date_order else  null end as last120_Time
-        ,case when date_order between 30 and 120 then CPU else  null end as last120_CPU
+        ,case when date_order <=120 then date_order else  null end as last120_Time
+        ,case when date_order <=120 then CPU else  null end as last120_CPU
+        ,case when date_order between 120 and 365 then date_order else  null end as last365_Time
+        ,case when date_order between 120 and 365 then CPU else  null end as last365_CPU
         ,ROW_NUMBER() OVER (partition by Site_ID order by TheDate Desc ) AS date_order
         from adlste_coa.coat_dim_cis_cpu_gtm_system_usage_hist as a
+        ---where theDate between  {yr_startdate} and {qtr_enddate}
         join CSM_Alignment   on a.Site_ID = SiteID
     ) as a
 ) as b
