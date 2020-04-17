@@ -9,12 +9,11 @@
 */
 
 /*{{save:dbql_feature_logging.csv}}*/
-
 SELECT
- '{siteid}' as SiteID
-,LogDate
-,MaskedUserName
-,Request_count
+ '{siteid}' (VARCHAR(100)) as SiteID
+,A.LogDate as LogDate
+,HASHROW(A.USERNAME) as MaskedUserName
+,count(*) as Request_Count
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -16)))) AS "Collect Statistics"
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -17)))) AS "Fallback"
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -18)))) AS "SET Table"
@@ -137,15 +136,6 @@ SELECT
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -135)))) AS "SET TRANSFORM"
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -136)))) AS "ODBC Scalar Functions"
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -137)))) AS "Multisource"
-from
-(
-SELECT
- A.LogDate as LogDate,
- HASHROW(A.USERNAME) as MaskedUserName,
- A.FEATUREUSAGE,
- COUNT(*) as Request_Count
 FROM {dbqlogtbl} /* PDCRINFO.DBQLOGTBL_HST */ as A
 WHERE LogDate BETWEEN {startdate} and {enddate}
-GROUP BY 1,2,3
-) A
-GROUP BY 1,2,3,4 having Request_Count > 0;
+GROUP BY 1,2,3;
