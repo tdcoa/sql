@@ -19,11 +19,3 @@ Default,Like,%Tableau%,Analytic,no    ,dept,subdept,rgn,4400
 Default,Like,%BOBJ%,Analytic,no    ,dept,subdept,rgn,4500
 Default,Like,%ETL%,ETL,no    ,dept,subdept,rgn,6000
 Transcend%,RegEx,[a-z]{2}[0-9]{6},User (QLID),yes,dept,subdept,rgn,7000
-Apple%,RegEx,[a-z]{1}[0-9]{4},Adhoc User,yes,Uknown,Unknown,CA,10000
-Apple%,Like,APAY%USER,App User,No    ,Apple Pay,Unknown,CA,9000
-Apple%,Equal,PerfAnalysis,Admin,no    ,dept,subdept,rgn,100
-Apple%,Equal,BENCHMARK_USER,Admin ,no    ,dept,subdept,rgn,100
-Apple%,Like,DAP_%USER,Application-DAP,no    ,dept,subdept,rgn,2050
-Apple%,Like,ACSE_USER%,Analytic,no    ,dept,subdept,rgn,4000
-Apple%,Like,ACA_USER%,Analytic,no    ,dept,subdept,rgn,4100
-Apple%,Like,ARTEMIS_USER%,Analytic,no    ,dept,subdept,rgn,4200
