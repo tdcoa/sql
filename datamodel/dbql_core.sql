@@ -1,4 +1,4 @@
-CREATE MULTISET GLOBAL TEMPORARY TABLE adlste_coa.stg_dat_DBQL_Core
+CREATE MULTISET GLOBAL TEMPORARY TABLE adlste_coa_STG.stg_dat_DBQL_Core
  (SiteID                           VARCHAR(64)  CHARACTER SET LATIN
  ,LogDate                          DATE
  ,LogHour                          INTEGER
@@ -238,14 +238,15 @@ CREATE MULTISET GLOBAL TEMPORARY TABLE adlste_coa.stg_dat_DBQL_Core
 
 
 REPLACE PROCEDURE adlste_coa.sp_dat_DBQL_Core ( fileset_version VARCHAR(128) )
+SQL SECURITY CREATOR
 BEGIN
 
   delete from adlste_coa.coat_dat_DBQL_Core
   where   (SiteID, LogDate) in
-   (Select SiteID, LogDate From adlste_coa.stg_dat_DBQL_Core);
+   (Select SiteID, LogDate From adlste_coa_stg.stg_dat_DBQL_Core);
 
   Insert into adlste_coa.coat_dat_DBQL_Core
-  Select * From adlste_coa.stg_dat_DBQL_Core;
+  Select * From adlste_coa_stg.stg_dat_DBQL_Core;
 END;
 
 
