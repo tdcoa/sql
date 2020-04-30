@@ -1,25 +1,4 @@
 
-/*
-create volatile table CSM_Alignment as
-(
-    select
-    assoc_qlid  as QuicklookID
-    ,Full_Name  as FullName
-    ,Acct_Name  as AccountName
-    ,Site_ID    as SiteID
-    from adlste_coa.coat_mat_sales_role_qlid a
-    where assoc_qlid in(select QLID from adlste_coa.coat_dim_csm_territory)
-    Group by 1,2,3,4
-) with data no primary index on commit preserve rows;
-
-
-delete from CSM_Alignment where QuicklookID = 'jo186015' and AccountName like 'LinkedIn%';
-delete from CSM_Alignment where QuicklookID = 'jo186015' and AccountName like 'PayPal%';
-delete from CSM_Alignment where QuicklookID = 'rb186085' and AccountName like 'Blizzard%';
-delete from CSM_Alignment where QuicklookID = 'yl186040' and AccountName like 'Gap%';
-delete from CSM_Alignment where QuicklookID = 'jo186015' and AccountName like 'LinkedIn%';
-*/
-
 
 
 Create volatile table siteid_x_account as
