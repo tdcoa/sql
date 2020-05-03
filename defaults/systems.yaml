@@ -3,6 +3,8 @@ systems:
   Customer_PROD_System_Name:
     siteid:     "TDSiteID123"
     active:     "False"
+    collection: "pdcr"
+    dbnversion: "16.20"
     host:       "someurl.prod.acme.com"
     username:   "{customer_username}"
     password:   "{customer_password}"
@@ -17,6 +19,8 @@ systems:
   Customer_DEV_System_Name:
     siteid:     "TDSiteID456"
     active:     "False"
+    collection: "pdcr"
+    dbnversion: "16.20"
     host:       "someurl.dev.acme.com"
     username:   "{customer_username}"
     password:   "{customer_password}"
@@ -30,7 +34,9 @@ systems:
 
   Transcend:
     siteid:     "Transcend"
-    active:     "False"
+    active:     "True"
+    collection: "pdcr"
+    dbnversion: "16.20"
     host:       "tdprdcop12.td.teradata.com"
     username:   "{td_username}"
     password:   "{td_password}"
