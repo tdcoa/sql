@@ -1,0 +1,43 @@
+systems:
+
+  Customer_PROD_System_Name:
+    siteid:     "TDSiteID123"
+    active:     "False"
+    host:       "someurl.prod.acme.com"
+    username:   "{customer_username}"
+    password:   "{customer_password}"
+    logmech:    ""     #blank, TD2, LDAP, etc.
+    use:        "prod" #dev, qa, prod, dr, etc.
+    filesets:
+      demo:
+        active:     "True"
+        startdate:  "DATE-7"
+        enddate:    "DATE-1"
+
+  Customer_DEV_System_Name:
+    siteid:     "TDSiteID456"
+    active:     "False"
+    host:       "someurl.dev.acme.com"
+    username:   "{customer_username}"
+    password:   "{customer_password}"
+    logmech:    ""     #blank, TD2, LDAP, etc.
+    use:        "dev" #dev, qa, prod, dr, etc.
+    filesets:
+      demo:
+        active:     "True"
+        startdate:  "DATE-7"
+        enddate:    "DATE-1"
+
+  Transcend:
+    siteid:     "Transcend"
+    active:     "False"
+    host:       "tdprdcop12.td.teradata.com"
+    username:   "{tdusername}"
+    password:   "{tdpassword}"
+    logmech:    "LDAP"
+    use:        "prod"
+    filesets:
+      demo:
+        active:     "True"
+        startdate:  "DATE-7"
+        enddate:    "DATE-1"
