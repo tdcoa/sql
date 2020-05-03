@@ -32,8 +32,8 @@ systems:
     siteid:     "Transcend"
     active:     "False"
     host:       "tdprdcop12.td.teradata.com"
-    username:   "{tdusername}"
-    password:   "{tdpassword}"
+    username:   "{td_username}"
+    password:   "{td_password}"
     logmech:    "LDAP"
     use:        "prod"
     filesets:

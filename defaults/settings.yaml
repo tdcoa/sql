@@ -8,8 +8,8 @@ substitutions:
 transcend:
   host:       "tdprdcop3.td.teradata.com"
   logmech:    "LDAP"
-  username:   "{tdusername}"
-  password:   "{tdpassword}"
+  username:   "{td_username}"
+  password:   "{td_password}"
   db_coa:     "adlste_coa"
   db_region:  "adlste_westcomm"
 
