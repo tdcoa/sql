@@ -1,0 +1,111 @@
+filesets:
+  demo:
+    active:     "True"
+    fileset_version: "1.15"
+    startdate:  "Current_Date - 7"
+    enddate:    "Current_Date - 1"
+    some_value: "Donkey"
+    files:
+      - "demo/0000.dates.csv"
+      - "demo/0000.dbcinfo.coa.sql"
+      - "demo/example.sql"
+
+
+  dbql_core_1620pdcr:
+    active:           "True"
+    fileset_version:  "1.0"
+    startdate:        "Current_Date - 45"
+    enddate:          "Current_Date - 1"
+    dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
+    resusagespma:     "pdcrinfo.ResUsageSPMA_Hst"
+    files:
+      - "dbql_core_1620pdcr/dbql_core.1620.pdcr.v3.coa.sql"
+      - "dims/dim_app.csv"
+      - "dims/dim_statement.csv"
+      - "dims/dim_user.csv"
+
+
+  success_plan_1620pdcr:
+    active:           "True"
+    fileset_version:  "1.0"
+    startdate:        "Current_Date - 45"
+    enddate:          "Current_Date - 1"
+    resusagescpu:     "pdcrinfo.resUsageSCPU_hst"
+    dbqlogtbl:        "pdcrinfo.dbqLogTbl_Hst"
+    files:
+      - "dims/dim_tablekind.csv"
+      - "dims/dim_feature.csv"
+      - "success_plan/cds_by_database.coa.sql"
+      - "success_plan/cpu_summary.coa.sql"
+      - "success_plan/cpu_summary.coa.py"
+      - "success_plan/cpu_summary.xlsx"
+      - "feature_adoption/dbql_feature_logging.coa.sql"
+
+
+
+  level1_how_much_1620pdcr:
+    active:           "True"
+    fileset_version:  "1.0"
+    startdate:        "Current_Date - 45"
+    enddate:          "Current_Date - 1"
+    databasespace:    "pdcrinfo.DatabaseSpace_hst"
+    dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
+    resusagesldv:     "pdcrinfo.ResUsageSldv_Hst"
+    resusagespma:     "pdcrinfo.ResUsageSpma_Hst"
+    files:
+      - "level1_how_much_1620pdcr/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+      - "level1_how_much_1620pdcr/io_trend_sldv.1620.pdcr.v12.coa.sql"
+      - "level1_how_much_1620pdcr/storage_trend.1620.pdcr.v11.coa.sql"
+
+
+  level1_how_much_1620dbc:
+    active:           "True"
+    fileset_version:  "1.0"
+    startdate:        "Current_Date - 45"
+    enddate:          "Current_Date - 1"
+    dbqlogtbl:        "dbc.DBQLogTbl"
+    resusagesldv:     "dbc.ResUsageSldv"
+    resusagespma:     "dbc.ResUsageSpma"
+    files:
+      - "level1_how_much_1620pdcr/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+      - "level1_how_much_1620pdcr/io_trend_sldv.1620.pdcr.v12.coa.sql"
+
+
+  level2_how_well_1620pdcr:
+    active:           "True"
+    fileset_version:  "1.0"
+    startdate:        "Current_Date - 45"
+    enddate:          "Current_Date - 1"
+    dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
+    featurelistv:     "dbc.QryLogFeatureListV"
+    files:
+      - "level2_how_well_1620pdcr/Concurrency.1620.pdcr.v02.coa.sql"
+      - "level2_how_well_1620pdcr/Workload_Analysis.1620.pdcr.v02.coa.sql"
+      - "feature_adoption/dbql_feature_logging.coa.sql"
+
+
+  level25_BUDlite_1620pdcr:
+    active:           "True"
+    fileset_version:  "1.0"
+    startdate:        "Current_Date - 365"
+    enddate:          "Current_Date - 1"
+    dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
+    dbqlsummarytbl:   "pdcrinfo.dbqlsummarytbl_hst"
+    files:
+      - "level25_bususedecode_lite/bizusedecodelite-Q1.coa.sql"
+      - "level25_bususedecode_lite/bizusedecodelite-Q2.coa.sql"
+      - "level25_bususedecode_lite/bizusedecodelite-Q3.coa.sql"
+      - "level25_bususedecode_lite/bizusedecodelite-Q3a.coa.sql"
+      - "level25_bususedecode_lite/bizusedecodelite-Q4.coa.sql"
+      - "level25_bususedecode_lite/bizusedecodelite-Q5.coa.sql"
+
+
+  csm_mbo:
+    active:           "True"
+    fileset_version:  "1.0"
+    files:
+      - "csm_mbo/create_dim_feature.sql"
+      - "csm_mbo/upload_dim_feature.coa.sql"
+      - "dims/dim_feature.csv"
+      - "csm_mbo/cpu_util.coa.sql"
+      - "csm_mbo/nps.coa.sql"
