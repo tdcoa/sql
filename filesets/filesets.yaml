@@ -22,7 +22,7 @@ filesets:
     files:
       dbql_core_pdcr16:
         collection:   ["pdcr"]
-        dbversion:  ["16.20", "16.10", "16.00"]
+        dbsversion:   ["16.20", "16.10", "16.00"]
         gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
         startdate:    "Current_Date - 45"
         enddate:      "Current_Date - 1"
@@ -30,7 +30,7 @@ filesets:
         resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
       dbql_core_dbc16:
         collection:   ["dbc"]
-        dbversion:  ["16.20", "16.10", "16.00"]
+        dbsversion:   ["16.20", "16.10", "16.00"]
         gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
         startdate:    "Current_Date - 45"
         enddate:      "Current_Date - 1"
@@ -57,28 +57,28 @@ filesets:
     resusagespma:     "pdcrinfo.ResUsageSpma_Hst"
     files:
       cpu_trend_pdcr16:
-        collection:   ["pdcr"]
-        dbversion:  ["16.20", "16.10", "16.00"]
+        collection: ["pdcr"]
+        dbsversion: ["16.20", "16.10", "16.00"]
         gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
         resusagespma: "pdcrinfo.ResUsageSpma_Hst"
       io_trend_pdcr16:
-        collection:   ["pdcr"]
-        dbversion:  ["16.20", "16.10", "16.00"]
+        collection: ["pdcr"]
+        dbsversion: ["16.20", "16.10", "16.00"]
         gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
         resusagesldv: "pdcrinfo.ResUsageSldv_Hst"
       storage_trend_pdcr16:
-        collection:   ["pdcr"]
-        dbversion:  ["16.20", "16.10", "16.00"]
+        collection: ["pdcr"]
+        dbsversion: ["16.20", "16.10", "16.00"]
         gitfile:    "level1_how_much/storage_trend.1620.pdcr.v11.coa.sql"
         databasespace: "pdcrinfo.DatabaseSpace_hst"
 
       cpu_trend_dbc16:
-        collection:   ["dbc"]
-        dbversion:  ["16.20", "16.10", "16.00"]
+        collection: ["dbc"]
+        dbsversion: ["16.20", "16.10", "16.00"]
         gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
         resusagespma: "dbc.ResUsageSpma"
       io_trend_pdcr16:
-        collection:   ["dbc"]
-        dbversion:  ["16.20", "16.10", "16.00"]
+        collection: ["dbc"]
+        dbsversion: ["16.20", "16.10", "16.00"]
         gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
         resusagesldv: "dbc.ResUsageSldv"
