@@ -77,7 +77,7 @@ filesets:
         dbsversion: ["16.20", "16.10", "16.00"]
         gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
         resusagespma: "dbc.ResUsageSpma"
-      io_trend_pdcr16:
+      io_trend_dbc16:
         collection: ["dbc"]
         dbsversion: ["16.20", "16.10", "16.00"]
         gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
