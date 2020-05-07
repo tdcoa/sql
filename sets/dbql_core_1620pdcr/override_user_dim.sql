@@ -21,4 +21,20 @@ Select
 ,'{siteid}'     as SiteID_
 from systemfe.ca_user_xref;
 
+
+
+delete from "dim_user.csv";
+insert into "dim_user.csv"
+  select
+  'default' as SiteID_
+  ,'Equal'  as Pattern_Type
+  ,UserName as Pattern
+  ,Department as User_Bucket
+  ,'NA' as Is_Discrete_Human
+  ,Department as User_Department
+  ,SubDepartment as User_SubDepartment
+  ,Region as User_Region
+  ,0 as Priority_
+  from systemfe.ca_user_xref
+  ;
 */

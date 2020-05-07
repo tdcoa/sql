@@ -1,5 +1,5 @@
 /*{{save:{siteid}.dbcinfo.csv}}*/
-/*{{load:{db_coa}.stg_dat_dbcinfo}}*/
+/*{{load:{db_coa}_stg.stg_dat_dbcinfo}}*/
 /*{{call:{db_coa}.sp_dat_dbcinfo('{fileset_version}')}}*/
 Select
  '{account}' as Account_Name

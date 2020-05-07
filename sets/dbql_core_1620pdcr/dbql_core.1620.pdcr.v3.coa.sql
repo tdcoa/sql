@@ -76,11 +76,21 @@ drop table "dim_statement.csv";
 /*{{save:dim_statement_reconcile.csv}}*/
 Select * from dim_statement
 order by case when  Statement_Bucket='Unknown' then '!!!' else Statement_Bucket end asc
-;
 
 
 
 /*{{temp:dim_user.csv}}*/
+;
+
+/* below override sql file allows opportunity to
+   replace dim_user.csv with ca_user_xref table
+   or a customer-specific table.  To use, review
+   and fill-in the .sql file content:
+*/
+/*{{file:override_user_dim.sql}}*/
+;
+
+
 create volatile table dim_user as
 (
   select
@@ -114,14 +124,6 @@ drop table "dim_user.csv"
 
 
 
-/* below override sql file allows opportunity to
-   replace dim_user.csv with ca_user_xref table
-   or a customer-specific table.  To use, review
-   and fill-in the .sql file content:
-*/
-/*{{file:override_user_dim.sql}}*/
-;
-
 /*{{save:dim_user_reconcile.csv}}*/
 Select hashrow(substr(Username,1,1))                                     /* first character  */
     || hashrow(substr(Username,floor(character_length(Username)/2)+1,1)) /* middle character */
@@ -151,7 +153,7 @@ in Transcend.
 
 
 /*{{save:0001.DBQL_Summary.OUTPUT-{siteid}.csv}}*/
-/*{{load:{db_coa}.stg_dat_DBQL_Core}}*/
+/*{{load:{db_coa}_stg.stg_dat_DBQL_Core}}*/
 /*{{call:{db_coa}.sp_dat_dbql_core('{fileset_version}')}}*/
 SELECT
  '{siteid}'  as SiteID
@@ -373,7 +375,7 @@ join dim_user usr
 
 join (
       Select TheDate as LogDate_mi, Floor(TheTime/1e4) as LogHour_mi
-      ,sum(cast(FullPotentialIOTA/1e9 as decimal(18,0))) as MaxIOTA_cntB
+      ,sum(cast(FullPotentialIOTA/1e6 as decimal(18,0))) as MaxIOTA_cntM
       from {resusagespma}  /* pdcrinfo.ResUsageSPMA_Hst */
       where TheDate between {startdate} and {enddate}
       Group by LogDate_mi, LogHour_mi
