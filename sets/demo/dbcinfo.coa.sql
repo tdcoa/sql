@@ -12,7 +12,7 @@ from dbc.dbcinfo as d
 
 create volatile table valid_dates
 (cal_date date
-,meaning  varchar(64))
+,item  varchar(64))
 no primary index
 on commit preserve rows
 ;
@@ -23,7 +23,7 @@ on commit preserve rows
    Substitutions are {column_name}==row value  */ ;
 
 /*{{loop:dates.csv}}*/
-insert into valid_dates values('{cal_date}', '{meaning}')
+insert into valid_dates values('{cal_date}', '{item}')
 ;
 
 
@@ -34,7 +34,7 @@ insert into valid_dates values('{cal_date}', '{meaning}')
 /*{{temp:dates.csv}}*/
 delete from valid_dates;
 insert into valid_dates
-Select cal_date, meaning from "dates.csv"
+Select cal_date, item from "dates.csv"
 ;
 
 /* birthday is substituted from either the config.yaml,
@@ -49,9 +49,9 @@ insert into valid_dates values( cast('{birthday}' as date), 'Me' )
 
 
 /* save the resultset output to the listed .csv */
-/*{{save:dates.csv}}*/
+/*{{save:alldates.csv}}*/
 Select cast(v.cal_date as date) as cal_date
-,trim(v.meaning) as meaning
+,trim(v.item) as item
 ,coalesce(c.year_of_calendar,extract(year from v.cal_date)) as cal_year
 ,current_date as today
 from Sys_Calendar.Calendar as c
