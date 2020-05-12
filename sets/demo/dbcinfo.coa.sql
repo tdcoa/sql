@@ -20,7 +20,8 @@ on commit preserve rows
 
 /* first method to load .csv into database tables: loop
    which opens a .csv file and loops the sql below once per record.
-   Substitutions are {column_name}==row value  */
+   Substitutions are {column_name}==row value  */ ;
+
 /*{{loop:dates.csv}}*/
 insert into valid_dates values('{cal_date}', '{meaning}')
 ;
@@ -28,7 +29,8 @@ insert into valid_dates values('{cal_date}', '{meaning}')
 
 /* second method to load .csv into database tables: temp
    which opens a .csv file and simply loads the entire thing into
-   a volatile table, named identically to .csv file (including .csv)  */
+   a volatile table, named identically to .csv file (including .csv)  */;
+
 /*{{temp:dates.csv}}*/
 delete from valid_dates;
 insert into valid_dates
@@ -36,7 +38,7 @@ Select cal_date, meaning from "dates.csv"
 ;
 
 /* birthday is substituted from either the config.yaml,
-   or (as a default) from fileset.yaml */
+   or (as a default) from fileset.yaml */;
 insert into valid_dates values( cast('{birthday}' as date), 'Me' )
 ;
 
@@ -48,8 +50,11 @@ insert into valid_dates values( cast('{birthday}' as date), 'Me' )
 
 /* save the resultset output to the listed .csv */
 /*{{save:dates.csv}}*/
-Select v.cal_date, v.meaning, c.calendar_year
+Select cast(v.cal_date as date) as cal_date
+,trim(v.meaning) as meaning
+,coalesce(c.year_of_calendar,extract(year from v.cal_date)) as cal_year
+,current_date as today
 from Sys_Calendar.Calendar as c
-join valid_dates as v
+right outer join valid_dates as v
   on c.calendar_date = v.cal_date
 ;
