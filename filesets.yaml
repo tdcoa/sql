@@ -6,9 +6,9 @@ demo:
   birthday:   "1974-12-17"
   some_value: "Donkey"
   files:
-    - "demo/0000.dates.csv"
-    - "demo/0000.dbcinfo.coa.sql"
-    - "demo/example.sql"
+    - "demo/dates.csv"
+    - "demo/dbcinfo.coa.sql"
+    - "demo/today.sql"
 
 
 dbql_core_1620pdcr:
