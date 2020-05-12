@@ -3,6 +3,7 @@ demo:
   fileset_version: "1.15"
   startdate:  "Current_Date - 7"
   enddate:    "Current_Date - 1"
+  birthday:   "1974-12-17"
   some_value: "Donkey"
   files:
     - "demo/0000.dates.csv"
