@@ -50,6 +50,7 @@ insert into valid_dates values( cast('{birthday}' as date), 'Me' )
 
 /* save the resultset output to the listed .csv */
 /*{{save:alldates.csv}}*/
+/*{{vis:alldates.csv}}*/
 Select cast(v.cal_date as date) as cal_date
 ,trim(v.item) as item
 ,coalesce(c.year_of_calendar,extract(year from v.cal_date)) as cal_year
