@@ -18,10 +18,6 @@ on commit preserve rows
 ;
 
 
-insert into valid_dates values( cast('{birthday}' as date), 'Me' )
-;
-
-
 /* first method to load .csv into database tables: loop
    which opens a .csv file and loops the sql below once per record.
    Substitutions are {column_name}==row value  */
@@ -34,8 +30,14 @@ insert into valid_dates values('{cal_date}', '{meaning}')
    which opens a .csv file and simply loads the entire thing into
    a volatile table, named identically to .csv file (including .csv)  */
 /*{{temp:dates.csv}}*/
+delete from valid_dates;
 insert into valid_dates
 Select cal_date, meaning from "dates.csv"
+;
+
+/* birthday is substituted from either the config.yaml,
+   or (as a default) from fileset.yaml */
+insert into valid_dates values( cast('{birthday}' as date), 'Me' )
 ;
 
 
