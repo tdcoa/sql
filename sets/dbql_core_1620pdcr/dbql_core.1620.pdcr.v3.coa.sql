@@ -87,7 +87,7 @@ order by case when  Statement_Bucket='Unknown' then '!!!' else Statement_Bucket 
    or a customer-specific table.  To use, review
    and fill-in the .sql file content:
 */
-/*{{file:override_user_dim.sql}}*/
+/*{{file:dim_user.override.sql}}*/
 ;
 
 
