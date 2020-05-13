@@ -13,17 +13,19 @@ demo:
 
 
 dbql_core_1620pdcr:
-  active:           "True"
-  fileset_version:  "1.0"
-  startdate:        "Current_Date - 45"
-  enddate:          "Current_Date - 1"
-  dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
-  resusagespma:     "pdcrinfo.ResUsageSPMA_Hst"
+  active:            "True"
+  fileset_version:   "1.0"
+  startdate:         "Current_Date - 45"
+  enddate:           "Current_Date - 1"
+  dbqlogtbl:         "pdcrinfo.DBQLogTbl_Hst"
+  resusagespma:      "pdcrinfo.ResUsageSPMA_Hst"
+  dim_user_override: "dim_user_override.sql"
   files:
     - "dbql_core_1620pdcr/dbql_core.1620.pdcr.v3.coa.sql"
     - "dims/dim_app.csv"
     - "dims/dim_statement.csv"
     - "dims/dim_user.csv"
+    - "dim_user_override.sql"
 
 
 success_plan_1620pdcr:

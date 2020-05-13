@@ -76,7 +76,7 @@ drop table "dim_statement.csv";
 /*{{save:dim_statement_reconcile.csv}}*/
 Select * from dim_statement
 order by case when  Statement_Bucket='Unknown' then '!!!' else Statement_Bucket end asc
-
+;
 
 
 /*{{temp:dim_user.csv}}*/
@@ -87,7 +87,7 @@ order by case when  Statement_Bucket='Unknown' then '!!!' else Statement_Bucket 
    or a customer-specific table.  To use, review
    and fill-in the .sql file content:
 */
-/*{{file:dim_user.override.sql}}*/
+/*{{file:{dim_user_override}}}*/
 ;
 
 
@@ -163,7 +163,7 @@ SELECT
 /* ,cast(cast(dbql.LogDate as char(10)) ||' '||
     cast(LogHour as char(2))||':00:00.000000'  as timestamp(6)) as LogTS */
 
-/* all other dimennsions (bucketed for space) */
+/* all other dimensions (bucketed for space) */
 ,app.App_Bucket
 ,app.Use_Bucket
 ,stm.Statement_Bucket
@@ -172,7 +172,7 @@ SELECT
 ,usr.User_Department
 ,usr.User_SubDepartment
 ,usr.User_Region
-,dbql.WDName
+,'' as WDName /* dbql.WDName */
 
 ,case
  when stm.Statement_Bucket = 'Select'
