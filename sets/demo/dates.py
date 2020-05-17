@@ -7,7 +7,7 @@ import seaborn as sns
 sns.set(rc={'figure.figsize':(11, 4)})
 
 # open file into dataframe:
-current_dir = os.getcwd()
+current_dir = os.chdir(os.path.dirname(os.path.abspath(__file__)))
 filename = 'alldates.csv'
 df = pd.read_csv(os.path.join(current_dir, filename))
 

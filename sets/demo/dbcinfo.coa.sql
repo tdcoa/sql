@@ -42,6 +42,10 @@ Select cal_date, item from "dates.csv"
 insert into valid_dates values( cast('{birthday}' as date), 'Me' )
 ;
 
+/* export birthday for value:replacement later */
+/*{{save:birthday.csv}}*/
+Select top 1 cal_date from valid_dates where item='Me';
+
 
 /* simply plop the below sql file right here: */
 /*{{file:today.sql}}*/
