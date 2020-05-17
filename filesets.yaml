@@ -10,6 +10,7 @@ demo:
     - "demo/dbcinfo.coa.sql"
     - "demo/today.sql"
     - "demo/dates.py"
+    - "demo/AgeReport.pptx"
 
 
 dbql_core_1620pdcr:
