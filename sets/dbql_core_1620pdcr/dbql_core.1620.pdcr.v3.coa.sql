@@ -356,7 +356,7 @@ join dim_user usr
 
 join (
       Select TheDate as LogDate_mi, Floor(TheTime/1e4) as LogHour_mi
-      ,sum(cast(FullPotentialIOTA/1e6 as decimal(18,0))) as MaxIOTA_cntM
+      ,sum(cast(FullPotentialIOTA/1e9 as decimal(18,0))) as MaxIOTA_cntB
       from {resusagespma}  /* pdcrinfo.ResUsageSPMA_Hst */
       where TheDate between {startdate} and {enddate}
       Group by LogDate_mi, LogHour_mi
