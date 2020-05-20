@@ -20,9 +20,12 @@ dbql_core_1620pdcr:
   enddate:           "Current_Date - 1"
   dbqlogtbl:         "pdcrinfo.DBQLogTbl_Hst"
   resusagespma:      "pdcrinfo.ResUsageSPMA_Hst"
+  resusagescpu:      "pdcrinfo.ResUsageSCPU_Hst"
   dim_user_override: "dim_user_override.sql"
   files:
     - "dbql_core_1620pdcr/dbql_core.1620.pdcr.v3.coa.sql"
+    - "dbql_core_1620pdcr/dim_user_override.sql"
+    - "dbql_core_1620pdcr/cpu_summary.coa.sql"
     - "dims/dim_app.csv"
     - "dims/dim_statement.csv"
     - "dims/dim_user.csv"

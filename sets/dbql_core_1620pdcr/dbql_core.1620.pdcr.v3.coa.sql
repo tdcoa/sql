@@ -87,7 +87,7 @@ order by case when  Statement_Bucket='Unknown' then '!!!' else Statement_Bucket 
    or a customer-specific table.  To use, review
    and fill-in the .sql file content:
 */
-/*{{file:{dim_user_override}}}*/
+/*{{file:dim_user_override.sql}}*/
 ;
 
 
@@ -154,7 +154,7 @@ in Transcend.
 
 /*{{save:0001.DBQL_Summary.OUTPUT-{siteid}.csv}}*/
 /*{{load:{db_coa}_stg.stg_dat_DBQL_Core}}*/
-/*{{call:{db_coa}.sp_dat_dbql_core('{fileset_version}')}}*/
+/*{{call:{db_coa}.sp_dat_dbql_core('v3')}}*/
 SELECT
  '{siteid}'  as SiteID
  /* TIME Dimension */
@@ -168,36 +168,32 @@ SELECT
 ,app.Use_Bucket
 ,stm.Statement_Bucket
 ,usr.User_Bucket
-,usr.Is_Discrete_Human
+/*,'' as Is_Discrete_Human */
 ,usr.User_Department
 ,usr.User_SubDepartment
-,usr.User_Region
-,'' as WDName /* dbql.WDName */
-
-,case
- when stm.Statement_Bucket = 'Select'
-  and app.App_Bucket not in ('TPT')
-  and (ZEROIFNULL( CAST(
-     (EXTRACT(HOUR   FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) * 3600)
-    +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
-    +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
-     as FLOAT))) <= 1  /* Runtime_AMP_Sec */
-  and dbql.NumOfActiveAMPs < Total_AMPs
- then 'Tactical'
- else 'Non-Tactical'
-/* TODO: Query_Type - design other query types */
- end as Query_Type
+/*,'' as User_Region
+,dbql.WDName
+,'' as Query_Type */
 
 /* ====== Query Metrics ======= */
 ,cast(HashAmp()+1 as Integer) as Total_AMPs
+,zeroifnull(cast(count(1) as BigInt)) as Request_Cnt
 ,zeroifnull(sum(cast( dbql.Statements as BigInt))) as Query_Cnt
 ,zeroifnull(sum(cast( (case when dbql.ErrorCode <> 0                then dbql.Statements else 0 end) as bigint))) as Query_Error_Cnt
 ,zeroifnull(sum(cast( (case when dbql.Abortflag = 'Y'               then dbql.Statements else 0 end) as bigint))) as Query_Abort_Cnt
 ,zeroifnull(sum(cast( (case when TotalIOCount = 0                   then dbql.Statements else 0 end) as bigint))) as Query_NoIO_cnt
 ,zeroifnull(sum(cast( (case when TotalIOCount > 0 AND ReqPhysIO = 0 then dbql.Statements else 0 end) as bigint))) as Query_InMem_Cnt
 ,zeroifnull(sum(cast( (case when TotalIOCount > 0 AND ReqPhysIO > 0 then dbql.Statements else 0 end) as bigint))) as Query_PhysIO_Cnt
-
-,zeroifnull(cast(count(1) as BigInt)) as Request_Cnt
+,zeroifnull(sum(case
+         when stm.Statement_Bucket = 'Select'
+          and app.App_Bucket not in ('TPT')
+          and (ZEROIFNULL( CAST(
+             (EXTRACT(HOUR   FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) * 3600)
+            +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
+            +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
+             as FLOAT))) <= 1  /* Runtime_AMP_Sec */
+          and dbql.NumOfActiveAMPs < Total_AMPs
+         then 1 else 0 end)) as Query_Tactical
 ,zeroifnull(avg(cast(dbql.NumSteps * (character_length(dbql.QueryText)/100) as BigInt) )) as Query_Complexity_Score_Avg
 ,zeroifnull(sum(cast(dbql.NumResultRows as decimal(18,0)) )) as Returned_Row_Cnt
 
@@ -240,29 +236,13 @@ SELECT
 ,zeroifnull(avg(NumOfActiveAMPs)) as NumOfActiveAMPs_Avg
 ,zeroifnull(sum(SpoolUsage/1e9)) as Spool_GB
 ,zeroifnull(avg(SpoolUsage/1e9)) as Spool_GB_Avg
+,zeroifnull(avg(1-(ReqPhysIO/nullifzero(TotalIOCount)))) as CacheHit_Pct
 
 ,zeroifnull(avg((AMPCPUTime / nullifzero(MaxAmpCPUTime*NumOfActiveAMPs))-1)) as CPUSec_Skew_AvgPCt
 ,zeroifnull(avg((TotalIOCount / nullifzero(MaxAmpIO*NumOfActiveAMPs))-1) ) as IOCnt_Skew_AvgPct
-,zeroifnull(avg(VHPhysIO / nullifzero(VHLogicalIO))) as VeryHot_IOcnt_Cache_AvgPct
-,zeroifnull(avg(VHPhysIOKB / nullifzero(VHLogicalIOKB))) as VeryHot_IOGB_Cache_AvgPct
-
-/* METRIC:   Cache Miss Rate IOPS.  normal cache miss rate <20%,   set score = 0  for  miss rate < 20%,  increments of 10%, range 0 -80, then scaled to 0-100 */
-,zeroifnull(avg(case when ReqPhysIO = 0 then 0
-          when zeroifnull(ReqPhysIO/ nullifzero(TotalIOCount)) <= 0.20 then 0                              /* set score = 0 when less than industry average 20% */
-          when ReqPhysIO > TotalIOCount then 80                                                            /* sometimes get Physical > Logical, set ceiling at 80*/
-          else (cast( 100 * zeroifnull (ReqPhysIO/ nullifzero(TotalIOCount)) /10 as  integer) * 10) - 20   /* only count above 20%, round to bin size 10*/
-          end) / .8  )  /*  scale up to 0 - 100 */
-     as CacheMiss_IOPSScore
-
-/* METRIC:   Cache Miss Rate KB.  normal cache miss rate <20%,   set score = 0  for  miss rate < 20%,  increments of 10%, range 0 -80 */
-,zeroifnull(avg(case when  ReqPhysIOKB = 0 then 0
-          when   zeroifnull(ReqPhysIOKB/ nullifzero(ReqIOKB)) <= 0.20 then 0                             /* set score = 0 when less than industry average 20% */
-          when   ReqPhysIOKB > ReqIOKB then 80                                                           /* sometimes get Physical > Logical, set ceiling at 80*/
-          else  (cast( 100 * zeroifnull (ReqPhysIOKB/ nullifzero(ReqIOKB)) /10 as  integer) * 10) - 20   /* only count above 20%, round to bin size 10*/
-          end) / .8  )    /*  scale up to 0 - 100 */
-     as CacheMiss_KBScore
 
 /* ====== Multi-Statement Break-Out, if interested: ====== */
+/*
 ,count(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end) as MultiStatement_Count
 ,zeroifnull(sum(cast(trim(
     substr(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,
@@ -288,6 +268,7 @@ SELECT
 ,zeroifnull(sum(cast(trim(substr(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,
     index(case when dbql.StatementGroup like 'DML Del=%' then dbql.StatementGroup end,' Sel=')+5, 10)) as INT))
   ) as MultiStatement_Select
+*/
 
 /* METRIC BREAK-OUTS:  */
 
