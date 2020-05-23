@@ -96,7 +96,6 @@ create volatile table dim_user as
   select
    trim(o.UserName) as Username
   ,coalesce(p.User_Bucket,'Unknown') as User_Bucket
-  ,coalesce(p.Is_Discrete_Human,'Unk') as Is_Discrete_Human
   ,coalesce(p.User_Department, 'Unknown') as User_Department
   ,coalesce(p.User_SubDepartment, 'Unknown') as User_SubDepartment
   ,coalesce(p.User_Region, 'Unknown') as User_Region
@@ -160,20 +159,14 @@ SELECT
  /* TIME Dimension */
 ,dbql.LogDate
 ,cast(extract(HOUR from StartTime) as INT format '99') as LogHour
-/* ,cast(cast(dbql.LogDate as char(10)) ||' '||
-    cast(LogHour as char(2))||':00:00.000000'  as timestamp(6)) as LogTS */
 
 /* all other dimensions (bucketed for space) */
 ,app.App_Bucket
 ,app.Use_Bucket
 ,stm.Statement_Bucket
 ,usr.User_Bucket
-/*,'' as Is_Discrete_Human */
 ,usr.User_Department
 ,usr.User_SubDepartment
-/*,'' as User_Region
-,dbql.WDName
-,'' as Query_Type */
 
 /* ====== Query Metrics ======= */
 ,cast(HashAmp()+1 as Integer) as Total_AMPs
