@@ -11,9 +11,9 @@ Parameters:
   enddate         = {enddate}
 
 
-Stage Table:  {db_region}.consumption_storage_forecast_stg
-Stored Proc:  {db_region}.consumption_storage_forecast_sp('{fileset_version}')
-Target Table: {db_region}.consumption_storage_forecast_v2
+Stage Table:  {db_stg}.stg_dat_level1_Storage_Forecast
+Stored Proc:  {db_coa}.sp_dat_level1_Storage_Forecast('v2')
+Target Table: {db_coa}.coat_dat_level1_Storage_Forecast
 
 
 Storage Trend & Forecast
@@ -55,8 +55,8 @@ Select these columns for charting in Excel:
 ==== SQL ==== ==== ==== ==== ====*/
 
 /*{{save:{siteid}--storage_trend.coa.csv}}*/
-/*{{load:{db_region}.consumption_storage_forecast_stg}}*/
-/*{{call:{db_region}.consumption_storage_forecast_sp('{fileset_version}')}}*/
+/*{{load:{db_stg}.stg_dat_level1_Storage_Forecast}}*/
+/*{{call:{db_coa}.sp_dat_level1_Storage_Forecast('v2')}}*/
 
 LOCK ROW FOR ACCESS
 SELECT
@@ -197,8 +197,7 @@ SELECT
   ,TotalMaxPerm-TotalCurPerm         AS TotalAvailPerm
   ,TotalCurPerm/(TotalMaxPerm (DECIMAL(38,4))) * 100   AS TotalCurPct
   ,TotalAvailPerm/(TotalMaxPerm (DECIMAL(38,4)))* 100 AS TotalAvailPct
-  /* FROM  ss160000.DatabaseSpace s1,
-     FROM  PDCRINFO.DatabaseSpace_Hst s1,  */
+  /* FROM  PDCRINFO.DatabaseSpace_Hst s1,  */
   FROM {databasespace} s1,
        sys_calendar.CALENDAR c1
   WHERE  c1.calendar_date= s1.LogDate
