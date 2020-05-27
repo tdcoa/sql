@@ -8,6 +8,7 @@ Parameters:
 */
 
 /*{{save:concurrency.csv}}*/
+/*{{vis:concurrency.csv}}*/
 SELECT
  '{siteid}' as Site_ID
 ,cast(StartTm10 as date) LogDate
