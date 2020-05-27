@@ -1,4 +1,38 @@
-USAGE NOTES and NOTICES:
+New User?  Click Here!
+
+ANNOUNCEMENTS
+=======================================================
+ - some message
+ - NEW PowerBI report now live!  Go check it out here:
+   http://powerbi.teradata.com/someurl
+ - New FileSet available!  Top_User
+
+ as always, documentation and "get started" guides are available here:
+https://teradata.sharepoint.com/teams/Sales/ConsumptionAnalytics/SitePages/COA.aspx
+=======================================================
+
+Click here for:
+ - List of current FileSets
+ - "Getting Started" Guide
+ - Documentation SharePoint
+
+
+RECENT CHANGES -- version 0.4.5 (latest)
+ - fixed bug where we did stuff wrong
+ - added enhancement to make stuff taste better
+ - etc.
+
+version  0.4.4
+  - did stuff here
+  - did more stuff
+  - fixed problems
+  - made better
+
+
+
+
+
+
 
 tdcsm (teradata csm tools) is a collection of tools intended for use by Teradata customer success managers /engineers.
 This includes the following classes:
@@ -11,7 +45,7 @@ usage:
 >>> coa.download_file_sets()  # refresh files from online sources
 >>> coa.prepare_sql()         # perform all loops and substitutions and save to _run dir
 >>> coa.execute_run()         # execute all coa.sql files found in  _run dir
->>> coa.upload_to_transcend   # parse upload_manifest and upload csv to Transcend
+>>> coa.upload_to_transcend() # parse upload_manifest and upload csv to Transcend
 
 Issues:
  - cannot use "--" comments in sql, need to use /* */ until addressed
@@ -28,7 +62,7 @@ TDCOA, in more detail:
    - "output" directory
    - "download" directory
    - "sql" directory
- - by default "download" and "sql" directories are the same location, 
+ - by default "download" and "sql" directories are the same location,
    meaning the next execution will always happen last downloaded sql.
 
 <manual review, create new custom_sql folders here>

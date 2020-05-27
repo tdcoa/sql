@@ -40,13 +40,8 @@ success_plan_1620pdcr:
   resusagescpu:     "pdcrinfo.resUsageSCPU_hst"
   dbqlogtbl:        "pdcrinfo.dbqLogTbl_Hst"
   files:
-    - "dims/dim_tablekind.csv"
-    - "dims/dim_feature.csv"
-    - "success_plan/cds_by_database.coa.sql"
-    - "success_plan/cpu_summary.coa.sql"
-    - "success_plan/cpu_summary.coa.py"
-    - "success_plan/cpu_summary.xlsx"
-    - "feature_adoption/dbql_feature_logging.coa.sql"
+    - "concurrency/concurrency.pdcr16.v1.coa.sql"
+    - "concurrency/concurrency.py"
 
 
 
