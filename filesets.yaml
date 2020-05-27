@@ -9,7 +9,7 @@ demo:
     - "demo/dates.csv"
     - "demo/dbcinfo.coa.sql"
     - "demo/today.sql"
-    - "demo/dates.py"
+    - "demo/alldates.py"
     - "demo/AgeReport.pptx"
 
 
