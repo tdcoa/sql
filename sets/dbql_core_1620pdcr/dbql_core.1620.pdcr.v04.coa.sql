@@ -374,7 +374,6 @@ Group by
 ,app.Use_Bucket
 ,stm.Statement_Bucket
 ,usr.User_Bucket
-,usr.Is_Discrete_Human
 ,usr.User_Department
 ,usr.User_SubDepartment
 ,usr.User_Region
