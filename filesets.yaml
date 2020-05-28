@@ -42,6 +42,9 @@ success_plan_1620pdcr:
   files:
     - "concurrency/concurrency.pdcr16.v1.coa.sql"
     - "concurrency/concurrency.py"
+    - "top_users/top_users.coa.sql"
+    - "dims/dim_user.csv"
+    - "dims/dim_user_override.sql"
 
 
 

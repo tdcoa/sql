@@ -18,4 +18,4 @@ Default,Like,CALLREP%,Analytic,dept,subdept,rgn,4300
 Default,Like,%Tableau%,Analytic,dept,subdept,rgn,4400
 Default,Like,%BOBJ%,Analytic,dept,subdept,rgn,4500
 Default,Like,%_ETL_%,ETL,dept,subdept,rgn,6000
-Transcend%,RegEx,[a-z]{2}[0-9]{6},Analytic,dept,subdept,rgn,7000
+TDCLOUD%TD%,RegEx,[a-z]{2}[0-9]{6},Analytic,dept,subdept,rgn,7000
