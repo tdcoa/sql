@@ -32,7 +32,7 @@ create volatile table dim_app as
          and character_length(regexp_substr(o.AppID, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
   qualify Priority_ = min(Priority_)over(partition by o.AppID)
-  where SiteID_ in('default','None') or SiteID_ like '{siteid}'
+  where SiteID_ in('default','None') or '{siteid}' like SiteID_
 ) with data
 no primary index
 on commit preserve rows;
@@ -66,7 +66,7 @@ create volatile table dim_statement as
          and character_length(regexp_substr(o.StatementType, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
   qualify Priority_ = min(Priority_)over(partition by o.StatementType)
-  where SiteID_ in('default','None') or SiteID_ like '{siteid}'
+  where SiteID_ in('default','None') or '{siteid}' like SiteID_
 ) with data
 no primary index
 on commit preserve rows;
@@ -113,7 +113,7 @@ create volatile table dim_user as
          and character_length(regexp_substr(o.UserName, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
   qualify Priority_ = min(Priority_)over(partition by o.UserName)
-  where SiteID_ in('default','None') or SiteID_ like '{siteid}'
+  where SiteID_ in('default','None') or '{siteid}' like SiteID_
 ) with data
 no primary index
 on commit preserve rows;
@@ -172,7 +172,8 @@ SELECT
 ,cast(HashAmp()+1 as Integer) as Total_AMPs
 ,zeroifnull(cast(count(1) as BigInt)) as Request_Cnt
 ,zeroifnull(sum(cast( dbql.Statements as BigInt))) as Query_Cnt
-,zeroifnull(sum(cast( (case when dbql.ErrorCode <> 0                then dbql.Statements else 0 end) as bigint))) as Query_Error_Cnt
+/* ErrorCode 3158 == TASM Demotion, aka warning, not real error */
+,zeroifnull(sum(cast( (case when dbql.ErrorCode not in(0,3158)      then dbql.Statements else 0 end) as bigint))) as Query_Error_Cnt
 ,zeroifnull(sum(cast( (case when dbql.Abortflag = 'Y'               then dbql.Statements else 0 end) as bigint))) as Query_Abort_Cnt
 ,zeroifnull(sum(cast( (case when TotalIOCount = 0                   then dbql.Statements else 0 end) as bigint))) as Query_NoIO_cnt
 ,zeroifnull(sum(cast( (case when TotalIOCount > 0 AND ReqPhysIO = 0 then dbql.Statements else 0 end) as bigint))) as Query_InMem_Cnt

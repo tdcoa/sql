@@ -17,7 +17,6 @@ Insert into dim_user
 Select
 ,Username       as UserName
 ,'unassigned'   as User_Bucket
-,'unk'          as Is_Discrete_Human
 ,Department     as User_Department
 ,SubDepartment  as User_SubDepartment
 ,Region         as User_Region
@@ -39,7 +38,6 @@ insert into "dim_user.csv"
   ,'Equal'  as Pattern_Type
   ,UserName as Pattern
   ,Department as User_Bucket
-  ,'NA' as Is_Discrete_Human
   ,Department as User_Department
   ,SubDepartment as User_SubDepartment
   ,Region as User_Region
