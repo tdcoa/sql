@@ -1,8 +1,8 @@
 
 
 /* BUILD VOLATILE "DIM_USER" TABLE */
-/*{{temp:dim_user.csv}}*/;
-/*{{file:dim_user_override.sql}}*/;
+/*{{temp:dim_user.csv}}*/ ;
+/*{{file:dim_user_override.sql}}*/ ;
 
 create volatile table dim_user as
 (

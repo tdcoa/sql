@@ -6,8 +6,11 @@ for any table.
 */
 
 /*
-Delete From table dim_user;
+Delete From table dim_user
+*/
+;
 
+/*
 Insert into dim_user
 (Username, User_Bucket, Is_Discrete_Human,
  User_Department, User_SubDepartment, User_Region, SiteID_)
@@ -19,11 +22,17 @@ Select
 ,SubDepartment  as User_SubDepartment
 ,Region         as User_Region
 ,'{siteid}'     as SiteID_
-from systemfe.ca_user_xref;
+from systemfe.ca_user_xref
+*/
+;
 
 
+/*
+delete from "dim_user.csv"
+*/
+;
 
-delete from "dim_user.csv";
+/*
 insert into "dim_user.csv"
   select
   'default' as SiteID_
@@ -36,5 +45,5 @@ insert into "dim_user.csv"
   ,Region as User_Region
   ,0 as Priority_
   from systemfe.ca_user_xref
-  ;
 */
+;
