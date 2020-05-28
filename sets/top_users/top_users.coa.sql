@@ -1,4 +1,14 @@
+/* pulls cpu, io, query count, query complexity, runtime,
+   and error count, per user and user alignment.
+   Generates UserHash as proxy for UserName, so it can be
+   uploaded to transcend.
 
+   Parameters:
+     - startdate:    {startdate}
+     - enddate:      {enddate}
+     - siteid:       {siteid}
+     - dbqlogtbl:    {dbqlogtbl}
+   */
 
 /* BUILD VOLATILE "DIM_USER" TABLE */
 /*{{temp:dim_user.csv}}*/ ;
@@ -70,8 +80,8 @@ Create Volatile Table Top_Users_DBQL  as(
     ,zeroifnull(sum(cast(ReqIOKB/1e6 as decimal(18,0)))) as IOGB
     ,zeroifnull(sum(cast(TotalFirstRespTime as decimal(18,6)))) as Runtime_Sec
     ,zeroifnull(sum(cast((case when dbql.ErrorCode not in(0,3158) then 1 else 0 end) as decimal(9,0)))) as Error_Cnt
-    from pdcrinfo.dbqlogtbl_hst as dbql
-    where LogDate between date-45 and date-1
+    from {dbqlogtbl} /* pdcrinfo.dbqlogtbl_hst */ as dbql
+    where LogDate between {startdate} and {enddate}
     Group by UserName, MonthID, WeekID
 ) with data
   primary index(UserName)
@@ -96,7 +106,7 @@ Select UserName
 ,MonthID
 ,sum(Day_Cnt)
 ,sum(Query_Cnt)
-,avg(Query_Complexity_Score)
+,avg(Query_Complexity_Score)(bigint)
 ,sum(CPU_Sec)
 ,sum(IOGB)
 ,sum(Runtime_Sec)
@@ -118,14 +128,14 @@ where WeekID is null
 
 /* Having removed partial Months, add full period rollup
    ...well, kinda.  Full period of based on above minimum
-   requirements, i.e.,  full weeks and 3-wk months */
+   requirements, i.e.,  full weeks and 3 week months */
 insert into Top_Users_DBQL
 Select UserName
 ,null as WeekID
 ,null as MonthID
 ,sum(Day_Cnt)
 ,sum(Query_Cnt)
-,avg(Query_Complexity_Score)
+,avg(Query_Complexity_Score)(bigint)
 ,sum(CPU_Sec)
 ,sum(IOGB)
 ,sum(Runtime_Sec)
@@ -144,11 +154,11 @@ union all
 Select 'All Users' as tbl, count(distinct UserName) from  dim_user
 ;
 
-/*{{save:user_ranks.csv}}*/
+/*{{save:top_users.csv}}*/
 /*{{load:{db_stg}.stg_dat_top_users}}*/
-/*{{call:{db_coa}.sp_dat_top_users}}*/
+/*{{call:{db_coa}.sp_dat_top_users('v1')}}*/
 Select '{siteid}' as Site_ID, a.*
-,rank()over(partition by MonthID, WeekID order by Combined_Score desc) as Total_Rank
+,rank()over(partition by MonthID, WeekID order by Combined_Score asc) as Total_Rank
 from(
     Select WeekID, MonthID, u.UserName
     ,u.UserHash, u.User_Bucket
