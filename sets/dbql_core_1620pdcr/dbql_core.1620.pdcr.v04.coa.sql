@@ -377,8 +377,6 @@ Group by
 ,usr.User_Department
 ,usr.User_SubDepartment
 ,usr.User_Region
-,dbql.WDName
-,Query_Type
 ,Total_AMPs
 ;
 
