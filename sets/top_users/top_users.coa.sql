@@ -145,7 +145,10 @@ Select 'All Users' as tbl, count(distinct UserName) from  dim_user
 ;
 
 /*{{save:user_ranks.csv}}*/
-Select a.* ,rank()over(partition by MonthID, WeekID order by Combined_Score desc) as Total_Rank
+/*{{load:{db_stg}.stg_dat_top_users}}*/
+/*{{call:{db_coa}.sp_dat_top_users}}*/
+Select '{siteid}' as Site_ID, a.*
+,rank()over(partition by MonthID, WeekID order by Combined_Score desc) as Total_Rank
 from(
     Select WeekID, MonthID, u.UserName
     ,u.UserHash, u.User_Bucket
