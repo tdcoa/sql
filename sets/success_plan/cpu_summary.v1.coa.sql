@@ -6,7 +6,6 @@ Parameters:
   - siteid:       {siteid}
   - resusagescpu: {resusagescpu}
 
-Author: Stephen Hilton
 */
 
 
@@ -27,14 +26,11 @@ SELECT
 +OS_Used_CPU_secM
 +DBS_Used_CPU_secM as Total_Available_CPU_secM
 
-/* just for reconciliation: */
+/* total cpu using simple math (preferable for it's stability): */
 ,count(distinct NodeID) as Node_Count
 ,count(distinct CPUID) as CPU_per_Node
 ,(60*60) as Sec_per_period
 ,cast(Node_Count * CPU_per_Node * Sec_per_period /1e6 as decimal(18,2)) as Total_Available_CPU_secM_reconcile
-
-/* this should be close to zero: */
-,1-(Total_Available_CPU_secM / Total_Available_CPU_secM_reconcile) as reconcile_delta_pct
 
 from {resusagescpu} /*  pdcrinfo.resUsageSCPU_hst */
 where TheDate between {startdate} and {enddate}

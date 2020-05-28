@@ -79,22 +79,20 @@ order by case when  Statement_Bucket='Unknown' then '!!!' else Statement_Bucket 
 ;
 
 
-/*{{temp:dim_user.csv}}*/
-;
 
 /* below override sql file allows opportunity to
    replace dim_user.csv with ca_user_xref table
    or a customer-specific table.  To use, review
    and fill-in the .sql file content:
 */
-/*{{file:dim_user_override.sql}}*/
-;
-
+/*{{temp:dim_user.csv}}*/ ;
+/*{{file:dim_user_override.sql}}*/ ;
 
 create volatile table dim_user as
 (
   select
-   trim(o.UserName) as Username
+   o.UserName
+  ,o.UserHash
   ,coalesce(p.User_Bucket,'Unknown') as User_Bucket
   ,coalesce(p.User_Department, 'Unknown') as User_Department
   ,coalesce(p.User_SubDepartment, 'Unknown') as User_SubDepartment
@@ -103,8 +101,18 @@ create volatile table dim_user as
   ,coalesce(p.Pattern_Type,'Equal')  as Pattern_Type
   ,coalesce(p.Pattern, o.UserName) as Pattern
   ,coalesce(p.SiteID, 'None')        as SiteID_
-  from (select distinct UserName from {dbqlogtbl}
-        where LogDate between {startdate} and {enddate}) as o
+  from (select
+         trim(DatabaseName) as UserName
+        ,substr(Username,1,3) as first3
+        ,substr(Username,floor(character_length(Username)/2)-1,3) as middle3
+        ,substr(Username,character_length(Username)-3,3) as last3
+        /* generate UserHash value */
+        ,trim(cast(from_bytes(hashrow( Username),'base16') as char(9))) ||
+         trim(cast(from_bytes(hashrow( first3  ),'base16') as char(9))) ||
+         trim(cast(from_bytes(hashrow( middle3 ),'base16') as char(9))) ||
+         trim(cast(from_bytes(hashrow( last3   ),'base16') as char(9))) as UserHash
+        from dbc.DatabasesV where DBKind = 'U'
+        ) as o
   left join "dim_user.csv" as p
     on (case
         when p.Pattern_Type = 'Equal' and o.UserName = p.Pattern then 1
@@ -112,26 +120,23 @@ create volatile table dim_user as
         when p.Pattern_Type = 'RegEx'
          and character_length(regexp_substr(o.UserName, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
+    and SiteID_ in('default','None') or '{siteid}' like SiteID_
   qualify Priority_ = min(Priority_)over(partition by o.UserName)
-  where SiteID_ in('default','None') or '{siteid}' like SiteID_
 ) with data
-no primary index
-on commit preserve rows;
+primary index (UserName)
+on commit preserve rows
+;
 
 drop table "dim_user.csv"
 ;
 
+collect stats on dim_user column(UserName)
+;
 
-
-/*{{save:dim_user_reconcile.csv}}*/
-Select hashrow(substr(Username,1,1))                                     /* first character  */
-    || hashrow(substr(Username,floor(character_length(Username)/2)+1,1)) /* middle character */
-    || hashrow(substr(Username,character_length(Username),1))            /* last character   */
-    || hashrow(Username)                                                 /* entire value */
-        as hash_userid
-,usr.*
-from dim_user as usr
-order by case when User_Bucket='Unknown' then '!!!' else User_Bucket end asc
+/*{{save:all_users.csv}}*/
+Select UserName, UserHash, User_Bucket
+,User_Department, User_SubDepartment, User_Region
+from dim_user
 ;
 
 
@@ -151,9 +156,9 @@ in Transcend.
 */
 
 
-/*{{save:0001.DBQL_Summary.OUTPUT-{siteid}.csv}}*/
+/*{{save:DBQL_Core_{siteid}.csv}}*/
 /*{{load:{db_coa}_stg.stg_dat_DBQL_Core}}*/
-/*{{call:{db_coa}.sp_dat_dbql_core('v3')}}*/
+/*{{call:{db_coa}.sp_dat_dbql_core('{fileset_version}')}}*/
 SELECT
  '{siteid}'  as SiteID
  /* TIME Dimension */
@@ -334,7 +339,6 @@ SELECT
 ,zeroifnull(SUM(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END))   as iogb_in_delaytime_0600_1800
 ,zeroifnull(SUM(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END))   as iogb_in_delaytime_1800_3600
 ,zeroifnull(SUM(CASE WHEN  dbql.delaytime  >3600                             THEN CAST(ReqIOKB/1e6 as decimal(18,4)) ELSE 0 END))   as iogb_in_delaytime_3600_plus
-
 
 From {dbqlogtbl} as dbql       /* pdcrinfo.dbqlogtbl_hst, typically */
 /* TODO: union with DBQL_Summary table - Paul */
