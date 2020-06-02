@@ -1,84 +1,89 @@
-filesets:
-  demo:
-    active:     "True"
-    fileset_version: "1.15"
-    startdate:  "Current_Date - 7"
-    enddate:    "Current_Date - 1"
-    some_value: "Donkey"
-    files:
-      file01:
-        gitfile:  "demo/0000.dates.csv"
-      file02:
-        gitfile:   "demo/0000.dbcinfo.coa.sql"
-        startdate: "Date-7"
-        enddate:   "Date-1"
-      file03:
-        gitfile:  "demo/example.sql"
+demo:
+  active:     "True"
+  fileset_version: "1.15"
+  startdate:  "Current_Date - 7"
+  enddate:    "Current_Date - 1"
+  some_value: "Donkey"
+  birthday:   "1974-12-17"
+  files:
+    file01:
+      gitfile:  "demo/dates.csv"
+    file02:
+      gitfile:   "demo/dbcinfo.coa.sql"
+      startdate: "Date-7"
+      enddate:   "Date-1"
+      some_value: "Elephant"
+    file03:
+      gitfile:  "demo/today.sql"
+    file04:
+      gitfile:  "demo/alldates.py"
+    file05:
+      gitfile:  "demo/AgeReport.pptx"
 
 
-  dbql_core:
-    active:           "True"
-    fileset_version:  "1.0"
-    files:
-      dbql_core_pdcr16:
-        collection:   ["pdcr"]
-        dbsversion:   ["16.20", "16.10", "16.00"]
-        gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
-        startdate:    "Current_Date - 45"
-        enddate:      "Current_Date - 1"
-        dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-        resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
-      dbql_core_dbc16:
-        collection:   ["dbc"]
-        dbsversion:   ["16.20", "16.10", "16.00"]
-        gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
-        startdate:    "Current_Date - 45"
-        enddate:      "Current_Date - 1"
-        dbqlogtbl:    "dbc.DBQLogTbl_Hst"
-        resusagespma: "dbc.ResUsageSPMA_Hst"
-      dim_app:
-        gitfile:  "dims/dim_app.csv"
-      dim_statement:
-        gitfile:  "dims/dim_statement.csv"
-      dim_user:
-        gitfile:  "dims/dim_user.csv"
-      dim_user_override:
-        gitfile:  "dbql_core/override_user_dim.sql"
+dbql_core:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    dbql_core_pdcr16:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
+      startdate:    "Current_Date - 45"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+      resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
+    dbql_core_dbc16:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
+      startdate:    "Current_Date - 45"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl_Hst"
+      resusagespma: "dbc.ResUsageSPMA_Hst"
+    dim_app:
+      gitfile:  "dims/dim_app.csv"
+    dim_statement:
+      gitfile:  "dims/dim_statement.csv"
+    dim_user:
+      gitfile:  "dims/dim_user.csv"
+    dim_user_override:
+      gitfile:  "dbql_core/override_user_dim.sql"
 
 
-  level1_how_much:
-    active:           "True"
-    fileset_version:  "1.0"
-    startdate:        "Current_Date - 365"
-    enddate:          "Current_Date - 1"
-    databasespace:    "pdcrinfo.DatabaseSpace_hst"
-    dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
-    resusagesldv:     "pdcrinfo.ResUsageSldv_Hst"
-    resusagespma:     "pdcrinfo.ResUsageSpma_Hst"
-    files:
-      cpu_trend_pdcr16:
-        collection: ["pdcr"]
-        dbsversion: ["16.20", "16.10", "16.00"]
-        gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
-        resusagespma: "pdcrinfo.ResUsageSpma_Hst"
-      io_trend_pdcr16:
-        collection: ["pdcr"]
-        dbsversion: ["16.20", "16.10", "16.00"]
-        gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
-        resusagesldv: "pdcrinfo.ResUsageSldv_Hst"
-      storage_trend_pdcr16:
-        collection: ["pdcr"]
-        dbsversion: ["16.20", "16.10", "16.00"]
-        gitfile:    "level1_how_much/storage_trend.1620.pdcr.v11.coa.sql"
-        databasespace: "pdcrinfo.DatabaseSpace_hst"
+level1_how_much:
+  active:           "True"
+  fileset_version:  "1.0"
+  startdate:        "Current_Date - 365"
+  enddate:          "Current_Date - 1"
+  databasespace:    "pdcrinfo.DatabaseSpace_hst"
+  dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
+  resusagesldv:     "pdcrinfo.ResUsageSldv_Hst"
+  resusagespma:     "pdcrinfo.ResUsageSpma_Hst"
+  files:
+    cpu_trend_pdcr16:
+      collection: ["pdcr"]
+      dbsversion: ["16.20", "16.10", "16.00"]
+      gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+      resusagespma: "pdcrinfo.ResUsageSpma_Hst"
+    io_trend_pdcr16:
+      collection: ["pdcr"]
+      dbsversion: ["16.20", "16.10", "16.00"]
+      gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
+      resusagesldv: "pdcrinfo.ResUsageSldv_Hst"
+    storage_trend_pdcr16:
+      collection: ["pdcr"]
+      dbsversion: ["16.20", "16.10", "16.00"]
+      gitfile:    "level1_how_much/storage_trend.1620.pdcr.v11.coa.sql"
+      databasespace: "pdcrinfo.DatabaseSpace_hst"
 
-      cpu_trend_dbc16:
-        collection: ["dbc"]
-        dbsversion: ["16.20", "16.10", "16.00"]
-        gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
-        resusagespma: "dbc.ResUsageSpma"
-      io_trend_dbc16:
-        collection: ["dbc"]
-        dbsversion: ["16.20", "16.10", "16.00"]
-        gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
-        resusagesldv: "dbc.ResUsageSldv"
+    cpu_trend_dbc16:
+      collection: ["dbc"]
+      dbsversion: ["16.20", "16.10", "16.00"]
+      gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+      resusagespma: "dbc.ResUsageSpma"
+    io_trend_dbc16:
+      collection: ["dbc"]
+      dbsversion: ["16.20", "16.10", "16.00"]
+      gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
+      resusagesldv: "dbc.ResUsageSldv"
