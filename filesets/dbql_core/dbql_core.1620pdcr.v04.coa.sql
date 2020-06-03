@@ -160,7 +160,7 @@ in Transcend.
 /*{{load:{db_coa}_stg.stg_dat_DBQL_Core}}*/
 /*{{call:{db_coa}.sp_dat_dbql_core('{fileset_version}')}}*/
 SELECT
- '{siteid}'  as SiteID
+ '{siteid}'  as Site_ID
 ,dbql.LogDate
 ,cast(extract(HOUR from StartTime) as INT format '99') as LogHour
 ,max(Node_Type)     as Node_Type
@@ -319,7 +319,7 @@ SELECT
 ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >3600                             THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_3600_plus
 
 
-From {dbqlogtbl} as dbql       /* pdcrinfo.dbqlogtbl_hst, typically */
+From {dbqlogtbl} /* pdcrinfo.dbqlogtbl_hst */ as dbql
 /* TODO: union with DBQL_Summary table - Paul */
 
 join dim_app as app
@@ -332,7 +332,7 @@ join dim_user usr
   on dbql.UserName = usr.UserName
 
 join (
-      Select TheDate as LogDate, Floor(TheTime/1e4) as LogHour
+      Select TheDate as LogDate, Floor(TheTime/1e4) as LogHour_
       ,cast(max(NodeType) as varchar(10)) as Node_Type
       ,cast(count(distinct NodeID) as smallint) as Node_Cnt
       ,cast(max(NCPUs) as smallint) as vCPU_per_Node
@@ -344,24 +344,21 @@ join (
       ,CPU_Idle+CPU_IOWait+CPU_OS+CPU_DBS as CPU_Total
       from {resusagespma}  /* pdcrinfo.ResUsageSPMA_Hst */
       where TheDate between {startdate} and {enddate}
-      Group by LogDate, LogHour
+      Group by LogDate, LogHour_
      ) resusage
   on dbql.LogDate = resusage.LogDate
- and LogHour = resusage.LogHour
+ and LogHour = resusage.LogHour_
 
 where dbql.LogDate between {startdate} and {enddate}
 
 Group by
  dbql.LogDate
 ,LogHour
-,resusage.LogDate
-,resusage.LogHour
-,SiteID
+,Site_ID
 ,app.App_Bucket
 ,app.Use_Bucket
 ,stm.Statement_Bucket
 ,usr.User_Bucket
 ,usr.User_Department
 ,usr.User_SubDepartment
-,usr.User_Region
 ;
