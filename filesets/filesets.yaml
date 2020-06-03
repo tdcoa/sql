@@ -48,7 +48,7 @@ dbql_core:
     dim_user:
       gitfile:  "dims/dim_user.csv"
     dim_user_override:
-      gitfile:  "dbql_core/override_user_dim.sql"
+      gitfile:  "dims/dim_user_override.sql"
 
 
 level1_how_much:
