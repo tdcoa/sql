@@ -28,19 +28,19 @@ dbql_core:
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
-      startdate:    "Current_Date - 45"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v04.coa.sql"
+      startdate:    "Current_Date - 42"
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
       resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
     dbql_core_dbc16:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v04.coa.sql"
       startdate:    "Current_Date - 45"
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl_Hst"
-      resusagespma: "dbc.ResUsageSPMA_Hst"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+      resusagespma: "dbc.ResUsageSPMA"
     dim_app:
       gitfile:  "dims/dim_app.csv"
     dim_statement:
