@@ -51,6 +51,16 @@ dbql_core:
       gitfile:  "dims/dim_user_override.sql"
 
 
+db_objects:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    columns_v01_coa_sql:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "db_objects/columns.v01.coa.sql"
+
+
 concurrency:
   active:           "True"
   fileset_version:  "1.0"
