@@ -345,58 +345,186 @@ while i < len(concurrency_list):
 # In[21]:
 
 
-# import seaborn as sns
-# import pandas as pd
-# import numpy as np
-# import matplotlib.pyplot as plt
-# import os
-# from numpy.random import randn
-# import matplotlib.ticker as ticker
-# from pandas.plotting import register_matplotlib_converters
-# register_matplotlib_converters()
+import seaborn as sns
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+from numpy.random import randn
+import matplotlib.ticker as ticker
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
 
-# # dir_path = os.path.dirname(os.path.realpath(__file__))
+# dir_path = os.path.dirname(os.path.realpath(__file__))
 # dir_path = current_dir
 # df = pd.read_excel(dir_path + r'\concurrency.xlsx')
 
-# # Adding Date Time
-# df['datetime'] = pd.to_datetime(df['LogDate'].astype(str) + ' ' + df['LogHour'].astype(str).apply(lambda x: f"{int(x):02d}") + ':00:00')
+df = df_concurrency
 
-# # Adding week day
-# week_day_list = ['Monday','Tuesday','Wednessday','Thursday','Friday','Saturday','Sunday']
+# Adding Date Time
+df['datetime'] = pd.to_datetime(df['LogDate'].astype(str) + ' ' + df['LogHour'].astype(str).apply(lambda x: f"{int(x):02d}") + ':00:00')
 
-# df['week_day'] = df['datetime'].apply(lambda x: week_day_list[x.weekday()])
-# df = df.set_index('datetime')
+# Adding week day
+week_day_list = ['Monday','Tuesday','Wednessday','Thursday','Friday','Saturday','Sunday']
 
-# data_columns = ['Concurrency_Avg','Concurrency_80Pctl', 'Concurrency_95Pctl', 'Concurrency_Peak']
+df['week_day'] = df['datetime'].apply(lambda x: week_day_list[x.weekday()])
+df = df.set_index('datetime')
 
-# # Resample to daily frequency, taking the max
-# df_daily_max = df[data_columns].resample('D').max()
+data_columns = ['Concurrency_Avg','Concurrency_80Pctl', 'Concurrency_95Pctl', 'Concurrency_Peak']
 
-# df_daily_max["Date"] = df_daily_max.index.date
+# Resample to daily frequency, taking the max
+df_daily_max = df[data_columns].resample('D').max()
 
-# df_daily_max_modified = df_daily_max.melt(id_vars=["Date"],
-#         var_name="Concurrency",
-#         value_name="Value")
+df_daily_max["Date"] = df_daily_max.index.date
 
-# fig, ax = plt.subplots(figsize=(15,6))
-# g = sns.lineplot(x=df_daily_max_modified["Date"], y='Value', data=df_daily_max_modified, hue="Concurrency", sort=True, linewidth=3)
-# x_dates = df_daily_max_modified['Date'].sort_values().unique()
-# plt.xticks(plt.xticks()[0], x_dates, rotation=30)
+df_daily_max_modified = df_daily_max.melt(id_vars=["Date"],
+        var_name="Concurrency",
+        value_name="Value")
 
-# ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+fig, ax = plt.subplots(figsize=(30,20))
+g = sns.lineplot(x=df_daily_max_modified["Date"], y='Value', data=df_daily_max_modified, hue="Concurrency", sort=True, linewidth=3)
+x_dates = df_daily_max_modified['Date'].sort_values().unique()
+plt.xticks(plt.xticks()[0], x_dates, rotation=30)
 
-# handles, labels = ax.get_legend_handles_labels()
-# ax.legend(handles=handles[1:], labels=labels[1:])
+ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
-# plt.tight_layout()
-# # plt.show()
+handles, labels = ax.get_legend_handles_labels()
+ax.legend(handles=handles[1:], labels=labels[1:])
+
+ax.set_title('Comparative Line Trend Graph', y=-0.15,size=36, pad=20)
+
+plt.tight_layout()
+# plt.show()
 # fig.savefig(dir_path + r'\concurrency.comparative_line_trend_graph.png', dpi=fig.dpi)
-
-
+fig.savefig('concurrency.comparative_line_trend_graph.png', bbox_inches='tight', dpi=fig.dpi)
 
 # In[ ]:
 
 
+########################################################################################################################
+#################################### Week-Day wise trend in all 4 concurrencies ########################################
+########################################################################################################################
+# Resample to daily frequency, taking the mean
+df_daily_mean = df[data_columns].resample('D').mean()
+
+df_daily_mean['Date'] = df_daily_mean.index
+
+# Adding week day
+week_day_list = ['Monday','Tuesday','Wednessday','Thursday','Friday','Saturday','Sunday']
+df_daily_mean['week_day'] = df_daily_mean['Date'].apply(lambda x: week_day_list[x.weekday()])
+
+df_daily_mean_modified = df_daily_mean.melt(id_vars=["Date", "week_day"],
+        var_name="Concurrency",
+        value_name="Value")
+
+fig, ax = plt.subplots(figsize=(30,20))
+g = sns.lineplot(x=df_daily_mean_modified["week_day"], y='Value', data=df_daily_mean_modified, hue="Concurrency", sort=True, linewidth=3)
+x_dates = df_daily_mean_modified['week_day'].unique()
+plt.xticks(plt.xticks()[0], x_dates, rotation=30)
+
+ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+
+handles, labels = ax.get_legend_handles_labels()
+ax.legend(handles=handles[1:], labels=labels[1:])
+
+ax.set_title('Week-day Comparative Line Trend Graph', y=-0.15,size=36, pad=20)
+
+plt.tight_layout()
+
+fig.savefig('concurrency.weekday_usage_analysis.png', bbox_inches='tight', dpi=fig.dpi)
+
+
+
+########################################################################################################################
+
+########################################################################################################################
+################################################# Box Plot for concurrency #############################################
+########################################################################################################################
+
+fig, axes = plt.subplots(4, 1, figsize=(11, 10), sharex=True)
+for name, ax in zip(data_columns, axes):
+    sns.boxplot(data=df, x='LogHour', y=name, ax=ax)
+    ax.set_ylabel('Concurrency')
+    ax.set_title(name)
+    # Remove the automatic x-axis label from all but the bottom subplot
+    if ax != axes[-1]:
+        ax.set_xlabel('')
+
+plt.tight_layout()
+fig.savefig('concurrency.hourly_analysis_concurrency.png', bbox_inches='tight', dpi=fig.dpi)
+
+
+########################################################################################################################
+
+########################################################################################################################
+################################################# Weekly Mean Usage ####################################################
+########################################################################################################################
+
+df_weekly_mean = df[data_columns].resample('W').mean()
+
+df_weekly_mean['Date'] = df_weekly_mean.index.date
+
+df_weekly_mean_modified = df_weekly_mean.melt(id_vars=["Date"],
+        var_name="Concurrency",
+        value_name="Value")
+
+fig, ax = plt.subplots(figsize=(30,20))
+g = sns.lineplot(x=df_weekly_mean_modified["Date"], y='Value', data=df_weekly_mean_modified, hue="Concurrency", sort=True, linewidth=3)
+x_dates = df_weekly_mean_modified['Date'].unique()
+plt.xticks(plt.xticks()[0], x_dates, rotation=30)
+
+ax.xaxis.set_major_locator(ticker.MultipleLocator(7))
+
+handles, labels = ax.get_legend_handles_labels()
+ax.legend(handles=handles[1:], labels=labels[1:])
+
+ax.set_title('Weekly Comparative Line Trend Graph', y=-0.15,size=36, pad=20)
+
+plt.tight_layout()
+
+fig.savefig('concurrency.weekly_mean_usage_analysis.png', bbox_inches='tight', dpi=fig.dpi)
+
+########################################################################################################################
+
+
+
+
+
+
+
+#
+# plt.plot(df['Concurrency_Peak'])
+#
+# from statsmodels.tsa.stattools import adfuller
+#
+#
+# def test_stationarity(timeseries):
+#     # Determing rolling statistics
+#     # rolmean = pd.rolling_mean(timeseries, window=7)
+#     rolmean = pd.Series(timeseries).rolling(window=7).mean()
+#
+#     # rolstd = pd.rolling_std(timeseries, window=7)
+#     rolstd = pd.Series(timeseries).rolling(window=7).std()
+#
+#     # Plot rolling statistics:
+#     orig = plt.plot(timeseries, color='blue', label='Original')
+#     mean = plt.plot(rolmean, color='red', label='Rolling Mean')
+#     std = plt.plot(rolstd, color='black', label='Rolling Std')
+#     plt.legend(loc='best')
+#     plt.title('Rolling Mean & Standard Deviation')
+#     plt.show(block=True)
+#
+#     # Perform Dickey-Fuller test:
+#     print('Results of Dickey-Fuller Test:')
+#
+#     dftest = adfuller(timeseries, autolag='AIC')
+#     dfoutput = pd.Series(dftest[0:4], index=['Test Statistic', 'p-value', '#Lags Used', 'Number of Observations Used'])
+#     for key, value in dftest[4].items():
+#         dfoutput['Critical Value (%s)' % key] = value
+#     print(dfoutput)
+#
+#
+#
+# test_stationarity(df['Concurrency_Peak'])
 
 
