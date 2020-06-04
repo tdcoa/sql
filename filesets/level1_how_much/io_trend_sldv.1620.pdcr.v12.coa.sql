@@ -11,7 +11,7 @@ Parameters:
   enddate         = {enddate}
 
 
-Stage Table:  {db_coa_stg}.stg_dat_level1_IO_Forecast
+Stage Table:  {db_stg}.stg_dat_level1_IO_Forecast
 Stored Proc:  {db_coa}.sp_dat_level1_IO_Forecast('{fileset_version}')
 Target Table: {db_coa}.coat_dat_level1_IO_Forecast
 
@@ -65,7 +65,7 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 ===== SQL ===== ===== ===== ===== =====*/
 
 /*{{save:{siteid}--iotrend_spma.coa.csv}}*/
-/*{{load:{db_coa_stg}.stg_dat_level1_IO_Forecast}}*/
+/*{{load:{db_stg}.stg_dat_level1_IO_Forecast}}*/
 /*{{call:{db_coa}.sp_dat_level1_IO_Forecast('{fileset_version}')}}*/
 
 LOCK ROW FOR ACCESS

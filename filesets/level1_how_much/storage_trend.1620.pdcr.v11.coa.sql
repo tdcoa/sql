@@ -11,7 +11,7 @@ Parameters:
   enddate         = {enddate}
 
 
-Stage Table:  {db_coa_stg}.stg_dat_level1_Storage_Forecast
+Stage Table:  {db_stg}.stg_dat_level1_Storage_Forecast
 Stored Proc:  {db_coa}.sp_dat_level1_Storage_Forecast('{fileset_version}')
 Target Table: {db_coa}.coat_dat_level1_Storage_Forecast
 
@@ -55,7 +55,7 @@ Select these columns for charting in Excel:
 ==== SQL ==== ==== ==== ==== ====*/
 
 /*{{save:{siteid}--storage_trend.coa.csv}}*/
-/*{{load:{db_coa_stg}.stg_dat_level1_Storage_Forecast}}*/
+/*{{load:{db_stg}.stg_dat_level1_Storage_Forecast}}*/
 /*{{call:{db_coa}.sp_dat_level1_Storage_Forecast('{fileset_version}')}}*/
 
 LOCK ROW FOR ACCESS

@@ -10,7 +10,7 @@ Parameters:
   startdate       = {startdate}
   enddate         = {enddate}
 
-Stage Table:  {db_coa_stg}.stg_dat_level1_CPU_Forecast
+Stage Table:  {db_stg}.stg_dat_level1_CPU_Forecast
 Stored Proc:  {db_coa}.sp_dat_level1_CPU_Forecast('{fileset_version}')
 Target Table: {db_coa}.coat_dat_level1_CPU_Forecast
 
@@ -61,7 +61,7 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 ===== SQL ===== ===== ===== ===== =====*/
 
 /*{{save:{siteid}--cpu_trend_spma.coa.csv}}*/
-/*{{load:{db_coa_stg}.stg_dat_level1_CPU_Forecast}}*/
+/*{{load:{db_stg}.stg_dat_level1_CPU_Forecast}}*/
 /*{{call:{db_coa}.sp_dat_level1_CPU_Forecast('{fileset_version}')}}*/
 LOCK ROW FOR ACCESS
 SELECT
