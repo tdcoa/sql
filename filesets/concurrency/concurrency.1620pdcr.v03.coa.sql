@@ -5,8 +5,8 @@ Parameters:
  - siteid:       APPLE50BLANEY
  - dbqlogtbl:    pdcrinfo.dbqLogTbl_Hst
 */
-/*{{save:concurrency.csv}}*/
-/*{{vis:concurrency.csv}}*/
+Create Volatile Table Concurrency
+(
 SELECT
 '{siteid}' as Site_ID
 ,cast(StartTmHr as date) LogDate
@@ -38,4 +38,20 @@ FROM
     GROUP BY 1, 2
   ) ex
 GROUP BY 2,3
-ORDER BY 2,3
+) with data
+no primary index
+on commit preserve rows
+;
+
+/*{{save:concurrency.csv}}*/
+/*{{vis:concurrency.csv}}*/
+Select * from Concurrency order by 2,3
+;
+
+/*{{save:concurrency_maxpeak.csv}}*/
+Select max(Concurrency_Peak) as maxPeak
+from Concurrency
+;
+
+drop table Concurrency
+;
