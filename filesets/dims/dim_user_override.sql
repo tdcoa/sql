@@ -12,8 +12,7 @@ Delete From dim_user
 
 /*
 Insert into dim_user
-(Username, User_Bucket, Is_Discrete_Human,
- User_Department, User_SubDepartment, User_Region, SiteID_)
+(Username, User_Bucket, User_Department, User_SubDepartment, User_Region, SiteID_)
 Select
 ,Username       as UserName
 ,'unassigned'   as User_Bucket
