@@ -111,6 +111,20 @@ success_plan:
       gitfile:      "dims/dim_user.csv"
     dim_user_override:
       gitfile:      "dims/dim_user_override.sql"
+    success_plan_pptx:
+      gitfile:      "success_plan/success_plan.pptx"
+    success_plan_sql:
+      gitfile:      "success_plan/z_build_success_plan.coa.sql"
+    cpu_summary_sql_pdcr1620:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "success_plan/cpu_summary.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      resusagescpu: "pdcrinfo.resUsageSCPU_hst"
+    cpu_summary_vis:
+      gitfile:      "success_plan/cpu_summary.py"
+
 
 
 level1_how_much:
