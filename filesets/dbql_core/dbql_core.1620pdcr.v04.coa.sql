@@ -337,10 +337,11 @@ join (
       ,cast(count(distinct NodeID) as smallint) as Node_Cnt
       ,cast(max(NCPUs) as smallint) as vCPU_per_Node
       ,sum(cast(FullPotentialIOTA/1e9 as decimal(18,0))) as MaxIOTA_cntB
-      ,sum(cast(CPUIdle   as decimal(18,2))) as CPU_Idle
-      ,sum(cast(CPUIOWait as decimal(18,2))) as CPU_IOWait
-      ,sum(cast(CPUUServ  as decimal(18,2))) as CPU_OS
-      ,sum(cast(CPUUExec  as decimal(18,2))) as CPU_DBS
+      /* CPU reported in Centiseconds: */
+      ,sum(cast(CPUIdle   /100.00 as decimal(18,2))) as CPU_Idle
+      ,sum(cast(CPUIOWait /100.00 as decimal(18,2))) as CPU_IOWait
+      ,sum(cast(CPUUServ  /100.00 as decimal(18,2))) as CPU_OS
+      ,sum(cast(CPUUExec  /100.00 as decimal(18,2))) as CPU_DBS
       ,CPU_Idle+CPU_IOWait+CPU_OS+CPU_DBS as CPU_Total
       from {resusagespma}  /* pdcrinfo.ResUsageSPMA_Hst */
       where TheDate between {startdate} and {enddate}
