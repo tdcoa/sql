@@ -11,7 +11,7 @@ Author: Stephen Hilton
 
 
 /*{{save:cpu_summary.csv}}*/
-/*{{vis:cpu_summary.coa.py}}*/
+/*{{vis:cpu_summary.csv}}*/
 SELECT
  '{siteid}' as SiteID
 ,theDate as LogDate
