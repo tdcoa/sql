@@ -51,6 +51,73 @@ dbql_core:
       gitfile:  "dims/dim_user_override.sql"
 
 
+concurrency:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    concurrency_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    concurrency_vis:
+      gitfile:      "concurrency/concurrency.py"
+
+
+top_user:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    concurrency_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    concurrency_vis:
+      gitfile:      "concurrency/concurrency.py"
+    topuser_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "top_users/top_users.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_user_csv:
+      gitfile:      "dims/dim_user.csv"
+    dim_user_override:
+      gitfile:      "dims/dim_user_override.sql"
+
+
+success_plan:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    concurrency_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    concurrency_vis:
+      gitfile:      "concurrency/concurrency.py"
+    topuser_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "top_users/top_users.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_user_csv:
+      gitfile:      "dims/dim_user.csv"
+    dim_user_override:
+      gitfile:      "dims/dim_user_override.sql"
+
+
 level1_how_much:
   active:           "True"
   fileset_version:  "1.0"
