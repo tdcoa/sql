@@ -39,6 +39,7 @@
 			<!-- version  updates -->
 			<h3><u>Version 0.3.9.4.4 (June 2, 2020)</u></h2>
 			<ul>
+				<li>added fileset: db_objects
 				<li>defaults can now be assigned per-file (or per fileset, like before)
 				<li>if config.yaml // settings //  write_to_perm = "True", the upload_to_transcend() process will take an
 					  alternate upload approach to help debugging:
@@ -119,6 +120,13 @@
 								The local "top_users.csv" file will contain UserName as well as a unique "UserHash."  When uploading
 								to Transcend, only the non-identifiable and non-reversable UserHash will be saved, thus preventing
 								any customer PII from being stored on Trancend.  K-Mean clustering visualizations included.
+							</td>
+					</tr>
+					<tr>
+						<td class="empty">db_objects</td>
+						<td class="empty">
+							  Collection of analysis around database object characteristics, such as count of columns by types or formats,
+								and in near-future, other table, database, or user analysis.
 							</td>
 					</tr>
 					<tr>
