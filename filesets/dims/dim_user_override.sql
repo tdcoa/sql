@@ -6,7 +6,7 @@ for any table.
 */
 
 /*
-Delete From table dim_user
+Delete From dim_user
 */
 ;
 
