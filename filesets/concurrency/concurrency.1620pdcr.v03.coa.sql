@@ -5,7 +5,7 @@ Parameters:
  - siteid:       APPLE50BLANEY
  - dbqlogtbl:    pdcrinfo.dbqLogTbl_Hst
 */
-Create Volatile Table Concurrency
+Create Volatile Table Concurrency as
 (
 SELECT
 '{siteid}' as Site_ID
