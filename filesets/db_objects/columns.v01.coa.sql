@@ -127,7 +127,7 @@ CASE ColumnType
 
 FROM dbc.ColumnsV
 WHERE ColumnType IS NOT NULL
-group by 1,2
+group by 2,3
 order by 3 desc;
 
 
@@ -137,4 +137,5 @@ CASE WHEN ColumnFormat IS NOT NULL
 THEN 'FORMATTED' ELSE 'NO DEFAULT FORMAT'
 END AS COLUMN_FORMAT,
  count(*) as Total_Cnt
- from DBC.COlumnsV group by 1
+ from DBC.COlumnsV
+ group by 2
