@@ -1,5 +1,7 @@
 
 /*{{save:column_type.csv}}*/
+/*{{load:{db_stg}.stg_dat_column_type}}*/
+/*{{call:{db_coa}.sp_dat_column_type}}*/
  SELECT
  '{siteid}' as Site_ID
  ,CASE ColumnType
