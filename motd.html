@@ -75,7 +75,7 @@
 						<td class="empty">
 							  Simple demonstration project that exercises the major functionality.
 							  Should work on any Teradata system, regardless of version or platform.
-							  Will need access to Transcend to perform final upload_to_transcend()
+							  You will need access to Transcend to perform final upload_to_transcend()
 							</td>
 					</tr>
 					<tr>
@@ -85,12 +85,56 @@
 								by application, statement type, user department, and time.  Collects
 								CPU, IO, Query Counts, Spool, Cache Rates... all the major metrics
 								available in DBQL that can aggregated by metrics above.
+								Defaults to 6 weeks (42 days) per run.
 								<br>Of special note:
 								<ul><li>This is primary source of PowerBI project
 									  <li>Even aggregated, this can be a large extract depending on workload diversity.
 											  Expect in the neighborhood of 500k to 1M rows per quarter (3mo) on busy systems
 							</td>
 					</tr>
+					<tr>
+						<td class="empty">concurrency</td>
+						<td class="empty">
+							  Generates concurrency average, peak, 80th and 95th percentile numbers,
+								by day by hour.  Default is 6 weeks. This includes auto-generated visualizations,
+								including a line chart and heat-map.
+							</td>
+					</tr>
+					<tr>
+						<td class="empty">top_users</td>
+						<td class="empty">
+							  Generates top users, per user, per week, month, and time period total.
+								"Top" is measured and ranked several different ways:
+								<ul><li>CPU
+									  <li>IOGB
+										<li>Query Count
+										<li>Query Complexity
+										<li>Query RunTime
+										<li>Error Count (excluded in overall rank)
+										</ul>
+								These ranks are added up and re-ranked, to arrive at an overall Total Rank (except for Error Count).
+								When WeekID and MonthID are both null, ranks are for the time-period total.  When WeekID is null, ranks are for
+								the month.  When WeekID is NOT null, ranks are for the week.  Partial weeks are not allowed, while months must
+								have at least 3 full weeks of data to be included.
+								The local "top_users.csv" file will contain UserName as well as a unique "UserHash."  When uploading
+								to Transcend, only the non-identifiable and non-reversable UserHash will be saved, thus preventing
+								any customer PII from being stored on Trancend.
+							</td>
+					</tr>
+					<tr>
+						<td class="empty">success_plan</td>
+						<td class="empty">
+							  Generates a template Consumption Analytics section for the CSM Success Plan, by stringing together
+								other filesets, namely:
+								<ul><li>cpu_summary
+									  <li>concurrency
+										<li>top_users
+										<li>...more to come!
+										</ul>
+							</td>
+					</tr>
+
+
 				</table>
 
 		</td>
