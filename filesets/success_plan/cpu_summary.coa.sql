@@ -11,7 +11,6 @@ Author: Stephen Hilton
 
 
 /*{{save:cpu_summary.csv}}*/
-/*{{vis:cpu_summary.csv}}*/
 SELECT
  '{siteid}' as SiteID
 ,theDate as LogDate
@@ -41,3 +40,5 @@ where TheDate between {startdate} and {enddate}
 Group by LogDate, LogHour
 /* order by LogDate, LogHour  */
 ;
+
+/*{{vis:cpu_summary.csv}}*/;
