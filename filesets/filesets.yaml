@@ -130,6 +130,8 @@ success_plan:
       resusagescpu: "pdcrinfo.resUsageSCPU_hst"
     cpu_summary_vis:
       gitfile:      "success_plan/cpu_summary.py"
+    success_plan_pptx:
+      gitfile:      "success_plan/success_plan.pptx"
 
 
 
