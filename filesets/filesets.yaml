@@ -132,6 +132,8 @@ success_plan:
       gitfile:      "success_plan/cpu_summary.py"
     success_plan_pptx:
       gitfile:      "success_plan/success_plan.pptx"
+    build_success_plan:
+      gitfile:      "success_plan/z_build_success_plan.coa.sql"
 
 
 
