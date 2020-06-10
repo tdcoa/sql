@@ -11,9 +11,9 @@ Parameters:
   enddate         = {enddate}
 
 
-Stage Table:  {db_region}.consumption_io_forecast_stg
-Stored Proc:  {db_region}.consumption_io_forecast_sp('{fileset_version}')
-Target Table: {db_region}.consumption_io_forecast_v2
+Stage Table:  {db_stg}.stg_dat_level1_IO_Forecast
+Stored Proc:  {db_coa}.sp_dat_level1_IO_Forecast('{fileset_version}')
+Target Table: {db_coa}.coat_dat_level1_IO_Forecast
 
 I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilization Method).
 •	Evaluates the percentage of time in the collection period that devices were busy processing I/O requests (ldvOutReqTime) for ldvreads > 0 & ldvtype = 'DISK' (no need for Archie or I/O capacity estimates).
@@ -65,12 +65,12 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 ===== SQL ===== ===== ===== ===== =====*/
 
 /*{{save:{siteid}--iotrend_spma.coa.csv}}*/
-/*{{load:{db_region}.consumption_io_forecast_stg}}*/
-/*{{call:{db_region}.consumption_io_forecast_sp('{fileset_version}')}}*/
+/*{{load:{db_stg}.stg_dat_level1_IO_Forecast}}*/
+/*{{call:{db_coa}.sp_dat_level1_IO_Forecast('{fileset_version}')}}*/
 
 LOCK ROW FOR ACCESS
 SELECT
- SiteID as SiteID  /* Enter the Customer SiteID */
+ '{siteid}' as Site_ID  /* Enter the Customer SiteID */
 ,current_date (format'YYYY-MM-DD') (CHAR(10)) as "Report Date"
 ,TheDate (format'YYYY-MM-DD') (CHAR(10)) as "Log Date"
 ,PeakStart ||':00:00' as "Peak Start"
@@ -88,7 +88,6 @@ SELECT
 FROM
 (
 SELECT
---(a6)
  SiteID
 ,COUNT(*) OVER (ORDER BY calendar_date ROWS UNBOUNDED PRECEDING ) AS Period_Number
 ,Month_Of_Calendar
@@ -110,7 +109,6 @@ SELECT
 ,SlopeX
 
 FROM (
---UNION-1 Forecast
 SELECT
  a5.SiteID
 ,a5.Period_Number
@@ -130,7 +128,6 @@ SELECT
 
 FROM
 (
---(a5)
 SELECT
  SiteID
 ,Period_Number
@@ -144,7 +141,6 @@ SELECT
 ,PeakEnd
 ,TheHour
 FROM (
---(a4)
 SELECT
  SiteID
 ,TheDate
@@ -155,7 +151,6 @@ SELECT
 ,VPeakAvgIOPct
 ,ROW_NUMBER() OVER (ORDER BY TheDate) AS Period_Number
 FROM (
---(a3)
 SELECT
  SiteID
 ,TheDate
@@ -166,21 +161,18 @@ SELECT
 ,HourlyAvgIOPct
 ,VPeakAvgIOPct
 FROM (
---(a2)
 SELECT
  SiteID
 ,TheDate
 ,Month_Of_Calendar
 ,TheHour
 ,( TheDate (DATE, FORMAT 'YYYY-MM-DD'))||' '||TRIM(TheHour (FORMAT '99')) AS PeakEnd
---,COUNT(*) AS LUNCount
 ,AVG(MinDiskPct) AS HourlyAvgIOPct
 ,AVG(HourlyAvgIOPct) OVER (ORDER BY  SiteID, TheDate ,TheHour ROWS 3 PRECEDING) AS VPeakAvgIOPct  /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 ,MIN((TheDate (DATE, FORMAT 'YYYY-MM-DD')) ||' '||TRIM(TheHour (FORMAT '99'))) OVER  (ORDER BY  SiteID, TheDate ,TheHour ROWS 3 PRECEDING) AS PeakStart  /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 from
 (
 Select
---(CC) Identify 1st device with NumDiskPct >=0.80, eliminate all others
  '{siteid}' as SiteID
 ,Month_Of_Calendar
 ,TheDate
@@ -193,10 +185,8 @@ Select
 ,MIN(TotalCount3 ) - 1 as CountDevicesBelow80th
 ,Count(*) as CountDevicesAbove80th
 ,(CountDevicesBelow80th(DECIMAL(18,4)))/TotalActiveDevices as PctDevicesBelow80th
---,MIN(NumDiskPct) as PctDevicesBelow80th
 ,1-PctDevicesBelow80th as PctDevicesAbove80th
 from (
---(BB) Reduce result to 20% most busy devices (i.e., 1st device with NumDiskPct >=0.80
 Select
 TheDate
 ,TheHour
@@ -213,9 +203,6 @@ TheDate
  ROWS UNBOUNDED PRECEDING))  as TotalCount3
 ,(TotalCount3 (DECIMAL(18,4)))/(TotalCount2 (DECIMAL(18,4))) as NumDiskPct
 FROM (
---(AA) SELECT qualifying data from Sldv
---ldvreads > 0
---ldvtype = 'DISK'
 select
  s1.TheDate
 ,c1.Month_Of_Calendar
@@ -227,7 +214,7 @@ select
 ,(cast(s1.ldvOutReqTime as decimal(18,4))/secs) as DiskPct
 ,AVG(DiskPct) over (partition by TheDate, TheHour, TheMinute) as AvgDiskPct2
 from {resusagesldv} s1,
---from dbc.ResUsageSldv s1,
+
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
 AND c1.day_of_week IN (2,3,4,5,6)
@@ -237,7 +224,6 @@ AND s1.TheDate BETWEEN {startdate} and {enddate}
 ) as AA
 Qualify NumDiskPct >= .80
 group by TheDate, Month_Of_Calendar, TheHour, TheMinute, AvgDiskPct2, NodeID, CtlID, LdvID, DiskPct
---Order by TheDate, TheHour, TheMinute, AvgDiskPct2, TotalCount3
 ) as BB
 group by 1,2,3,4,5
 ) as CC
@@ -260,7 +246,6 @@ UNION
 ==== ==== ====
 */
 SELECT
---UNION-2 Historical Trend Line
  SiteID
 ,Period_Number
 ,Month_Of_Calendar
@@ -304,14 +289,13 @@ SELECT
 ,Month_Of_Calendar
 ,TheHour
 ,( TheDate (DATE, FORMAT 'YYYY-MM-DD'))||' '||TRIM(TheHour (FORMAT '99')) AS PeakEnd
---,COUNT(*) AS LUNCount
 ,AVG(MinDiskPct) AS HourlyAvgIOPct
 ,AVG(HourlyAvgIOPct) OVER (ORDER BY  SiteID, TheDate ,TheHour ROWS 3 PRECEDING) AS VPeakAvgIOPct /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 ,MIN((TheDate (DATE, FORMAT 'YYYY-MM-DD')) ||' '||TRIM(TheHour (FORMAT '99'))) OVER  (ORDER BY  SiteID, TheDate ,TheHour ROWS 3 PRECEDING) AS PeakStart /* Enter Peak Period duration (n-1).  Typically 4 hours = 3  */
 from
 (
 Select
---(CC) Identify 1st device with NumDiskPct >=0.80, eliminate all others
+/* (CC) Identify 1st device with NumDiskPct >=0.80, eliminate all others */
  '{siteid}' as SiteID
 ,Month_Of_Calendar
 ,TheDate
@@ -324,10 +308,10 @@ Select
 ,MIN(TotalCount3 ) - 1 as CountDevicesBelow80th
 ,Count(*) as CountDevicesAbove80th
 ,(CountDevicesBelow80th(DECIMAL(18,4)))/TotalActiveDevices as PctDevicesBelow80th
---,MIN(NumDiskPct) as PctDevicesBelow80th
+/* ,MIN(NumDiskPct) as PctDevicesBelow80th */
 ,1-PctDevicesBelow80th as PctDevicesAbove80th
 from (
---(BB) Reduce result to 20% most busy devices (i.e., 1st device with NumDiskPct >=0.80
+/* (BB) Reduce result to 20% most busy devices (i.e., 1st device with NumDiskPct >=0.80 */
 Select
 TheDate
 ,TheHour
@@ -344,9 +328,6 @@ TheDate
  ROWS UNBOUNDED PRECEDING))  as TotalCount3
 ,(TotalCount3 (DECIMAL(18,4)))/(TotalCount2 (DECIMAL(18,4))) as NumDiskPct
 FROM (
---(AA) SELECT qualifying data from Sldv
---ldvreads > 0
---ldvtype = 'DISK'
 select
  s1.TheDate
 ,c1.Month_Of_Calendar
@@ -358,7 +339,6 @@ select
 ,(cast(s1.ldvOutReqTime as decimal(18,4))/secs) as DiskPct
 ,AVG(DiskPct) over (partition by TheDate, TheHour, TheMinute) as AvgDiskPct2
 from {resusagesldv} s1,
---from dbc.ResUsageSldv s1,
 sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
 AND c1.day_of_week IN (2,3,4,5,6)
@@ -368,7 +348,6 @@ AND s1.TheDate BETWEEN {startdate} and {enddate}
 ) as AA
 Qualify NumDiskPct >= .80
 group by TheDate, Month_Of_Calendar, TheHour, TheMinute, AvgDiskPct2, NodeID, CtlID, LdvID, DiskPct
---Order by TheDate, TheHour, TheMinute, AvgDiskPct2, TotalCount3
 ) as BB
 group by 1,2,3,4,5
 ) as CC

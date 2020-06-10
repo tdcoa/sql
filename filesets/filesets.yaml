@@ -28,19 +28,19 @@ dbql_core:
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
-      startdate:    "Current_Date - 45"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v04.coa.sql"
+      startdate:    "Current_Date - 42"
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
       resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
     dbql_core_dbc16:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620.pdcr.v3.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v04.coa.sql"
       startdate:    "Current_Date - 45"
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl_Hst"
-      resusagespma: "dbc.ResUsageSPMA_Hst"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+      resusagespma: "dbc.ResUsageSPMA"
     dim_app:
       gitfile:  "dims/dim_app.csv"
     dim_statement:
@@ -48,7 +48,93 @@ dbql_core:
     dim_user:
       gitfile:  "dims/dim_user.csv"
     dim_user_override:
-      gitfile:  "dbql_core/override_user_dim.sql"
+      gitfile:  "dims/dim_user_override.sql"
+
+
+db_objects:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    columns_v01_coa_sql:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "db_objects/columns.v01.coa.sql"
+
+
+concurrency:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    concurrency_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    concurrency_vis:
+      gitfile:      "concurrency/concurrency.py"
+
+
+top_users:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    topuser_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "top_users/top_users.coa.sql"
+      startdate:    "Current_Date - 48"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    topuser_vis:
+      gitfile:      "top_users/top_users.py"
+    dim_user_csv:
+      gitfile:      "dims/dim_user.csv"
+    dim_user_override:
+      gitfile:      "dims/dim_user_override.sql"
+
+
+success_plan:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    concurrency_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    concurrency_vis:
+      gitfile:      "concurrency/concurrency.py"
+    topuser_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "top_users/top_users.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    topuser_vis:
+      gitfile:      "top_users/top_users.py"
+    dim_user_csv:
+      gitfile:      "dims/dim_user.csv"
+    dim_user_override:
+      gitfile:      "dims/dim_user_override.sql"
+    cpu_summary_sql_pdcr1620:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "success_plan/cpu_summary.coa.sql"
+      startdate:    "Current_Date - 42"
+      enddate:      "Current_Date - 1"
+      resusagescpu: "pdcrinfo.resUsageSCPU_hst"
+    cpu_summary_vis:
+      gitfile:      "success_plan/cpu_summary.py"
+    success_plan_pptx:
+      gitfile:      "success_plan/success_plan.pptx"
+    build_success_plan:
+      gitfile:      "success_plan/z_build_success_plan.coa.sql"
+
 
 
 level1_how_much:
@@ -87,3 +173,24 @@ level1_how_much:
       dbsversion: ["16.20", "16.10", "16.00"]
       gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
       resusagesldv: "dbc.ResUsageSldv"
+
+
+
+test:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    build_success_plan01:
+      gitfile:      "test/build_success_plan01.coa.sql"
+    build_success_plan02:
+      gitfile:      "test/build_success_plan02.coa.sql"
+    build_success_plan03:
+      gitfile:      "test/build_success_plan03.coa.sql"
+    concurrency_csv:
+      gitfile:      "test/concurrency_maxpeak.csv"
+    concurrency_png:
+      gitfile:      "test/concurrency.heatmap_Concurrency_95Pctl.png"
+    success_plan:
+      gitfile:      "test/success_plan.pptx"
+    user_counts:
+      gitfile:      "test/user_counts.csv"
