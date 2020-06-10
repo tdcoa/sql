@@ -205,13 +205,13 @@ SELECT
    (EXTRACT(HOUR   FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) * 3600)
   +(EXTRACT(MINUTE FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) *   60)
   +(EXTRACT(SECOND FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) *    1)
-   as FLOAT))) as Runtime_Parse_Sec
+   as FLOAT))) as RunTime_Parse_Sec
 ,sum(ZEROIFNULL(CAST(
    (EXTRACT(HOUR   FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) * 3600)
   +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
   +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
    as FLOAT))) as Runtime_AMP_Sec
-,sum(TotalFirstRespTime)  as Runtime_Total_Sec
+,sum(TotalFirstRespTime)  as RunTime_Total_Sec
 ,sum(ZEROIFNULL(CAST(
    case when LastRespTime is not null then
    (EXTRACT(HOUR   FROM ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) ) * 3600)
