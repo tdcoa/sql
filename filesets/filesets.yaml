@@ -82,7 +82,7 @@ feature_usage:
   files:
     feature_usage_1620pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["16.20"]
       gitfile:      "feature_usage/feature_usage.1620pdcr.v03.coa.sql"
       startdate:    "Current_Date - 43"  # 6 weeks
       enddate:      "Current_Date - 1"
