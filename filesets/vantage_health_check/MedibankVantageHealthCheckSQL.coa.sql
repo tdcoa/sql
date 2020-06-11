@@ -29,7 +29,7 @@
 	FROM PDCRINFO.DBQLogTbl_Hst D
 	/*INNER JOIN systemfe.ca_user_xref U
 		ON D.UserName = U.UserName*/
-	WHERE D.LogDate BETWEEN current_date -30 AND current_date -1
+	WHERE D.LogDate BETWEEN current_date -3 AND current_date -1
 	GROUP BY 1,2,3,4,5,6;
 
 --Query2)
