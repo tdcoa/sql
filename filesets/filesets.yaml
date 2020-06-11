@@ -196,6 +196,17 @@ level1_how_much:
 
 
 
+
+vantage_health_check:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    columns_v01_coa_sql:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "vantage_health_check/MedibankVantageHealthCheckSQL.coa.sql"
+
+
 test:
   active:           "True"
   fileset_version:  "1.0"
