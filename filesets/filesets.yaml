@@ -87,7 +87,6 @@ feature_usage:
       startdate:    "Current_Date - 43"  # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-
     dim_user_sql:
       gitfile:      "dims/dim_user.sql"
     dim_user_csv:
