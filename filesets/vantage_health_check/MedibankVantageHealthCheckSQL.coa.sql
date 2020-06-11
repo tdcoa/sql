@@ -118,7 +118,7 @@ GROUP BY 1,2,3,4;
 
 --Query3
 
-
+/*
 SELECT
  A.LogDate as LogDate,
  A.USERNAME as MaskedUserName,
@@ -134,7 +134,8 @@ GROUP BY
     USERNAME,
     FeatureName having FeatureUseCount > 0
     ORDER BY 1,2,3;
-
+		
+*/
 
 
 --Query4
