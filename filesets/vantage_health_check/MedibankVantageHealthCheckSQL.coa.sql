@@ -29,8 +29,10 @@
 	FROM PDCRINFO.DBQLogTbl_Hst D
 	/*INNER JOIN systemfe.ca_user_xref U
 		ON D.UserName = U.UserName*/
-	WHERE D.LogDate BETWEEN current_date -3 AND current_date -1
+	WHERE D.LogDate BETWEEN {startdate} AND {enddate}
 	GROUP BY 1,2,3,4,5,6;
+
+
 
 --Query2)
 
@@ -116,13 +118,12 @@ FROM(
 GROUP BY 1,2,3,4;
 
 
---Query3
+/* Query3 */
 
 /*
 SELECT
  A.LogDate as LogDate,
  A.USERNAME as MaskedUserName,
---  HASHROW(A.USERNAME) as MaskedUserName,
  CAST(B.FEATURENAME AS VARCHAR(100)) AS FeatureName,
  SUM(GETBIT(A.FEATUREUSAGE,(2047 - B.FEATUREBITPOS))) AS FeatureUseCount,
   COUNT(*) AS RequestCount
@@ -134,7 +135,7 @@ GROUP BY
     USERNAME,
     FeatureName having FeatureUseCount > 0
     ORDER BY 1,2,3;
-		
+
 */
 
 
