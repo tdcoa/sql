@@ -10,11 +10,25 @@
 */
 
 /*{{save:feature_department.csv}}*/
+
+/*  extracts the feature logging from dbqlogtbl
+    WITHOUT the cartesian Join
+
+  parameters
+     dbqlogtbl  = {dbqlogtbl}
+     siteid     = {siteid}
+     startdate  = {startdate}
+     enddate    = {enddate}
+*/
+
+/*{{save:feature_department.csv}}*/
+/*{{load:{db_stg}.stg_dat_feature_usage_log}}*/
 SELECT
  '{siteid}' (VARCHAR(100)) as SiteID
 ,A.LogDate as LogDate
 ,u.User_Bucket
 ,u.User_Department
+,v.DBSVersion
 ,count(*) as Request_Count
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -016)))) AS bit016
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -017)))) AS bit017
@@ -138,8 +152,10 @@ SELECT
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -135)))) AS bit135
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -136)))) AS bit136
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -137)))) AS bit137
-FROM {dbqlogtbl} as A PDCRINFO.DBQLOGTBL_HST
-JOIN dim_user u
+FROM {dbqlogtbl} as A
+/* FROM PDCRINFO.DBQLOGTBL_HST as A  */
+JOIN dim_user as U
   on a.UserName = u.UserName
+CROSS JOIN (Select trim(infoData) as DBSVersion from dbc.dbcinfo where InfoKey = 'VERSION') as V
 WHERE LogDate BETWEEN {startdate} and {enddate}
-GROUP BY 1,2,3,4;
+GROUP BY 1,2,3,4,5;
