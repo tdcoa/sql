@@ -2,9 +2,7 @@
    requires the dim_user.csv file
 
 Parameters:
-  - dbqlogtbl:    {dbqlogtbl}
-  - startdate:    {startdate}
-  - enddate:      {enddate}
+  - siteid:    {siteid}
 */
 
 /*{{temp:dim_user.csv}}*/ ;
@@ -13,7 +11,8 @@ Parameters:
 create volatile table dim_user as
 (
   select
-   o.UserName
+   '{siteid}' as Site_ID
+  ,o.UserName
   ,o.UserHash
   ,coalesce(p.User_Bucket,'Unknown') as User_Bucket
   ,coalesce(p.User_Department, 'Unknown') as User_Department

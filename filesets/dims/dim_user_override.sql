@@ -9,7 +9,6 @@ for any table.
 /*
 delete from "dim_user.csv"
 */
-;
 
 /*
 insert into "dim_user.csv"

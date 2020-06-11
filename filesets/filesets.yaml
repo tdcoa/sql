@@ -29,7 +29,7 @@ dbql_core:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core.1620pdcr.v04.coa.sql"
-      startdate:    "Current_Date - 42"
+      startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
       resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
@@ -37,7 +37,7 @@ dbql_core:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core.1620pdcr.v04.coa.sql"
-      startdate:    "Current_Date - 45"
+      startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "dbc.DBQLogTbl"
       resusagespma: "dbc.ResUsageSPMA"
@@ -69,11 +69,32 @@ concurrency:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
-      startdate:    "Current_Date - 42"
+      startdate:    "Current_Date - 43"  # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     concurrency_vis:
       gitfile:      "concurrency/concurrency.py"
+
+
+feature_usage:
+  active:           "True"
+  fileset_version:  "1.2"
+  files:
+    feature_usage_1620pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "feature_usage/feature_usage.1620pdcr.v03.coa.sql"
+      startdate:    "Current_Date - 43"  # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+
+    dim_user_sql:
+      gitfile:      "dims/dim_user.sql"
+    dim_user_csv:
+      gitfile:      "dims/dim_user.csv"
+    dim_user_override:
+      gitfile:      "dims/dim_user_override.sql"
+
 
 
 top_users:
@@ -84,7 +105,7 @@ top_users:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "top_users/top_users.coa.sql"
-      startdate:    "Current_Date - 48"
+      startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     topuser_vis:
@@ -103,7 +124,7 @@ success_plan:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
-      startdate:    "Current_Date - 42"
+      startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     concurrency_vis:
@@ -112,7 +133,7 @@ success_plan:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "top_users/top_users.coa.sql"
-      startdate:    "Current_Date - 42"
+      startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     topuser_vis:
@@ -125,7 +146,7 @@ success_plan:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "success_plan/cpu_summary.coa.sql"
-      startdate:    "Current_Date - 42"
+      startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       resusagescpu: "pdcrinfo.resUsageSCPU_hst"
     cpu_summary_vis:
