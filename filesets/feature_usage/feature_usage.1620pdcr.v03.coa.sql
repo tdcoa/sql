@@ -68,7 +68,7 @@ from dim_user
 
 /*{{save:feature_department.csv}}*/
 /*{{load:{db_stg}.stg_dat_feature_usage_log}}*/
-/*{{call:{db_coa}.sp_dat_feature_usage_log}}*/
+/*{{call:{db_coa}.sp_dat_feature_usage_log('v1')}}*/
 SELECT
  '{siteid}' (VARCHAR(100)) as SiteID
 ,A.LogDate as LogDate
