@@ -45,7 +45,7 @@ create volatile table dim_user as
         when p.Pattern_Type = 'RegEx'
          and character_length(regexp_substr(o.UserName, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
-    and SiteID_ in('default','None') or '{siteid}' like SiteID_
+    and (SiteID_ in('default','None') or '{siteid}' like SiteID_)
   qualify Priority_ = min(Priority_)over(partition by o.UserName)
 ) with data
 primary index (UserName)
