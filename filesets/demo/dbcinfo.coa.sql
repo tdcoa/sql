@@ -55,7 +55,6 @@ Select top 1 cal_date from valid_dates where item='Me';
 /* save the resultset output to the listed .csv */
 /*{{save:alldates.csv}}*/
 /*{{vis:alldates.csv}}*/
-/*{pptx:AgeReport.pptx}*/
 Select cast(v.cal_date as date) as cal_date
 ,trim(v.item) as item
 ,coalesce(c.year_of_calendar,extract(year from v.cal_date)) as cal_year
