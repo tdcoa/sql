@@ -377,7 +377,7 @@ In case it's needed, here is the approximate* Transcend Stored Proc text:
        END IF;
 
        IF unp <> dim THEN
-           Select 'MISSING BIT POSITION DEFINITION: ' || min(u.BitPos) || ' -- found in '|| trim(u.Site_ID) ||' ('|| u.DBSVersion ||')' as msg
+           Select 'MISSING BIT POSITION DEFINITION: ' || min(u.BitPos) || ' - found in '|| trim(u.Site_ID) ||' ('|| u.DBSVersion ||')' as msg
            INTO msg
            from feature_usage_unpivot u
            left outer join adlste_coa.coat_dim_feature f
