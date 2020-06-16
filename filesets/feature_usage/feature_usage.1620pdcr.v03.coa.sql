@@ -214,7 +214,8 @@ FROM {dbqlogtbl} as A /* PDCRINFO.DBQLOGTBL_HST as A */
 JOIN dim_user as U
   on a.UserName = u.UserName
 WHERE LogDate BETWEEN {startdate} and {enddate}
-GROUP BY 1,2,3,4,5;
+GROUP BY 1,2,3,4,5
+;
 
 
 /*   Notes:
@@ -232,7 +233,7 @@ GROUP BY 1,2,3,4,5;
       The regression of mis-aligned bits occurred from build 16.20.33.01
       and above until the builds before 16.20.53.07 build.
       Builds starting from 16.20.53.07 and above are GOOD.
-   - this will be accounted for in the coa_dim_feature table in Transcend 
+   - this will be accounted for in the coa_dim_feature table in Transcend
 
 In case it's needed, here is the approximate* Transcend Stored Proc text:
    *minus updates since point of writing
@@ -243,7 +244,7 @@ In case it's needed, here is the approximate* Transcend Stored Proc text:
    SQL SECURITY CREATOR
    BEGIN
 
-       -- start setup audit process
+
        DECLARE runid  INTEGER;
        DECLARE siteid VARCHAR(128);
        DECLARE tablename VARCHAR(128);
@@ -251,13 +252,13 @@ In case it's needed, here is the approximate* Transcend Stored Proc text:
        DECLARE startdate DATE;
        DECLARE enddate DATE;
 
-       -- for reconcile:
-       DECLARE dim INTEGER; -- dim_feature
-       DECLARE gtt INTEGER; -- source GTT
-       DECLARE unp INTEGER; -- unpivot
-       DECLARE dat INTEGER; -- final dat_feature_usage_log
 
-       DECLARE err BYTEINT; -- Flag if error found
+       DECLARE dim INTEGER;
+       DECLARE gtt INTEGER;
+       DECLARE unp INTEGER;
+       DECLARE dat INTEGER;
+
+       DECLARE err BYTEINT;
        DECLARE msg VARCHAR(100);
 
        SET runid = 0;
@@ -276,7 +277,6 @@ In case it's needed, here is the approximate* Transcend Stored Proc text:
        Group by 1
        ;
 
-       -- end setup audit process
 
 
        CALL adlste_coa.sp_audit_log(runid, :siteid, :tablename, :callingsp, :spversion, :startdate, :enddate,
@@ -285,7 +285,7 @@ In case it's needed, here is the approximate* Transcend Stored Proc text:
        CALL adlste_coa.sp_audit_log(runid, :siteid, :tablename, :callingsp, :spversion, :startdate, :enddate,
                                  'normal run', 'STEP',  'Unpivot from source') ;
 
-       -- unpivot data from source
+
        create volatile table feature_usage_unpivot as
        (
            select *
@@ -334,13 +334,18 @@ In case it's needed, here is the approximate* Transcend Stored Proc text:
 
        INSERT into adlste_coa.coat_dat_feature_usage_log
        select u.Site_ID, u.LogDate, f.Feature_ID
+       ,case when u.DBSVersion between '16.20.33.01' and '16.20.53.07' then 'ALT01'
+             else 'DEFAULT' end as DBS_Version
        ,u.User_Bucket, u.User_Department, 'na' as User_SubDepartment, 'na' as User_Region
        ,Usage_Cnt as Feature_Usage_Cnt
        ,:runid as RunID
        from feature_usage_unpivot u
        join adlste_coa.coat_dim_feature f
-         on cast(u.BitPos as int) = f.Feature_BitPos;
-
+         on cast(u.BitPos as int) = f.Feature_BitPos
+        and f.DBS_Version = case
+                            when u.DBSVersion between '16.20.33.01' and '16.20.53.07' then 'ALT01'
+                            else 'DEFAULT' end
+       ;
 
 
 
@@ -348,7 +353,7 @@ In case it's needed, here is the approximate* Transcend Stored Proc text:
                                  'normal run', 'STEP',  'Reconcile record counts');
 
 
-       -- Reconcile
+
        Select gtt, unp, dim, dat
          INTO gtt, unp, dim, dat
        from
