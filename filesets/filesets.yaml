@@ -211,17 +211,5 @@ test:
   active:           "True"
   fileset_version:  "1.0"
   files:
-    build_success_plan01:
-      gitfile:      "test/build_success_plan01.coa.sql"
-    build_success_plan02:
-      gitfile:      "test/build_success_plan02.coa.sql"
-    build_success_plan03:
-      gitfile:      "test/build_success_plan03.coa.sql"
-    concurrency_csv:
-      gitfile:      "test/concurrency_maxpeak.csv"
-    concurrency_png:
-      gitfile:      "test/concurrency.heatmap_Concurrency_95Pctl.png"
-    success_plan:
-      gitfile:      "test/success_plan.pptx"
-    user_counts:
-      gitfile:      "test/user_counts.csv"
+    dim_app:
+      gitfile:  "dims/dim_app.csv"
