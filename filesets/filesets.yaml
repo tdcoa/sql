@@ -211,5 +211,9 @@ test:
   active:           "True"
   fileset_version:  "1.0"
   files:
-    dim_app:
-      gitfile:  "dims/dim_app.csv"
+    user_counts:
+      gitfile:  "test/user_counts.csv"
+    dim_app_test:
+      gitfile:  "test/dim_app.csv"
+    dim_app_orig:
+      gitfile:  "dim/dim_app.csv"
