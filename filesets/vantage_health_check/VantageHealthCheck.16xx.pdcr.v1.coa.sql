@@ -99,7 +99,9 @@ FROM(
         --,SubDepartment
         FROM PDCRINFO.DbqlogTbl_Hst DBQL -- INNER JOIN systemfe.ca_user_xref U
         --    ON DBQL.username = U.username
-        WHERE Logdate BETWEEN current_date - 30 AND current_date -1) as D
+        WHERE Logdate BETWEEN {startdate} AND {enddate}
+				--current_date - 30 AND current_date -1
+			) as D
 
     INNER JOIN
 
@@ -114,7 +116,8 @@ FROM(
         FROM PDCRINFO.DBQLObjTbl_Hst --INNER JOIN systemfe.ca_table_xref
         --        ON ObjectDatabaseName = DatabaseName
         --        AND ObjectDatabaseName = Tablename
-        WHERE Logdate BETWEEN current_date - 30 AND current_date -1
+        WHERE Logdate BETWEEN {startdate} AND {enddate}
+				-- current_date - 30 AND current_date -1
         AND ObjectType = 'Tab') as O
 
             ON D.QueryID = O.QueryID
@@ -593,7 +596,7 @@ FROM
             Sys_Calendar.CALENDAR QryCal
                 ON QryCal.calendar_date = QryLog.LogDate
         WHERE
-            LogDate BETWEEN current_date - 30  AND current_date - 1
+            LogDate BETWEEN {startdate} AND {enddate}
             AND StartTime IS NOT NULL
     ) AS QryDetails
 GROUP BY
@@ -932,8 +935,8 @@ SELECT
             ,QryLog.CacheFlag
 
  /* 30-Day Max CPU & I/O  */
-            ,(select MAX(QryLogX.AMPCPUTime) FROM PDCRINFO.DBQLogTbl_Hst QryLogX WHERE LogDate BETWEEN current_date - 30  AND current_date - 1 AND StartTime IS NOT NULL) as MAXCPU   --Observed CPU Cieling
-            ,(select MAX(QryLogX.TotalIOCount) FROM PDCRINFO.DBQLogTbl_Hst QryLogX WHERE LogDate BETWEEN current_date - 30  AND current_date - 1 AND StartTime IS NOT NULL) as MAXIO  --Observed I/O Ceiling
+            ,(select MAX(QryLogX.AMPCPUTime) FROM PDCRINFO.DBQLogTbl_Hst QryLogX WHERE LogDate BETWEEN {startdate} AND {enddate} AND StartTime IS NOT NULL) as MAXCPU   --Observed CPU Cieling
+            ,(select MAX(QryLogX.TotalIOCount) FROM PDCRINFO.DBQLogTbl_Hst QryLogX WHERE LogDate BETWEEN {startdate} AND {enddate} AND StartTime IS NOT NULL) as MAXIO  --Observed I/O Ceiling
 
  /* Request Groupings */
             ,CASE
@@ -1097,8 +1100,7 @@ SELECT
             Sys_Calendar.CALENDAR QryCal
                 ON QryCal.calendar_date = QryLog.LogDate
         WHERE
-            --LogDate BETWEEN current_date - 1  AND current_date
-            LogDate BETWEEN current_date - 30 AND current_date - 1
+            LogDate BETWEEN {startdate} AND {enddate}
             --AND Extract (HOUR from StartTime) in (8,9,10)
             AND StartTime IS NOT NULL
             AND AMPCPUTime > 0
@@ -1243,7 +1245,7 @@ sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
 AND s1.vproc1 > 0
 AND c1.day_of_week IN (2,3,4,5,6)
-AND s1.TheDate BETWEEN (CURRENT_DATE - 365) AND CURRENT_DATE  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN {startdate_history} AND {enddate_history} /* (CURRENT_DATE - 365) AND CURRENT_DATE    Enter number of days for history.  Typically 365  */
 GROUP BY 1,2,3,4) a1
 QUALIFY ROW_NUMBER () OVER (PARTITION BY TheDate ORDER BY VPeakAvgCPUPct  DESC) = 1) a2
 ) a3
@@ -1310,7 +1312,7 @@ sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
 AND s1.vproc1 > 0
 AND c1.day_of_week IN (2,3,4,5,6)
-AND s1.TheDate BETWEEN (CURRENT_DATE - 365) AND CURRENT_DATE  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN ({startdate_history} - 365) AND {enddate_history}  /* Enter number of days for history.  Typically 365  */
 GROUP BY 1,2,3,4) a1
 QUALIFY ROW_NUMBER () OVER (PARTITION BY TheDate ORDER BY VPeakAvgCPUPct  DESC) = 1) a2
 ) a3
@@ -1508,7 +1510,7 @@ WHERE  c1.calendar_date= s1.TheDate
 AND c1.day_of_week IN (2,3,4,5,6)
 and s1.LdvType='DISK'
 AND s1.ldvreads > 0
-AND s1.TheDate BETWEEN (Current_Date - 365) AND Current_Date  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN ({startdate_history} - 365) AND {enddate_history}  /* Enter number of days for history.  Typically 365  */
 ) as AA
 Qualify NumDiskPct >= .80
 group by TheDate, Month_Of_Calendar, TheHour, TheMinute, AvgDiskPct2, NodeID, CtlID, LdvID, DiskPct
@@ -1634,7 +1636,7 @@ WHERE  c1.calendar_date= s1.TheDate
 AND c1.day_of_week IN (2,3,4,5,6)
 and s1.LdvType='DISK'
 AND s1.ldvreads > 0
-AND s1.TheDate BETWEEN (Current_Date - 365) AND Current_Date  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN ({startdate_history} - 365) AND {enddate_history}  /* Enter number of days for history.  Typically 365  */
 ) as AA
 Qualify NumDiskPct >= .80
 group by TheDate, Month_Of_Calendar, TheHour, TheMinute, AvgDiskPct2, NodeID, CtlID, LdvID, DiskPct
@@ -1768,7 +1770,7 @@ SELECT
       sys_calendar.CALENDAR c1
   WHERE  c1.calendar_date= s1.LogDate
     AND c1.day_of_week IN (2,3,4,5,6)
-    AND s1.Logdate BETWEEN Current_Date - 365 AND Current_Date /* Enter the number days history */
+    AND s1.Logdate BETWEEN {startdate_history} AND {enddate_history} /* Enter the number days history */
   Group by 1,2
 ) a1
 ) a2
@@ -1820,7 +1822,7 @@ SELECT
       sys_calendar.CALENDAR c1
   WHERE  c1.calendar_date= s1.LogDate
     AND c1.day_of_week IN (2,3,4,5,6)
-    AND s1.Logdate BETWEEN Current_Date - 365 AND Current_Date /* Enter the number days history */
+    AND s1.Logdate BETWEEN {startdate_history} AND {enddate_history} /* Enter the number days history */
   Group by 1,2
 ) a1
 ) a2
@@ -1858,7 +1860,7 @@ SELECT
 ,SUM(FileAcqReadKB) as "File Acq Read KB"
 ,SUM(FileWriteKB)   as "File Write KB"
 FROM PDCRINFO.ResUsageSpma_Hst s1
-where TheDate between (Current_Date - 365) AND Current_Date
+where TheDate between ({startdate_history}) AND {enddate_history}
 group by 1,2,3,4,5,6
 order by 1,2,3,4,5,6;
 
@@ -1899,7 +1901,7 @@ SELECT
 ,SUM(FileAcqReadKB) as "File Acq-Read KB"
 ,SUM(FileWriteKB)   as "File Write KB"
 FROM PDCRINFO.ResUsageSPMA_hst s1
-where TheDate between (Current_Date - 365) AND Current_Date
+where TheDate between ({startdate_history}) AND {enddate_history}
 group by 1,2,3,4,5,6, 8,9,10,11,12,13
 --order by 1,2,3,4,5
 ;
@@ -1964,7 +1966,7 @@ select
 ,AVG(DiskPct) over (partition by TheDate, TheHour, TheMinute) as AvgDiskPct2
 from PDCRINFO.ResUsageSldv_hst
 --from PDCRINFO.ResUsageSldv_hst
-where thedate BETWEEN (Current_Date - 365) and Current_Date
+where thedate BETWEEN {startdate_history} and {enddate_history}
 and ldvreads > 0
 and LdvType='DISK'
 ) as AA
@@ -2176,7 +2178,7 @@ from DBC.QryLogTdwmSumV  a
 
 
 
-where a.StartColTime between current_date - 30 and current_date -1
+where a.StartColTime BETWEEN {startdate} and {enddate}
 
 
 
@@ -2222,7 +2224,7 @@ Locking Row for Access
        from  PDCRINFO.DBQLogTbl_Hst a
 
        Where  DelayTime > 0
-       AND a.Logdate between current_date - 30 and current_date - 1
+       AND a.Logdate BETWEEN {startdate} and {enddate}
        Group By 1,2,3,4,5,6,7,8,9,10,11;
 
 
@@ -2288,7 +2290,7 @@ FROM PDCRINFO.DBQLogTbl_Hst QryLog
             Sys_Calendar.CALENDAR QryCal
                 ON QryCal.calendar_date = QryLog.LogDate
         WHERE
-            LogDate BETWEEN current_date - 30  AND current_date - 1
+            LogDate BETWEEN {startdate} and {enddate}
             AND StartTime IS NOT NULL
 			Group By 1,2,3,4,5
 )ResponseT
@@ -2503,8 +2505,8 @@ SELECT
 	ON QryLog.LogDate = c.Calendar_date
 	--INNER JOIN systemfe.ca_user_xref U
 	--	ON QryLog.UserName = U.UserName
-	WHERE QryLog.LogDate BETWEEN current_date -30 AND current_date -1
-	and c.Calendar_date BETWEEN current_date -30 AND current_date -1
+	WHERE QryLog.LogDate BETWEEN {startdate} and {enddate}
+	and c.Calendar_date BETWEEN {startdate} and {enddate}
 
 	--	ON QryLog.UserName = U.UserName
 
@@ -2745,7 +2747,7 @@ INNER JOIN
         Username as Username
          ,COUNT(*) as NoOfQueries
         From PDCRINFO.DBQLogTbl_hst
-        where logdate  > CURRENT_DATE - 60 -- - INTERVAL'2'MONTH
+        where logdate BETWEEN {startdate} and {enddate}
         Group By 1
         )USR
 ON DatabaseName = USR.Username
@@ -2786,7 +2788,7 @@ INNER JOIN
             Group BY 1,2)t
               on o.objectdatabasename = t.DatabaseName
                AND o.ObjectTableName = t.Tablename
-        WHERE o.LogDate > CURRENT_DATE - 60 --INTERVAL'2'MONTH
+        WHERE o.LogDate BETWEEN {startdate} and {enddate}
         Group BY 1,2,3
         ) TMP
 
@@ -2871,7 +2873,8 @@ FROM (
                     AND ObjectColumnName IS NULL
 					-- AND CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'     uncomment for DBC */
 					-- AND LogDate BETWEEN '2020-04-01' AND '2020-04-30'      uncomment for PDCR */
-					AND LogDate BETWEEN current_date - 90 AND current_date - 1 /* uncomment for PDCR */
+					AND LogDate BETWEEN {startdate} and {enddate}
+					-- TODO: BETWEEN current_date - 90 AND current_date - 1   uncomment for PDCR */
 					GROUP BY 1,2,3
                 ) AS QTU1
                 INNER JOIN
@@ -2885,7 +2888,8 @@ FROM (
                     AND ObjectColumnName IS NULL
 				--	 AND CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'    uncomment for DBC */
 				--	 AND LogDate BETWEEN '2020-04-01' AND '2020-04-30'     uncomment for PDCR */
-					AND LogDate BETWEEN current_date - 90 AND current_date - 1 /* uncomment for PDCR */
+					AND LogDate BETWEEN {startdate} and {enddate}
+					-- TODO: BETWEEN current_date - 90 AND current_date - 1  uncomment for PDCR */
                     GROUP BY 1
                 ) AS QTU2
                 ON QTU1.QueryID=QTU2.QueryID
@@ -2927,7 +2931,8 @@ LEFT JOIN
 	    ON QU.CollectTimeStamp (DATE) = spma.thedate
 	--WHERE CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'    uncomment for DBC */
 	-- WHERE LogDate BETWEEN '2017-01-01' AND '2017-08-01'    uncomment for PDCR */
-		AND LogDate BETWEEN current_date - 90 AND current_date - 1 /* uncomment for PDCR */
+		AND LogDate BETWEEN {startdate} and {enddate}
+		-- TODO: BETWEEN current_date - 90 AND current_date - 1   uncomment for PDCR */
 
     ) AS SumAll
     ON 1=1
@@ -2968,7 +2973,8 @@ FROM    (
                     AND ObjectColumnName IS NULL
 					-- AND CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'  uncomment for DBC */
 					-- AND LogDate BETWEEN '2017-01-01' AND '2017-08-01'  uncomment for PDCR */
-						AND LogDate BETWEEN current_date - 90 AND current_date - 1 /* uncomment for PDCR */
+						AND LogDate BETWEEN {startdate} and {enddate}
+						-- BETWEEN current_date - 90 AND current_date - 1  uncomment for PDCR */
 					GROUP BY 1,2,3
                 ) AS QTU1
                 INNER JOIN
@@ -2983,7 +2989,8 @@ FROM    (
                     AND ObjectColumnName IS NULL
 					--AND CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'  uncomment for DBC */
 					-- AND LogDate BETWEEN '2017-01-01' AND '2017-08-01'  uncomment for PDCR */
-						AND LogDate BETWEEN current_date - 90 AND current_date - 1 /* uncomment for PDCR */
+						AND LogDate BETWEEN {startdate} and {enddate}
+						-- TODO: BETWEEN current_date - 90 AND current_date - 1    uncomment for PDCR */
 					GROUP BY 1,2,3
                 ) AS QTU2
                 ON QTU1.QueryID=QTU2.QueryID
