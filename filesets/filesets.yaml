@@ -201,10 +201,10 @@ vantage_health_check:
   active:           "True"
   fileset_version:  "1.0"
   files:
-    columns_v01_coa_sql:
+    main_sql01:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "vantage_health_check/MedibankVantageHealthCheckSQL.coa.sql"
+      gitfile:      "vantage_health_check/VantageHealthCheck.16xx.pdcr.v1.coa.sql"
 
 
 test:
