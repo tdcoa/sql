@@ -39,7 +39,7 @@ Query Results File name : DepartmentCPUConsumption
 	FROM PDCRINFO.DBQLogTbl_Hst D
 	/*INNER JOIN systemfe.ca_user_xref U
 		ON D.UserName = U.UserName*/
-	WHERE D.LogDate BETWEEN {startdate} AND {enddarte}
+	WHERE D.LogDate BETWEEN {startdate} AND {enddate}
 	GROUP BY 1,2,3,4,5,6;
 
 
