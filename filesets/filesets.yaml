@@ -216,4 +216,4 @@ test:
     dim_app_test:
       gitfile:  "test/dim_app.csv"
     dim_app_orig:
-      gitfile:  "dim/dim_app.csv"
+      gitfile:  "dims/dim_app.csv"
