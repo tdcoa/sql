@@ -214,6 +214,6 @@ test:
     user_counts:
       gitfile:  "test/user_counts.csv"
     dim_app_test:
-      gitfile:  "test/dim_app.csv"
-    dim_app_orig:
       gitfile:  "dims/dim_app.csv"
+    dim_app_orig:
+      gitfile:  "test/dim_app.csv"
