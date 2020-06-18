@@ -7,7 +7,7 @@ Tableau Dashboard: CPU Consumption By Operating Window
 
 */
 
-/*{{save:CPUByOperatingWindow}}*/
+/*{{save:CPUByOperatingWindow.csv}}*/
   SELECT
 	QryLog.LogDate AS "Log Date"
 	,EXTRACT( HOUR FROM QryLog.starttime) AS "Log Hour"

@@ -7,7 +7,7 @@ Query Output File Name: SPMA-Detail-Data
 Tableau Dashboard: CPU Heatmap of Avg % Util  - SPMA Detail
 */
 
-/*{{save:SPMA-Detail-Data}}*/
+/*{{save:SPMA-Detail-Data10.csv}}*/
 SELECT
 'SiteID'  (VARCHAR(30)) as SiteID --< enter customer SiteID here
 ,TheDate (FORMAT 'YYYY-MM-DD') as "Log Date"

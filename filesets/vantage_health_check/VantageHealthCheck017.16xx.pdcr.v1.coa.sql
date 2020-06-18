@@ -7,7 +7,7 @@ Tableau Dashboard: Database Size, Top Database Size
 
 */
 
-/*{{save:TopDatabasebySpace}}*/
+/*{{save:TopDatabasebySpace.csv}}*/
 
 Select
     Rank()  OVER (Order by CURRENTPERM DESC ) as CURRENTPERMRnk

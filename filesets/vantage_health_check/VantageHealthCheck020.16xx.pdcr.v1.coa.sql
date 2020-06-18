@@ -7,7 +7,7 @@ Tableau Dashboard: Activity By Database
 
 */
 
-/*{{save:DatabaseActivitySummary}}*/
+/*{{save:DatabaseActivitySummary.csv}}*/
   SELECT
 		TMP.DatabaseName
 	,	TMP.Tablename
