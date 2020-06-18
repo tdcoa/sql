@@ -21,6 +21,20 @@ demo:
       gitfile:  "demo/AgeReport.pptx"
 
 
+
+test:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    user_counts:
+      gitfile:  "test/user_counts.csv"
+    dim_app_test:
+      gitfile:  "dims/dim_app.csv"
+    dim_app_orig:
+      gitfile:  "test/dim_app.csv"
+
+
+
 dbql_core:
   active:           "True"
   fileset_version:  "1.0"
@@ -200,20 +214,60 @@ level1_how_much:
 vantage_health_check:
   active:           "True"
   fileset_version:  "1.0"
+  startdate:          "Current_Date - 30"
+  enddate:            "Current_Date - 1"
+  startdate_history:  "Current_Date - 365"
+  enddate_history:    "Current_Date"
   files:
-    main_sql01:
+    vhc_master_16pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "vantage_health_check/VantageHealthCheck.16xx.pdcr.v1.coa.sql"
-
-
-test:
-  active:           "True"
-  fileset_version:  "1.0"
-  files:
-    user_counts:
-      gitfile:  "test/user_counts.csv"
-    dim_app_test:
-      gitfile:  "dims/dim_app.csv"
-    dim_app_orig:
-      gitfile:  "test/dim_app.csv"
+      gitfile:      "vantage_health_check/VantageHealthCheck_master.16xx.pdcr.v1.coa.sql"
+    vhc_sql01:
+      gitfile:      "vantage_health_check/VantageHealthCheck001.16xx.pdcr.v1.sql"
+    vhc_sql02:
+      gitfile:      "vantage_health_check/VantageHealthCheck002.16xx.pdcr.v1.sql"
+    vhc_sql03:
+      gitfile:      "vantage_health_check/VantageHealthCheck003.16xx.pdcr.v1.sql"
+    vhc_sql04:
+      gitfile:      "vantage_health_check/VantageHealthCheck004.16xx.pdcr.v1.sql"
+    vhc_sql05:
+      gitfile:      "vantage_health_check/VantageHealthCheck005.16xx.pdcr.v1.sql"
+    vhc_sql06:
+      gitfile:      "vantage_health_check/VantageHealthCheck006.16xx.pdcr.v1.sql"
+    vhc_sql07:
+      gitfile:      "vantage_health_check/VantageHealthCheck007.16xx.pdcr.v1.sql"
+    vhc_sql08:
+      gitfile:      "vantage_health_check/VantageHealthCheck008.16xx.pdcr.v1.sql"
+    vhc_sql09:
+      gitfile:      "vantage_health_check/VantageHealthCheck009.16xx.pdcr.v1.sql"
+    vhc_sql10:
+      gitfile:      "vantage_health_check/VantageHealthCheck010.16xx.pdcr.v1.sql"
+    vhc_sql11:
+      gitfile:      "vantage_health_check/VantageHealthCheck011.16xx.pdcr.v1.sql"
+    vhc_sql12:
+      gitfile:      "vantage_health_check/VantageHealthCheck012.16xx.pdcr.v1.sql"
+    vhc_sql13:
+      gitfile:      "vantage_health_check/VantageHealthCheck013.16xx.pdcr.v1.sql"
+    vhc_sql14:
+      gitfile:      "vantage_health_check/VantageHealthCheck014.16xx.pdcr.v1.sql"
+    vhc_sql15:
+      gitfile:      "vantage_health_check/VantageHealthCheck015.16xx.pdcr.v1.sql"
+    vhc_sql16:
+      gitfile:      "vantage_health_check/VantageHealthCheck016.16xx.pdcr.v1.sql"
+    vhc_sql17:
+      gitfile:      "vantage_health_check/VantageHealthCheck017.16xx.pdcr.v1.sql"
+    vhc_sql18:
+      gitfile:      "vantage_health_check/VantageHealthCheck018.16xx.pdcr.v1.sql"
+    vhc_sql19:
+      gitfile:      "vantage_health_check/VantageHealthCheck019.16xx.pdcr.v1.sql"
+    vhc_sql20:
+      gitfile:      "vantage_health_check/VantageHealthCheck020.16xx.pdcr.v1.sql"
+    vhc_sql21:
+      gitfile:      "vantage_health_check/VantageHealthCheck021.16xx.pdcr.v1.sql"
+    vhc_sql22:
+      gitfile:      "vantage_health_check/VantageHealthCheck022.16xx.pdcr.v1.sql"
+    vhc_sql23:
+      gitfile:      "vantage_health_check/VantageHealthCheck023.16xx.pdcr.v1.sql"
+    vhc_sql24:
+      gitfile:      "vantage_health_check/VantageHealthCheck024.16xx.pdcr.v1.sql"
