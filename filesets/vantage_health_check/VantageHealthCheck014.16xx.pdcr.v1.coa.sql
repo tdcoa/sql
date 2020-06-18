@@ -1,13 +1,11 @@
 /*
 ##############################################3
 Query 14
-
 Query Output File Name: ResponseTimeBucket
 Tableau Dashboard: QueryRunTimes
-
 */
 
-
+/*{{save:ResponseTimeBucket.csv}}*/
 Select
 ResponseT.logdate "Log Date"
 ,ResponseT.username "User"

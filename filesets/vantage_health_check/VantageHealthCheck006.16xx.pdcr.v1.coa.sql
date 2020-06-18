@@ -23,7 +23,7 @@ CPU Utilization 4-Hour Variable Peak from ResusageSpma (Viewpoint CPU Utilizatio
 
 */
 
-/*{{CPU_Trend_Spma_AvgCPUBusyPct.csv}}*/
+/*{{save:CPU_Trend_Spma_AvgCPUBusyPct.csv}}*/
 LOCK ROW FOR ACCESS
 SELECT
 'SiteId' as SiteID /* Enter the Customer SiteID */
