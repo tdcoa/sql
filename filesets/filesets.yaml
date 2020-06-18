@@ -264,7 +264,7 @@ vantage_health_check:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
     vhc_sql12:
-      gitfile:      "vantage_health_check/VantageHealthCheck012.16xx.pdcr.v1.coa.sql"
+      gitfile:      "vantage_health_check/VantageHealthCheck012.16xx.pdcr.v1.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
     vhc_sql13:
@@ -276,7 +276,7 @@ vantage_health_check:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
     vhc_sql15:
-      gitfile:      "vantage_health_check/VantageHealthCheck015.16xx.pdcr.v1.coa.sql"
+      gitfile:      "vantage_health_check/VantageHealthCheck015.16xx.pdcr.v1.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
     vhc_sql16:
