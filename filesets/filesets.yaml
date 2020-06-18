@@ -228,7 +228,7 @@ vantage_health_check:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
     vhc_sql03:
-      gitfile:      "vantage_health_check/VantageHealthCheck003.16xx.pdcr.v1.coa.sql"
+      gitfile:      "vantage_health_check/VantageHealthCheck003.16xx.pdcr.v1.sql"  # disabled
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
     vhc_sql04:

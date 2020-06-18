@@ -58,31 +58,31 @@ FROM (
 					WHERE Objecttype = 'Tab'
 					AND ObjectTableName IS NOT NULL
                     AND ObjectColumnName IS NULL
-					-- AND CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'     uncomment for DBC */
-					-- AND LogDate BETWEEN '2020-04-01' AND '2020-04-30'      uncomment for PDCR */
+					-- AND CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'     uncomment for DBC
+					-- AND LogDate BETWEEN '2020-04-01' AND '2020-04-30'      uncomment for PDCR
 					AND LogDate BETWEEN {startdate} and {enddate}
-					-- TODO: BETWEEN current_date - 90 AND current_date - 1   uncomment for PDCR */
+					-- TODO: BETWEEN current_date - 90 AND current_date - 1   uncomment for PDCR
 					GROUP BY 1,2,3
                 ) AS QTU1
                 INNER JOIN
                 (
                     SELECT   QueryID
                            , SUM(FreqOfUse) AS CountOfAllTableUses
-                   -- FROM DBC.DBQLObjTbl /* uncomment for DBC */
+                   -- FROM DBC.DBQLObjTbl uncomment for DBC
 					 FROM PDCRINFO.DBQLObjTbl_Hst  /* uncomment for PDCR */
 					WHERE Objecttype = 'Tab'
 					AND ObjectTableName IS NOT NULL
                     AND ObjectColumnName IS NULL
-				--	 AND CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'    uncomment for DBC */
-				--	 AND LogDate BETWEEN '2020-04-01' AND '2020-04-30'     uncomment for PDCR */
+				--	 AND CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'    uncomment for DBC
+				--	 AND LogDate BETWEEN '2020-04-01' AND '2020-04-30'     uncomment for PDCR
 					AND LogDate BETWEEN {startdate} and {enddate}
-					-- TODO: BETWEEN current_date - 90 AND current_date - 1  uncomment for PDCR */
+					-- TODO: BETWEEN current_date - 90 AND current_date - 1  uncomment for PDCR
                     GROUP BY 1
                 ) AS QTU2
                 ON QTU1.QueryID=QTU2.QueryID
 
-                --INNER JOIN DBC.DBQLogTbl QU      uncomment for DBC */
-                 INNER JOIN PDCRINFO.DBQLogTbl_Hst QU /* uncomment for PDCR */
+                --INNER JOIN DBC.DBQLogTbl QU      uncomment for DBC
+                 INNER JOIN PDCRINFO.DBQLogTbl_Hst QU  -- uncomment for PDCR
                 ON QTU1.QueryID=QU.QueryID
 
 				LEFT OUTER JOIN (
@@ -106,7 +106,7 @@ LEFT JOIN
             SUM(QU.AMPCPUTime + QU.ParserCPUTime) AS SUM_AllCPU
           , SUM(COALESCE(spma.AvgIOPerReqGB, 1.0 / (1024 * 1024 * 1024))*QU.TotalIOCount) (FLOAT) AS SUM_AllIO
 
-    --FROM DBC.DBQLogTbl QU      uncomment for DBC */
+    --FROM DBC.DBQLogTbl QU      uncomment for DBC
      FROM PDCRINFO.DBQLogTbl_Hst QU /* uncomment for PDCR */
 		LEFT OUTER JOIN (
 		SELECT    thedate
@@ -116,10 +116,10 @@ LEFT JOIN
 		GROUP BY thedate
 	    ) AS spma
 	    ON QU.CollectTimeStamp (DATE) = spma.thedate
-	--WHERE CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'    uncomment for DBC */
-	-- WHERE LogDate BETWEEN '2017-01-01' AND '2017-08-01'    uncomment for PDCR */
+	--WHERE CollectTimeStamp (DATE) BETWEEN '2017-01-01' AND '2017-08-01'    uncomment for DBC
+	-- WHERE LogDate BETWEEN '2017-01-01' AND '2017-08-01'    uncomment for PDCR
 		AND LogDate BETWEEN {startdate} and {enddate}
-		-- TODO: BETWEEN current_date - 90 AND current_date - 1   uncomment for PDCR */
+		-- TODO: BETWEEN current_date - 90 AND current_date - 1   uncomment for PDCR
 
     ) AS SumAll
     ON 1=1
