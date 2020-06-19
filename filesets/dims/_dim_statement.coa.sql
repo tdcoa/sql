@@ -7,6 +7,7 @@ Parameters:
   - enddate:      {enddate}
 */
 
+
 /*{{temp:dim_statement.csv}}*/
 create volatile table dim_statement as
 (
@@ -27,7 +28,7 @@ create volatile table dim_statement as
          and character_length(regexp_substr(o.StatementType, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
   qualify Priority_ = min(Priority_)over(partition by o.StatementType)
-  where SiteID_ in('default','None') or SiteID_ like '{siteid}'
+  where (SiteID_ in('default','None') or '{siteid}' like SiteID_)
 ) with data
 no primary index
 on commit preserve rows;

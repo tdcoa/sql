@@ -42,7 +42,7 @@ dbql_core:
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v04.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v05.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
@@ -50,19 +50,58 @@ dbql_core:
     dbql_core_dbc16:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v04.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v05.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "dbc.DBQLogTbl"
       resusagespma: "dbc.ResUsageSPMA"
+
     dim_app:
-      gitfile:  "dims/dim_app.csv"
+      gitfile:      "dims/dim_app.csv"
+    dim_app_sql_pdcr:
+      collection:   ["pdcrinfo"]
+      gitfile:      "dims/_dim_app.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_app_sql_dbc:
+      collection:   ["dbc"]
+      gitfile:      "dims/_dim_app.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+
     dim_statement:
       gitfile:  "dims/dim_statement.csv"
+    dim_statement_sql_pdcr:
+      collection:   ["pdcrinfo"]
+      gitfile:      "dims/_dim_statement.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_statement_sql_dbc:
+      collection:   ["dbc"]
+      gitfile:      "dims/_dim_statement.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+
     dim_user:
-      gitfile:  "dims/dim_user.csv"
+      gitfile:      "dims/dim_user.csv"
     dim_user_override:
-      gitfile:  "dims/dim_user_override.sql"
+      gitfile:      "dims/dim_user_override.sql"
+    dim_user_sql_pdcr:
+      collection:   ["pdcrinfo"]
+      gitfile:      "dims/_dim_user.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_user_sql_dbc:
+      collection:   ["dbc"]
+      gitfile:      "dims/_dim_user.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl"
 
 
 db_objects:

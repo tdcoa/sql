@@ -5,13 +5,19 @@ Parameters:
   - siteid:    {siteid}
 */
 
+
+/* below override sql file allows opportunity to
+   replace dim_user.csv with ca_user_xref table
+   or a customer-specific table.  To use, review
+   and fill-in the .sql file content:
+*/
 /*{{temp:dim_user.csv}}*/ ;
 /*{{file:dim_user_override.sql}}*/ ;
+
 create volatile table dim_user as
 (
   select
-   '{siteid}' as Site_ID
-  ,o.UserName
+   o.UserName
   ,o.UserHash
   ,coalesce(p.User_Bucket,'Unknown') as User_Bucket
   ,coalesce(p.User_Department, 'Unknown') as User_Department
@@ -53,7 +59,7 @@ drop table "dim_user.csv"
 collect stats on dim_user column(UserName)
 ;
 
-/*{{save:all_users.csv}}*/
+/*{{save:dim_user_reconcile.csv}}*/
 Select UserName, UserHash, User_Bucket
 ,User_Department, User_SubDepartment, User_Region
 from dim_user
