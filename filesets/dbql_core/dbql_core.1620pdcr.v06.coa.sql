@@ -116,7 +116,7 @@ SELECT /*dbql_core*/
              as FLOAT))) <= 1  /* Runtime_AMP_Sec */
           and dbql.NumOfActiveAMPs < Total_AMPs
          then 1 else 0 end as Integer))) as Query_Tactical_Cnt
-,zeroifnull(avg(cast(dbql.NumSteps * (character_length(dbql.QueryText)/100) as BigInt) )) as Query_Complexity_Score_Avg
+,zeroifnull(avg(Query_Complexity_Score)) as Query_Complexity_Score_Avg
 ,zeroifnull(sum(cast(dbql.NumResultRows as BigInt) )) as Returned_Row_Cnt
 
 /* ====== Metrics: RunTimes ====== */
