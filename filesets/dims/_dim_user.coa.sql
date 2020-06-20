@@ -1,4 +1,5 @@
-/* builds the dim_user volatile table
+/* Start COA: Dim_User
+   builds the dim_user volatile table
    requires the dim_user.csv file
 
 Parameters:
@@ -64,3 +65,5 @@ Select UserName, UserHash, User_Bucket
 ,User_Department, User_SubDepartment, User_Region
 from dim_user
 ;
+
+/* End COA: Dim_User */

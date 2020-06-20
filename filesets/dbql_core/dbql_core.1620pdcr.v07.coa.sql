@@ -1,4 +1,4 @@
-/* Pulls all DBQL Data Required for CSM - CONSUMPTION ANALYTICS (COA)
+/* Start COA: DBQL_Core
    see comments about each SQL step inline below.
 
 Parameters:
@@ -8,7 +8,6 @@ Parameters:
   - dbqlogtbl:    {dbqlogtbl}
   - resusagespma: {resusagespma}
 */
-
 
 /*{{save:UTC_Offset.csv}}*/
 SELECT SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9 FOR 6) as UTC_Offset
@@ -40,28 +39,8 @@ Group by LogDate, LogHour
 ;
 
 
-/* Query_Complexity_Score
-   This information is integrated below in DBQL_Core return.
-   Pulled out to save spool.
-*/
-/* integrated into DBQL_Core return */
-CREATE VOLATILE TABLE QueryComplexity
-AS
-(SELECT /*dbql_core*/ dbql.LogDate, QueryID
-,abs(ZeroIfNull((Cast(dbql.NumSteps * (Character_Length(dbql.QueryText)/100) AS BIGINT)))) AS Query_Complexity_Score
-FROM {dbqlogtbl} AS dbql
-WHERE dbql.LogDate between {startdate} and {enddate}
-) WITH DATA
-PRIMARY INDEX ( LogDate ,QueryID )
-PARTITION BY RANGE_N(LogDate BETWEEN DATE '2019-01-01' AND DATE '2021-12-31' EACH INTERVAL '1' DAY )
-ON COMMIT PRESERVE ROWS
-;
-
-
-
-/* pull DBQL_Core in GMT
-   this allows for local-time adjusted 'business hours' analysis  */
 SET TIME ZONE 'GMT'
+/* allows for local-time adjusted 'business hours' analysis  */
 ;
 
 
@@ -108,15 +87,14 @@ SELECT /*dbql_core*/
 ,zeroifnull(sum(cast(case when TotalIOCount > 0 AND ReqPhysIO > 0 then dbql.Statements else 0 end as int))) as Query_PhysIO_Cnt
 ,zeroifnull(sum(cast(case
          when stm.Statement_Bucket = 'Select'
-          and app.App_Bucket not in ('TPT')
+          and dbql.NumOfActiveAMPs < (Total_AMPs * 0.10)
           and (ZEROIFNULL( CAST(
              (EXTRACT(HOUR   FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) * 3600)
             +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
             +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
              as FLOAT))) <= 1  /* Runtime_AMP_Sec */
-          and dbql.NumOfActiveAMPs < Total_AMPs
          then 1 else 0 end as Integer))) as Query_Tactical_Cnt
-,zeroifnull(avg(Query_Complexity_Score)) as Query_Complexity_Score_Avg
+,avg(dbql.NumSteps) as Query_Complexity_Score_Avg
 ,zeroifnull(sum(cast(dbql.NumResultRows as BigInt) )) as Returned_Row_Cnt
 
 /* ====== Metrics: RunTimes ====== */
@@ -173,10 +151,6 @@ join dim_Statement stm
 join dim_user usr
   on dbql.UserName = usr.UserName
 
-join QueryComplexity tqs
-  on tqs.LogDate = dbql.LogDate
- and tqs.QueryID = dbql.QueryID
-
 where dbql.LogDate between {startdate} and {enddate}
 
 Group by
@@ -200,7 +174,7 @@ Group by
 /*{{call:{db_coa}.sp_dat_DBQL_Core_QryCnt_Ranges('{fileset_version}')}}*/
 SELECT /*dbql_core*/
  '{siteid}'  as Site_ID
-,cast(StartTime as char(13))||':00:00' as LogTS
+,LogDate
 ,usr.User_Bucket
 ,usr.User_Department
 ,usr.User_SubDepartment
@@ -284,9 +258,11 @@ join dim_user usr
 where dbql.LogDate between {startdate} and {enddate}
 
 Group by
- LogTS
-,Site_ID
+ LogDate
 ,usr.User_Bucket
 ,usr.User_Department
 ,usr.User_SubDepartment
 ;
+
+
+/* End COA: DBQL_Core */

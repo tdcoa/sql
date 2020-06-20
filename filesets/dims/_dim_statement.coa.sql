@@ -1,4 +1,5 @@
-/* builds the dim_statement volatile table
+/* Start COA: Dim_Statement
+   builds the dim_statement volatile table
    requires the dim_statement.csv file
 
 Parameters:
@@ -39,3 +40,5 @@ drop table "dim_statement.csv";
 Select * from dim_statement
 order by case when  Statement_Bucket='Unknown' then '!!!' else Statement_Bucket end asc
 ;
+
+/* End COA: Dim_Statement */

@@ -1,4 +1,5 @@
-/* builds the dim_app volatile table
+/* Start COA: Dim_App
+   builds the dim_app volatile table
    requires the dim_app.csv file
 
 Parameters:
@@ -40,3 +41,5 @@ drop table "dim_app.csv";
 Select * from dim_App
 order by case when  App_Bucket='Unknown' then '!!!' else App_Bucket end asc
 ;
+
+/* End COA: Dim_App */
