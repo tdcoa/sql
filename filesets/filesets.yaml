@@ -37,12 +37,12 @@ test:
 
 dbql_core:
   active:           "True"
-  fileset_version:  "1.0"
+  fileset_version:  "6.0"
   files:
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v05.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v06.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
