@@ -14,11 +14,7 @@ Parameters:
 SELECT SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9 FOR 6) as UTC_Offset
 ;
 
-/* Spool Saver: ResUsage_MaxCPU
-   This process was extracted from the main SQL to lower
-   spool requirements / raise the number of days runnable
-   at a time.
-
+/* ResUsage_MaxCPU
    This information is saved and loaded into Transcend, then
    joined back to the DBQL_Core process in the view tier
 */
@@ -44,6 +40,10 @@ Group by LogDate, LogHour
 ;
 
 
+/* Query_Complexity_Score
+   This information is integrated below in DBQL_Core return.
+   Pulled out to save spool.
+*/
 /* integrated into DBQL_Core return */
 CREATE VOLATILE TABLE QueryComplexity
 AS
@@ -198,7 +198,7 @@ Group by
 /*{{save:Query_Breakouts.csv}}*/
 /*{{load:{db_stg}.stg_dat_DBQL_Core_QryCnt_Ranges}}*/
 /*{{call:{db_coa}.sp_dat_DBQL_Core_QryCnt_Ranges('{fileset_version}')}}*/
-SELECT /*dbql_core*/ 
+SELECT /*dbql_core*/
  '{siteid}'  as Site_ID
 ,cast(StartTime as char(13))||':00:00' as LogTS
 ,usr.User_Bucket
