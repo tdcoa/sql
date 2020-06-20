@@ -26,7 +26,7 @@ SELECT SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9
 /*{{save:cpu_summary.csv}}*/
 /*{{load:{db_stg}.stg_dat_dbql_core_maxcpu}}*/
 /*{{call:{db_coa}.sp_dat_dbql_core_maxcpu('{fileset_version}')}}*/
-Select '{siteid}' as Site_ID
+Select /*dbql_core*/ '{siteid}' as Site_ID
 ,TheDate as LogDate, Floor(TheTime/1e4) as LogHour
 ,SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9 FOR 6) as UTC_Offset
 ,cast(max(NodeType) as varchar(10)) as Node_Type
@@ -47,7 +47,7 @@ Group by LogDate, LogHour
 /* integrated into DBQL_Core return */
 CREATE VOLATILE TABLE QueryComplexity
 AS
-(SELECT dbql.LogDate, QueryID
+(SELECT /*dbql_core*/ dbql.LogDate, QueryID
 ,abs(ZeroIfNull((Cast(dbql.NumSteps * (Character_Length(dbql.QueryText)/100) AS BIGINT)))) AS Query_Complexity_Score
 FROM {dbqlogtbl} AS dbql
 WHERE dbql.LogDate between {startdate} and {enddate}
@@ -83,7 +83,7 @@ in Transcend.
 /*{{save:DBQL_Core.csv}}*/
 /*{{load:{db_stg}.stg_dat_DBQL_Core}}*/
 /*{{call:{db_coa}.sp_dat_DBQL_Core('{fileset_version}')}}*/
-SELECT
+SELECT /*dbql_core*/
  '{siteid}'  as Site_ID
 ,cast(StartTime as char(13))||':00:00' as LogTS
 ,cast(HashAmp()+1 as Integer) as Total_AMPs
@@ -198,7 +198,7 @@ Group by
 /*{{save:Query_Breakouts.csv}}*/
 /*{{load:{db_stg}.stg_dat_DBQL_Core_QryCnt_Ranges}}*/
 /*{{call:{db_coa}.sp_dat_DBQL_Core_QryCnt_Ranges('{fileset_version}')}}*/
-SELECT
+SELECT /*dbql_core*/ 
  '{siteid}'  as Site_ID
 ,cast(StartTime as char(13))||':00:00' as LogTS
 ,usr.User_Bucket
