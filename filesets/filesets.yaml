@@ -117,7 +117,7 @@ dbql_core:
       gitfile:      "dims/_dim_date.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      numofgroups:  "1"
+      numof_dategroups:  "1"
 
 
 db_objects:
