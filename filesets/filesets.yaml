@@ -27,7 +27,7 @@ test:
   fileset_version:  "1.0"
   files:
     user_counts:
-      gitfile:  "dims/dim_date.coa.sql"
+      gitfile:  "dims/_dim_date.coa.sql"
 
 
 
