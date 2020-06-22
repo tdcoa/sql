@@ -59,9 +59,10 @@ size.  As these fields are easily calculated, they will be re-constituted
 in Transcend.
 */
 
-/*{{save:DBQL_Core.csv}}*/
+/*{{save:DBQL_Core_{dategroup}.csv}}*/
 /*{{load:{db_stg}.stg_dat_DBQL_Core}}*/
 /*{{call:{db_coa}.sp_dat_DBQL_Core('{fileset_version}')}}*/
+/*{{loop:dim_date.csv}}*/
 SELECT /*dbql_core*/
  '{siteid}'  as Site_ID
 ,cast(StartTime as char(13))||':00:00' as LogTS
@@ -151,7 +152,7 @@ join dim_Statement stm
 join dim_user usr
   on dbql.UserName = usr.UserName
 
-where dbql.LogDate between {startdate} and {enddate}
+where dbql.LogDate in (Select LogDate from dim_date where DateGroup ={dategroup})
 
 Group by
  LogTS
