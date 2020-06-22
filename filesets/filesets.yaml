@@ -27,11 +27,7 @@ test:
   fileset_version:  "1.0"
   files:
     user_counts:
-      gitfile:  "test/user_counts.csv"
-    dim_app_test:
-      gitfile:  "dims/dim_app.csv"
-    dim_app_orig:
-      gitfile:  "test/dim_app.csv"
+      gitfile:  "dims/dim_date.coa.sql"
 
 
 
