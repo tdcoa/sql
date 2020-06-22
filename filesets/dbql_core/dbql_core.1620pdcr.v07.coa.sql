@@ -62,7 +62,7 @@ in Transcend.
 /*{{save:DBQL_Core_{dategroup}.csv}}*/
 /*{{load:{db_stg}.stg_dat_DBQL_Core}}*/
 /*{{call:{db_coa}.sp_dat_DBQL_Core('{fileset_version}')}}*/
-/*{{loop:dim_date.csv}}*/
+/*{{loop:dim_date_{dategroup}.csv}}*/
 SELECT /*dbql_core*/
  '{siteid}'  as Site_ID
 ,cast(StartTime as char(13))||':00:00' as LogTS
