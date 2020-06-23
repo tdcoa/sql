@@ -1,29 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Consumption Analytics  </title>
-<style>
-	hr  {border-style: dashed;}
-	table {border: 0px; margin-left: auto; margin-right: auto;}
-	td {border: 3px dotted white; padding: 10px; text-align: left; vertical-align: top;}
-	td.empty   {border: 0px; padding: 10px; text-align: left; vertical-align: top;}
 
-	#default {color: #ffffff; font-family:verdana;}
-	#pacman  {color: #ffff00; font-family:verdana;}
-	#blinky  {color: #ff5555; font-family:verdana;}
-	#pinky   {color: #ff99cc; font-family:verdana;}
-	#inky    {color: #22FAFD; font-family:verdana;}
-	#clyde   {color: #ffcc99; font-family:verdana;}
-
-</style>
-</head>
-<body style="background-color:black;">
-
-<p><img src="https://teradata.sharepoint.com/:i:/r/teams/SalesTech/GLOBAL/Images/Banners/coa_banner_pacman2.jpg"
-				alt="COA Banner - PacMan"
-				width="100%"/></p>
-<span style="color: #FFFFFF;">
-<h1 id="pacman">Consumption Analytics</h1>
 
 <p id="default">Welcome to Consumption Analytics!  This newly funded project is undergoing rapid development -
 	please check back frequently for updates.
