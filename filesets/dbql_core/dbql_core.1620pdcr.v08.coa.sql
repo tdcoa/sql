@@ -98,7 +98,7 @@ SELECT
 ,sum(IOGB_Physical              ) as IOGB_Physical
 ,sum(IOGB_Total                 ) as IOGB_Total
 ,sum(IOTA_Used_cntB             ) as IOTA_Used_cntB
-,sum(NumOfActiveAMPs_Cnt        ) as NumOfActiveAMPs_Avg
+,avg(NumOfActiveAMPs_Cnt        ) as NumOfActiveAMPs_Avg
 ,sum(Spool_GB                   ) as Spool_GB
 ,sum(CacheHit_Pct               ) as CacheHit_Pct
 ,avg(CPUSec_Skew_AvgPCt         ) as CPUSec_Skew_AvgPCt
