@@ -38,7 +38,7 @@ dbql_core:
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v07.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
@@ -46,7 +46,7 @@ dbql_core:
     dbql_core_dbc16:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v07.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "dbc.DBQLogTbl"
@@ -104,34 +104,6 @@ dbql_core:
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "dbc.DBQLogTbl"
-
-    dim_date_10:
-      gitfile:  "dims/dim_date_10.csv"
-    dim_date_9:
-      gitfile:  "dims/dim_date_9.csv"
-    dim_date_8:
-      gitfile:  "dims/dim_date_8.csv"
-    dim_date_7:
-      gitfile:  "dims/dim_date_7.csv"
-    dim_date_6:
-      gitfile:  "dims/dim_date_6.csv"
-    dim_date_5:
-      gitfile:  "dims/dim_date_5.csv"
-    dim_date_4:
-      gitfile:  "dims/dim_date_4.csv"
-    dim_date_3:
-      gitfile:  "dims/dim_date_3.csv"
-    dim_date_2:
-      gitfile:  "dims/dim_date_2.csv"
-    dim_date_1:
-      gitfile:  "dims/dim_date_1.csv"
-    dim_date_sql_pdcr:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_date.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      numof_dategroups:  "1"
 
 
 db_objects:
