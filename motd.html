@@ -37,6 +37,29 @@
 		<td style="width: 50%;" id="pinky" rowspan="2">
 
 			<!-- version  updates -->
+			To update:  <code>&nbsp&nbsp pip install tdcsm --upgrade</code>
+			<h3><u>Version 0.3.9.5.8 (June 23, 2020)</u></h3>
+			<ul>
+				<li>First GUI is live!   To start, simply run the updated process and look for a
+					new coa.py, which is downloaded into the root directory during the first run.
+					Or, in the root directory open python3 and type:
+					<br><code>&nbsp&nbsp&nbsp&nbsp from tdcsm.tdgui import coa</code>
+					<br><code>&nbsp&nbsp&nbsp&nbsp c = coa()</code>
+				<li>Systems now hold two new elements, dbsversion and collection.  For example, a system running 16.20 and pdcr would look like:
+				<ul>
+				  <li>dbsversion: "16.20"
+					<li>collection: "pdcr"
+				</ul>
+				With these additions, we get down to one fileset (i.e., DBQL_Core) instead of one fileset per combination (i.e., DBQL_Core_1620pdcr)
+				<li>Download_files() only happens once, not one-per-system (i.e., more than it needed to)
+				<li>Fixed several bugs pertaining to file-handling differences between Mac and Windows
+				<li>Removed the "skip_git" and "skip_dbs" settings
+				<li>Fixed DBQL_Core spool-out issues
+				<li>Fixed dim_app.csv file encoding problem
+				<li>New Fileset: vantage_health_check (from APAC)
+			</ul>
+
+				</br>
 			<h3><u>Version 0.3.9.5.0 (June 10, 2020)</u></h3>
 			<ul>
 				<li>Connection and Encryption settings are now set at a per-system basis within source_systems.yaml
