@@ -98,7 +98,7 @@ SELECT
 ,sum(IOGB_Physical              ) as IOGB_Physical
 ,sum(IOGB_Total                 ) as IOGB_Total
 ,sum(IOTA_Used_cntB             ) as IOTA_Used_cntB
-,avg(NumOfActiveAMPs_Cnt        ) as NumOfActiveAMPs_Avg
+,avg(NumOfActiveAMPs_Avg        ) as NumOfActiveAMPs_Avg
 ,sum(Spool_GB                   ) as Spool_GB
 ,sum(CacheHit_Pct               ) as CacheHit_Pct
 ,avg(CPUSec_Skew_AvgPCt         ) as CPUSec_Skew_AvgPCt
@@ -165,7 +165,7 @@ FROM
   ,zeroifnull(sum( cast(dbql.UsedIOTA/1e9     as decimal(18,2)))) as IOTA_Used_cntB
 
   /* ====== Metrics: Other ====== */
-  ,zeroifnull(sum(NumOfActiveAMPs)) as NumOfActiveAMPs_Cnt  /* prevent re-averaging */
+  ,zeroifnull(avg(NumOfActiveAMPs)) as NumOfActiveAMPs_Avg
   ,zeroifnull(sum(SpoolUsage/1e9))  as Spool_GB
   ,zeroifnull(avg(1-(ReqPhysIO/nullifzero(TotalIOCount)))) as CacheHit_Pct
   ,zeroifnull(avg((AMPCPUTime / nullifzero(MaxAmpCPUTime*NumOfActiveAMPs))-1)) as CPUSec_Skew_AvgPCt
