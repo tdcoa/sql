@@ -164,10 +164,25 @@ top_users:
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     topuser_vis:
       gitfile:      "top_users/top_users.py"
-    dim_user_csv:
+    dim_user:
       gitfile:      "dims/dim_user.csv"
     dim_user_override:
       gitfile:      "dims/dim_user_override.sql"
+    dim_user_sql_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_user.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_user_sql_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_user.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+
 
 
 success_plan:
