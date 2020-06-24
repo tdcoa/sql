@@ -97,7 +97,7 @@ Select 'All Users' as tbl, count(distinct UserName) from  dim_user
 /*{{save:top_users.csv}}*/
 /*{{load:{db_stg}.stg_dat_top_users}}*/
 /*{{call:{db_coa}.sp_dat_top_users('v1')}}*/
-/*{{vis:tbl_users.csv}}*/
+/*{{vis:top_users.csv}}*/
 Select '{siteid}' as Site_ID, a.*
 ,rank()over(partition by MonthID, WeekID order by Combined_Score asc) as Total_Rank
 from(
