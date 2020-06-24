@@ -75,7 +75,7 @@ Create Volatile Table Top_Users_DBQL  as(
     from Top_Users_DBQL_preagg as dbql
     join top_user_dates as dt
       on LogDate between MinDate and MaxDate
-    Group by UserName, MonthID, rollup(WeekID)
+    Group by UserName, rollup(MonthID, WeekID)
 ) with data
   primary index(UserName)
   on commit preserve rows
