@@ -52,6 +52,3 @@ Select * from Concurrency order by 2,3
 Select max(Concurrency_Peak) as maxPeak
 from Concurrency
 ;
-
-drop table Concurrency
-;

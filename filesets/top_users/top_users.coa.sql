@@ -123,5 +123,4 @@ from(
 ) a
 ;
 
-drop table Top_Users_DBQL;
 drop table Dim_User;

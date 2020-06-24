@@ -1,7 +1,5 @@
 
-/*{{save:column_type.csv}}*/
-/*{{load:{db_stg}.stg_dat_column_type}}*/
-/*{{call:{db_coa}.sp_dat_column_type}}*/
+
  SELECT
  '{siteid}' as Site_ID
  ,CASE ColumnType
@@ -130,7 +128,14 @@ CASE ColumnType
 FROM dbc.ColumnsV
 WHERE ColumnType IS NOT NULL
 group by 2,3
-order by 3 desc;
+)with data no primary index on commit preserve rows
+;
+
+/*{{save:column_type.csv}}*/
+/*{{load:{db_stg}.stg_dat_column_type}}*/
+/*{{call:{db_coa}.sp_dat_column_type}}*/
+Select  * from table column_types
+;
 
 
 /*{{save:column_format.csv}}*/
@@ -138,6 +143,6 @@ SELECT  '{siteid}' as Site_ID,
 CASE WHEN ColumnFormat IS NOT NULL
 THEN 'FORMATTED' ELSE 'NO DEFAULT FORMAT'
 END AS COLUMN_FORMAT,
- count(*) as Total_Cnt
- from DBC.COlumnsV
- group by 2
+count(*) as Total_Cnt
+from DBC.ColumnsV
+group by 2
