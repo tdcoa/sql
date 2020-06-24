@@ -14,17 +14,6 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-import seaborn as sns
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import os
-from numpy.random import randn
-import matplotlib.ticker as ticker
-from pandas.plotting import register_matplotlib_converters
-register_matplotlib_converters()
-
-
 # current_dir = os.getcwd()
 # print(current_dir)
 #
@@ -280,54 +269,41 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
 
 
 # In[18]:
-def human_readable_heatmap_title(input_text):
-    output_text = ''
-    if input_text == 'Concurrency_Avg':
-        output_text = 'Concurrency, Average'
-    elif input_text == 'Concurrency_80Pctl':
-        output_text = 'Concurrency, 80th Percentile'
-    elif input_text == 'Concurrency_95Pctl':
-        output_text = 'Concurrency, 95th Percentile'
-    elif input_text == 'Concurrency_Peak':
-        output_text = 'Concurrency, Peak'
-    else:
-        output_text = 'Concurrency'
 
-    return output_text
 
 i = 0
 while i < len(concurrency_list):
-    df = df_concurrency[['LogDate', 'LogHour', concurrency_list[i]]]
-
+    df = df_concurrency[['LogDate','LogHour',concurrency_list[i]]]
+    
     # df['LogDate'] = df['LogDate'].dt.date
-
+    
     df_pivot = df.pivot(index='LogDate', columns='LogHour', values=concurrency_list[i])
-
+    
     log_date = df_pivot.index
 
     log_hour = df_pivot.columns
 
     Concurrency_values = df_pivot.values
-
-    fig, ax = plt.subplots(figsize=(30, 30))
+    
+    fig, ax = plt.subplots(figsize=(30,30))
     # plt.figure(figsize=(1,1))
 
     SMALL_SIZE = 20
     MEDIUM_SIZE = 20
     BIGGER_SIZE = 20
 
-    plt.rc('font', size=SMALL_SIZE)  # controls default text sizes
-    plt.rc('axes', titlesize=SMALL_SIZE)  # fontsize of the axes title
-    plt.rc('axes', labelsize=MEDIUM_SIZE)  # fontsize of the x and y labels
-    plt.rc('xtick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
-    plt.rc('ytick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
-    plt.rc('legend', fontsize=40)  # legend fontsize
+    plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+    plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+    plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+    plt.rc('legend', fontsize=40)    # legend fontsize
     plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
-    im = heatmap(Concurrency_values, log_date, log_hour, ax=ax,
-                 cmap="YlOrRd", cbarlabel=concurrency_list[i])
+    im = heatmap(Concurrency_values,  log_date,log_hour, ax=ax,
+                       cmap="YlOrRd", cbarlabel=concurrency_list[i] )
 
-    # legend
+    #legend
     # cbar.set_label('Concurrency Peak', rotation=270, size=35)
 
     # create an axes on the right side of ax. The width of cax will be 5%
@@ -338,20 +314,18 @@ while i < len(concurrency_list):
 
     plt.colorbar(im, cax=cax)
     # plt.title("Concurrency_Peak")
-    #     ax.set_ylabel('Date',size = 30,labelpad =10)
-    ax.set_xlabel('Hour', size=30, labelpad=10)
-    ax.xaxis.set_label_position('top')
-    size = fig.get_size_inches() * fig.dpi
-    #     ax.set_title('Heatmap showing ' + concurrency_list[i], y=-0.05,size=36, pad=20)
-    ax_title = human_readable_heatmap_title(concurrency_list[i])
-    ax.set_title(ax_title, loc='left', pad=5, size=36)
+    ax.set_ylabel('Date',size = 30,labelpad =10)
+    ax.set_xlabel('Hour',size=30,labelpad =10)
+    ax.xaxis.set_label_position('top') 
+    size = fig.get_size_inches()*fig.dpi
+    ax.set_title('Heatmap showing ' + concurrency_list[i], y=-0.05,size=36, pad=20)
 
     texts = annotate_heatmap(im, valfmt="{x}")
 
     plt.tight_layout()
     # plt.show()
     fig.savefig('concurrency.heatmap_' + concurrency_list[i] + '.png', bbox_inches='tight', dpi=fig.dpi)
-
+    
     i += 1
     
 
@@ -371,7 +345,15 @@ while i < len(concurrency_list):
 # In[21]:
 
 
-
+import seaborn as sns
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+from numpy.random import randn
+import matplotlib.ticker as ticker
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
 
 # dir_path = os.path.dirname(os.path.realpath(__file__))
 # dir_path = current_dir
@@ -407,10 +389,9 @@ plt.xticks(plt.xticks()[0], x_dates, rotation=30)
 ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 handles, labels = ax.get_legend_handles_labels()
-ax.legend(handles=handles[1:], labels=labels[1:], loc="upper left",bbox_to_anchor=(1, 1), scatterpoints=1, fontsize=20)
+ax.legend(handles=handles[1:], labels=labels[1:])
 
 ax.set_title('Comparative Line Trend Graph', y=-0.15,size=36, pad=20)
-
 
 plt.tight_layout()
 # plt.show()
@@ -444,7 +425,7 @@ plt.xticks(plt.xticks()[0], x_dates, rotation=30)
 ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 handles, labels = ax.get_legend_handles_labels()
-ax.legend(handles=handles[1:], labels=labels[1:], loc="upper left",bbox_to_anchor=(1, 1), scatterpoints=1, fontsize=20)
+ax.legend(handles=handles[1:], labels=labels[1:])
 
 ax.set_title('Week-day Comparative Line Trend Graph', y=-0.15,size=36, pad=20)
 
@@ -495,7 +476,7 @@ plt.xticks(plt.xticks()[0], x_dates, rotation=30)
 ax.xaxis.set_major_locator(ticker.MultipleLocator(7))
 
 handles, labels = ax.get_legend_handles_labels()
-ax.legend(handles=handles[1:], labels=labels[1:], loc="upper left",bbox_to_anchor=(1, 1), scatterpoints=1, fontsize=20)
+ax.legend(handles=handles[1:], labels=labels[1:])
 
 ax.set_title('Weekly Comparative Line Trend Graph', y=-0.15,size=36, pad=20)
 
