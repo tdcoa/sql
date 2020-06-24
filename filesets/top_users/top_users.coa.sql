@@ -4,90 +4,84 @@
    uploaded to transcend.
 
    Parameters:
-     - startdate:    {startdate}
-     - enddate:      {enddate}
-     - siteid:       {siteid}
-     - dbqlogtbl:    {dbqlogtbl}
+     - siteid:     {siteid}
+     - startdate:  {startdate}
+     - enddate:    {enddate}
+     - dbqlogtbl:  {dbqlogtbl}
 */
 
 
-/* long pull from dbql */
-Create Volatile Table Top_Users_DBQL  as(
+/* define dates for number of months  */
+/* rules: full weeks (7 days) only, no partial weeks (having)
+          this month: partial month allowed (qualify)
+          prev months: full months only (qualify)
+          Month start/end measured on ISO calendar
+   in other words, you will almost always get fewer dates than you asked for
+*/
+create volatile table top_user_dates as (
+  Select
+   cast(YearNumber_of_Calendar(calendar_date,'ISO') as int) as year_num
+  ,cast(MonthNumber_of_Year   (calendar_date,'ISO') as int) as month_num
+  ,cast(WeekNumber_of_Month   (calendar_date,'ISO') as int) as week_num
+  ,cast((year_num*1000)+(month_num*10)+(week_num) as int) as WeekID
+  ,cast(WeekID/10 as int) as MonthID
+  ,case when cast(MonthNumber_of_Year(DATE-1,'ISO') as int) = month_num then 1 else 0  end as month_cur
+  ,min(Calendar_Date) as MinDate
+  ,max(Calendar_Date) as MaxDate
+  from sys_calendar.calendar
+  where calendar_date between {startdate} and {enddate}
+  group by year_num, month_num, week_num
+  qualify (min(week_num)over(partition by month_num) = 1 or month_cur=1)
+  having count(Calendar_Date)=7
+) with data no primary index on commit preserve rows
+;
+
+Collect stats on top_user_dates column (WeekID)
+;
+
+/*{{save:top_user_dates.csv}}*/
+Select * from top_user_dates
+;
+
+
+/* LONG PULL: pre-aggregate from dbql, to reduce spool-outs
+ */
+Create Volatile Table Top_Users_DBQL_preagg  as(
     Select UserName
-    ,(YearNumber_of_Calendar(logdate,'ISO')*1000)+
-     (MonthNumber_of_Year   (logdate,'ISO')*10)+
-     (WeekNumber_of_Month   (logdate,'ISO')) as WeekID
-    ,(WeekID/10)(INT) as MonthID
-    ,count(distinct LogDate) as Day_Cnt
+    ,LogDate
     ,zeroifnull(sum(cast(Statements as BigInt))) as Query_Cnt
-    ,zeroifnull(avg(cast(NumSteps * (character_length(QueryText)/100) as BigInt) )) as Query_Complexity_Score
-    ,zeroifnull(sum(cast(ParserCPUTime+AMPCPUTime as decimal(18,2)))) as CPU_Sec
-    ,zeroifnull(sum(cast(ReqIOKB/1e6 as decimal(18,0)))) as IOGB
-    ,zeroifnull(sum(cast(TotalFirstRespTime as decimal(18,6)))) as Runtime_Sec
+    ,zeroifnull(avg(cast(NumSteps as Int))) as Query_Complexity_Score
+    ,zeroifnull(sum(cast(ParserCPUTime+AMPCPUTime as Decimal(18,2)))) as CPU_Sec
+    ,zeroifnull(sum(cast(ReqIOKB/1e6 as Decimal(18,0)))) as IOGB
+    ,zeroifnull(sum(cast(TotalFirstRespTime as Decimal(18,6)))) as Runtime_Sec
     ,zeroifnull(sum(cast((case when dbql.ErrorCode not in(0,3158) then 1 else 0 end) as decimal(9,0)))) as Error_Cnt
     from {dbqlogtbl} /* pdcrinfo.dbqlogtbl_hst */ as dbql
     where LogDate between {startdate} and {enddate}
-    Group by UserName, MonthID, WeekID
+    Group by UserName, LogDate
+) with data
+  no primary index
+  on commit preserve rows
+;
+
+
+Create Volatile Table Top_Users_DBQL  as(
+    Select UserName, dt.WeekID, dt.MonthID
+    ,zeroifnull(sum(Query_Cnt)) as Query_Cnt
+    ,zeroifnull(avg(Query_Complexity_Score)) as Query_Complexity_Score
+    ,zeroifnull(sum(CPU_Sec)) as CPU_Sec
+    ,zeroifnull(sum(IOGB)) as IOGB
+    ,zeroifnull(sum(Runtime_Sec)) as Runtime_Sec
+    ,zeroifnull(sum(Error_Cnt)) as Error_Cnt
+    from Top_Users_DBQL_preagg as dbql
+    join top_user_dates as dt
+      on LogDate between MinDate and MaxDate
+    Group by UserName, MonthID, rollup(WeekID)
 ) with data
   primary index(UserName)
   on commit preserve rows
 ;
 
-
-/* WEEKS must have 7 days (full only) */
-delete from Top_Users_DBQL
-where WeekID in
- (select WeekID /* nested day_cnt is needed, to max() then sum() */
-  from (Select WeekID, MonthID, max(Day_Cnt) as day_cnt
-        from Top_Users_DBQL group by 1,2) a
-  group by 1 having sum(Day_Cnt)<7)
-;
-
-
-/* Having removed partial weeks, add Month rollup */
-insert into Top_Users_DBQL
-Select UserName
-,null as WeekID
-,MonthID
-,sum(Day_Cnt)
-,sum(Query_Cnt)
-,avg(Query_Complexity_Score)(bigint)
-,sum(CPU_Sec)
-,sum(IOGB)
-,sum(Runtime_Sec)
-,sum(Error_Cnt)
-from Top_Users_DBQL
-Group by UserName, MonthID
-;
-
-
-/* MONTHS must have at least 3 (full) weeks */
-delete from Top_Users_DBQL
-where WeekID is null
-  and MonthID in
-(Select MonthID
- from Top_Users_DBQL group by 1
- having count(distinct WeekID)<3)
-;
-
-
-/* Having removed partial Months, add full period rollup
-   ...well, kinda.  Full period of based on above minimum
-   requirements, i.e.,  full weeks and 3 week months */
-insert into Top_Users_DBQL
-Select UserName
-,null as WeekID
-,null as MonthID
-,sum(Day_Cnt)
-,sum(Query_Cnt)
-,avg(Query_Complexity_Score)(bigint)
-,sum(CPU_Sec)
-,sum(IOGB)
-,sum(Runtime_Sec)
-,sum(Error_Cnt)
-from Top_Users_DBQL
-where WeekID is null
-Group by UserName
+drop table Top_Users_DBQL_preagg
 ;
 
 collect stats on Top_Users_DBQL column(UserName)
@@ -99,9 +93,11 @@ union all
 Select 'All Users' as tbl, count(distinct UserName) from  dim_user
 ;
 
+
 /*{{save:top_users.csv}}*/
 /*{{load:{db_stg}.stg_dat_top_users}}*/
 /*{{call:{db_coa}.sp_dat_top_users('v1')}}*/
+/*{{vis:tbl_users.csv}}*/
 Select '{siteid}' as Site_ID, a.*
 ,rank()over(partition by MonthID, WeekID order by Combined_Score asc) as Total_Rank
 from(
