@@ -112,7 +112,7 @@ db_objects:
   files:
     columns_v01_coa_sql:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/columns.v01.coa.sql"
 
 
