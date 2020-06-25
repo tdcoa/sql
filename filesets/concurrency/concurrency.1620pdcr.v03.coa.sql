@@ -48,7 +48,14 @@ on commit preserve rows
 Select * from Concurrency order by 2,3
 ;
 
-/*{{save:concurrency_maxpeak.csv}}*/
-Select max(Concurrency_Peak) as maxPeak
+/*{{save:concurrency_summary.csv}}*/
+Select
+ max(Concurrency_Peak) as Peak_max
+,avg(Concurrency_Peak) as Peak_avg
+,max(Concurrency_95Pctl) as p95_max
+,avg(Concurrency_95Pctl) as p95_avg
+,max(Concurrency_80Pctl) as p80_max
+,max(Concurrency_Avg) as Avg_max
+,avg(Concurrency_Avg) as Avg_avg
 from Concurrency
 ;
