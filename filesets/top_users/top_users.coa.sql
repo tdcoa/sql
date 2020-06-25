@@ -122,5 +122,3 @@ from(
       on d.UserName = u.UserName
 ) a
 ;
-
-drop table Dim_User;
