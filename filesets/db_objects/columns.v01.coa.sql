@@ -1,5 +1,11 @@
+/* column type analysis
+
+  Parameters:
+  - siteid:  {siteid}   
+*/
 
 
+create volatile table column_types as (
  SELECT
  '{siteid}' as Site_ID
  ,CASE ColumnType
@@ -56,7 +62,6 @@
     WHEN 'JN' THEN 'JSON('            || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
     WHEN 'VA' THEN 'TD_VALIST'
     WHEN 'XM' THEN 'XML'
-
     ELSE '<Unknown> ' || ColumnType
   END
   || CASE
@@ -71,60 +76,55 @@
              END
          ELSE ''
       END as Column_Type,
-
-CASE ColumnType
-    WHEN 'BF' THEN 'BYTE'
-    WHEN 'BV' THEN 'VARBYTE'
-    WHEN 'CF' THEN 'CHAR'
-    WHEN 'CV' THEN 'VARCHAR'
-    WHEN 'D ' THEN 'DECIMAL'
-    WHEN 'DA' THEN 'DATE'
-    WHEN 'F ' THEN 'FLOAT'
-    WHEN 'I1' THEN 'BYTEINT'
-    WHEN 'I2' THEN 'SMALLINT'
-    WHEN 'I8' THEN 'BIGINT'
-    WHEN 'I ' THEN 'INTEGER'
-    WHEN 'AT' THEN 'TIME'
-    WHEN 'TS' THEN 'TIMESTAMP'
-    WHEN 'TZ' THEN 'TIME'
-    WHEN 'SZ' THEN 'TIMESTAMP'
-    WHEN 'YR' THEN 'INTERVAL'
-    WHEN 'YM' THEN 'INTERVAL'
-    WHEN 'MO' THEN 'INTERVAL'
-    WHEN 'DY' THEN 'INTERVAL'
-    WHEN 'DH' THEN 'INTERVAL'
-    WHEN 'DM' THEN 'INTERVAL'
-    WHEN 'DS' THEN 'INTERVAL'
-    WHEN 'HR' THEN 'INTERVAL'
-    WHEN 'HM' THEN 'INTERVAL'
-    WHEN 'HS' THEN 'INTERVAL'
-    WHEN 'MI' THEN 'INTERVAL'
-    WHEN 'MS' THEN 'INTERVAL'
-    WHEN 'SC' THEN 'INTERVAL'
-    WHEN 'BO' THEN 'BLOB'
-    WHEN 'CO' THEN 'CLOB'
-
-    WHEN 'PD' THEN 'PERIOD'
-    WHEN 'PM' THEN 'PERIOD'
-    WHEN 'PS' THEN 'PERIOD'
-    WHEN 'PT' THEN 'PERIOD'
-    WHEN 'PZ' THEN 'PERIOD'
-    WHEN 'UT' THEN COALESCE(ColumnUDTName,  '<Unknown> ' || ColumnType)
-
-    WHEN '++' THEN 'TD_ANYTYPE'
-    WHEN 'N'  THEN 'NUMBER'
-    WHEN 'A1' THEN COALESCE('SYSUDTLIB.' || ColumnUDTName,  '<Unknown> ' || ColumnType)
-    WHEN 'AN' THEN COALESCE('SYSUDTLIB.' || ColumnUDTName,  '<Unknown> ' || ColumnType)
-
-    WHEN 'JN' THEN 'JSON('            || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
-    WHEN 'VA' THEN 'TD_VALIST'
-    WHEN 'XM' THEN 'XML'
-
+CASE
+    WHEN ColumnType = 'BF' THEN 'BYTE'
+    WHEN ColumnType = 'BV' THEN 'VARBYTE'
+    WHEN ColumnType = 'CF' THEN 'CHAR'
+    WHEN ColumnType = 'CV' THEN 'VARCHAR'
+    WHEN ColumnType = 'D ' THEN 'DECIMAL'
+    WHEN ColumnType = 'DA' THEN 'DATE'
+    WHEN ColumnType = 'F ' THEN 'FLOAT'
+    WHEN ColumnType = 'I1' THEN 'BYTEINT'
+    WHEN ColumnType = 'I2' THEN 'SMALLINT'
+    WHEN ColumnType = 'I8' THEN 'BIGINT'
+    WHEN ColumnType = 'I ' THEN 'INTEGER'
+    WHEN ColumnType = 'AT' THEN 'TIME'
+    WHEN ColumnType = 'TS' THEN 'TIMESTAMP'
+    WHEN ColumnType = 'TZ' THEN 'TIME'
+    WHEN ColumnType = 'SZ' THEN 'TIMESTAMP'
+    WHEN ColumnType = 'YR' THEN 'INTERVAL'
+    WHEN ColumnType = 'YM' THEN 'INTERVAL'
+    WHEN ColumnType = 'MO' THEN 'INTERVAL'
+    WHEN ColumnType = 'DY' THEN 'INTERVAL'
+    WHEN ColumnType = 'DH' THEN 'INTERVAL'
+    WHEN ColumnType = 'DM' THEN 'INTERVAL'
+    WHEN ColumnType = 'DS' THEN 'INTERVAL'
+    WHEN ColumnType = 'HR' THEN 'INTERVAL'
+    WHEN ColumnType = 'HM' THEN 'INTERVAL'
+    WHEN ColumnType = 'HS' THEN 'INTERVAL'
+    WHEN ColumnType = 'MI' THEN 'INTERVAL'
+    WHEN ColumnType = 'MS' THEN 'INTERVAL'
+    WHEN ColumnType = 'SC' THEN 'INTERVAL'
+    WHEN ColumnType = 'BO' THEN 'BLOB'
+    WHEN ColumnType = 'CO' THEN 'CLOB'
+    WHEN ColumnType = 'PD' THEN 'PERIOD'
+    WHEN ColumnType = 'PM' THEN 'PERIOD'
+    WHEN ColumnType = 'PS' THEN 'PERIOD'
+    WHEN ColumnType = 'PT' THEN 'PERIOD'
+    WHEN ColumnType = 'PZ' THEN 'PERIOD'
+    WHEN ColumnType = 'UT' THEN COALESCE(ColumnUDTName,  '<Unknown> ' || ColumnType)
+    WHEN ColumnType = '++' THEN 'TD_ANYTYPE'
+    WHEN ColumnType = 'N'  THEN 'NUMBER'
+    WHEN ColumnType = 'A1' THEN COALESCE('SYSUDTLIB.' || ColumnUDTName,  '<Unknown> ' || ColumnType)
+    WHEN ColumnType = 'AN' THEN COALESCE('SYSUDTLIB.' || ColumnUDTName,  '<Unknown> ' || ColumnType)
+    WHEN ColumnType = 'JN' AND CharType =1 AND cast(ColumnLength as INT)<64000 THEN 'JSON(Small)'
+    WHEN ColumnType = 'JN' AND CharType<>1 AND cast(ColumnLength as INT)<32000 THEN 'JSON(Small)'
+    WHEN ColumnType = 'JN' THEN 'JSON(Large)'
+    WHEN ColumnType = 'VA' THEN 'TD_VALIST'
+    WHEN ColumnType = 'XM' THEN 'XML'
     ELSE '<Unknown> ' || ColumnType
-  END
-  as Column_Category
+  END as Column_Category
   ,count(*) as Total_Cnt
-
 FROM dbc.ColumnsV
 WHERE ColumnType IS NOT NULL
 group by 2,3
@@ -137,9 +137,17 @@ group by 2,3
 Select  * from table column_types
 ;
 
+/*{{save:column_category.csv}}*/
+select '{siteid}' as Site_ID,
+,Column_Category as "Column Category"
+,sum(Total_Cnt) as "Count Defined"
+,rank() over(order by "Count Defined" desc) as "Rank"
+from column_types
+group by 1
+
 
 /*{{save:column_format.csv}}*/
-SELECT  '{siteid}' as Site_ID,
+SELECT '{siteid}' as Site_ID,
 CASE WHEN ColumnFormat IS NOT NULL
 THEN 'FORMATTED' ELSE 'NO DEFAULT FORMAT'
 END AS COLUMN_FORMAT,
