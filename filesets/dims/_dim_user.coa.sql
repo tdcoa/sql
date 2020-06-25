@@ -61,8 +61,17 @@ collect stats on dim_user column(UserName)
 ;
 
 /*{{save:dim_user_reconcile.csv}}*/
-Select UserName, UserHash, User_Bucket
-,User_Department, User_SubDepartment, User_Region
+Select
+ '{siteid}' as Site_ID
+,'Equal' as Pattern_Type
+,UserName as Pattern
+,User_Bucket
+,User_Department
+,User_SubDepartment
+,User_Region
+,1 as Priority
+,UserName 
+,UserHash
 from dim_user
 ;
 
