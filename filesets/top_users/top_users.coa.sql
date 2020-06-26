@@ -86,7 +86,7 @@ Create Volatile Table Top_Users_DBQL  as(
   on commit preserve rows
 ;
 
-drop table Top_Users_Dates
+drop table top_user_dates
 ;
 drop table Top_Users_DBQL_preagg
 ;
