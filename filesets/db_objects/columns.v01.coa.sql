@@ -134,16 +134,17 @@ group by 2,3
 /*{{save:column_type.csv}}*/
 /*{{load:{db_stg}.stg_dat_column_type}}*/
 /*{{call:{db_coa}.sp_dat_column_type}}*/
-Select  * from table column_types
+Select  * from column_types
 ;
 
 /*{{save:column_category.csv}}*/
-select '{siteid}' as Site_ID,
+select '{siteid}' as Site_ID
 ,Column_Category as "Column Category"
 ,sum(Total_Cnt) as "Count Defined"
 ,rank() over(order by "Count Defined" desc) as "Rank"
 from column_types
-group by 1
+group by 2
+;
 
 
 /*{{save:column_format.csv}}*/
