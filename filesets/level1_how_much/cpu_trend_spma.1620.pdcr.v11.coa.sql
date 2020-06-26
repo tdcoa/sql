@@ -60,7 +60,7 @@ WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
 
 ===== SQL ===== ===== ===== ===== =====*/
 
-/*{{save:{siteid}--cpu_trend_spma.coa.csv}}*/
+/*{{save:level1_cpu_trend_spma.coa.csv}}*/
 /*{{load:{db_stg}.stg_dat_level1_CPU_Forecast}}*/
 /*{{call:{db_coa}.sp_dat_level1_CPU_Forecast('{fileset_version}')}}*/
 LOCK ROW FOR ACCESS

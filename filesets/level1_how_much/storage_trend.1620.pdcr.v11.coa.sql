@@ -54,7 +54,7 @@ Select these columns for charting in Excel:
 
 ==== SQL ==== ==== ==== ==== ====*/
 
-/*{{save:{siteid}--storage_trend.coa.csv}}*/
+/*{{save:level1_storage_trend.coa.csv}}*/
 /*{{load:{db_stg}.stg_dat_level1_Storage_Forecast}}*/
 /*{{call:{db_coa}.sp_dat_level1_Storage_Forecast('{fileset_version}')}}*/
 
