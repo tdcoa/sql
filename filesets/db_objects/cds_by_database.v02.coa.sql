@@ -30,7 +30,7 @@ create volatile table db_objects as
     ) s
     JOIN
     (
-        Select d.DatabaseName, d.CommentString
+        Select t.DatabaseName, '' as CommentString
         ,sum( case when t.TableKind in('T','O','J','Q') then 1 else 0 end) as TableCount
         ,sum( case when t.TableKind in('V') then 1 else 0 end) as ViewCount
         ,sum( case when t.TableKind in('I','N') then 1 else 0 end) as IndexCount
@@ -39,9 +39,7 @@ create volatile table db_objects as
         ,sum( case when t.TableKind in('A','B','F','R','S','U','D') then 1 else 0 end) as UDObjectCount
         ,sum( case when t.TableKind in('H') then 1 else 0 end) as SysConstCount
         ,sum( case when t.TableKind NOT in('A','B','F','R','S','U','P','E','G','M','I','N','V','T','O','J','Q','D','H') then 1 else 0 end) as OtherCount
-        FROM dbc.Databases d
-        LEFT OUTER JOIN dbc.Tables t
-        ON t.DatabaseName = d.DatabaseName
+        FROM dbc.Tables t
         Group By 1,2
     ) d
     ON s.DatabaseName = d.DatabaseName
