@@ -59,7 +59,7 @@ size.  As these fields are easily calculated, they will be re-constituted
 in Transcend.
 */
 
-/*{{save:DBQL_Core_{dategroup}.csv}}*/
+/*{{save:DBQL_Core.csv}}*/
 /*{{load:{db_stg}.stg_dat_DBQL_Core}}*/
 /*{{call:{db_coa}.sp_dat_DBQL_Core('{fileset_version}')}}*/
 

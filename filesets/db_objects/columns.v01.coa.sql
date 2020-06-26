@@ -1,7 +1,7 @@
 /* column type analysis
 
   Parameters:
-  - siteid:  {siteid}   
+  - siteid:  {siteid}
 */
 
 
@@ -154,3 +154,12 @@ END AS COLUMN_FORMAT,
 count(*) as Total_Cnt
 from DBC.ColumnsV
 group by 2
+;
+
+/*{{save:db_table_column_count.csv}}*/
+select
+ trim(cast(count(distinct databasename) as INT format'ZZZ,ZZZ,ZZZ,ZZZ')) as Database_Cnt
+,trim(cast(count(distinct databasename||tablename) as INT format'ZZZ,ZZZ,ZZZ,ZZZ')) as Table_Cnt
+,trim(cast(count(*) as INT format'ZZZ,ZZZ,ZZZ,ZZZ'))  as Column_Cnt
+from dbc.ColumnsV
+;

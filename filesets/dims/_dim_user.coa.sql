@@ -70,9 +70,13 @@ Select
 ,User_SubDepartment
 ,User_Region
 ,1 as Priority
-,UserName 
+,UserName
 ,UserHash
 from dim_user
+;
+
+/*{{save:users_total.csv}}*/
+select count(*) as Total_User_Cnt from dim_user
 ;
 
 /* End COA: Dim_User */
