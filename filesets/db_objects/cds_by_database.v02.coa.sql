@@ -73,6 +73,7 @@ from db_objects a
 /*{{save:db_objects_total.csv}}*/
 Select a.* from db_objects a
 where DBName = '**** Totals ****'
+;
 
 /*{{save:db_objects_top10.csv}}*/
 Select a.*, rank() over(order by MaxPermGB desc) as GBRank
