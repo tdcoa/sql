@@ -207,6 +207,8 @@ success_plan:
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       resusagescpu: "pdcrinfo.resUsageSCPU_hst"
+    cpu_summary_py:
+      gitfile:      "success_plan/cpu_summary.py"
 
     dim_user:
       gitfile:      "dims/dim_user.csv"
