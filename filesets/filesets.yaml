@@ -194,6 +194,20 @@ success_plan:
   active:           "True"
   fileset_version:  "1.0"
   files:
+    logo:
+      gitfile:      "success_plan/logo.png"
+    success_plan_ppt:
+      gitfile:      "success_plan/success_plan.pptx"
+    success_plan_exe:
+      gitfile:      "success_plan/z_build_success_plan.coa.sql"
+    cpu_summary_sql:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "success_plan/cpu_summary.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      resusagescpu: "pdcrinfo.resUsageSCPU_hst"
+
     dim_user:
       gitfile:      "dims/dim_user.csv"
     dim_user_override:
