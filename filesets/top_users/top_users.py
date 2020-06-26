@@ -75,7 +75,7 @@ df = pd.read_csv(filename)
 # # comment this in .py file
 # current_dir = os.getcwd()
 # # print(current_dir)
-# filename = '/Crescent_top_users.csv'
+# filename = '/top_users.csv'
 # df = pd.read_csv(current_dir + filename)
 
 df_complete_data = df[df['MonthID'].isnull() & df['WeekID'].isnull()]
@@ -191,11 +191,11 @@ for user_category in user_category_list:
                 fig = scatterplot.get_figure()
 
                 # fig.savefig(
-                #     r'C:\Users\KT250034\PROJECTS\Customer_Success\top_users\Crescent_top_users.' + user_category + '_' + str(
+                #     r'C:\Users\KT250034\PROJECTS\Customer_Success\top_users\_top_users.' + user_category + '_' + str(
                 #         factor_x) + str('_vs_') + str(factor_y) + '.png',
                 #     dpi=fig.dpi)
 
-                fig.savefig('Crescent_top_users.Scatter_Plot_' + user_category +  '_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
+                fig.savefig('top_users.Scatter_Plot_' + user_category +  '_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
                             dpi=fig.dpi)
                 fig.clf()
 
@@ -206,7 +206,7 @@ for user_category in user_category_list:
 #                                           hue="User_Bucket")
 #             plt.tight_layout()
 #             fig = scatterplot.get_figure()
-#             fig.savefig('Crescent_top_users.User_Buckets_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
+#             fig.savefig('top_users.User_Buckets_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
 #                         dpi=fig.dpi)
 #             fig.clf()
 #
@@ -214,7 +214,7 @@ for user_category in user_category_list:
 #                                           hue="User_Department")
 #             plt.tight_layout()
 #             fig = scatterplot.get_figure()
-#             fig.savefig('Crescent_top_users.User_Departments_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
+#             fig.savefig('top_users.User_Departments_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
 #                         dpi=fig.dpi)
 #             fig.clf()
 #
@@ -222,7 +222,7 @@ for user_category in user_category_list:
 #                                           hue="User_SubDepartment")
 #             plt.tight_layout()
 #             fig = scatterplot.get_figure()
-#             fig.savefig('Crescent_top_users.User_SubDepartments_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
+#             fig.savefig('top_users.User_SubDepartments_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
 #                         dpi=fig.dpi)
 #             fig.clf()
 #
@@ -230,7 +230,7 @@ for user_category in user_category_list:
 #                                           hue="User_Region")
 #             plt.tight_layout()
 #             fig = scatterplot.get_figure()
-#             fig.savefig('Crescent_top_users.User_Regions_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
+#             fig.savefig('top_users.User_Regions_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png',
 #                         dpi=fig.dpi)
 #             fig.clf()
 
@@ -239,7 +239,7 @@ for user_category in user_category_list:
 #         if factor_x != factor_y:
 #             scatterplot = sns.scatterplot(data=df_selected_cols_complete_data, x=factor_x, y=factor_y, hue="User_Bucket")
 #             fig = scatterplot.get_figure()
-#             fig.savefig('Crescent_top_users.User_Buckets_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png', dpi=fig.dpi)
+#             fig.savefig('top_users.User_Buckets_' + str(factor_x) + str('_vs_') + str(factor_y) + '.png', dpi=fig.dpi)
 #             fig.clf()
 
 
@@ -294,7 +294,7 @@ for user_category in user_category_list:
         plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
 
         plt.tight_layout()
-        fig.savefig('Crescent_top_users.Bar_chart_' + ax_title + '.png',
+        fig.savefig('top_users.Bar_chart_' + ax_title + '.png',
                     dpi=fig.dpi)
 
         fig.clf()
@@ -349,7 +349,7 @@ for user_category in user_category_list:
 #         plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
 #
 #         plt.tight_layout()
-#         fig.savefig('Crescent_top_users.User_Buckets_bar_chart_' + ax_title + '.png',
+#         fig.savefig('top_users.User_Buckets_bar_chart_' + ax_title + '.png',
 #                     dpi=fig.dpi)
 #         fig.clf()
 
@@ -429,10 +429,10 @@ for user_category in user_category_list:
         fig = scatterplot.get_figure()
 
         fig.savefig(
-            'Crescent_top_users.Violin_chart_' + ax_title + '.png',
+            'top_users.Violin_chart_' + ax_title + '.png',
             dpi=fig.dpi)
 
-        # fig.savefig(r'C:\Users\KT250034\PROJECTS\Customer_Success\top_users\vis_from_notebook\Crescent_top_users.User_Buckets_violin_chart_' + ax_title + '.png',
+        # fig.savefig(r'C:\Users\KT250034\PROJECTS\Customer_Success\top_users\vis_from_notebook\top_users.User_Buckets_violin_chart_' + ax_title + '.png',
         #                     dpi=fig.dpi)
 
         fig.clf()
@@ -536,7 +536,7 @@ for user_category in user_category_list:
         plt.tight_layout()
 
         fig.savefig(
-            'Crescent_top_users.Histogram_' + ax_title + '.png',
+            'top_users.Histogram_' + ax_title + '.png',
             dpi=fig.dpi, bbox_inches='tight')
 
         fig.clf()
