@@ -114,6 +114,11 @@ db_objects:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/columns.v01.coa.sql"
+    db_objects_sql:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/cds_by_database.v02.coa.sql"
+
 
 
 concurrency:
@@ -189,15 +194,35 @@ success_plan:
   active:           "True"
   fileset_version:  "1.0"
   files:
+    dim_user:
+      gitfile:      "dims/dim_user.csv"
+    dim_user_override:
+      gitfile:      "dims/dim_user_override.sql"
+    dim_user_sql_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_user.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_user_sql_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_user.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+
     concurrency_sql01:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
+      startdate:    "Current_Date - 43"  # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     concurrency_vis:
       gitfile:      "concurrency/concurrency.py"
+
     topuser_sql01:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
@@ -207,23 +232,32 @@ success_plan:
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     topuser_vis:
       gitfile:      "top_users/top_users.py"
-    dim_user_csv:
-      gitfile:      "dims/dim_user.csv"
-    dim_user_override:
-      gitfile:      "dims/dim_user_override.sql"
-    cpu_summary_sql_pdcr1620:
+
+    columns_v01_coa_sql:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "success_plan/cpu_summary.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      resusagescpu: "pdcrinfo.resUsageSCPU_hst"
-    cpu_summary_vis:
-      gitfile:      "success_plan/cpu_summary.py"
-    success_plan_pptx:
-      gitfile:      "success_plan/success_plan.pptx"
-    build_success_plan:
-      gitfile:      "success_plan/z_build_success_plan.coa.sql"
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/columns.v01.coa.sql"
+    db_objects_sql:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/cds_by_database.v02.coa.sql"
+
+    cpu_trend_pdcr16:
+      collection: ["pdcr"]
+      dbsversion: ["16.20", "16.10", "16.00"]
+      gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
+      resusagespma: "pdcrinfo.ResUsageSpma_Hst"
+    io_trend_pdcr16:
+      collection: ["pdcr"]
+      dbsversion: ["16.20", "16.10", "16.00"]
+      gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
+      resusagesldv: "pdcrinfo.ResUsageSldv_Hst"
+    storage_trend_pdcr16:
+      collection: ["pdcr"]
+      dbsversion: ["16.20", "16.10", "16.00"]
+      gitfile:    "level1_how_much/storage_trend.1620.pdcr.v11.coa.sql"
+      databasespace: "pdcrinfo.DatabaseSpace_hst"
+
 
 
 
