@@ -59,6 +59,7 @@ create volatile table db_objects as
 
 /*{{save:db_objects_all.csv}}*/
 /*{{load:{db_stg}.stg_dat_DB_Objects}}*/
+/*{{call:{db_coa}.sp_dat_DB_Objects('{fileset_version}')}}*/
 Select current_date as LogDate
 ,DBName
 ,rank() over(order by CurrentPermGB desc)-1 as CurrPermGB_Rank
