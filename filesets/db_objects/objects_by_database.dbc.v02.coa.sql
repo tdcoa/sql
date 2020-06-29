@@ -16,7 +16,7 @@ create volatile table db_objects as
     ,cast({spoolpct} as decimal(4,3)) as SpoolPct
     ,case when d.DatabaseName is null
         then '** Entire Teradata System (minus '||
-        cast(cast(SpoolPct*100 as decimal(4,1) format'99.9') as char(4)) ||'% spool) **'
+        cast(cast(SpoolPct*100 as decimal(4,1) format'99.9') as char(4)) ||'% spool from MaxPerm) **'
         else Max(d.CommentString) end as CommentString
     ,cast(sum(MaxPerm)/1e9 as decimal(18,3))
       * case when d.DatabaseName is null then (1-SpoolPct) else 1.000 end as MaxPermGB
@@ -58,31 +58,59 @@ create volatile table db_objects as
 
 
 /*{{save:db_objects_all.csv}}*/
-Select current_date as LogDate, a.*, rank() over(order by MaxPermGB desc) as GBRank
-from db_objects a
+/*{{load:{db_stg}.stg_dat_DB_Objects}}*/
+Select current_date as LogDate
+,DBName
+,rank() over(order by CurrentPermGB desc)-1 as CurrPermGB_Rank
+,CommentString
+,cast(cast(MaxPermGB      as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as MaxPermGB
+,cast(cast(CurrentPermGB  as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as CurrentPermGB
+,cast(cast(FilledPct*100  as decimal( 9,3) format'99.99')              as varchar(32)) as FilledPct
+,cast(cast(TableCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as Table_Count
+,cast(cast(ViewCount      as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as View_Count
+,cast(cast(IndexCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as Index_Count
+,cast(cast(MacroCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as Macro_Count
+,cast(cast("SP&TrigCount" as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as SPTrig_Count
+,cast(cast(UDObjectCount  as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as UDObject_Count
+,cast(cast(OtherCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as Other_Count
+from db_objects
 ;
 
 /*{{save:db_objects_total.csv}}*/
-Select current_date as LogDate, a.* from db_objects a
+Select current_date as LogDate
+,DBName as "Database Name"
+,SpoolPct as "Spool%"
+,CommentString as "Comment String"
+,cast(cast(MaxPermGB      as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Allocated GB"
+,cast(cast(CurrentPermGB  as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Used GB"
+,cast(cast(FilledPct*100  as decimal( 9,3) format'99.99')              as varchar(32)) as "Filled Pct"
+,cast(cast(TableCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "Table Count"
+,cast(cast(ViewCount      as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "View Count"
+,cast(cast(IndexCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "Index Count"
+,cast(cast(MacroCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "Macro Count"
+,cast(cast("SP&TrigCount" as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "SP&Trig Count"
+,cast(cast(UDObjectCount  as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "UDObject Count"
+,cast(cast(OtherCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "Other Count"
+from db_objects
 where DBName = '**** Totals ****'
 ;
 
 /*{{save:db_objects_top10.csv}}*/
-Select
- DBName
-,CommentString
-,cast(MaxPermGB      as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "Max Perm GB"
-,cast(CurrentPermGB  as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "Current Perm GB"
-,cast(FilledPct      as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "Filled Pct"
-,cast(TableCount     as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "Table Count"
-,cast(ViewCount      as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "View Count"
-,cast(IndexCount     as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "Index Count"
-,cast(MacroCount     as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "Macro Count"
-,cast("SP&TrigCount" as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "SP&Trig Count"
-,cast(UDObjectCount  as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "UDObject Count"
-,cast(OtherCount     as int format'ZZZ,ZZZ,ZZZ,ZZZ') as "OtherCount"
-,rank() over(order by MaxPermGB desc) as GBRank
-from db_objects a
+Select current_date as LogDate
+,DBName as "Database Name"
+,rank() over(order by CurrentPermGB desc) as "Used GB Rank"
+,CommentString as "Comment String"
+,cast(cast(MaxPermGB      as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Allocated GB"
+,cast(cast(CurrentPermGB  as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Used GB"
+,cast(cast(FilledPct*100  as decimal( 9,3) format'99.99')              as varchar(32)) as "Filled Pct"
+,cast(cast(TableCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "Table Count"
+,cast(cast(ViewCount      as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "View Count"
+,cast(cast(IndexCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "Index Count"
+,cast(cast(MacroCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "Macro Count"
+,cast(cast("SP&TrigCount" as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "SP&Trig Count"
+,cast(cast(UDObjectCount  as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "UDObject Count"
+,cast(cast(OtherCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as "Other Count"
+from db_objects
 where DBName <> '**** Totals ****'
-qualify GBRank <= 10
+qualify "Used GB Rank" <= 10
 ;
