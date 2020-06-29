@@ -7,8 +7,7 @@
 
 create volatile table column_types as (
  SELECT
- '{siteid}' as Site_ID
- ,CASE ColumnType
+    CASE ColumnType
     WHEN 'BF' THEN 'BYTE('            || TRIM(ColumnLength (FORMAT '-(9)9')) || ')'
     WHEN 'BV' THEN 'VARBYTE('         || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
     WHEN 'CF' THEN 'CHAR('            || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
@@ -134,7 +133,12 @@ group by 2,3
 /*{{save:column_type.csv}}*/
 /*{{load:{db_stg}.stg_dat_column_type}}*/
 /*{{call:{db_coa}.sp_dat_column_type}}*/
-Select  * from column_types
+Select '{siteid}' as Site_ID
+, CURRENT_DATE as LogDate
+, Column_Type
+, Column_Category
+, Total_Cnt
+ from column_types
 ;
 
 /*{{save:column_category.csv}}*/
