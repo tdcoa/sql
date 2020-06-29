@@ -105,6 +105,15 @@ dbql_core:
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "dbc.DBQLogTbl"
 
+customer_data_space:
+  active:   "True"
+  fileset_version:  "1.0"
+  files: &customer_data_space
+    cds_by_database_today_sql:
+      collection:   ["pdcr", "dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
+      gitfile:      "db_objects/objects_by_database.dbc.v02.coa.sql"
+      spoolpct:     "0.20" # 20%
 
 db_objects:
   active:           "True"
@@ -115,17 +124,6 @@ db_objects:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/columns.v01.coa.sql"
-
-
-customer_data_space:
-  active:   "True"
-  fileset_version:  "1.0"
-  files: &customer_data_space
-    cds_by_database_today_sql:
-      collection:   ["pdcr", "dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
-      gitfile:      "db_objects/objects_by_database.dbc.v02.coa.sql"
-      spoolpct:     "0.20" # 20%
 
 
 concurrency:
