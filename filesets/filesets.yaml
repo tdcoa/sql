@@ -114,10 +114,14 @@ db_objects:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/columns.v01.coa.sql"
-    db_objects_sql:
+    cds_by_database_sql:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/cds_by_database.v02.coa.sql"
+    cds_history_sql:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/cds_history.v02.coa.sql"
 
 
 
