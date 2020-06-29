@@ -1,3 +1,11 @@
+/* Pull all databases plus object counts, by type
+   NOT by history, just point-in-time
+
+   Parameters:
+   - spoolpct:   {spoolpct}  default 20%
+
+
+*/
 
 create volatile table db_objects as
 (
@@ -8,10 +16,10 @@ create volatile table db_objects as
     ,case when d.DatabaseName is null
         then '** Entire Teradata System (minus 20% spool) **'
         else Max(d.CommentString) end as CommentString
-    ,cast(sum(MaxPerm)/1024/1024/1024 as decimal(16,1))
-    * case when DBName='**** Totals ****'  then 0.8 else 1 end as MaxPermGB
-    ,ZeroIfNull(cast(NullifZero(sum(CurrentPerm))/1024/1024/1024 as decimal(16,1))) as CurrentPermGB
-    ,ZeroIfNull(cast(CurrentPermGB as decimal(16,4))/nullifzero(cast(MaxPermGB as decimal(16,4)))) as FilledPct
+    ,cast(sum(MaxPerm)/1e9 as decimal(18,3))
+      * case when d.DatabaseName is null then 0.800 else 1.000 end as MaxPermGB
+    ,ZeroIfNull(cast(NullifZero(sum(CurrentPerm))/1e9 as decimal(18,3))) as CurrentPermGB
+    ,CurrentPermGB/NullIfZero(MaxPermGB) as FilledPct
     ,Sum(d.TableCount) as TableCount
     ,Sum(d.ViewCount) as ViewCount
     ,Sum(d.IndexCount) as IndexCount
@@ -48,12 +56,12 @@ create volatile table db_objects as
 
 
 /*{{save:db_objects_all.csv}}*/
-Select a.*, rank() over(order by MaxPermGB desc) as GBRank
+Select current_date as LogDate, a.*, rank() over(order by MaxPermGB desc) as GBRank
 from db_objects a
 ;
 
 /*{{save:db_objects_total.csv}}*/
-Select a.* from db_objects a
+Select current_date as LogDate, a.* from db_objects a
 where DBName = '**** Totals ****'
 ;
 

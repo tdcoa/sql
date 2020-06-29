@@ -14,8 +14,8 @@ SELECT
 ,trim(h.TableName) as "Table"
 ,cast(SUM(h.CurrentPerm)/1e9 as decimal(18,3)) AS "Current PermGB"
 ,cast(avg(d.PermSpace)/1e9 as decimal(18,3)) as "Max PermGB"
-,cast("Current PermGB"/"Max PermGB" as decimal(4,3)) as CDS_Pct
-,cast(cast(CDS_Pct*100 as decimal(4,1) format '99.9') as char(4))||'%' as "CDS%"
+,cast("Current PermGB"/"Max PermGB" as decimal(9,3)) as CDS_Pct
+,cast(cast(CDS_Pct*100 as decimal(9,1) format '99.9') as char(4))||'%' as "CDS%"
 ,rank() over(partition by "Database" order by "Current PermGB" desc) as RankGB
 FROM {tablespace} /* pdcrinfo.TableSpace_Hst */ as h
 JOIN dbc.databasesV as d
