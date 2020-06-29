@@ -24,8 +24,7 @@ create volatile table db_objects as
         Select DatabaseName
         ,sum(MaxPerm) as MaxPerm
         ,sum(CurrentPerm) as CurrentPerm
-        FROM dbc.AllSpace
-        WHERE TableName = 'All'
+        FROM dbc.diskspace
         Group By 1
     ) s
     JOIN
