@@ -111,18 +111,31 @@ db_objects:
   fileset_version:  "1.0"
   files:
     columns_v01_coa_sql:
-      collection:   ["pdcr"]
+      collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/columns.v01.coa.sql"
     cds_by_database_sql:
-      collection:   ["pdcr"]
+      collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
-      gitfile:      "db_objects/cds_by_database.v02.coa.sql"
-    cds_history_sql:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
-      gitfile:      "db_objects/cds_history.v02.coa.sql"
+      gitfile:      "db_objects/objects_by_database.v02.coa.sql"
 
+
+customer_data_space:
+  active:   "True"
+  fileset_version:  "1.0"
+  files:
+    cds_history_sql_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "customer_data_space/cds_history.pdcr.v02.coa.sql"
+      tablespace:   "pdcrinfo.TableSpace_Hst"
+      startdate:    "Current_Date - 43"  # 6 weeks
+      enddate:      "Current_Date - 1"
+    cds_history_sql_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "customer_data_space/cds_today.dbc.v02.coa.sql"
+      tablespace:   "dbc.allspace"
 
 
 concurrency:
