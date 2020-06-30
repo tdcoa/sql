@@ -126,7 +126,7 @@ CASE
   ,count(*) as Total_Cnt
 FROM dbc.ColumnsV
 WHERE ColumnType IS NOT NULL
-group by 2,3
+group by 1,2
 )with data no primary index on commit preserve rows
 ;
 
