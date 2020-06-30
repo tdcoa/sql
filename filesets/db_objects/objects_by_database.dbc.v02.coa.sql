@@ -22,7 +22,7 @@ create volatile table db_objects as
     ,cast(sum(MaxPerm)/1e9 as decimal(18,3))
       * case when d.DatabaseName is null then (1-SpoolPct) else 1.000 end as MaxPermGB
     ,ZeroIfNull(cast(NullifZero(sum(CurrentPerm))/1e9 as decimal(18,3))) as CurrentPermGB
-    ,CurrentPermGB/NullIfZero(MaxPermGB) as FilledPct
+    ,ZeroIfNull(CurrentPermGB/NullIfZero(MaxPermGB)) as FilledPct
     ,Sum(d.TableCount) as TableCount
     ,Sum(d.ViewCount) as ViewCount
     ,Sum(d.IndexCount) as IndexCount
