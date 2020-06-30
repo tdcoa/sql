@@ -64,7 +64,8 @@ Create Volatile Table Top_Users_DBQL_preagg  as(
 ;
 
 /*{{save:users_active.csv}}*/
-select count(distinct UserName) as Active_User_Cnt, count(distinct LogDate) as Days_Cnt
+select cast(cast(count(distinct UserName) as BigInt format'ZZZ,ZZZ,ZZZ,ZZZ') as varchar(32)) as Active_User_Cnt
+,count(distinct LogDate) as Days_Cnt
 from  Top_Users_DBQL_preagg
 ;
 

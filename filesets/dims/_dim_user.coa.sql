@@ -76,7 +76,8 @@ from dim_user
 ;
 
 /*{{save:users_total.csv}}*/
-select count(*) as Total_User_Cnt from dim_user
+select cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZZ') as varchar(32)) as Total_User_Cnt
+from dim_user
 ;
 
 /* End COA: Dim_User */
