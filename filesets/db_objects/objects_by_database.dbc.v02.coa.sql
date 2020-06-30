@@ -69,7 +69,7 @@ Select
 ,CommentString
 ,cast(cast(MaxPermGB      as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as MaxPermGB
 ,cast(cast(CurrentPermGB  as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as CurrentPermGB
-,cast(cast(FilledPct*100  as decimal( 9,3) format'99.99')              as varchar(32)) as FilledPct
+,cast(cast(FilledPct*100  as decimal( 9,3) format'999.99')             as varchar(32)) as FilledPct
 ,cast(cast(TableCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as Table_Count
 ,cast(cast(ViewCount      as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as View_Count
 ,cast(cast(IndexCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as Index_Count
@@ -89,7 +89,7 @@ Select
 ,CommentString as "Comment String"
 ,cast(cast(zeroifnull(MaxPermGB     ) as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Allocated GB"
 ,cast(cast(zeroifnull(CurrentPermGB ) as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Used GB"
-,cast(cast(zeroifnull(FilledPct*100 ) as decimal( 9,3) format'99.99')              as varchar(32)) as "Filled Pct"
+,cast(cast(zeroifnull(FilledPct*100 ) as decimal( 9,3) format'999.99')             as varchar(32)) as "Filled Pct"
 ,cast(cast(zeroifnull(TableCount    ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "Table Count"
 ,cast(cast(zeroifnull(ViewCount     ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "View Count"
 ,cast(cast(zeroifnull(IndexCount    ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "Index Count"
@@ -110,7 +110,7 @@ Select
 ,CommentString as "Comment String"
 ,cast(cast(zeroifnull(MaxPermGB     ) as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Allocated GB"
 ,cast(cast(zeroifnull(CurrentPermGB ) as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Used GB"
-,cast(cast(zeroifnull(FilledPct*100 ) as decimal( 9,3) format'99.99')              as varchar(32)) as "Filled Pct"
+,cast(cast(zeroifnull(FilledPct*100 ) as decimal( 9,3) format'999.99')             as varchar(32)) as "Filled Pct"
 ,cast(cast(zeroifnull(TableCount    ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "Table Count"
 ,cast(cast(zeroifnull(ViewCount     ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "View Count"
 ,cast(cast(zeroifnull(IndexCount    ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "Index Count"
