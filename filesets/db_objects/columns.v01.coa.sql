@@ -132,7 +132,7 @@ group by 1,2
 
 /*{{save:column_type.csv}}*/
 /*{{load:{db_stg}.stg_dat_column_type}}*/
-/*{{call:{db_coa}.sp_dat_column_type}}*/
+/*{{call:{db_coa}.sp_dat_column_type('{fileset_version}')}}*/
 Select '{siteid}' as Site_ID
 , CURRENT_DATE as LogDate
 , Column_Type
