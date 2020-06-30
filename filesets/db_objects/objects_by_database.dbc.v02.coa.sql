@@ -60,7 +60,9 @@ create volatile table db_objects as
 /*{{save:db_objects_all.csv}}*/
 /*{{load:{db_stg}.stg_dat_DB_Objects}}*/
 /*{{call:{db_coa}.sp_dat_DB_Objects('{fileset_version}')}}*/
-Select current_date as LogDate
+Select
+ '{siteid}' as Site_ID
+,current_date as LogDate
 ,DBName
 ,rank() over(order by CurrentPermGB desc)-1 as CurrPermGB_Rank
 ,CommentString
@@ -78,7 +80,9 @@ from db_objects
 ;
 
 /*{{save:db_objects_total.csv}}*/
-Select current_date as LogDate
+Select
+ '{siteid}' as Site_ID
+,current_date as LogDate
 ,DBName as "Database Name"
 ,SpoolPct as "Spool%"
 ,CommentString as "Comment String"
@@ -97,7 +101,9 @@ where DBName = '**** Totals ****'
 ;
 
 /*{{save:db_objects_top10.csv}}*/
-Select current_date as LogDate
+Select
+'{siteid}' as Site_ID
+,current_date as LogDate
 ,DBName as "Database Name"
 ,rank() over(order by CurrentPermGB desc) as "Used GB Rank"
 ,CommentString as "Comment String"
