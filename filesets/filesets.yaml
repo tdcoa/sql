@@ -370,6 +370,9 @@ dbql_core:
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "dbc.DBQLogTbl"
       resusagespma: "dbc.ResUsageSPMA"
+    upload_manifest_template:
+      gitfile:      "dbql_core/upload-manifest.template.json"
+
 
     dim_app:
       gitfile:      "dims/dim_app.csv"

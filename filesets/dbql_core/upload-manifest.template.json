@@ -1,0 +1,5 @@
+{"entries":[ 
+ {"file": "cpu_summary.csv",  "table": "adlste_coa_stg.stg_dat_dbql_core_maxcpu",  "call": "adlste_coa.sp_dat_dbql_core_maxcpu('6.0')"}
+,{"file": "DBQL_Core.csv",  "table": "adlste_coa_stg.stg_dat_DBQL_Core",  "call": "adlste_coa.sp_dat_DBQL_Core('6.0')"}
+,{"file": "Query_Breakouts.csv",  "table": "adlste_coa_stg.stg_dat_DBQL_Core_QryCnt_Ranges",  "call": "adlste_coa.sp_dat_DBQL_Core_QryCnt_Ranges('6.0')"}
+  ]}
