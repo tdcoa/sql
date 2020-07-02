@@ -209,7 +209,7 @@ success_plan:
   fileset_version:  "1.0"
   files:
     <<: *dim_user
-    <<: *&concurrency
+    <<: *concurrency
     <<: *top_users
     <<: *db_objects
     <<: *level1_how_much
