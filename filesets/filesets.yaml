@@ -21,26 +21,112 @@ demo:
       gitfile:  "demo/AgeReport.pptx"
 
 
+dim_user:
+  active:           "True"
+  fileset_version:  "1.0"
+  fileset_type:  "atomic"
+  description:   "builds the dim_user volatile table, with user/dept mappings using either .csv or pre-built table.  Most often run as prerequisite to other filesets."
+  files:  &dim_user
+    dim_user:
+      gitfile:      "dims/dim_user.csv"
+    dim_user_override:
+      gitfile:      "dims/dim_user_override.sql"
+    dim_user_sql_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_user.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_user_sql_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_user.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+
+
+dim_app:
+  active:           "True"
+  fileset_version:  "1.0"
+  fileset_type:  "atomic"
+  description:   "builds the dim_app volatile table, with AppID/App_Bucket mappings using either .csv or pre-built table.  Most often run as prerequisite to other filesets."
+  files:  &dim_app
+    dim_app:
+      gitfile:      "dims/dim_app.csv"
+    dim_app_sql_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_app.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_app_sql_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_app.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+
+
+dim_statement:
+  active:           "True"
+  fileset_version:  "1.0"
+  fileset_type:  "atomic"
+  description:   "builds the dim_statement volatile table, with StatementType/Statement_Bucket mappings using either .csv or pre-built table.  Most often run as prerequisite to other filesets."
+  files: &dim_statement
+    dim_statement:
+      gitfile:  "dims/dim_statement.csv"
+    dim_statement_sql_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_statement.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    dim_statement_sql_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_statement.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+
+
+top_users:
+  active:           "True"
+  fileset_version:  "1.0"
+  files: &top_users
+    <<: *dim_user
+    topuser_sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "top_users/top_users.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    topuser_vis:
+      gitfile:      "top_users/top_users.py"
+
+
 customer_data_space:
   active:           "True"
   fileset_version:  "1.0"
-  files:
+  files: &customer_data_space
     cds_by_database_today_sql:
+      spoolpct:     "0.20"
       collection:   ["pdcr", "dbc"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       gitfile:      "db_objects/objects_by_database.dbc.v02.coa.sql"
-      spoolpct:     "0.20" # 20%
 
 
 db_objects:
   active:           "True"
   fileset_version:  "1.0"
-  files:
-    cds_by_database_today_sql:
-      collection:   ["pdcr", "dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
-      gitfile:      "db_objects/objects_by_database.dbc.v02.coa.sql"
-      spoolpct:     "0.20" # 20%
+  files: &db_objects
+    <<: *customer_data_space
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
@@ -50,7 +136,7 @@ db_objects:
 concurrency:
   active:           "True"
   fileset_version:  "1.0"
-  files:
+  files: &concurrency
     concurrency_sql01:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
@@ -66,6 +152,7 @@ feature_usage:
   active:           "True"
   fileset_version:  "1.2"
   files:
+    <<: *dim_user
     feature_usage_1620pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20"]
@@ -73,132 +160,6 @@ feature_usage:
       startdate:    "Current_Date - 43"  # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    dim_user_sql:
-      gitfile:      "dims/dim_user.sql"
-    dim_user_csv:
-      gitfile:      "dims/dim_user.csv"
-    dim_user_override:
-      gitfile:      "dims/dim_user_override.sql"
-
-
-
-top_users:
-  active:           "True"
-  fileset_version:  "1.0"
-  files:
-    topuser_sql01:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "top_users/top_users.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    topuser_vis:
-      gitfile:      "top_users/top_users.py"
-    dim_user:
-      gitfile:      "dims/dim_user.csv"
-    dim_user_override:
-      gitfile:      "dims/dim_user_override.sql"
-    dim_user_sql_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    dim_user_sql_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
-
-
-# TODO: explore achors(&) and aliases(*)
-success_plan:
-  active:           "True"
-  fileset_version:  "1.0"
-  files:
-    logo:
-      gitfile:      "success_plan/logo.png"
-    success_plan_ppt:
-      gitfile:      "success_plan/success_plan.pptx"
-    success_plan_exe:
-      gitfile:      "success_plan/z_build_success_plan.coa.sql"
-    cpu_summary_sql:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "success_plan/cpu_summary.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      resusagescpu: "pdcrinfo.resUsageSCPU_hst"
-    cpu_summary_py:
-      gitfile:      "success_plan/cpu_summary.py"
-
-    dim_user:
-      gitfile:      "dims/dim_user.csv"
-    dim_user_override:
-      gitfile:      "dims/dim_user_override.sql"
-    dim_user_sql_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    dim_user_sql_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
-
-    concurrency_sql01:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
-      startdate:    "Current_Date - 43"  # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    concurrency_vis:
-      gitfile:      "concurrency/concurrency.py"
-
-    topuser_sql01:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "top_users/top_users.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    topuser_vis:
-      gitfile:      "top_users/top_users.py"
-
-    columns_v01_coa_sql:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
-      gitfile:      "db_objects/columns.v01.coa.sql"
-    db_objects_sql:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
-      gitfile:      "db_objects/objects_by_database.dbc.v02.coa.sql"
-
-    cpu_trend_pdcr16:
-      collection: ["pdcr"]
-      dbsversion: ["16.20", "16.10", "16.00"]
-      gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
-      resusagespma: "pdcrinfo.ResUsageSpma_Hst"
-    io_trend_pdcr16:
-      collection: ["pdcr"]
-      dbsversion: ["16.20", "16.10", "16.00"]
-      gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
-      resusagesldv: "pdcrinfo.ResUsageSldv_Hst"
-    storage_trend_pdcr16:
-      collection: ["pdcr"]
-      dbsversion: ["16.20", "16.10", "16.00"]
-      gitfile:    "level1_how_much/storage_trend.1620.pdcr.v11.coa.sql"
-      databasespace: "pdcrinfo.DatabaseSpace_hst"
 
 
 
@@ -212,7 +173,7 @@ level1_how_much:
   dbqlogtbl:        "pdcrinfo.DBQLogTbl_Hst"
   resusagesldv:     "pdcrinfo.ResUsageSldv_Hst"
   resusagespma:     "pdcrinfo.ResUsageSpma_Hst"
-  files:
+  files: &level1_how_much
     cpu_trend_pdcr16:
       collection: ["pdcr"]
       dbsversion: ["16.20", "16.10", "16.00"]
@@ -241,6 +202,32 @@ level1_how_much:
       resusagesldv: "dbc.ResUsageSldv"
 
 
+
+# TODO: explore achors(&) and aliases(*)
+success_plan:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    <<: *dim_user
+    <<: *&concurrency
+    <<: *top_users
+    <<: *db_objects
+    <<: *level1_how_much
+    logo:
+      gitfile:      "success_plan/logo.png"
+    success_plan_ppt:
+      gitfile:      "success_plan/success_plan.pptx"
+    success_plan_exe:
+      gitfile:      "success_plan/z_build_success_plan.coa.sql"
+    cpu_summary_sql:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "success_plan/cpu_summary.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      resusagescpu: "pdcrinfo.resUsageSCPU_hst"
+    cpu_summary_py:
+      gitfile:      "success_plan/cpu_summary.py"
 
 
 vantage_health_check:
@@ -354,6 +341,9 @@ dbql_core:
   active:           "True"
   fileset_version:  "6.0"
   files:
+    <<: *dim_user
+    <<: *dim_statement
+    <<: *dim_app
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
@@ -372,60 +362,6 @@ dbql_core:
       resusagespma: "dbc.ResUsageSPMA"
     upload_manifest_template:
       gitfile:      "dbql_core/upload-manifest.template.json"
-
-
-    dim_app:
-      gitfile:      "dims/dim_app.csv"
-    dim_app_sql_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_app.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    dim_app_sql_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_app.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
-
-    dim_statement:
-      gitfile:  "dims/dim_statement.csv"
-    dim_statement_sql_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_statement.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    dim_statement_sql_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_statement.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
-
-    dim_user:
-      gitfile:      "dims/dim_user.csv"
-    dim_user_override:
-      gitfile:      "dims/dim_user_override.sql"
-    dim_user_sql_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    dim_user_sql_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
 
 
 test:
