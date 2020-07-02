@@ -12,10 +12,12 @@
 
 
 /* define dates for number of months  */
-/* rules: full weeks (7 days) only, no partial weeks (having)
-          this month: partial month allowed (qualify)
-          prev months: full months only (qualify)
-          Month start/end measured on ISO calendar
+/* rules:
+   - full weeks (7 days) only, no partial weeks (having)
+       EXCEPT for current week ONLY IF there are less than 7 days in original request
+   - this month: partial month allowed (qualify)
+   - prev months: full months only (qualify)
+   - Month start/end measured on ISO calendar
    in other words, you will almost always get fewer dates than you asked for
 */
 create volatile table top_user_dates as (
@@ -26,13 +28,16 @@ create volatile table top_user_dates as (
   ,cast((year_num*1000)+(month_num*10)+(week_num) as int) as WeekID
   ,cast(WeekID/10 as int) as MonthID
   ,case when cast(MonthNumber_of_Year(DATE-1,'ISO') as int) = month_num then 1 else 0  end as month_cur
+  ,case when cast(WeekNumber_of_Month(DATE-1,'ISO') as int) = week_num and month_cur = 1 then 1 else 0  end as week_cur
   ,min(Calendar_Date) as MinDate
   ,max(Calendar_Date) as MaxDate
+  ,count(Calendar_Date) as Actual_Date_Cnt
+  ,({enddate} - ({startdate})) as Orig_Date_Cnt
   from sys_calendar.calendar
   where calendar_date between {startdate} and {enddate}
   group by year_num, month_num, week_num
   qualify (min(week_num)over(partition by month_num) = 1 or month_cur=1)
-  having count(Calendar_Date)=7
+  having (count(Calendar_Date)=7 or (week_cur = 1 and Orig_Date_Cnt < 7))
 ) with data no primary index on commit preserve rows
 ;
 
