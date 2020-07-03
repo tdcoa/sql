@@ -1,0 +1,3 @@
+{"entries":[ 
+ {"file": "dbcinfo.csv",  "table": "adlste_coa_stg.stg_dat_dbcinfo",  "call": "adlste_coa.sp_dat_dbcinfo('1.15')"}
+  ]}

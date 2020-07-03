@@ -1,0 +1,8 @@
+{"entries":[ 
+ {"file": "column_type.csv",  "table": "adlste_coa_stg.stg_dat_column_type",  "call": "adlste_coa.sp_dat_column_type('1.0')"}
+,{"file": "level1_cpu_trend_spma.coa.csv",  "table": "adlste_coa_stg.stg_dat_level1_CPU_Forecast",  "call": "adlste_coa.sp_dat_level1_CPU_Forecast('1.0')"}
+,{"file": "level1_io_trend_spma.coa.csv",  "table": "adlste_coa_stg.stg_dat_level1_IO_Forecast",  "call": "adlste_coa.sp_dat_level1_IO_Forecast('1.0')"}
+,{"file": "db_objects_all.csv",  "table": "adlste_coa_stg.stg_dat_DB_Objects",  "call": "adlste_coa.sp_dat_DB_Objects('1.0')"}
+,{"file": "level1_storage_trend.coa.csv",  "table": "adlste_coa_stg.stg_dat_level1_Storage_Forecast",  "call": "adlste_coa.sp_dat_level1_Storage_Forecast('1.0')"}
+,{"file": "top_users.csv",  "table": "adlste_coa_stg.stg_dat_top_users",  "call": "adlste_coa.sp_dat_top_users('v1')"}
+  ]}

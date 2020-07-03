@@ -19,6 +19,8 @@ demo:
       gitfile:  "demo/alldates.py"
     file05:
       gitfile:  "demo/AgeReport.pptx"
+    upload_template:
+      gitfile:  "demo/upload-manifest.template.json"
 
 
 dim_user:
@@ -109,6 +111,8 @@ top_users:
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     topuser_vis:
       gitfile:      "top_users/top_users.py"
+    upload_template:
+      gitfile:      "top_users/upload-manifest.template.json"
 
 
 customer_data_space:
@@ -120,6 +124,9 @@ customer_data_space:
       collection:   ["pdcr", "dbc"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       gitfile:      "db_objects/objects_by_database.dbc.v02.coa.sql"
+    upload_template:
+      gitfile:      "db_objects/upload-manifest.template.json"
+
 
 
 db_objects:
@@ -146,6 +153,8 @@ concurrency:
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     concurrency_vis:
       gitfile:      "concurrency/concurrency.py"
+    upload_template:
+      gitfile:      "concurrency/upload-manifest.template.json"
 
 
 feature_usage:
@@ -200,6 +209,8 @@ level1_how_much:
       dbsversion: ["16.20", "16.10", "16.00"]
       gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
       resusagesldv: "dbc.ResUsageSldv"
+    upload_template:
+      gitfile:    "level1_how_much/upload-manifest.template.json"
 
 
 
@@ -228,6 +239,8 @@ success_plan:
       resusagescpu: "pdcrinfo.resUsageSCPU_hst"
     cpu_summary_py:
       gitfile:      "success_plan/cpu_summary.py"
+    upload_template:
+      gitfile:      "success_plan/upload-manifest.template.json"
 
 
 vantage_health_check:
@@ -361,6 +374,8 @@ dbql_core:
       dbqlogtbl:    "dbc.DBQLogTbl"
       resusagespma: "dbc.ResUsageSPMA"
     upload_manifest_template:
+      gitfile:      "dbql_core/upload-manifest.template.json"
+    upload_template:
       gitfile:      "dbql_core/upload-manifest.template.json"
 
 

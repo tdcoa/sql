@@ -1,0 +1,3 @@
+{"entries":[ 
+ {"file": "db_objects_all.csv",  "table": "adlste_coa_stg.stg_dat_DB_Objects",  "call": "adlste_coa.sp_dat_DB_Objects('1.0')"}
+  ]}
