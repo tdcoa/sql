@@ -214,7 +214,6 @@ level1_how_much:
 
 
 
-# TODO: explore achors(&) and aliases(*)
 success_plan:
   active:           "True"
   fileset_version:  "1.0"
@@ -374,8 +373,6 @@ dbql_core:
       dbqlogtbl:    "dbc.DBQLogTbl"
       resusagespma: "dbc.ResUsageSPMA"
     upload_manifest_template:
-      gitfile:      "dbql_core/upload-manifest.template.json"
-    upload_template:
       gitfile:      "dbql_core/upload-manifest.template.json"
 
 
