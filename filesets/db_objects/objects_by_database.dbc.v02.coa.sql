@@ -5,7 +5,6 @@
    - siteid:     {siteid}
    - spoolpct:   {spoolpct}  default 20%
 
-
 */
 
 create volatile table db_objects_dates as
@@ -18,7 +17,6 @@ create volatile table db_objects_dates as
   where Week_of_Calendar in
       (Select week_of_calendar from sys_calendar.calendar
        where calendar_date = DATE)  /*  DBC is always today */
-    and Day_of_Week = 1
 ) with data no primary index on commit preserve rows
 ;
 
