@@ -23,6 +23,29 @@ demo:
       gitfile:  "demo/upload-manifest.template.json"
 
 
+problems:
+  active:     "True"
+  appears_in_gui: "False"
+  fileset_version: "0"
+  startdate:  "Current_Date - 5"
+  enddate:    "Current_Date - 2"
+  birthday:   "1974-12-17"
+  files:
+    file01:
+      gitfile:  "demo/dates.csv"
+    file02:
+      gitfile:   "demo/dbcinfo.coa.sql"
+      startdate: "Date-7"
+      enddate:   "Date-1"
+    file03:
+      gitfile:  "demo/today.sql"
+    file05:
+      gitfile:  "demo/AgeReport.pptx"
+    upload_template:
+      gitfile:  "demo/upload-manifest.template.json"
+
+
+
 dim_user:
   active:           "True"
   fileset_version:  "1.0"
