@@ -23,6 +23,9 @@ create volatile table db_objects_dates as
 ) with data no primary index on commit preserve rows
 ;
 
+collect stats on db_objects_dates column(WeekID)
+;
+
 
 create volatile table db_objects as
 (

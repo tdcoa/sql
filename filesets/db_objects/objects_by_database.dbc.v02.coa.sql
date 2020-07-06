@@ -22,6 +22,8 @@ create volatile table db_objects_dates as
 ) with data no primary index on commit preserve rows
 ;
 
+collect stats on db_objects_dates column(WeekID)
+;
 
 create volatile table db_objects as
 (
@@ -45,7 +47,7 @@ create volatile table db_objects as
     ,Sum(d."SP&TrigCount") as "SP&TrigCount"
     ,Sum(d.UDObjectCount) as UDObjectCount
     ,Sum(d.OtherCount) as OtherCount
-    ,rank() over (partition by dt.WeekID order by dt.WeekID, CurrentPermGB desc) as CDSRank
+    ,rank() over (order by CurrentPermGB desc) as CDSRank
     FROM
     (
         Select DatabaseName
@@ -79,7 +81,7 @@ create volatile table db_objects as
 /*{{call:{db_coa}.sp_dat_DB_Objects('{fileset_version}')}}*/
 Select
  '{siteid}' as Site_ID
-,WeekID
+,(select WeekID from db_objects_dates) as WeekID
 ,DBName
 ,rank() over(order by CurrentPermGB desc)-1 as CurrPermGB_Rank
 ,CommentString
@@ -99,7 +101,7 @@ from db_objects
 /*{{save:db_objects_total.csv}}*/
 Select
  '{siteid}' as Site_ID
-,WeekID
+,(select WeekID from db_objects_dates) as WeekID
 ,DBName as "Database Name"
 ,SpoolPct as "Spool%"
 ,CommentString as "Comment String"
@@ -120,7 +122,7 @@ where DBName = '**** Totals ****'
 /*{{save:db_objects_top10.csv}}*/
 Select
 '{siteid}' as Site_ID
-,WeekID
+,(select WeekID from db_objects_dates) as WeekID
 ,DBName as "Database Name"
 ,rank() over(order by CurrentPermGB desc) as "Used GB Rank"
 ,CommentString as "Comment String"
