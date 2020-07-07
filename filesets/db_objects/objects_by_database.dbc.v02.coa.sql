@@ -140,3 +140,5 @@ from db_objects
 where DBName <> '**** Totals ****'
 qualify "Used GB Rank" <= 10
 ;
+
+drop table db_objects_dates;
