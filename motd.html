@@ -37,7 +37,34 @@
 		<td style="width: 50%;" id="pinky" rowspan="2">
 
 			<!-- version  updates -->
-			To update:  <code>&nbsp&nbsp pip install tdcsm --upgrade</code>
+			To update:  <code>&nbsp&nbsp pip install tdcsm --upgrade</code></br>
+
+			<h3><u>Version 0.3.9.6.8 (July 7, 2020)</u></h3>
+			<ul>
+				<li>New/missing Filesets now added to source_system.yaml automatically (active = False)
+				<li>If a required file is missing from the AppRoot (working directory), the process now looks in '0_override' folder first and will copy that version if present.  Only if not found in 0_override will it pull a new copy from the python install package.
+				<li>Added new text-base UI: "run_cmdline."  This was originally used for development/testing, but is useful enough to include as an optioinal UI.
+					<ul>
+					  <li>To use: <code>&nbsp&nbsp python run_cmdline.py</code>
+						<li>Optionally specify approot and secrets.yaml file:
+						</br><code>python run_cmdline.py  --approot 'c:\myCust'  --secrets '../!secrets.yaml'</code>
+					</ul>
+				<li>Bug fix: "KeyError: 'skip_dbs'" caused by new debugging functionality
+				<li>PPTx module now looks for special/replacement commands in block shapes, tables, and text blocks.  If more object types are needed, please let us know.
+			</ul></br>
+
+
+		<h3><u>Version 0.3.9.6.6 (June 30, 2020)</u></h3>
+		<ul>
+			<li>Added "skip_dbs" option back in, to help tweak GUI issues more quickly
+			<li>Various GUI usability enhancements
+			<li>Bug fix to avoid failure of upload step when any of the SQL returns Zero rows
+			</br>This fix will skip adding entry to the upload manifest file if SQL returns zero rows
+			<li>Handled missing files error in the pptx module for special commands inside picture, text and table placeholders
+			</br>Added ** at the end of the text (or special command) to indicate that the substituted value was not replaced because the file doesn’t exist
+		</ul></br>
+
+
 			<h3><u>Version 0.3.9.6.2 (June 23, 2020)</u></h3>
 			<ul>
 				<li>COA GUI 1.0 is live!   To start, simply open a terminal window / cmd window, and type or copy/paste:
@@ -56,9 +83,9 @@
 				<li>Fixed DBQL_Core spool-out issues
 				<li>Fixed dim_app.csv file encoding problem
 				<li>New Fileset: vantage_health_check (from APAC)
-			</ul>
+			</ul></br>
 
-				</br>
+
 			<h3><u>Version 0.3.9.5.0 (June 10, 2020)</u></h3>
 			<ul>
 				<li>Connection and Encryption settings are now set at a per-system basis within source_systems.yaml
@@ -70,9 +97,8 @@
 				<li>Application can run special commands relating to sql that does not return any values
 				<li>Fixes error caused by re-processing of pptx files
 				<li>Fixes out-of-bounds issue relating to pptx processing
-			</ul>
+			</ul></br>
 
-				</br>
 
 			<h3><u>Version 0.3.9.4.4 (June 2, 2020)</u></h3>
 			<ul>
