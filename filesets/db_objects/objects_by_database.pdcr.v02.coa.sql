@@ -39,17 +39,17 @@ create volatile table db_objects as
         then '** Entire Teradata System (minus '||
         cast(cast(SpoolPct*100 as decimal(4,1) format'99.9') as char(4)) ||'% spool from MaxPerm) **'
       else Max(d.CommentString) end as CommentString
-  ,cast(sum(MaxPerm)/1e9 as decimal(18,3))
+  ,cast(avg(MaxPerm)/1e9 as decimal(18,3))
     * case when d.DatabaseName is null then (1-SpoolPct) else 1.000 end as MaxPermGB
-  ,ZeroIfNull(cast(NullifZero(sum(CurrentPerm))/1e9 as decimal(18,3))) as CurrentPermGB
+  ,ZeroIfNull(cast(NullifZero(avg(CurrentPerm))/1e9 as decimal(18,3))) as CurrentPermGB
   ,ZeroIfNull(CurrentPermGB/NullIfZero(MaxPermGB)) as FilledPct
-  ,Sum(d.TableCount) as TableCount
-  ,Sum(d.ViewCount) as ViewCount
-  ,Sum(d.IndexCount) as IndexCount
-  ,Sum(d.MacroCount) as MacroCount
-  ,Sum(d."SP&TrigCount") as "SP&TrigCount"
-  ,Sum(d.UDObjectCount) as UDObjectCount
-  ,Sum(d.OtherCount) as OtherCount
+  ,avg(d.TableCount) as TableCount
+  ,avg(d.ViewCount) as ViewCount
+  ,avg(d.IndexCount) as IndexCount
+  ,avg(d.MacroCount) as MacroCount
+  ,avg(d."SP&TrigCount") as "SP&TrigCount"
+  ,avg(d.UDObjectCount) as UDObjectCount
+  ,avg(d.OtherCount) as OtherCount
   ,rank() over (partition by dt.WeekID order by dt.WeekID, CurrentPermGB desc) as CDSRank
   FROM
   (
