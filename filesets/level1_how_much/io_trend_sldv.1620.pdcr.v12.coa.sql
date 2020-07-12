@@ -30,7 +30,7 @@ I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilizatio
 •
 Execution Instructions
 •	Copy/Paste below query into favorite query tool & execute.
-•	Copy/Paste result set from query tool into Excel and save as .xls or .xlsx
+•	Copy/Paste result set from query tool into .csv and save
 o	Don’t export results (impacts formatting).
 o	Don’t save results to spreadsheeting (impacts formatting).
 •	Use visualization tool to import results for analysis (coming soon).
