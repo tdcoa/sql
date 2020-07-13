@@ -114,6 +114,7 @@ Select
 ,cast(cast(zeroifnull("SP&TrigCount") as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "SP&Trig Count"
 ,cast(cast(zeroifnull(UDObjectCount ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "UDObject Count"
 ,cast(cast(zeroifnull(OtherCount    ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "Other Count"
+,rank() over(order by Week_ID desc) as "Used GB Rank"
 from db_objects
 where DBName = '**** Totals ****'
 ;
@@ -123,7 +124,7 @@ Select
 '{siteid}' as Site_ID
 ,(select Week_ID from db_objects_dates) as Week_ID
 ,DBName as "Database Name"
-,rank() over(order by CurrentPermGB desc) as "Used GB Rank"
+,rank() over(partition by Week_ID order by CurrentPermGB desc) as "Used GB Rank"
 ,CommentString as "Comment String"
 ,cast(cast(zeroifnull(MaxPermGB     ) as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Allocated GB"
 ,cast(cast(zeroifnull(CurrentPermGB ) as decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Used GB"
