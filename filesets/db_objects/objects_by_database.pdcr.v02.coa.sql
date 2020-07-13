@@ -14,7 +14,7 @@ create volatile table db_objects_dates as
   select Calendar_Date as LogDate
   ,(cast(YearNumber_of_Calendar(calendar_date,'ISO') as int)*1000) +
    (cast(MonthNumber_of_Year   (calendar_date,'ISO') as int)*10) +
-   (cast(WeekNumber_of_Month   (calendar_date,'ISO') as int)) as WeekID
+   (cast(WeekNumber_of_Month   (calendar_date,'ISO') as int)) as Week_ID
   from sys_calendar.calendar
   where Week_of_Calendar in
       (Select week_of_calendar from sys_calendar.calendar
@@ -23,14 +23,14 @@ create volatile table db_objects_dates as
 ) with data no primary index on commit preserve rows
 ;
 
-collect stats on db_objects_dates column(WeekID)
+collect stats on db_objects_dates column(Week_ID)
 ;
 
 
 create volatile table db_objects as
 (
   SELECT
-   dt.WeekID
+   dt.Week_ID
   ,case when d.DatabaseName is null
       then '**** Totals ****'
       else d.DatabaseName end as DBName
@@ -50,7 +50,7 @@ create volatile table db_objects as
   ,avg(d."SP&TrigCount") as "SP&TrigCount"
   ,avg(d.UDObjectCount) as UDObjectCount
   ,avg(d.OtherCount) as OtherCount
-  ,rank() over (partition by dt.WeekID order by dt.WeekID, CurrentPermGB desc) as CDSRank
+  ,rank() over (partition by dt.Week_ID order by dt.Week_ID, CurrentPermGB desc) as CDSRank
   FROM
   (
       Select DatabaseName
@@ -85,7 +85,7 @@ create volatile table db_objects as
   JOIN db_objects_dates as dt
     on s.LogDate = dt.LogDate
    and d.LogDate = dt.LogDate
-  GROUP BY dt.WeekID, rollup(d.Databasename)
+  GROUP BY dt.Week_ID, rollup(d.Databasename)
 
 ) with data no primary index on commit preserve rows
 ;
@@ -96,7 +96,7 @@ create volatile table db_objects as
 /*{{call:{db_coa}.sp_dat_DB_Objects('{fileset_version}')}}*/
 Select
  '{siteid}' as Site_ID
-,WeekID
+,Week_ID
 ,DBName
 ,rank() over(order by CurrentPermGB desc)-1 as CurrPermGB_Rank
 ,CommentString
@@ -117,7 +117,7 @@ from db_objects
 /*{{save:db_objects_total.csv}}*/
 Select
  '{siteid}' as Site_ID
-,WeekID
+,Week_ID
 ,DBName as "Database Name"
 ,SpoolPct as "Spool%"
 ,CommentString as "Comment String"
@@ -139,7 +139,7 @@ where DBName = '**** Totals ****'
 /*{{save:db_objects_top10.csv}}*/
 Select
 '{siteid}' as Site_ID
-,WeekID
+,Week_ID
 ,DBName as "Database Name"
 ,rank() over(order by CurrentPermGB desc) as "Used GB Rank"
 ,CommentString as "Comment String"
@@ -157,7 +157,7 @@ Select
 from db_objects
 where DBName <> '**** Totals ****'
 qualify "Used GB Rank" <= 10
-    and max(WeekID) over()  = WeekID
+    and max(Week_ID) over()  = Week_ID
 ;
 
 

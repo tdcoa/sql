@@ -12,13 +12,13 @@ create volatile table db_objects_dates as
   select Calendar_Date as LogDate
   ,(cast(YearNumber_of_Calendar(calendar_date,'ISO') as int)*1000) +
    (cast(MonthNumber_of_Year   (calendar_date,'ISO') as int)*10) +
-   (cast(WeekNumber_of_Month   (calendar_date,'ISO') as int)) as WeekID
+   (cast(WeekNumber_of_Month   (calendar_date,'ISO') as int)) as Week_ID
   from sys_calendar.calendar
   where calendar_date = DATE  /*  DBC is always today */
 ) with data no primary index on commit preserve rows
 ;
 
-collect stats on db_objects_dates column(WeekID)
+collect stats on db_objects_dates column(Week_ID)
 ;
 
 create volatile table db_objects as
@@ -77,7 +77,7 @@ create volatile table db_objects as
 /*{{call:{db_coa}.sp_dat_DB_Objects('{fileset_version}')}}*/
 Select
  '{siteid}' as Site_ID
-,(select WeekID from db_objects_dates) as WeekID
+,(select Week_ID from db_objects_dates) as Week_ID
 ,DBName
 ,rank() over(order by CurrentPermGB desc)-1 as CurrPermGB_Rank
 ,CommentString
@@ -98,7 +98,7 @@ from db_objects
 /*{{save:db_objects_total.csv}}*/
 Select
  '{siteid}' as Site_ID
-,(select WeekID from db_objects_dates) as WeekID
+,(select Week_ID from db_objects_dates) as Week_ID
 ,DBName as "Database Name"
 ,SpoolPct as "Spool%"
 ,CommentString as "Comment String"
@@ -121,7 +121,7 @@ where DBName = '**** Totals ****'
 /*{{save:db_objects_top10.csv}}*/
 Select
 '{siteid}' as Site_ID
-,(select WeekID from db_objects_dates) as WeekID
+,(select Week_ID from db_objects_dates) as Week_ID
 ,DBName as "Database Name"
 ,rank() over(order by CurrentPermGB desc) as "Used GB Rank"
 ,CommentString as "Comment String"
