@@ -151,7 +151,7 @@ customer_data_space:
       spoolpct:     "0.20"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
-      day_of_week:  "1"  # for weekly CDS, use first day of week 
+      day_of_week:  "1"  # for weekly CDS, use first day of week
       gitfile:      "db_objects/objects_by_database.pdcr.v02.coa.sql"
     upload_template:
       gitfile:      "db_objects/upload-manifest.template.json"
@@ -411,3 +411,15 @@ test:
   files:
     user_counts:
       gitfile:  "dims/_dim_date.coa.sql"
+
+
+internal_qbr:
+  active:           "True"
+  fileset_version:  "1.0"
+  files:
+    qbr01:
+      gitfile:    "internal_qbr/csm_qbr_ams_west_csm.coa.sql"
+      startdate:  "Current_Date - 43" # 6 weeks
+      enddate:    "Current_Date - 1"
+    align01:
+      gitfile:    "internal_qbr/dim_alignment_ams_west_csm.csv"
