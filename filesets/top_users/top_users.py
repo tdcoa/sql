@@ -124,8 +124,8 @@ for user_category in user_category_list:
         by=[human_readable_names(user_category)])
 
     user_bucket_unique_list = list(df_selected_cols_complete_data[human_readable_names(user_category)].unique())
-    markers_unique_list = ["D", "X", "H", "s", "P", "*", "v", "^", "o", "d", "h", "$f$", "<", ">", "$♣$", "$b$", "$c$",
-                           "$d$", "$e$", "$g$", "$h$", "$i$", "$j$", "$k$", "$l$", "$m$", "$n$", "$o$", "$p$", "$q$",
+    markers_unique_list = ["D", "X", "H", "s", "P", "*", "v", "^", "o", "d", "h", "$f$", "<", ">", "$a$", "$b$", "$c$",
+                           "$d$", "$e$", "$f$", "$g$", "$h$", "$i$", "$j$", "$k$", "$l$", "$m$", "$n$", "$o$", "$p$", "$q$",
                            "$r$", "$s$", "$t$", "$u$", "$v$", "$w$", "$x$", "$y$", "$z$"]
 
     markers_new = {}
