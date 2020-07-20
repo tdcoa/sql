@@ -25,7 +25,7 @@ demo:
 
 problems:
   active:     "True"
-  appears_in_gui: "False"
+  show_in_gui: "False"
   fileset_version: "0"
   startdate:  "Current_Date - 5"
   enddate:    "Current_Date - 2"
@@ -407,6 +407,7 @@ dbql_core:
 
 test:
   active:           "True"
+  show_in_gui: "False"
   fileset_version:  "1.0"
   files:
     user_counts:
@@ -415,6 +416,7 @@ test:
 
 internal_qbr:
   active:           "True"
+  show_in_gui: "False"
   fileset_version:  "1.0"
   files:
     qbr01:
