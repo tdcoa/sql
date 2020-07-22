@@ -42,10 +42,8 @@ ON COMMIT PRESERVE ROWS;
 INSERT INTO ca_user_xref  Select * from systemfe.ca_user_xref
 
  === OR ===  if you prefer the dim_user methodology:
+*/
 
 INSERT INTO ca_user_xref
-Select UserNaame, User_Department, User_SubDepartment, User_Region
-From dim_user
-
- === Don't forget to add semi-colons after whatever SQL you use ===
-*/
+Select UserName, User_Department, User_SubDepartment, User_Region
+From dim_user;
