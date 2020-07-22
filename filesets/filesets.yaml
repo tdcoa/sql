@@ -23,6 +23,33 @@ demo:
       gitfile:  "demo/upload-manifest.template.json"
 
 
+dbql_core:
+  active:           "True"
+  fileset_version:  "6.0"
+  files:
+    <<: *dim_user
+    <<: *dim_statement
+    <<: *dim_app
+    dbql_core_pdcr16:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+      resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
+    dbql_core_dbc16:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "dbc.DBQLogTbl"
+      resusagespma: "dbc.ResUsageSPMA"
+    upload_manifest_template:
+      gitfile:      "dbql_core/upload-manifest.template.json"
+
+
 problems:
   active:     "True"
   show_in_gui: "False"
@@ -242,7 +269,6 @@ level1_how_much:
       gitfile:    "level1_how_much/upload-manifest.template.json"
 
 
-
 success_plan:
   active:           "True"
   fileset_version:  "1.0"
@@ -382,6 +408,9 @@ biz_usage_decoded:
   show_id_gui: "True"
   files:
     <<: *dim_user
+    setup_xref_tables:
+      gitfile:      "biz_usage_decoded/_setup_xref_tables.coa.sql"
+      notes:        "this is named to run between _dim_user and rest of BUD"
     BusGrpDataDomainCPUConsumption:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
@@ -401,7 +430,7 @@ biz_usage_decoded:
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     SpaceByDomainSubject:
-      collection:   ["pdcr"]
+      collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "biz_usage_decoded/SpaceByDomainSubject.coa.sql"
     TopCPUUsers:
@@ -412,35 +441,7 @@ biz_usage_decoded:
       enddate:      "Current_Date - 1"
     links:
       gitfile:      "biz_usage_decoded/links.txt"
-    setup_xref_tables:
-      gitfile:      "biz_usage_decoded/_setup_xref_tables.coa.sql"
 
-
-dbql_core:
-  active:           "True"
-  fileset_version:  "6.0"
-  files:
-    <<: *dim_user
-    <<: *dim_statement
-    <<: *dim_app
-    dbql_core_pdcr16:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-      resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
-    dbql_core_dbc16:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
-      resusagespma: "dbc.ResUsageSPMA"
-    upload_manifest_template:
-      gitfile:      "dbql_core/upload-manifest.template.json"
 
 
 test:
@@ -450,8 +451,6 @@ test:
   files:
     user_counts:
       gitfile:  "dims/_dim_date.coa.sql"
-
-
 
 
 internal_qbr:

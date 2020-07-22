@@ -22,6 +22,7 @@ ON COMMIT PRESERVE ROWS;
    also, add a semi-colon to the end
 
 INSERT INTO ca_table_xref  Select * from systemfe.ca_table_xref
+
 */
 
 
@@ -38,5 +39,13 @@ ON COMMIT PRESERVE ROWS;
 /* uncomment this out if the logic works, or, add your own custom here
    also, add a semi-colon to the end
 
-INSERT INTO ca_user_xref  Select * from systemfe.ca_user_xref 
+INSERT INTO ca_user_xref  Select * from systemfe.ca_user_xref
+
+ === OR ===  if you prefer the dim_user methodology:
+
+INSERT INTO ca_user_xref
+Select UserNaame, User_Department, User_SubDepartment, User_Region
+From dim_user
+
+ === Don't forget to add semi-colons after whatever SQL you use ===
 */
