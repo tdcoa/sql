@@ -117,7 +117,7 @@ dim_statement:
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "dbc.DBQLogTbl"
-      
+
 
 dbql_core:
   active:           "True"
@@ -411,29 +411,29 @@ biz_usage_decoded:
     BusGrpDataDomainCPUConsumption:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "biz_usage_decoded/BusGrpDataDomainCPUConsumption.coa.sql"
+      gitfile:      "biz_usage_decoded/busGrpDataDomainCPUConsumption.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     DepartmentCPUConsumption:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "biz_usage_decoded/DepartmentCPUConsumption.coa.sql"
+      gitfile:      "biz_usage_decoded/departmentCPUConsumption.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     DeptDataDomainCPUConsumption:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "biz_usage_decoded/DeptDataDomainCPUConsumption.coa.sql"
+      gitfile:      "biz_usage_decoded/deptDataDomainCPUConsumption.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     SpaceByDomainSubject:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "biz_usage_decoded/SpaceByDomainSubject.coa.sql"
+      gitfile:      "biz_usage_decoded/spaceByDomainSubject.coa.sql"
     TopCPUUsers:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "biz_usage_decoded/TopCPUUsers.coa.sql"
+      gitfile:      "biz_usage_decoded/topCPUUsers.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     links:
