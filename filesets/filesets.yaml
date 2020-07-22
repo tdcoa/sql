@@ -377,7 +377,7 @@ vantage_health_check:
       dbsversion:   ["16.20", "16.10", "16.00"]
 
 
-business_usage_decoded:
+biz_usage_decoded:
   active: "True"
   show_id_gui: "True"
   files:
@@ -385,33 +385,35 @@ business_usage_decoded:
     BusGrpDataDomainCPUConsumption:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "business_usage_decoded/BusGrpDataDomainCPUConsumption.coa.sql"
+      gitfile:      "biz_usage_decoded/BusGrpDataDomainCPUConsumption.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     DepartmentCPUConsumption:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "business_usage_decoded/DepartmentCPUConsumption.coa.sql"
+      gitfile:      "biz_usage_decoded/DepartmentCPUConsumption.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     DeptDataDomainCPUConsumption:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "business_usage_decoded/DeptDataDomainCPUConsumption.coa.sql"
+      gitfile:      "biz_usage_decoded/DeptDataDomainCPUConsumption.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     SpaceByDomainSubject:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "business_usage_decoded/SpaceByDomainSubject.coa.sql"
+      gitfile:      "biz_usage_decoded/SpaceByDomainSubject.coa.sql"
     TopCPUUsers:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "business_usage_decoded/TopCPUUsers.coa.sql"
+      gitfile:      "biz_usage_decoded/TopCPUUsers.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     links:
-      gitfile:      "business_usage_decoded/links.txt"
+      gitfile:      "biz_usage_decoded/links.txt"
+    setup_xref_tables:
+      gitfile:      "biz_usage_decoded/_setup_xref_tables.coa.sql"
 
 
 dbql_core:
