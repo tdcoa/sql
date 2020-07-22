@@ -149,7 +149,7 @@ Select * from Top_Users_Rank
 select cast('Query_Cnt' as varchar(128)) as Category
 ,cast(max(case when Query_Cnt_Rank=1 then UserName || ' / '
      || User_Bucket || ' ('
-     || trim(cast(Query_Cnt as INT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
+     || trim(cast(Query_Cnt as BIGINT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
      else '' end) as varchar(128)) as "Rank #1 User"
 from Top_Users_Rank  where WeekId is null and MonthID is null
 UNION ALL
@@ -159,27 +159,27 @@ select cast('Query_Complexity' as varchar(128)) as Metric
 from Top_Users_Rank  where WeekId is null and MonthID is null
 UNION ALL
 select cast('CPU_Sec' as varchar(128)) as Metric
-,max(case when CPU_Sec_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(CPU_Sec as INT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
+,max(case when CPU_Sec_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(CPU_Sec as BIGINT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
           else '' end) as CPU_Sec
 from Top_Users_Rank  where WeekId is null and MonthID is null
 UNION ALL
 select cast('IOGB' as varchar(128)) as Metric
-,max(case when IOGB_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(IOGB as INT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
+,max(case when IOGB_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(IOGB as BIGINT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
           else '' end) as IOGB
 from Top_Users_Rank  where WeekId is null and MonthID is null
 UNION ALL
 select cast('Runtime_Sec' as varchar(128)) as Metric
-,max(case when Runtime_Sec_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(Runtime_Sec as INT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
+,max(case when Runtime_Sec_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(Runtime_Sec as BIGINT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
           else '' end) as Runtime_Sec
 from Top_Users_Rank  where WeekId is null and MonthID is null
 UNION ALL
 select cast('Error_Cnt' as varchar(128)) as Metric
-,max(case when Error_Cnt_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(Error_Cnt as INT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
+,max(case when Error_Cnt_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(Error_Cnt as BIGINT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
           else '' end) as Error_Cnt
 from Top_Users_Rank  where WeekId is null and MonthID is null
 UNION ALL
 select cast('Total_Score' as varchar(128)) as Metric
-,max(case when Total_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(Combined_Score as INT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
+,max(case when Total_Rank=1 then UserName || ' / ' || User_Bucket || ' (' || trim(cast(Combined_Score as BIGINT format'ZZZ,ZZZ,ZZZ,ZZZ')) || ')'
           else '' end) as Total_Score
 from Top_Users_Rank  where WeekId is null and MonthID is null
 ;
