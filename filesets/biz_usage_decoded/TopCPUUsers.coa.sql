@@ -14,7 +14,7 @@ ROW_NUMBER() OVER(ORDER BY CPUTime DESC)
 ,UPPER(C.Department)
 ,UPPER(C.SubDepartment) as BusinessGroup
 FROM PDCRINFO.DBQLogTbl D
-    INNER JOIN systemfe.ca_user_xref C
+    INNER JOIN ca_user_xref C
     ON d.username = c.username
 WHERE D.Logdate BETWEEN {startdate} AND {enddate}
 GROUP BY 3,4,5

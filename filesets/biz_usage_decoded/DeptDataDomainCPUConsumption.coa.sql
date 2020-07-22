@@ -31,7 +31,7 @@ FROM(
         ,(AMPCPUTime + ParserCPUTime) as SUMCPUTime
         ,Department
         ,SubDepartment
-        FROM PDCRINFO.DbqlogTbl DBQL INNER JOIN systemfe.ca_user_xref U
+        FROM PDCRINFO.DbqlogTbl DBQL INNER JOIN ca_user_xref U
             ON DBQL.username = U.username
         WHERE Logdate BETWEEN {startdate} AND {enddate}) as D
 
@@ -44,7 +44,7 @@ FROM(
         TableName,
         DataDomain,
         SubjectArea
-        FROM PDCRINFO.DBQLObjTbl INNER JOIN systemfe.ca_table_xref
+        FROM PDCRINFO.DBQLObjTbl INNER JOIN ca_table_xref
                 ON ObjectDatabaseName = DatabaseName
                 AND ObjectTableName = Tablename
         WHERE Logdate BETWEEN {startdate} AND {enddate}
@@ -65,7 +65,7 @@ FROM(
                 TableName,
                 DataDomain,
                 SubjectArea
-                FROM PDCRINFO.DBQLObjTbl INNER JOIN systemfe.ca_table_xref
+                FROM PDCRINFO.DBQLObjTbl INNER JOIN ca_table_xref
                         ON ObjectDatabaseName = DatabaseName
                         AND ObjectTableName = Tablename
                 WHERE Logdate BETWEEN {startdate} AND {enddate}
