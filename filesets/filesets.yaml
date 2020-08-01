@@ -127,7 +127,30 @@ autotune_check:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "autotune/autotune_check.coa.sql"
- 
+
+
+compete_snowflake:
+  active:           "True"
+  fileset_version:  "1.0"
+  files: &compete_snowflake
+    dim_dbobject:
+      gitfile:      "dims/dim_dbobject.csv"
+    dim_datatype:
+      gitfile:      "dims/dim_datatype.csv"
+    dim_tablekind:
+      gitfile:      "dims/dim_tablekind.csv"
+    compete01_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      iopernode_90pct: 0
+      gitfile:      "compete_snowflake/compete_snowflake.pdcr.coa.sql"
+    compete01_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      iopernode_90pct: 0
+      gitfile:      "compete_snowflake/compete_snowflake.dbc.coa.sql"
+
+
 
 dbql_core:
   active:           "True"
