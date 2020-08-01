@@ -155,9 +155,6 @@ compete_snowflake:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
 
-
-
-
 dbql_core:
   active:           "True"
   fileset_version:  "6.0"
