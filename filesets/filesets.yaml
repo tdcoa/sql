@@ -139,6 +139,8 @@ compete_snowflake:
       gitfile:      "dims/dim_datatype.csv"
     dim_tablekind:
       gitfile:      "dims/dim_tablekind.csv"
+    dim_tablekind:
+      gitfile:      "dims/_dim_column_type.coa.sql"
     compete01_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
@@ -149,6 +151,10 @@ compete_snowflake:
       dbsversion:   ["16.20", "16.10", "16.00"]
       iopernode_90pct: 0
       gitfile:      "compete_snowflake/compete_snowflake.dbc.coa.sql"
+    pptx_migration_blockers:
+      gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
+
+
 
 
 
