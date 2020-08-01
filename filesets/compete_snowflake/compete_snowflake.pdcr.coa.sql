@@ -2,6 +2,29 @@
   parameters:
   - iopernode_90pct = 1000  (from archie)
 */
+
+/* LOAD DIMENSIONS INTO VOLATILE TABLES:
+*/;
+/*{{temp:dim_dbobject.csv}}*/;
+/*{{temp:dim_datatype.csv}}*/;
+/*{{temp:dim_tablekind.csv}}*/;
+/*{{temp:dim_tdinternal_databases.csv}}*/;
+
+/*{{save:dat_dbobject_usage_per_tablekind.csv}}*/
+SELECT
+    'Object Type Definitions' AS ReportName
+    ,Table_Bucket
+    ,TableKind_Desc
+    ,TableKind_Desc as Object_Type
+    ,COUNT(*) AS ObjectCount
+FROM DBC.Tables as  t
+JOIN "dim_tablekind.csv" as tk
+  on t.TableKind = tk.TableKind
+WHERE DatabaseName NOT IN
+  (select dbname from "dim_tdinternal_databases.csv")
+GROUP BY 1,2;
+
+
 /*{{save:dat_dbobject_table_multiset.csv}}*/
 select CASE CheckOpt WHEN  'Y' THEN 'MULTISET Tables'
 WHEN 'N' THEN 'SET Tables'
@@ -11,513 +34,6 @@ from DBC.Tables
 GROUP BY 1;
 
 
- CREATE VOLATILE TABLE FeatureObjectType AS
-    (
-        SELECT
-            CAST('AgS' AS VARCHAR(10)) AS ObjectType
-            ,CAST('User-Defined Aggregate STAT Function' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Aut' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Security Authorization' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('GLP' AS VARCHAR(10)) AS ObjectType
-            ,CAST('GLOP Set' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Jrl' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Journal' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Sta' AS VARCHAR(10)) AS ObjectType
-            ,CAST('User-Defined STAT Function' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('UDM' AS VARCHAR(10)) AS ObjectType
-            ,CAST('User-Defined Method (UDM)' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('UDT' AS VARCHAR(10)) AS ObjectType
-            ,CAST('User-Defined Type (UDT)' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Vol' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Volatile Table' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Col' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Column' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('DB ' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Database' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Viw' AS VARCHAR(10)) AS ObjectType
-            ,CAST('View' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Tab' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Table' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Mac' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Macro' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Idx' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Index' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Tmp' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Global Temporary Table' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('SP ' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Stored Procedure (SP)' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('UDF' AS VARCHAR(10)) AS ObjectType
-            ,CAST('User-Defined Function (UDF)' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('TbF' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Table Function' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('JIx' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Join Index (JI)' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Agg' AS VARCHAR(10)) AS ObjectType
-            ,CAST('User-Defined Aggregate Function' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('SUF' AS VARCHAR(10)) AS ObjectType
-            ,CAST('SQL User-Defined Function (SQL UDF)' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('XSP' AS VARCHAR(10)) AS ObjectType
-            ,CAST('External Stored Procedure (XSP)' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('TbO' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Table Operator (TO)' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('TbC' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Contract Function' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('Trg' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Trigger' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-        UNION
-        SELECT
-            CAST('HIx' AS VARCHAR(10)) AS ObjectType
-            ,CAST('Hash Index' AS VARCHAR(50)) AS ObjectTypeDesc
-        FROM
-            DBC.DBCInfo
-    )
-    WITH DATA
-    PRIMARY INDEX (ObjectType)
-    ON COMMIT PRESERVE ROWS;
-COLLECT STATISTICS ON FeatureObjectType INDEX (ObjectType);
-
-/*{{save:dim_dbobject_type.csv}}*/
-select *  from  FeatureObjectType;
-
-
-
-CREATE VOLATILE TABLE FeatureDataType AS
-    (
-        SELECT
-            '++' AS DataType
-            ,CAST('TD_ANYTYPE' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'A1' AS DataType
-            ,CAST('ARRAY (one dimensional)' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'AN' AS DataType
-            ,CAST('ARRAY (multidimensional)' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'AT' AS DataType
-            ,CAST('TIME' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'BF' AS DataType
-            ,CAST('BYTE' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'BN' AS DataType
-            ,CAST('BSON' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'BO' AS DataType
-            ,CAST('BINARY LARGE OBJECT' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'BV' AS DataType
-            ,CAST('BYTE VARYING' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'CF' AS DataType
-            ,CAST('CHARACTER (fixed)' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'CO' AS DataType
-            ,CAST('CHARACTER LARGE OBJECT' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'CV' AS DataType
-            ,CAST('CHARACTER (varying)' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'D' AS DataType
-            ,CAST('DECIMAL' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'DA' AS DataType
-            ,CAST('DATE' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'DH' AS DataType
-            ,CAST('INTERVAL DAY TO HOUR' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'DM' AS DataType
-            ,CAST('INTERVAL DAY TO MINUTE' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'DS' AS DataType
-            ,CAST('INTERVAL DAY TO SECOND' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'DY' AS DataType
-            ,CAST('INTERVAL DAY' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'F' AS DataType
-            ,CAST('FLOAT' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'HM' AS DataType
-            ,CAST('INTERVAL HOUR TO MINUTE' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'HR' AS DataType
-            ,CAST('INTERVAL HOUR' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'HS' AS DataType
-            ,CAST('INTERVAL HOUR TO SECOND' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'I' AS DataType
-            ,CAST('INTEGER' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'I1' AS DataType
-            ,CAST('BYTEINT' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'I2' AS DataType
-            ,CAST('SMALLINT' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'I8' AS DataType
-            ,CAST('BIGINT' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'JN' AS DataType
-            ,CAST('JSON' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'MI' AS DataType
-            ,CAST('INTERVAL MINUTE' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'MO' AS DataType
-            ,CAST('INTERVAL MONTH' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'MS' AS DataType
-            ,CAST('INTERVAL MINUTE TO SECOND' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'N' AS DataType
-            ,CAST('NUMBER' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'PD' AS DataType
-            ,CAST('PERIOD(DATE)' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'PM' AS DataType
-            ,CAST('PERIOD(TIMESTAMP(n) WITH TIME ZONE)' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'PS' AS DataType
-            ,CAST('PERIOD(TIMESTAMP(n))' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'PT' AS DataType
-            ,CAST('PERIOD(TIME(n))' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'PZ' AS DataType
-            ,CAST('PERIOD(TIME(n) WITH TIME ZONE)' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'SC' AS DataType
-            ,CAST('INTERVAL SECOND' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'SZ' AS DataType
-            ,CAST('TIMESTAMP WITH TIME ZONE' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'TS' AS DataType
-            ,CAST('TIMESTAMP' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'TZ' AS DataType
-            ,CAST('TIME WITH TIME ZONE' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'UN' AS DataType
-            ,CAST('UBJSON' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'UT' AS DataType
-            ,CAST('USER-DEFINED TYPE (all types)' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'XM' AS DataType
-            ,CAST('XML' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'YM' AS DataType
-            ,CAST('INTERVAL YEAR TO MONTH' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-        UNION
-        SELECT
-            'YR' AS DataType
-            ,CAST('INTERVAL YEAR' AS VARCHAR(50)) AS DataTypeDesc
-        FROM
-            DBC.DBCINFO
-    )
-    WITH DATA
-    UNIQUE PRIMARY INDEX (DataType)
-    ON COMMIT PRESERVE ROWS;
-COLLECT STATISTICS ON FeatureDataType INDEX (DataType);
-
-/*{{save:dim_datatype.csv}}*/
-select * from FeatureDataType;
-
-
-/*{{save:dat_dbobject_usage_per_tablekind.csv}}*/
-SELECT
-    'Object Type Definitions' AS ReportName
-    ,
-    CASE TableKind
-        WHEN 'A'
-            THEN 'Aggregate function'
-        WHEN 'B'
-            THEN 'Combined aggregate and ordered analytical function'
-        WHEN 'C'
-            THEN 'Table operator parser contract function'
-        WHEN 'D'
-            THEN 'JAR'
-        WHEN 'E'
-            THEN 'External stored procedure'
-        WHEN 'F'
-            THEN 'Standard function'
-        WHEN 'G'
-            THEN 'Trigger'
-        WHEN 'H'
-            THEN 'Instance or constructor method'
-        WHEN 'I'
-            THEN 'Join index'
-        WHEN 'J'
-            THEN 'Journal'
-        WHEN 'K'
-            THEN 'Foreign server object. Note: K is supported on the Teradata-to-Hadoop connector only.'
-        WHEN 'L'
-            THEN 'User-defined table operator'
-        WHEN 'M'
-            THEN 'Macro'
-        WHEN 'N'
-            THEN 'Hash index'
-        WHEN 'O'
-            THEN 'Table with no primary index and no partitioning'
-        WHEN 'P'
-            THEN 'Stored procedure'
-        WHEN 'Q'
-            THEN 'Queue table'
-        WHEN 'R'
-            THEN 'Table function'
-        WHEN 'S'
-            THEN 'Ordered analytical function'
-        WHEN 'T'
-            THEN 'Table with a primary index or primary AMP index, partitioning, or both. Or a partitioned table with NoPI'
-        WHEN 'U'
-            THEN 'Use r-defined type'
-        WHEN 'V'
-            THEN 'View'
-        WHEN 'X'
-            THEN 'Authorization'
-        WHEN 'Y'
-            THEN 'GLOP set'
-        WHEN 'Z'
-            THEN 'UIF'
-    END AS Object_Type
-    ,COUNT(*) AS ObjectCount
-FROM
-    DBC.Tables
-WHERE
-    DatabaseName NOT IN ('All', 'ARCUSERS', 'console', 'Crashdumps', 'DBC', 'DBCMANAGER', 'dbcmngr', 'Default', 'External_AP', 'LockLogShredder', 'PUBLIC', 'SECADMIN', 'SPOOL_RESERVE', 'SQLJ', 'SysAdmin', 'SYSBAR', 'SYSDBA', 'SYSJDBC', 'SYSLIB', 'SYSSPATIAL', 'SystemFe', 'SYSUDTLIB', 'SYSUIF', 'Sys_Calendar', 'TDPUSER', 'TDQCD', 'TDStats', 'tdwm', 'TD_COD', 'TD_RECONFIG', 'TD_SERVER_DB', 'TD_SYSFNLIB', 'TD_SYSGPL', 'TD_SYSXML', 'USERSPACE', 'viewpoint')
-GROUP BY 1,2;
-
-
 /*{{save:dat_dbobject_usage_per_type.csv}}*/
 SELECT
     'Object Types Used and Frequency' AS ReportName
@@ -525,7 +41,7 @@ SELECT
     ,ObjectTypeDesc
     ,ZEROIFNULL(Frequency_of_Use) AS Frequency_of_Use
 FROM
-    FeatureObjectType FT
+    "dim_dbobject.csv" FT
     LEFT OUTER JOIN
     (
         SELECT
@@ -556,7 +72,7 @@ SELECT
 FROM
     PDCRINFO.DBQLObjTbl OT
     LEFT JOIN
-    FeatureObjectType FT
+    "dim_dbobject.csv" FT
         ON OT.ObjectType = FT.ObjectType
     INNER JOIN
     PDCRINFO.DBQLogTbl QryLog
@@ -755,7 +271,7 @@ SELECT
     ,DataTypeDesc
     ,ZEROIFNULL(DataTypeCount) AS DataTypeCount
 FROM
-    FeatureDataType DT
+    "dim_datatype.csv" DT
     LEFT JOIN
     (
         SELECT
@@ -795,7 +311,7 @@ FROM
         ON Tbls.DatabaseName = Cols.DatabaseName
             AND Tbls.TableName = Cols.TableName
     LEFT JOIN
-    FeatureDataType DT
+    "dim_datatype.csv" DT
         ON DT.DataType = Cols.ColumnType
     LEFT JOIN
     DBC.ColumnStatsV ColStats
