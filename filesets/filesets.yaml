@@ -123,10 +123,16 @@ autotune_check:
   active:           "True"
   fileset_version:  "1.0"
   files: &autotune_check
-    autotune:
+    autotune_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "autotune/autotune_check.coa.sql"
+    autotune_pptx:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "autotune/autotune_check.pptx"
+
+
 
 
 compete_snowflake:
