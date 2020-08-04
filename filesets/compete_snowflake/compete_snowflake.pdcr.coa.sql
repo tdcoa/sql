@@ -14,7 +14,7 @@
 SELECT
     'Object Type Definitions' AS ReportName
     ,Table_Bucket
-    ,TableKind_Desc
+--jcm  ,TableKind_Desc                     
     ,TableKind_Desc as Object_Type
     ,COUNT(*) AS ObjectCount
 FROM DBC.Tables as  t
@@ -22,7 +22,8 @@ JOIN "dim_tablekind.csv" as tk
   on t.TableKind = tk.TableKind
 WHERE DatabaseName NOT IN
   (select dbname from "dim_tdinternal_databases.csv")
-GROUP BY 1,2;
+--jcm
+GROUP BY 2,3;                            
 
 
 /*{{save:dat_dbobject_table_multiset.csv}}*/
@@ -31,6 +32,8 @@ WHEN 'N' THEN 'SET Tables'
 ELSE 'Others' END AS Table_Type,
 Count(*) as Total_Count
 from DBC.Tables
+--jcm
+WHERE DatabaseName NOT IN (select dbname from "dim_tdinternal_databases.csv")  
 GROUP BY 1;
 
 
@@ -50,8 +53,10 @@ FROM
         FROM
             PDCRINFO.DBQLObjTbl OT
         WHERE
-            LogDate BETWEEN DATE -90 AND DATE -1
-            AND OT.ObjectDatabaseName NOT IN ('All', 'ARCUSERS', 'console', 'Crashdumps', 'DBC', 'DBCMANAGER', 'dbcmngr', 'Default', 'External_AP', 'LockLogShredder', 'PUBLIC', 'SECADMIN', 'SPOOL_RESERVE', 'SQLJ', 'SysAdmin', 'SYSBAR', 'SYSDBA', 'SYSJDBC', 'SYSLIB', 'SYSSPATIAL', 'SystemFe', 'SYSUDTLIB', 'SYSUIF', 'Sys_Calendar', 'TDPUSER', 'TDQCD', 'TDStats', 'tdwm', 'TD_COD', 'TD_RECONFIG', 'TD_SERVER_DB', 'TD_SYSFNLIB', 'TD_SYSGPL', 'TD_SYSXML', 'USERSPACE', 'viewpoint', 'PDCRINFO', 'PDCRADM')
+            --jcm
+            LogDate BETWEEN {startdate} AND {enddate}  
+--          AND OT.ObjectDatabaseName NOT IN ('All', 'ARCUSERS', 'console', 'Crashdumps', 'DBC', 'DBCMANAGER', 'dbcmngr', 'Default', 'External_AP', 'LockLogShredder', 'PUBLIC', 'SECADMIN', 'SPOOL_RESERVE', 'SQLJ', 'SysAdmin', 'SYSBAR', 'SYSDBA', 'SYSJDBC', 'SYSLIB', 'SYSSPATIAL', 'SystemFe', 'SYSUDTLIB', 'SYSUIF', 'Sys_Calendar', 'TDPUSER', 'TDQCD', 'TDStats', 'tdwm', 'TD_COD', 'TD_RECONFIG', 'TD_SERVER_DB', 'TD_SYSFNLIB', 'TD_SYSGPL', 'TD_SYSXML', 'USERSPACE', 'viewpoint', 'PDCRINFO', 'PDCRADM') 
+            AND OT.ObjectDatabaseName NOT IN (select dbname from "dim_tdinternal_databases.csv")      
         GROUP BY
             1
     ) OT
@@ -80,7 +85,8 @@ FROM
             AND QryLog.LogDate = OT.LogDate
             AND QryLog.ProcID = OT.ProcID
 WHERE
-    OT.LogDate BETWEEN DATE -90 AND DATE -1
+--jcm
+    OT.LogDate BETWEEN {startdate} AND {enddate}   
     AND OT.ObjectType = 'TbO'
 GROUP BY 1,2,3,4,5,6;
 
@@ -150,8 +156,8 @@ SELECT
         WHEN Cols.ColumnType = 'YM'
             THEN 'INTERVAL YEAR TO MONTH'
         WHEN Cols.ColumnType = 'JN'
-            THEN
-                CASE
+            THEN 
+               CASE
                     WHEN Cols.StorageFormat = 'TEXT'
                         THEN 'JSON'
                     ELSE
@@ -185,7 +191,8 @@ SELECT
             THEN 'XML'
         ELSE
             Cols.ColumnType
-    END AS ColumnDataType
+    END
+     AS ColumnDataType
     ,DecimalTotalDigits AS DecNum
     ,DecimalFractionalDigits AS DecScale
     ,Cols.ColumnLength
@@ -260,7 +267,9 @@ FROM
             AND Inds.TableName = Cols.TableName
             AND Inds.ColumnName = Cols.ColumnName
 WHERE
-    Cols.DatabaseName NOT IN ('All', 'ARCUSERS', 'console', 'Crashdumps', 'DBC', 'DBCMANAGER', 'dbcmngr', 'Default', 'External_AP', 'LockLogShredder', 'PUBLIC', 'SECADMIN', 'SPOOL_RESERVE', 'SQLJ', 'SysAdmin', 'SYSBAR', 'SYSDBA', 'SYSJDBC', 'SYSLIB', 'SYSSPATIAL', 'SystemFe', 'SYSUDTLIB', 'SYSUIF', 'Sys_Calendar', 'TDPUSER', 'TDQCD', 'TDStats', 'tdwm', 'TD_COD', 'TD_RECONFIG', 'TD_SERVER_DB', 'TD_SYSFNLIB', 'TD_SYSGPL', 'TD_SYSXML', 'USERSPACE', 'viewpoint')
+--jcm
+    Cols.DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
+--  Cols.DatabaseName NOT IN ('All', 'ARCUSERS', 'console', 'Crashdumps', 'DBC', 'DBCMANAGER', 'dbcmngr', 'Default', 'External_AP', 'LockLogShredder', 'PUBLIC', 'SECADMIN', 'SPOOL_RESERVE', 'SQLJ', 'SysAdmin', 'SYSBAR', 'SYSDBA', 'SYSJDBC', 'SYSLIB', 'SYSSPATIAL', 'SystemFe', 'SYSUDTLIB', 'SYSUIF', 'Sys_Calendar', 'TDPUSER', 'TDQCD', 'TDStats', 'tdwm', 'TD_COD', 'TD_RECONFIG', 'TD_SERVER_DB', 'TD_SYSFNLIB', 'TD_SYSGPL', 'TD_SYSXML', 'USERSPACE', 'viewpoint')   
     AND TableKind <> 'V'
     AND Cols.ColumnType = 'JN' ;
 
@@ -292,7 +301,9 @@ FROM
         FROM
             DBC.ColumnsV
         WHERE
-            DatabaseName NOT IN ('All', 'ARCUSERS', 'console', 'Crashdumps', 'DBC', 'DBCMANAGER', 'dbcmngr', 'Default', 'External_AP', 'LockLogShredder', 'PUBLIC', 'SECADMIN', 'SPOOL_RESERVE', 'SQLJ', 'SysAdmin', 'SYSBAR', 'SYSDBA', 'SYSJDBC', 'SYSLIB', 'SYSSPATIAL', 'SystemFe', 'SYSUDTLIB', 'SYSUIF', 'Sys_Calendar', 'TDPUSER', 'TDQCD', 'TDStats', 'tdwm', 'TD_COD', 'TD_RECONFIG', 'TD_SERVER_DB', 'TD_SYSFNLIB', 'TD_SYSGPL', 'TD_SYSXML', 'USERSPACE', 'viewpoint')
+--jcm
+            DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")  
+--          DatabaseName NOT IN ('All', 'ARCUSERS', 'console', 'Crashdumps', 'DBC', 'DBCMANAGER', 'dbcmngr', 'Default', 'External_AP', 'LockLogShredder', 'PUBLIC', 'SECADMIN', 'SPOOL_RESERVE', 'SQLJ', 'SysAdmin', 'SYSBAR', 'SYSDBA', 'SYSJDBC', 'SYSLIB', 'SYSSPATIAL', 'SystemFe', 'SYSUDTLIB', 'SYSUIF', 'Sys_Calendar', 'TDPUSER', 'TDQCD', 'TDStats', 'tdwm', 'TD_COD', 'TD_RECONFIG', 'TD_SERVER_DB', 'TD_SYSFNLIB', 'TD_SYSGPL', 'TD_SYSXML', 'USERSPACE', 'viewpoint')
         GROUP BY
             1
     ) AS Col
@@ -328,6 +339,7 @@ WHERE
     AND ColumnDataType IS NOT NULL
 GROUP BY 1,2;
 
+
 /*{{save:dat_dbobject_count_per_statementtype.csv}}*/
 SELECT
     'SQL Statement Type Usage' AS ReportName
@@ -340,137 +352,82 @@ WHERE
 GROUP BY 1,2;
 
 
+--jcm. Replaced code with dimension.
 /*{{save:dat_dbobject_count_per_columntype.csv}}*/
-SELECT
-CASE ColumnType
-    WHEN 'BF' THEN 'BYTE('            || TRIM(ColumnLength (FORMAT '-(9)9')) || ')'
-    WHEN 'BV' THEN 'VARBYTE('         || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
-    WHEN 'CF' THEN 'CHAR('            || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
-    WHEN 'CV' THEN 'VARCHAR('         || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
-    WHEN 'D ' THEN 'DECIMAL('         || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ','
-                                      || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'DA' THEN 'DATE'
-    WHEN 'F ' THEN 'FLOAT'
-    WHEN 'I1' THEN 'BYTEINT'
-    WHEN 'I2' THEN 'SMALLINT'
-    WHEN 'I8' THEN 'BIGINT'
-    WHEN 'I ' THEN 'INTEGER'
-    WHEN 'AT' THEN 'TIME('            || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'TS' THEN 'TIMESTAMP('       || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'TZ' THEN 'TIME('            || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')' || ' WITH TIME ZONE'
-    WHEN 'SZ' THEN 'TIMESTAMP('       || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')' || ' WITH TIME ZONE'
-    WHEN 'YR' THEN 'INTERVAL YEAR('   || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'YM' THEN 'INTERVAL YEAR('   || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'      || ' TO MONTH'
-    WHEN 'MO' THEN 'INTERVAL MONTH('  || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'DY' THEN 'INTERVAL DAY('    || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'DH' THEN 'INTERVAL DAY('    || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'      || ' TO HOUR'
-    WHEN 'DM' THEN 'INTERVAL DAY('    || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'      || ' TO MINUTE'
-    WHEN 'DS' THEN 'INTERVAL DAY('    || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'      || ' TO SECOND('
-                                      || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'HR' THEN 'INTERVAL HOUR('   || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'HM' THEN 'INTERVAL HOUR('   || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'      || ' TO MINUTE'
-    WHEN 'HS' THEN 'INTERVAL HOUR('   || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'      || ' TO SECOND('
-                                      || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'MI' THEN 'INTERVAL MINUTE(' || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'MS' THEN 'INTERVAL MINUTE(' || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ')'      || ' TO SECOND('
-                                      || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'SC' THEN 'INTERVAL SECOND(' || TRIM(DecimalTotalDigits (FORMAT '-(9)9')) || ','
-                                      || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')'
-    WHEN 'BO' THEN 'BLOB('            || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
-    WHEN 'CO' THEN 'CLOB('            || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
+Select * from column_types;
 
-    WHEN 'PD' THEN 'PERIOD(DATE)'
-    WHEN 'PM' THEN 'PERIOD(TIMESTAMP('|| TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')' || ' WITH TIME ZONE)'
-    WHEN 'PS' THEN 'PERIOD(TIMESTAMP('|| TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || '))'
-    WHEN 'PT' THEN 'PERIOD(TIME('     || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || '))'
-    WHEN 'PZ' THEN 'PERIOD(TIME('     || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) || ')' || ' WITH TIME ZONE)'
-    WHEN 'UT' THEN COALESCE(ColumnUDTName,  '<Unknown> ' || ColumnType)
-
-    WHEN '++' THEN 'TD_ANYTYPE'
-    WHEN 'N'  THEN 'NUMBER('          || CASE WHEN DecimalTotalDigits = -128 THEN '*' ELSE TRIM(DecimalTotalDigits (FORMAT '-(9)9')) END
-                                      || CASE WHEN DecimalFractionalDigits IN (0, -128) THEN '' ELSE ',' || TRIM(DecimalFractionalDigits (FORMAT '-(9)9')) END
-                                      || ')'
-    WHEN 'A1' THEN COALESCE('SYSUDTLIB.' || ColumnUDTName,  '<Unknown> ' || ColumnType)
-    WHEN 'AN' THEN COALESCE('SYSUDTLIB.' || ColumnUDTName,  '<Unknown> ' || ColumnType)
-
-    WHEN 'JN' THEN 'JSON('            || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
-    WHEN 'VA' THEN 'TD_VALIST'
-    WHEN 'XM' THEN 'XML'
-
-    ELSE '<Unknown> ' || ColumnType
-  END
-  || CASE
-        WHEN ColumnType IN ('CV', 'CF', 'CO')
-        THEN CASE CharType
-                WHEN 1 THEN ' CHARACTER SET LATIN'
-                WHEN 2 THEN ' CHARACTER SET UNICODE'
-                WHEN 3 THEN ' CHARACTER SET KANJISJIS'
-                WHEN 4 THEN ' CHARACTER SET GRAPHIC'
-                WHEN 5 THEN ' CHARACTER SET KANJI1'
-                ELSE ''
-             END
-         ELSE ''
-      END as C_TYPE,
-
-CASE ColumnType
-    WHEN 'BF' THEN 'BYTE'
-    WHEN 'BV' THEN 'VARBYTE'
-    WHEN 'CF' THEN 'CHAR'
-    WHEN 'CV' THEN 'VARCHAR'
-    WHEN 'D ' THEN 'DECIMAL'
-    WHEN 'DA' THEN 'DATE'
-    WHEN 'F ' THEN 'FLOAT'
-    WHEN 'I1' THEN 'BYTEINT'
-    WHEN 'I2' THEN 'SMALLINT'
-    WHEN 'I8' THEN 'BIGINT'
-    WHEN 'I ' THEN 'INTEGER'
-    WHEN 'AT' THEN 'TIME'
-    WHEN 'TS' THEN 'TIMESTAMP'
-    WHEN 'TZ' THEN 'TIME'
-    WHEN 'SZ' THEN 'TIMESTAMP'
-    WHEN 'YR' THEN 'INTERVAL'
-    WHEN 'YM' THEN 'INTERVAL'
-    WHEN 'MO' THEN 'INTERVAL'
-    WHEN 'DY' THEN 'INTERVAL'
-    WHEN 'DH' THEN 'INTERVAL'
-    WHEN 'DM' THEN 'INTERVAL'
-    WHEN 'DS' THEN 'INTERVAL'
-    WHEN 'HR' THEN 'INTERVAL'
-    WHEN 'HM' THEN 'INTERVAL'
-    WHEN 'HS' THEN 'INTERVAL'
-    WHEN 'MI' THEN 'INTERVAL'
-    WHEN 'MS' THEN 'INTERVAL'
-    WHEN 'SC' THEN 'INTERVAL'
-    WHEN 'BO' THEN 'BLOB'
-    WHEN 'CO' THEN 'CLOB'
-
-    WHEN 'PD' THEN 'PERIOD'
-    WHEN 'PM' THEN 'PERIOD'
-    WHEN 'PS' THEN 'PERIOD'
-    WHEN 'PT' THEN 'PERIOD'
-    WHEN 'PZ' THEN 'PERIOD'
-    WHEN 'UT' THEN COALESCE(ColumnUDTName,  '<Unknown> ' || ColumnType)
-
-    WHEN '++' THEN 'TD_ANYTYPE'
-    WHEN 'N'  THEN 'NUMBER'
-    WHEN 'A1' THEN COALESCE('SYSUDTLIB.' || ColumnUDTName,  '<Unknown> ' || ColumnType)
-    WHEN 'AN' THEN COALESCE('SYSUDTLIB.' || ColumnUDTName,  '<Unknown> ' || ColumnType)
-
-    WHEN 'JN' THEN 'JSON('            || TRIM(ColumnLength (FORMAT 'Z(9)9')) || ')'
-    WHEN 'VA' THEN 'TD_VALIST'
-    WHEN 'XM' THEN 'XML'
-
-    ELSE '<Unknown> ' || ColumnType
-  END
-  as C_CAT,
-count(*) as Total
-FROM dbc.ColumnsV
-WHERE ColumnType IS NOT NULL
-group by 1,2
-;
 
 /*{{save:dat_dbobject_count_per_columnformats.csv}}*/
 SELECT
 CASE WHEN ColumnFormat IS NOT NULL
 THEN 'FORMATTED' ELSE 'NO DEFAULT FORMAT'
-END AS COLUMN_FORMAT, count(*) from DBC.COlumnsV group by 1;
+END AS Column_Format, 
+count(*) AS Column_Count
+from DBC.ColumnsV 
+group by 1;
+
+
+--jcm new dataset for indices. 
+/*{{save:dat_dbobject_count_per_indextype.csv}}*/
+select 
+  'Index Types' AS ReportName
+  ,IndexTypeDesc
+  ,SUM(Total) AS Total
+from index_types
+Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
+group by 2;
+
+
+--jcm new dataset for constraint types. 
+/*{{save:dat_dbobject_count_per_constrainttype.csv}}*/
+SELECT  
+ ConstraintType
+,Count(*) AS ConstraintCount
+FROM    (
+        SELECT  DatabaseName,
+                TableName,
+                CASE WHEN IndexType IN ('U','P','Q')
+                     THEN 'Unique'
+                     WHEN IndexType IN ('K')
+                     THEN 'Primary Key'
+                END (VARCHAR(30)) AS ConstraintType
+        FROM    DBC.IndicesV
+        WHERE UniqueFlag = 'Y' AND IndexType IN ('K','U','P','Q')
+        GROUP BY 1,2,3
+        
+        UNION ALL
+
+        SELECT  ChildDB,
+                ChildTable,
+                'Foreign Key'
+        FROM    DBC.RI_Distinct_ChildrenV
+
+        UNION ALL
+
+        SELECT  DatabaseName,
+                TableName,
+                'Column Constraint'
+        FROM    DBC.ColumnsV
+        WHERE   ColumnConstraint IS NOT NULL
+
+        UNION ALL
+
+        SELECT  DatabaseName,
+                TableName,
+                'Table Constraint'
+        FROM    DBC.Table_LevelConstraintsV
+
+        UNION ALL
+
+        SELECT  COL.DatabaseName,
+                COL.TableName,
+                'Default'
+        FROM    DBC.ColumnsV COL
+        JOIN    DBC.Tablesv TAB
+        ON      TAB.DatabaseName = COL.DatabaseName
+        AND     TAB.TableName = COL.TableName
+        AND     TAB.TableKind = 'T'
+        WHERE   COL.DefaultValue IS NOT NULL
+        ) AS C
+Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
+GROUP BY 1;
