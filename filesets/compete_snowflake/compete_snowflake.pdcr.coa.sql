@@ -22,7 +22,7 @@ JOIN "dim_tablekind.csv" as tk
   on t.TableKind = tk.TableKind
 WHERE DatabaseName NOT IN
   (select dbname from "dim_tdinternal_databases.csv")
-GROUP BY 1,2;
+GROUP BY 1,2,3,4;
 
 
 /*{{save:dat_dbobject_table_multiset.csv}}*/
