@@ -150,7 +150,7 @@ compete_snowflake:
     dim_columnkind:
       gitfile:      "dims/_dim_column_type.coa.sql"
     dim_indexkind:
-      gitfile:      "dims/_dim_index_type_by_database.coa.sql"
+      gitfile:      "dims/_dim_index_type.coa.sql"
     compete01_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
