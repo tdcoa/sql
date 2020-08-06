@@ -24,7 +24,7 @@ JOIN "dim_tablekind.csv" as tk
 WHERE DatabaseName NOT IN
   (select dbname from "dim_tdinternal_databases.csv")
 --jcm
-GROUP BY 2,3;                            
+GROUP BY 3,4;                            
 
 
 /*{{save:dat_dbobject_table_multiset.csv}}*/
@@ -39,7 +39,7 @@ select
 from DBC.Tables
 --jcm
 WHERE DatabaseName NOT IN (select dbname from "dim_tdinternal_databases.csv")  
-GROUP BY 1;
+GROUP BY 2;
 
 
 /*{{save:dat_dbobject_usage_per_type.csv}}*/
@@ -95,7 +95,7 @@ WHERE
 --jcm
     OT.LogDate BETWEEN {startdate} AND {enddate}   
     AND OT.ObjectType = 'TbO'
-GROUP BY 1,2,3,4,5,6;
+GROUP BY 3,4,5,6,7;
 
 
 /*{{save:dat_dbobject_columns_and_indexes.csv}}*/
@@ -312,8 +312,7 @@ FROM
 --jcm
             DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")  
 --          DatabaseName NOT IN ('All', 'ARCUSERS', 'console', 'Crashdumps', 'DBC', 'DBCMANAGER', 'dbcmngr', 'Default', 'External_AP', 'LockLogShredder', 'PUBLIC', 'SECADMIN', 'SPOOL_RESERVE', 'SQLJ', 'SysAdmin', 'SYSBAR', 'SYSDBA', 'SYSJDBC', 'SYSLIB', 'SYSSPATIAL', 'SystemFe', 'SYSUDTLIB', 'SYSUIF', 'Sys_Calendar', 'TDPUSER', 'TDQCD', 'TDStats', 'tdwm', 'TD_COD', 'TD_RECONFIG', 'TD_SERVER_DB', 'TD_SYSFNLIB', 'TD_SYSGPL', 'TD_SYSXML', 'USERSPACE', 'viewpoint')
-        GROUP BY
-            1
+        GROUP BY 1
     ) AS Col
         ON DT.DataType = Col.ColumnType ;
 
@@ -346,7 +345,7 @@ FROM
 WHERE
     TableKind <> 'V'
     AND ColumnDataType IS NOT NULL
-GROUP BY 1,2;
+GROUP BY 3;
 
 
 /*{{save:dat_dbobject_count_per_statementtype.csv}}*/
@@ -359,7 +358,7 @@ FROM
     PDCRINFO.DBQLogTbl
 WHERE
     LogDate BETWEEN DATE -8 AND DATE -1
-GROUP BY 1,2;
+GROUP BY 3;
 
 
 --jcm. dat_dbobject_count_per_columntype.csv moved to dimension.
@@ -374,7 +373,7 @@ SELECT
      END AS Column_Format, 
 count(*) AS Column_Count
 from DBC.ColumnsV 
-group by 1;
+group by 2;
 
 
 --jcm dimension for index in separate sql file. 
@@ -434,4 +433,4 @@ FROM    (
         WHERE   COL.DefaultValue IS NOT NULL
         ) AS C
 Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
-GROUP BY 1;
+GROUP BY 3;
