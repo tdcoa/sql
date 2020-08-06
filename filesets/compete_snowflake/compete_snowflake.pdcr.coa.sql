@@ -12,7 +12,8 @@
 
 /*{{save:dat_dbobject_usage_per_tablekind.csv}}*/
 SELECT
-    'Object Type Definitions' AS ReportName
+     '{siteid}' as Site_ID
+    ,'Object Type Definitions' AS ReportName
     ,Table_Bucket
 --jcm  ,TableKind_Desc                     
     ,TableKind_Desc as Object_Type
@@ -27,10 +28,14 @@ GROUP BY 2,3;
 
 
 /*{{save:dat_dbobject_table_multiset.csv}}*/
-select CASE CheckOpt WHEN  'Y' THEN 'MULTISET Tables'
-WHEN 'N' THEN 'SET Tables'
-ELSE 'Others' END AS Table_Type,
-Count(*) as Total_Count
+select 
+     '{siteid}' as Site_ID
+    ,CASE CheckOpt 
+       WHEN  'Y' THEN 'MULTISET Tables'
+       WHEN 'N' THEN 'SET Tables'
+       ELSE 'Others' 
+     END AS Table_Type
+    ,Count(*) as Total_Count
 from DBC.Tables
 --jcm
 WHERE DatabaseName NOT IN (select dbname from "dim_tdinternal_databases.csv")  
@@ -39,7 +44,8 @@ GROUP BY 1;
 
 /*{{save:dat_dbobject_usage_per_type.csv}}*/
 SELECT
-    'Object Types Used and Frequency' AS ReportName
+     '{siteid}' as Site_ID
+    ,'Object Types Used and Frequency' AS ReportName
     ,FT.ObjectType
     ,ObjectTypeDesc
     ,ZEROIFNULL(Frequency_of_Use) AS Frequency_of_Use
@@ -66,7 +72,8 @@ ORDER BY ObjectTypeDesc;
 
 /*{{save:dat_dbobject_tcore_per_type.csv}}*/
 SELECT
-    'Object Type TCore Consumption' AS ReportName
+     '{siteid}' as Site_ID
+    ,'Object Type TCore Consumption' AS ReportName
     ,QryLog.LogDate
     ,EXTRACT(HOUR FROM QryLog.StartTime) AS LogHour
     ,ObjectDatabaseName
@@ -78,12 +85,12 @@ FROM
     PDCRINFO.DBQLObjTbl OT
     LEFT JOIN
     "dim_dbobject.csv" FT
-        ON OT.ObjectType = FT.ObjectType
+     ON OT.ObjectType = FT.ObjectType
     INNER JOIN
     PDCRINFO.DBQLogTbl QryLog
-        ON QryLog.QueryID = OT.QueryID
-            AND QryLog.LogDate = OT.LogDate
-            AND QryLog.ProcID = OT.ProcID
+     ON QryLog.QueryID = OT.QueryID
+    AND QryLog.LogDate = OT.LogDate
+    AND QryLog.ProcID = OT.ProcID
 WHERE
 --jcm
     OT.LogDate BETWEEN {startdate} AND {enddate}   
@@ -93,12 +100,12 @@ GROUP BY 1,2,3,4,5,6;
 
 /*{{save:dat_dbobject_columns_and_indexes.csv}}*/
 SELECT
-    'Data Type Definitions' AS ReportName
+     '{siteid}' as Site_ID
+    ,'Data Type Definitions' AS ReportName
     ,Cols.DatabaseName
     ,Cols.TableName
     ,Cols.ColumnName
-    ,
-    CASE
+    ,CASE
         WHEN Cols.ColumnType = '++'
             THEN 'TD_ANYTYPE'
         WHEN Cols.ColumnType = 'AN'
@@ -276,7 +283,8 @@ WHERE
 
 /*{{save:dat_dbobject_count_per_datatype.csv}}*/
 SELECT
-    'Data Type Usage' AS ReportName
+     '{siteid}' as Site_ID
+    ,'Data Type Usage' AS ReportName
     ,DataTypeDesc
     ,ZEROIFNULL(DataTypeCount) AS DataTypeCount
 FROM
@@ -312,7 +320,8 @@ FROM
 
 /*{{save:dat_dbobject_indexing_and_PPI.csv}}*/
 SELECT
-    'Index Types and Partitioning' AS ReportName
+     '{siteid}' as Site_ID
+    ,'Index Types and Partitioning' AS ReportName
     ,DT.DataTypeDesc AS ColumnDataType
     ,COUNT(*) AS DataTypeCount
 FROM
@@ -342,7 +351,8 @@ GROUP BY 1,2;
 
 /*{{save:dat_dbobject_count_per_statementtype.csv}}*/
 SELECT
-    'SQL Statement Type Usage' AS ReportName
+     '{siteid}' as Site_ID
+    ,'SQL Statement Type Usage' AS ReportName
     ,StatementType
     ,COUNT(*) AS Frequency_Count
 FROM
@@ -352,37 +362,31 @@ WHERE
 GROUP BY 1,2;
 
 
---jcm. Replaced code with dimension.
-/*{{save:dat_dbobject_count_per_columntype.csv}}*/
-Select * from column_types;
+--jcm. dat_dbobject_count_per_columntype.csv moved to dimension.
 
 
 /*{{save:dat_dbobject_count_per_columnformats.csv}}*/
 SELECT
-CASE WHEN ColumnFormat IS NOT NULL
-THEN 'FORMATTED' ELSE 'NO DEFAULT FORMAT'
-END AS Column_Format, 
+     '{siteid}' as Site_ID
+    ,CASE 
+       WHEN ColumnFormat IS NOT NULL THEN 'FORMATTED' 
+       ELSE 'NO DEFAULT FORMAT'
+     END AS Column_Format, 
 count(*) AS Column_Count
 from DBC.ColumnsV 
 group by 1;
 
 
---jcm new dataset for indices. 
-/*{{save:dat_dbobject_count_per_indextype.csv}}*/
-select 
-  'Index Types' AS ReportName
-  ,IndexTypeDesc
-  ,SUM(Total) AS Total
-from index_types
-Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
-group by 2;
+--jcm dimension for index in separate sql file. 
 
 
 --jcm new dataset for constraint types. 
 /*{{save:dat_dbobject_count_per_constrainttype.csv}}*/
 SELECT  
- ConstraintType
-,Count(*) AS ConstraintCount
+ '{siteid}' as Site_ID
+ ,'Constraint Type' as ReportName
+ ,ConstraintType
+ ,Count(*) AS ConstraintCount
 FROM    (
         SELECT  DatabaseName,
                 TableName,
