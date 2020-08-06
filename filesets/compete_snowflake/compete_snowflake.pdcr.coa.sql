@@ -416,3 +416,5 @@ FROM    (
         ) AS C
 Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
 GROUP BY 3;
+
+drop table "dim_tdinternal_databases.csv";
