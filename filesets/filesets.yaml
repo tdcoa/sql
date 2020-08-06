@@ -207,6 +207,10 @@ db_objects:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/columns.v01.coa.sql"
+    indices_v01_coa_sql:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/indeces.v01.coa.sql"
 
 
 compete_snowflake:
