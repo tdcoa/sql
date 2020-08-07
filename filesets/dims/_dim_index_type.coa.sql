@@ -2,7 +2,7 @@
 */
 
 /*{{temp:dim_indexkind.csv}}*/;
-
+/*{{temp:dim_tdinternal_databases.csv}}*/;
 
 create volatile table index_types as 
 (
@@ -73,8 +73,6 @@ group by 1,2
 ) with data 
 no primary index on commit preserve rows;
 */
-
-/*{{temp:dim_tdinternal_databases.csv}}*/;
 
 /*{{save:dat_dbobject_count_per_indextype.csv}}*/
 select
