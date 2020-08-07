@@ -149,7 +149,7 @@ compete_snowflake:
       gitfile:      "dims/dim_tdinternal_databases.csv"
     dim_columnkind:
       gitfile:      "dims/_dim_column_type.coa.sql"
-    dim_indexkind:
+    dim_indextype:
       gitfile:      "dims/_dim_index_type.coa.sql"
     compete01_pdcr:
       collection:   ["pdcr"]
