@@ -133,6 +133,40 @@ autotune_check:
       gitfile:      "autotune/autotune_check.pptx"
 
 
+
+
+compete_snowflake:
+  active:           "True"
+  fileset_version:  "1.0"
+  files: &compete_snowflake
+    dim_dbobject:
+      gitfile:      "dims/dim_dbobject.csv"
+    dim_datatype:
+      gitfile:      "dims/dim_datatype.csv"
+    dim_tablekind:
+      gitfile:      "dims/dim_tablekind.csv"
+    dim_indexkind:
+      gitfile:      "dims/dim_indexkind.csv"
+    dim_tdinternal_databases:
+      gitfile:      "dims/dim_tdinternal_databases.csv"
+    dim_columnkind:
+      gitfile:      "dims/_dim_column_type.coa.sql"
+    dim_indexkind:
+      gitfile:      "dims/_dim_index_type.coa.sql"
+    compete01_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      iopernode_90pct: 0
+      gitfile:      "compete_snowflake/compete_snowflake.pdcr.coa.sql"
+    compete01_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      iopernode_90pct: 0
+      gitfile:      "compete_snowflake/compete_snowflake.dbc.coa.sql"
+    pptx_migration_blockers:
+      gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
+
+
 dbql_core:
   active:           "True"
   fileset_version:  "6.0"
@@ -207,36 +241,6 @@ db_objects:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/columns.v01.coa.sql"
-
-
-compete_snowflake:
-  active:           "True"
-  fileset_version:  "1.0"
-  files: &compete_snowflake
-    dim_dbobject:
-      gitfile:      "dims/dim_dbobject.csv"
-    dim_datatype:
-      gitfile:      "dims/dim_datatype.csv"
-    dim_tablekind:
-      gitfile:      "dims/dim_tablekind.csv"
-    dim_tdinternal_databases:
-      gitfile:      "dims/dim_tdinternal_databases.csv"
-    dim_columnkind:
-      gitfile:      "dims/_dim_column_type.coa.sql"
-    dim_indexkind:
-      gitfile:      "dims/_dim_index_type.coa.sql"
-    compete01_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      iopernode_90pct: 0
-      gitfile:      "compete_snowflake/compete_snowflake.pdcr.coa.sql"
-    compete01_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      iopernode_90pct: 0
-      gitfile:      "compete_snowflake/compete_snowflake.dbc.coa.sql"
-    pptx_migration_blockers:
-      gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
 
 concurrency:
