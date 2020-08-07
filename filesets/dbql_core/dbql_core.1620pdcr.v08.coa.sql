@@ -118,7 +118,7 @@ FROM
   ,zeroifnull(sum(cast(case when dbql.StatementGroup like '%=%' then 1 else 0 end as SmallInt))) as Query_MultiStatement_Cnt
   /* ErrorCode 3158 == TASM Demotion, aka warning, not real error */
   ,zeroifnull(sum(cast(case when dbql.ErrorCode not in(0,3158)      then dbql.Statements else 0 end as int))) as Query_Error_Cnt
-  ,zeroifnull(sum(cast(case when dbql.Abortflag = 'Y'               then dbql.Statements else 0 end as int))) as Query_Abort_Cnt
+  ,zeroifnull(sum(cast(case when dbql.Abortflag = 'T'               then dbql.Statements else 0 end as int))) as Query_Abort_Cnt
   ,zeroifnull(sum(cast(case when TotalIOCount = 0                   then dbql.Statements else 0 end as int))) as Query_NoIO_cnt
   ,zeroifnull(sum(cast(case when TotalIOCount > 0 AND ReqPhysIO = 0 then dbql.Statements else 0 end as int))) as Query_InMem_Cnt
   ,zeroifnull(sum(cast(case when TotalIOCount > 0 AND ReqPhysIO > 0 then dbql.Statements else 0 end as int))) as Query_PhysIO_Cnt
