@@ -14,7 +14,6 @@ create volatile table index_types as
  LEFT JOIN DBC.IndicesV Inds
    ON IK.IndexKind = Inds.IndexType 
   AND IK.UniqueFlag = Inds.UniqueFlag
-from DBC.IndicesV Inds
 group by 1,2
 ) with data 
 no primary index on commit preserve rows;
