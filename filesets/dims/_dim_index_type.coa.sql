@@ -41,6 +41,7 @@ select
 from index_types
 Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")
   and IndexTypeDesc IN ('Unique Primary Index (UPI)', 'Partitioned Primary Index (unique)', 'Partitioned Primary Index (non-unique)')      
-group by 2;
+group by 2
+order by 2;
 
 drop table "dim_tdinternal_databases.csv";
