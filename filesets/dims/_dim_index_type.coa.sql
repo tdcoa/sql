@@ -34,6 +34,7 @@ group by 3;
 
 
 /*{{save:dat_index_count_for_pptx.csv}}*/
+/*{{pptx:snowflake_migration_blockers.pptx}}*/
 select
    '{siteid}' as Site_ID 
   ,substring(indextypedesc from 1 for index(indextypedesc, '(') -1) AS IndexTypeDescription
@@ -45,6 +46,4 @@ group by 2
 order by 2;
 
 drop table "dim_tdinternal_databases.csv";
-
-/*{{pptx:snowflake_migration_blockers.pptx}}*/
 
