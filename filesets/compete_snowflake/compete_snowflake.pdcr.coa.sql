@@ -434,3 +434,7 @@ FROM    (
         ) AS C
 Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
 GROUP BY 3;
+
+/*{{pptx:snowflake_migration_blockers.pptx}}*/
+                     
+                     
