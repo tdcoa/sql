@@ -45,3 +45,6 @@ group by 2
 order by 2;
 
 drop table "dim_tdinternal_databases.csv";
+
+/*{{pptx:snowflake_migration_blockers.pptx}}*/
+
