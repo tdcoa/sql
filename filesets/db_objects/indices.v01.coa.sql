@@ -25,7 +25,7 @@ select
    '{siteid}' as Site_ID 
   ,'Index Types' AS ReportName
   ,IndexTypeDesc
-  ,SUM(Total) AS Total
+  ,SUM(IndexCount) AS Total
 from index_types
 Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
 group by 3;
