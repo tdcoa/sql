@@ -224,6 +224,8 @@ compete_snowflake:
       gitfile:      "dims/dim_datatype.csv"
     dim_tablekind:
       gitfile:      "dims/dim_tablekind.csv"
+    dim_indexkind:
+      gitfile:      "dims/dim_indexkind.csv"
     dim_tdinternal_databases:
       gitfile:      "dims/dim_tdinternal_databases.csv"
     compete01_pdcr:
