@@ -22,7 +22,7 @@ create volatile table db_objects_counts as
     ,sum(d.OtherCount) as OtherCount
     FROM
     (
-    Select t.DatabaseName
+     Select t.DatabaseName
     ,sum( case when tk.Table_Bucket = 'Table' then 1 else 0 end) as TableCount
     ,sum( case when tk.Table_Bucket = 'View' then 1 else 0 end) as ViewCount
     ,sum( case when tk.Table_Bucket = 'Index' then 1 else 0 end) as IndexCount
@@ -36,6 +36,7 @@ create volatile table db_objects_counts as
     FROM dbc.Tables t
     LEFT OUTER JOIN "dim_tablekind.csv" tk
     on t.TableKind = tk.TableKind
+    group by 1
     ) d
     GROUP BY rollup (d.Databasename)
 ) with data no primary index on commit preserve rows
