@@ -5,10 +5,12 @@
    - spoolpct:   {spoolpct}  default 20%
 */
 
+/*{{temp:dim_tablekind.csv}}*/
 create volatile table db_objects_counts as
 (
     SELECT
-    case when d.DatabaseName is null
+     Current_Date as LogDate
+    ,case when d.DatabaseName is null
         then '*** Total ***'
         else d.DatabaseName end as DBName
     ,sum(d.TableCount) as TableCount
@@ -20,18 +22,20 @@ create volatile table db_objects_counts as
     ,sum(d.OtherCount) as OtherCount
     FROM
     (
-        Select t.DatabaseName
-        ,'' as CommentString
-        ,sum( case when t.TableKind in('T','O','J','Q') then 1 else 0 end) as TableCount
-        ,sum( case when t.TableKind in('V') then 1 else 0 end) as ViewCount
-        ,sum( case when t.TableKind in('I','N') then 1 else 0 end) as IndexCount
-        ,sum( case when t.TableKind in('M') then 1 else 0 end) as MacroCount
-        ,sum( case when t.TableKind in('P','E','G') then 1 else 0 end) as "SP&TrigCount"
-        ,sum( case when t.TableKind in('A','B','F','R','S','U','D') then 1 else 0 end) as UDObjectCount
-        ,sum( case when t.TableKind in('H') then 1 else 0 end) as SysConstCount
-        ,sum( case when t.TableKind NOT in('A','B','F','R','S','U','P','E','G','M','I','N','V','T','O','J','Q','D','H') then 1 else 0 end) as OtherCount
-        FROM dbc.Tables t
-        Group By 1,2
+    Select t.DatabaseName
+    ,sum( case when tk.Table_Bucket = 'Table' then 1 else 0 end) as TableCount
+    ,sum( case when tk.Table_Bucket = 'View' then 1 else 0 end) as ViewCount
+    ,sum( case when tk.Table_Bucket = 'Index' then 1 else 0 end) as IndexCount
+    ,sum( case when tk.Table_Bucket = 'Macro' then 1 else 0 end) as MacroCount
+    ,sum( case when tk.Table_Bucket in('Stored Procedure','Trigger') then 1 else 0 end) as "SP&TrigCount"
+    ,sum( case when tk.Table_Bucket = 'Function' then 1 else 0 end) as FunctionCount
+    ,sum( case when tk.Table_Bucket = 'User Defined' then 1 else 0 end) as UDObjectCount
+    ,sum( case when tk.Table_Bucket = 'Foreign Server' then 1 else 0 end) as ForeignServerCount
+    ,sum( case when tk.Table_Bucket in('Other','Journal')
+                 or tk.Table_Bucket is null then 1 else 0 end) as OtherCount
+    FROM dbc.Tables t
+    LEFT OUTER JOIN "dim_tablekind.csv" tk
+    on t.TableKind = tk.TableKind
     ) d
     GROUP BY rollup (d.Databasename)
 ) with data no primary index on commit preserve rows
