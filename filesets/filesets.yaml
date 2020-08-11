@@ -203,6 +203,8 @@ db_objects:
   fileset_version:  "1.0"
   files: &db_objects
     <<: *customer_data_space
+    dim_indexkind:
+      gitfile:      "dims/dim_indexkind.csv"    
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
@@ -224,8 +226,6 @@ compete_snowflake:
       gitfile:      "dims/dim_datatype.csv"
     dim_tablekind:
       gitfile:      "dims/dim_tablekind.csv"
-    dim_indexkind:
-      gitfile:      "dims/dim_indexkind.csv"
     dim_tdinternal_databases:
       gitfile:      "dims/dim_tdinternal_databases.csv"
     compete01_pdcr:
