@@ -54,7 +54,7 @@ create volatile table db_objects_cds as
   ) s
   JOIN db_objects_dates as dt
     on s.LogDate = dt.LogDate
-   and d.LogDate = dt.LogDate
+   and s.LogDate = dt.LogDate
   GROUP BY dt.Week_ID, rollup(s.Databasename)
 
 ) with data no primary index on commit preserve rows
