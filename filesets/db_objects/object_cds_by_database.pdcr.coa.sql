@@ -28,33 +28,34 @@ create volatile table db_objects_cds as
 (
   SELECT
    dt.Week_ID
-  ,case when d.DatabaseName is null
+  ,case when s.DatabaseName is null
       then '**** Totals ****'
-      else d.DatabaseName end as DBName
+      else s.DatabaseName end as DBName
   ,cast( {spoolpct} as decimal(4,3)) as SpoolPct
-  ,case when d.DatabaseName is null
+  ,case when s.DatabaseName is null
         then '** Entire Teradata System (minus '||
         cast(cast(SpoolPct*100 as decimal(4,1) format'99.9') as char(4)) ||'% spool from MaxPerm) **'
       else Max(d.CommentString) end as CommentString
   ,cast(avg(MaxPerm)/1e9 as decimal(18,3))
-    * case when d.DatabaseName is null then (1-SpoolPct) else 1.000 end as MaxPermGB
+    * case when s.DatabaseName is null then (1-SpoolPct) else 1.000 end as MaxPermGB
   ,ZeroIfNull(cast(NullifZero(avg(CurrentPerm))/1e9 as decimal(18,3))) as CurrentPermGB
   ,ZeroIfNull(CurrentPermGB/NullIfZero(MaxPermGB)) as FilledPct
   ,rank() over (partition by dt.Week_ID order by dt.Week_ID, CurrentPermGB desc) as CDSRank
   FROM
   (
-      Select DatabaseName
-  	,logdate
+      Select 
+       DatabaseName
+  	   ,logdate
       ,sum(MaxPerm) as MaxPerm
       ,sum(CurrentPerm) as CurrentPerm
       FROM PDCRDATA.DatabaseSpace_Hst
-  	where logdate in (select LogDate from db_objects_dates)
+  	   where logdate in (select LogDate from db_objects_dates)
       Group By 1,2
   ) s
   JOIN db_objects_dates as dt
     on s.LogDate = dt.LogDate
    and d.LogDate = dt.LogDate
-  GROUP BY dt.Week_ID, rollup(d.Databasename)
+  GROUP BY dt.Week_ID, rollup(s.Databasename)
 
 ) with data no primary index on commit preserve rows
 ;
