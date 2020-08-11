@@ -222,7 +222,7 @@ customer_data_space:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       day_of_week:  "1"  # for weekly CDS, use first day of week
-      gitfile:      "db_objects/objects_by_database.pdcr.v02.coa.sql"
+      gitfile:      "db_objects/object_cds_by_database.pdcr.coa.sql"
     upload_template:
       gitfile:      "db_objects/upload-manifest.template.json"
 
