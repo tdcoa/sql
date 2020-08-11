@@ -22,7 +22,7 @@ create volatile table db_objects_cds as
     * case when s.DatabaseName is null then (1-SpoolPct) else 1.000 end as MaxPermGB
   ,ZeroIfNull(cast(NullifZero(sum(CurrentPerm))/1e9 as decimal(18,3))) as CurrentPermGB
   ,ZeroIfNull(CurrentPermGB/NullIfZero(MaxPermGB)) as FilledPct
-  ,rank() over (partition by dt.Week_ID order by dt.Week_ID, CurrentPermGB desc) as CDSRank
+  ,rank() over (partition by s.LogDate order by CurrentPermGB desc) as CDSRank
   FROM
   (
       Select 
