@@ -233,6 +233,10 @@ db_objects:
   fileset_version:  "1.0"
   files: &db_objects
     <<: *customer_data_space
+    object_counts_by_database_sql:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/object_counts_by_database.coa.sql"    
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
