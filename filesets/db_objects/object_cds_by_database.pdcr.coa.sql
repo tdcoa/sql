@@ -35,7 +35,7 @@ create volatile table db_objects_cds as
   ,case when s.DatabaseName is null
         then '** Entire Teradata System (minus '||
         cast(cast(SpoolPct*100 as decimal(4,1) format'99.9') as char(4)) ||'% spool from MaxPerm) **'
-      else Max(d.CommentString) end as CommentString
+      else '' end as CommentString
   ,cast(avg(MaxPerm)/1e9 as decimal(18,3))
     * case when s.DatabaseName is null then (1-SpoolPct) else 1.000 end as MaxPermGB
   ,ZeroIfNull(cast(NullifZero(avg(CurrentPerm))/1e9 as decimal(18,3))) as CurrentPermGB
