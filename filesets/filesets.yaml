@@ -216,7 +216,7 @@ customer_data_space:
       spoolpct:     "0.20"
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
-      gitfile:      "db_objects/objects_by_database.dbc.v02.coa.sql"
+      gitfile:      "db_objects/object_cds_by_database.dbc.coa.sql"
     cds_by_database_pdcr_sql:
       spoolpct:     "0.20"
       collection:   ["pdcr"]
