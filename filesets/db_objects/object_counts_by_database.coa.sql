@@ -9,7 +9,7 @@ create volatile table db_objects_counts as
 (
     SELECT
     case when d.DatabaseName is null
-        then '**** Totals ****'
+        then '*** Total ***'
         else d.DatabaseName end as DBName
     ,sum(d.TableCount) as TableCount
     ,sum(d.ViewCount) as ViewCount
@@ -38,7 +38,7 @@ create volatile table db_objects_counts as
 ;
 
 
-/*{{save:db_objects_counts_all.csv}}*/
+/*{{save:db_objects_counts-all.csv}}*/
 Select
  '{siteid}' as Site_ID
 ,DBName
@@ -52,7 +52,7 @@ Select
 from db_objects_counts
 ;
 
-/*{{save:db_objects_counts_total.csv}}*/
+/*{{save:db_objects_counts-total.csv}}*/
 Select
  '{siteid}' as Site_ID
 ,DBName as "Database Name"
@@ -64,5 +64,5 @@ Select
 ,cast(cast(zeroifnull(UDObjectCount ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "UDObject Count"
 ,cast(cast(zeroifnull(OtherCount    ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "Other Count"
 from db_objects_counts
-where DBName = '**** Totals ****'
+where DBName = '*** Total ***'
 ;
