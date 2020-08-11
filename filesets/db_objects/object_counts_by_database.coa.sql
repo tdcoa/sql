@@ -5,7 +5,7 @@
    - spoolpct:   {spoolpct}  default 20%
 */
 
-create volatile table db_object_counts as
+create volatile table db_objects_counts as
 (
     SELECT
     case when d.DatabaseName is null
@@ -38,7 +38,7 @@ create volatile table db_object_counts as
 ;
 
 
-/*{{save:db_object_counts_all.csv}}*/
+/*{{save:db_objects_counts_all.csv}}*/
 Select
  '{siteid}' as Site_ID
 ,DBName
@@ -49,10 +49,10 @@ Select
 ,cast(cast("SP&TrigCount" as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as SPTrig_Count
 ,cast(cast(UDObjectCount  as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as UDObject_Count
 ,cast(cast(OtherCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as Other_Count
-from db_object_counts
+from db_objects_counts
 ;
 
-/*{{save:db_object_counts_total.csv}}*/
+/*{{save:db_objects_counts_total.csv}}*/
 Select
  '{siteid}' as Site_ID
 ,DBName as "Database Name"
@@ -63,6 +63,6 @@ Select
 ,cast(cast(zeroifnull("SP&TrigCount") as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "SP&Trig Count"
 ,cast(cast(zeroifnull(UDObjectCount ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "UDObject Count"
 ,cast(cast(zeroifnull(OtherCount    ) as integer       format'ZZZ,ZZZ,ZZZ,ZZ9')    as varchar(32)) as "Other Count"
-from db_object_counts
+from db_objects_counts
 where DBName = '**** Totals ****'
 ;
