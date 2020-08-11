@@ -14,6 +14,7 @@ J,Journal,Journal
 K,Foreign Server,Foreign Server Object
 L,User Defined,User-defined table operator
 M,Macro,Macro
+N,Index,Hash Index
 O,Table,Table with no primary index and no partitioning
 P,Stored Procedure,Stored procedure
 Q,Table,Queue Table
