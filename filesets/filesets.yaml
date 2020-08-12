@@ -204,15 +204,15 @@ db_objects:
   files: &db_objects
     <<: *customer_data_space
     dim_indexkind:
-      gitfile:      "dims/dim_indexkind.csv"    
+      gitfile:      "dims/dim_indexkind.csv"
+    indices_v01_coa_sql:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/indices.v01.coa.sql"      
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/columns.v01.coa.sql"
-    indices_v01_coa_sql:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
-      gitfile:      "db_objects/indices.v01.coa.sql"
 
 
 compete_snowflake:
