@@ -360,7 +360,18 @@ WHERE
     LogDate BETWEEN DATE -8 AND DATE -1
 GROUP BY 3;
 
+                                      
+/*{{save:dat_dbobject_count_per_indextype.csv}}*/
+select
+   '{siteid}' as Site_ID 
+  ,'Index Types' AS ReportName
+  ,IndexTypeDesc
+  ,SUM(IndexCount) AS Total
+from index_types
+Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
+group by 3;
 
+                                                
 --jcm new dataset for constraint types. 
 /*{{save:dat_dbobject_count_per_constrainttype.csv}}*/
 SELECT  
