@@ -1,0 +1,20 @@
+IndexType,UniqueFlag,IndexAbbr,IndexName,Index_Bucket
+P,Y,UPI,Unique Primary Index,Primary Index
+P,N,NUPI,Non-Unique Primary Index,Primary Index
+Q,-,PPI,Partitioned Primary Index,Partition
+S,Y,USI,Unique Secondary Index,Secondary Index
+S,N,NUSI,Non-Unique Secondary Index,Secondary Index
+U,-,USI-NN,Unique Secondary with NOT NULL,Secondary Index
+K,-,PK,Primary Key,Primary Key
+J,-,JI,Join Index,Join Index
+V,-,VO-SI,Value Ordered Secondary Index,Secondary Index
+H,-,HOA-SI,Hash Ordered ALL (covering) Secondary Index,Secondary Index
+O,-,VOA-SI,Value Ordered ALL (covering) Secondary Index,Secondary Index
+I,-,OCC-SI,Ordering Column of a Composite Secondary Index,Secondary Index
+M,-,MC-Stats,Multi-Column Statistics,Statistics
+D,-,DC-Stats,Derived Column Partition Statistics,Statistics
+1,-,Unknown,Unknown,Unknown
+2,-,Unknown,Unknown,Unknown
+A,-,PA,Unknown,Unknown
+G,-,Geo-NUSI,Geospatial non-unique secondary index,Secondary Index
+N,-,Hash-SI,Hash Index,Secondary Index
