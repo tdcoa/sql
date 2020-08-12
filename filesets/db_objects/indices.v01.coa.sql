@@ -16,18 +16,3 @@ create volatile table index_types as
 group by 1,2
 ) with data 
 no primary index on commit preserve rows;
-
-
-/*{{temp:dim_tdinternal_databases.csv}}*/;
-
-/*{{save:index_type.csv}}*/
-select
-   '{siteid}' as Site_ID 
-  ,'Index Types' AS ReportName
-  ,IndexTypeDesc
-  ,SUM(IndexCount) AS Total
-from index_types
-Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
-group by 3;
-
-drop table "dim_tdinternal_databases.csv";
