@@ -18,6 +18,7 @@ Default,Equal,DSMain,TTU,Backup,1130
 Default,Equal,MULTILOAD,TTU,ETL,1140
 Default,Equal,TPTSTRM,TTU,Stream,1170
 Default,Equal,TPUMPEXE,TTU,Stream,1190
+Default,Equal,TERADATAKERNEL,Jupyter,Analytic,1234
 Default,Equal,OUTLOOK,MS Office,Application,1500
 Default,Like,AGINITY.NETEZZAWORKBENCH%,Netezza,Analytic,10000
 Default,Like,SPOTFIRE%,Spotfire,Application,10010
@@ -101,9 +102,47 @@ Default,Like,%TABLEAU%,Tableau,Analytic,15600
 Default,Like,BMT%,Cognos,Analytic,15700
 Default,Like,%PYT,Python,Analytic,15800
 Default,Like,%PYTHON%,Python,Analytic,15900
-Default,Like,RAYTHEON%,Raytheon Inspect Analytics,Analytic,16000
 Default,Like,DUL%,Teradata,Analytic,16000
+Default,Like,RAYTHEON%,Raytheon Inspect Analytics,Analytic,16000
+Default,Equal,1,Unknown,Analytic,20000
+Default,Equal,(DELETED)                     ,Unknown,Analytic,20001
+Default,Equal,?,Unknown,Analytic,20002
+Default,Equal,ACLDA64                       ,ACL for Win (Highbond),Analytic,20003
+Default,Like,AQTV%             ,Advanced Query Tool,Analytic,20004
+Default,Equal,CAS                           ,Unknown,Analytic,20005
+Default,Equal,CMO_PANEL:NET:SS:16.20.09.000 ,Unknown,Analytic,20006
+Default,Equal,COLLECTION                    ,TD PDCR Procerss,Analytic,20007
+Default,Equal,COMPSRV                       ,SAS,Analytic,20008
+Default,Equal,CSPPEEK                       ,Crashdumps,System,20009
+Default,Equal,D_UGAP_DATA.PY                ,Python,Analytic,20010
+Default,Equal,DBEAVER                       ,Universal DB Tool,Analytic,20011
+Default,Equal,DSAPI_SLAVE                   ,DataStage,ETL,20012
+Default,Equal,HPMQUERYSERVICEQUEUE:NET:SS:13,Unknown,Analytic,20013
+Default,Equal,IMPADMIN                      ,Impromptu,Analytic,20014
+Default,Equal,INFORMATIONDESIGNTOOL         ,Business Objects,Analytic,20015
+Default,Equal,IR_ACO_DATALOADER%,Demand Tools - CRM,Analytic,20016
+Default,Like,KERNEL%,Azure Data Studio,Analytic,20017
+Default,Like,MSREPORTBUILDER%,SQL Server Reporting Services,Analytic,20018
+Default,Like,MULTITHREADSGENQUEUE%,Python,Analytic,20019
+Default,Equal,MYSQLD                        ,MySQL,Analytic,20020
+Default,Equal,ORCHDBUTIL                    ,DataStage,ETL,20021
+Default,Equal,PHANTOM                       ,CRM,Analytic,20022
+Default,Equal,PMDTM                         ,Informatica,Analytic,20023
+Default,Like,PREVIEWPROCESSINGSERVICE%      ,SQL Server Reporting Services,Analytic,20024
+Default,Equal,R                             ,R Studio,Analytic,20025
+Default,Like,REPORTINGSERVICESSERVICE%,SQL Server Reporting Services,Analytic,20026
+Default,Equal,RTERM                         ,R Studio,Analytic,20027
+Default,Equal,RUNAGENT                      ,BMC(?),System,20028
+Default,Equal,RUNDLL32                      ,Windows App,Analytic,20029
+Default,Equal,SEGUIDE                       ,SAS,Analytic,20030
+Default,Equal,SQLDBX                        ,SQLDB Explorer,Analytic,20031
+Default,Equal,SRCLIB_DLL_X64-32             ,Alteryx,Analytic,20032
+Default,Equal,TDXODBC                       ,TD Linux ODBC,Analytic,20033
+Default,Like,TITAN2_%,unknown,Analytic,20034
+Default,Equal,TRNSFRMR                      ,Cognos,Analytic,20035
+Default,Equal,Unavailable                   ,unknown,Analytic,20036
+Default,Equal,UVSH                          ,DataStage,ETL,20037
+Default,Equal,WRITE_UGAP_                   ,Apache Airflow,Analytic,20038
 Default,Like,JOBRUNNER%,D3,ETL,144101
 Default,Like,%PL%,Perl,Application,1000001
 Default,Like,OSH%,IBM Data Stage,ETL,1000002
-Default,Equal,TERADATAKERNEL,Jupyter,Analytic,1234
