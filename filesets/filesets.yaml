@@ -205,14 +205,22 @@ db_objects:
     <<: *customer_data_space
     dim_indexkind:
       gitfile:      "dims/dim_indexkind.csv"
+    dim_tablekind:
+      gitfile:      "dims/dim_tablekind.csv"
+    dim_datatype:
+      gitfile:      "dims/dim_datatype.csv"
     indices_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
-      gitfile:      "db_objects/indices.v01.coa.sql"      
+      gitfile:      "db_objects/objects_indices_by_database.v01.coa.sql"      
+    tables_v01_coa_sql:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/objects_tables_by_database.v01.coa.sql"
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
-      gitfile:      "db_objects/columns.v01.coa.sql"
+      gitfile:      "db_objects/objects_columns.v01.coa.sql"
 
 
 compete_snowflake:
@@ -222,22 +230,21 @@ compete_snowflake:
     <<: *db_objects
     dim_dbobject:
       gitfile:      "dims/dim_dbobject.csv"
-    dim_datatype:
-      gitfile:      "dims/dim_datatype.csv"
-    dim_tablekind:
-      gitfile:      "dims/dim_tablekind.csv"
     dim_tdinternal_databases:
       gitfile:      "dims/dim_tdinternal_databases.csv"
+    constraints_sql:
+      collection:   ["pdcr","dbc"]
+      gitfile:      "compete_snowflake/constraints.coa.sql"      
     compete01_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       iopernode_90pct: 0
-      gitfile:      "compete_snowflake/compete_snowflake.pdcr.coa.sql"
+      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
     compete01_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       iopernode_90pct: 0
-      gitfile:      "compete_snowflake/compete_snowflake.dbc.coa.sql"
+      gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
