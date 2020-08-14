@@ -234,7 +234,7 @@ compete_snowflake:
       gitfile:      "dims/dim_tdinternal_databases.csv"
     constraints_sql:
       collection:   ["pdcr","dbc"]
-      gitfile:      "compete_snowflake/constraints.coa.sql"      
+      gitfile:      "dims/_dim_constraints.coa.sql"      
     compete01_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
