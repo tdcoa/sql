@@ -197,7 +197,6 @@ customer_data_space:
       gitfile:      "db_objects/upload-manifest.template.json"
 
 
-
 db_objects:
   active:           "True"
   fileset_version:  "1.0"
@@ -221,6 +220,10 @@ db_objects:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_columns.v01.coa.sql"
+    constraints_v01_coa_sql:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/objects_constraints_by_database.v01.coa.sql"
 
 
 compete_snowflake:
