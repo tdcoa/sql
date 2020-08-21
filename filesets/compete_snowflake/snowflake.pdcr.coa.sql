@@ -1,6 +1,6 @@
-/* 
-  parameters:
-  - iopernode_90pct = 1000  (from archie)
+/* Compete Snowflake set
+Parameters:
+ - startdate, enddate, siteid, dbqobjtbl
 */
 
 
@@ -11,40 +11,71 @@
 /*{{temp:dim_tdinternal_databases.csv}}*/;
 
 
-/*{{save:dat_dbobject_count_per_tablekind.csv}}*/
+/*{{save:dat_snowflake_tablekind.csv}}*/
 SELECT
-     '{siteid}' as Site_ID
-    ,'Object Type Definitions' AS ReportName
-    ,Table_Bucket
-    ,TableKind_Desc                     
-    ,SUM(ObjectCount)AS ObjectCount
+     '{siteid}' as Site_ID                    
+    ,CAST(CAST(SUM(ObjectCount) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS JICount
 FROM table_kinds_by_database
-WHERE DatabaseName NOT IN
-  (select dbname from "dim_tdinternal_databases.csv")
-GROUP BY 3,4;                            
+WHERE DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")
+  AND TableKindDesc = 'Join Index'
+;                           
 
 
-/*{{save:dat_dbobject_table_multiset.csv}}*/
+/*{{save:dat_snowflake_table_multiset.csv}}*/
 select 
      '{siteid}' as Site_ID
-    ,CASE MultisetInd
-       WHEN 'Y' THEN 'MULTISET Tables'
-       WHEN 'N' THEN 'SET Tables'
-       ELSE 'Others' 
-     END AS Table_Type
-    ,SUM(ObjectCount) as Total_Count
+    ,CAST(CAST(SUM(CASE WHEN MultisetInd = 'N' THEN ObjectCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) as SetTableCount
+    ,CAST(CAST(SUM(ObjectCount) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) as TotalObjectCount
+    ,CAST(SUM(CASE WHEN MultisetInd = 'N' THEN ObjectCount ELSE 0 END) / CAST(SUM(ObjectCount) AS DECIMAL(18,3)) * 100 AS INTEGER FORMAT 'ZZ9') AS SetTablePct
 FROM table_kinds_by_database
-WHERE DatabaseName NOT IN (select dbname from "dim_tdinternal_databases.csv")  
-GROUP BY 2;
+;
+ 
+
+/*{{save:dat_snowflake_special_data_types.csv}}*/
+select 
+ '{siteid}' as Site_ID
+,CAST(CAST(SUM(CASE WHEN ColumnCategory = 'INTERVAL' THEN ColumnCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS IntervalCnt
+,CAST(CAST(SUM(CASE WHEN ColumnCategory = 'PERIOD' THEN ColumnCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS PeriodCnt
+,CAST(CAST(SUM(CASE WHEN ColumnCategory = 'NUMBER' THEN ColumnCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS NumberCnt
+,CAST(CAST(SUM(CASE WHEN ColumnCategory = 'BLOB' AND 
+                         CAST(SUBSTRING(COLUMNTYPE FROM 6 FOR CHARS(COLUMNTYPE) -6) AS BIGINT) > 8*2**20  
+                    THEN ColumnCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS Blob8MCnt
+,CAST(CAST(SUM(CASE WHEN ColumnCategory = 'CLOB' AND 
+                         CAST(SUBSTRING(COLUMNTYPE FROM 6 FOR INDEX(COLUMNTYPE, ')') -6) AS BIGINT) *
+                         CASE WHEN INDEX(COLUMNTYPE, 'LATIN') > 0 THEN 1 ELSE 2 END  > 16*2**20 
+                    THEN ColumnCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS Clob16MCnt
+,CAST(CAST(SUM(CASE WHEN ColumnCategory = 'XML' OR ColumnCategory LIKE 'JSON%' THEN ColumnCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS XMLJSONCnt
+,CAST(CAST(SUM(CASE WHEN ColumnCategory = 'ST_GEOMETRY' THEN ColumnCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS GeoCnt
+from column_types
+;
 
 
-/*{{save:dat_dbobject_usage_per_type.csv}}*/
+/*{{save:dat_snowflake_indextype.csv}}*/
+select
+   '{siteid}' as Site_ID 
+  ,CAST(CAST(SUM(CASE WHEN IndexTypeDesc = 'Unique Primary Index (UPI)' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS UPI 
+  ,CAST(CAST(SUM(CASE WHEN IndexTypeDesc LIKE 'Partitioned Primary Index%' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS PPI 
+from index_types_by_database
+Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv");
+
+                                                                           
+/*{{save:dat_snowflake_constrainttype.csv}}*/
+SELECT  
+ '{siteid}' as Site_ID
+ ,CAST(CAST(SUM(CASE WHEN ConstraintType = 'Column Constraint' THEN ConstraintCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS CCC_Count
+ ,CAST(CAST(SUM(CASE WHEN ConstraintType = 'Primary Key' THEN ConstraintCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS PKC_Count 
+ ,CAST(CAST(SUM(CASE WHEN ConstraintType = 'Foreign Key' THEN ConstraintCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS FKC_Count 
+FROM constraint_type_by_database
+WHERE DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
+;
+
+
+/*{{save:dat_snowflake_usage_per_type.csv}}*/
 SELECT
      '{siteid}' as Site_ID
-    ,'Object Types Used and Frequency' AS ReportName
     ,FT.ObjectType
     ,ObjectTypeDesc
-    ,ZEROIFNULL(Frequency_of_Use) AS Frequency_of_Use
+    ,CAST(CAST(ZEROIFNULL(Frequency_of_Use) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS Frequency_of_Use
 FROM
     "dim_dbobject.csv" FT
     LEFT OUTER JOIN
@@ -53,59 +84,15 @@ FROM
             ObjectType
             ,SUM(CAST(FreqofUse AS BIGINT)) AS Frequency_of_Use
         FROM
-            PDCRINFO.DBQLObjTbl OT
+            {dbqlobjtbl} OT
         WHERE
-            --jcm
             LogDate BETWEEN {startdate} AND {enddate}  
-            AND OT.ObjectDatabaseName NOT IN (select dbname from "dim_tdinternal_databases.csv")      
+            AND OT.ObjectDatabaseName NOT IN (select dbname from "dim_tdinternal_databases.csv")
+            AND ObjectType = 'Tmp'   -- Global Temp only
         GROUP BY 1
     ) OT
     ON FT.ObjectType = OT.ObjectType
-ORDER BY ObjectTypeDesc;
+WHERE FT.ObjectType = 'Tmp'          -- dim_dboject has all obj types but this resultset is only for Tmp
+;
 
-
-/*{{save:dat_dbobject_count_per_datatype.csv}}*/
-SELECT
-     '{siteid}' as Site_ID
-    ,'Data Type Usage' AS ReportName
-    ,DataTypeDesc
-    ,SUM(ColumnCount) AS Total_Cnt
-FROM column_types
-GROUP BY 3
-ORDER BY 3;
-
-
-/*{{save:dat_dbobject_count_per_statementtype.csv}}*/
-SELECT
-     '{siteid}' as Site_ID
-    ,'SQL Statement Type Usage' AS ReportName
-    ,StatementType
-    ,COUNT(*) AS Frequency_Count
-FROM
-    PDCRINFO.DBQLogTbl
-WHERE
-    LogDate BETWEEN {startdate} AND {enddate}
-GROUP BY 3;
-
-
-/*{{save:dat_dbobject_count_per_indextype.csv}}*/
 /*{{pptx:snowflake_migration_blockers.pptx}}*/
-select
-   '{siteid}' as Site_ID 
-  ,'Index Types' AS ReportName
-  ,IndexTypeDesc
-  ,SUM(IndexCount) AS Total
-from index_types_by_database
-Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
-group by 3;
-
-                                                                           
-/*{{save:dat_dbobject_count_per_constrainttype.csv}}*/
-SELECT  
- '{siteid}' as Site_ID
- ,'Constraint Analysis' as ReportName
- ,ConstraintType
- ,Count(*) AS ConstraintCount
-FROM constraint_details
-WHERE DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")      
-GROUP BY 3;
