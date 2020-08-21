@@ -203,7 +203,7 @@ db_objects:
   files: &db_objects
     <<: *customer_data_space
     dim_indexkind:
-      gitfile:      "dims/dim_indexkind.csv"
+      gitfile:      "dims/dim_indextype.csv"
     dim_tablekind:
       gitfile:      "dims/dim_tabletype.csv"
     dim_datatype:
