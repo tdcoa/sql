@@ -205,7 +205,7 @@ db_objects:
     dim_indexkind:
       gitfile:      "dims/dim_indexkind.csv"
     dim_tablekind:
-      gitfile:      "dims/dim_tablekind.csv"
+      gitfile:      "dims/dim_tabletype.csv"
     dim_datatype:
       gitfile:      "dims/dim_datatype.csv"
     indices_v01_coa_sql:
