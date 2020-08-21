@@ -9,6 +9,14 @@ dbcmngr
 Default
 External_AP
 LockLogShredder
+PDCRAccess                                                  
+PDCRADM                                                     
+PDCRAdmin                                                   
+PDCRDATA                                                    
+PDCRHIGA                                                    
+PDCRINFO                                                                                                      
+PDCRSTG                                                                                                        
+PDCRTPCD 
 PUBLIC
 SECADMIN
 SPOOL_RESERVE
