@@ -240,12 +240,16 @@ compete_snowflake:
       dbsversion:   ["16.20", "16.10", "16.00"]
       iopernode_90pct: 0
       gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
+      startdate:    "Current_Date - 7"
+      enddate:      "Current_Date - 1"
       dbqlobjtbl:   "pdcrinfo.DBQLObjTbl"
     compete01_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       iopernode_90pct: 0
       gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
+      startdate:    "Current_Date - 7"
+      enddate:      "Current_Date - 1"
       dbqlobjtbl:   "dbc.QryLogObjectsV"      
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
