@@ -245,7 +245,8 @@ compete_snowflake:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       iopernode_90pct: 0
-      gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
+      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
+      dbqlobjtbl:   "dbc.QryLogObjectsV"      
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
