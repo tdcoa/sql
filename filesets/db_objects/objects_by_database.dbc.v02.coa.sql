@@ -73,8 +73,8 @@ create volatile table db_objects as
 
 
 /*{{save:db_objects_all.csv}}*/
-/*{{load:{db_stg}.stg_dat_DB_Objects}}*/
-/*{{call:{db_coa}.sp_dat_DB_Objects('{fileset_version}')}}*/
+/*  {{load:{db_stg}.stg_dat_DB_Objects}}*/
+/*  {{call:{db_coa}.sp_dat_DB_Objects('{fileset_version}')}}*/
 Select
  '{siteid}' as Site_ID
 ,(select Week_ID from db_objects_dates) as Week_ID
