@@ -1,5 +1,5 @@
 SELECT
- case when d.logdate is null 
+ case when d.logdate is null
     then date
     else d.logdate end as log_date
 ,case when WeekNumber_Of_Year(d.logdate) is null
@@ -35,7 +35,7 @@ FROM
 JOIN
 (
     Select t.DatabaseName, '' as CommentString
-	,logdate 
+	,logdate
     ,sum( case when t.TableKind in('T','O','J','Q') then 1 else 0 end) as TableCount
     ,sum( case when t.TableKind in('V') then 1 else 0 end) as ViewCount
     ,sum( case when t.TableKind in('I','N') then 1 else 0 end) as IndexCount

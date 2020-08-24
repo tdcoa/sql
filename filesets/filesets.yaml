@@ -22,14 +22,12 @@ demo:
     upload_template:
       gitfile:  "demo/upload-manifest.template.json"
 
-
-problem:
+problems:
   active:     "True"
   show_in_gui: "False"
-  fileset_version: "1.15"
-  startdate:  "Current_Date - 7"
-  enddate:    "Current_Date - 1"
-  some_value: "Donkey"
+  fileset_version: "0"
+  startdate:  "Current_Date - 5"
+  enddate:    "Current_Date - 2"
   birthday:   "1974-12-17"
   files:
     file01:
@@ -38,15 +36,13 @@ problem:
       gitfile:   "demo/dbcinfo.coa.sql"
       startdate: "Date-7"
       enddate:   "Date-1"
-      some_value: "Elephant"
     file03:
       gitfile:  "demo/today.sql"
-    file04:
-      gitfile:  "demo/alldates.py"
     file05:
-      gitfile:  "demo/AgeReport_problem.pptx"
+      gitfile:  "demo/AgeReport.pptx"
     upload_template:
       gitfile:  "demo/upload-manifest.template.json"
+
 
 
 dim_user:
@@ -149,10 +145,14 @@ compete_snowflake:
       gitfile:      "dims/dim_datatype.csv"
     dim_tablekind:
       gitfile:      "dims/dim_tablekind.csv"
+    dim_indexkind:
+      gitfile:      "dims/dim_indexkind.csv"
     dim_tdinternal_databases:
       gitfile:      "dims/dim_tdinternal_databases.csv"
     dim_columnkind:
       gitfile:      "dims/_dim_column_type.coa.sql"
+    dim_indextype:
+      gitfile:      "dims/_dim_index_type.coa.sql"
     compete01_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
@@ -220,13 +220,13 @@ customer_data_space:
       spoolpct:     "0.20"
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
-      gitfile:      "db_objects/objects_cds_by_database.dbc.coa.sql"
+      gitfile:      "db_objects/objects_by_database.dbc.v02.coa.sql"
     cds_by_database_pdcr_sql:
       spoolpct:     "0.20"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       day_of_week:  "1"  # for weekly CDS, use first day of week
-      gitfile:      "db_objects/objects_cds_by_database.pdcr.coa.sql"
+      gitfile:      "db_objects/objects_by_database.pdcr.v02.coa.sql"
     upload_template:
       gitfile:      "db_objects/upload-manifest.template.json"
 
@@ -237,12 +237,6 @@ db_objects:
   fileset_version:  "1.0"
   files: &db_objects
     <<: *customer_data_space
-    dim_tablekind:
-      gitfile:      "dims/dim_tablekind.csv"
-    object_counts_by_database_sql:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
-      gitfile:      "db_objects/objects_counts_by_database.coa.sql"    
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
