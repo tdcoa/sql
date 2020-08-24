@@ -220,13 +220,13 @@ customer_data_space:
       spoolpct:     "0.20"
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
-      gitfile:      "db_objects/objects_by_database.dbc.v02.coa.sql"
+      gitfile:      "db_objects/objects_cds_by_database.dbc.coa.sql"
     cds_by_database_pdcr_sql:
       spoolpct:     "0.20"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       day_of_week:  "1"  # for weekly CDS, use first day of week
-      gitfile:      "db_objects/objects_by_database.pdcr.v02.coa.sql"
+      gitfile:      "db_objects/objects_cds_by_database.pdcr.coa.sql"
     upload_template:
       gitfile:      "db_objects/upload-manifest.template.json"
 
@@ -237,6 +237,12 @@ db_objects:
   fileset_version:  "1.0"
   files: &db_objects
     <<: *customer_data_space
+    dim_tablekind:
+      gitfile:      "dims/dim_tablekind.csv"
+    object_counts_by_database_sql:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/objects_counts_by_database.coa.sql"    
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
