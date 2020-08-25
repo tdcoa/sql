@@ -532,4 +532,8 @@ gss_resusage:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20"]
       gitfile:      "gss_resusage/gss_resusage.1620.dbc.coa.sql"
+    gss_resusage_1610_dbc:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.10"]
+      gitfile:      "gss_resusage/gss_resusage.1610.dbc.coa.sql"
       
