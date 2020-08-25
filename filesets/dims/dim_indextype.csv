@@ -1,4 +1,4 @@
-IndexType,UniqueFlag,IndexAbbr,IndexName,Index_Bucket
+IndexType,UniqueFlag,IndexTypeAbbr,IndexTypeDesc,IndexTypeBucket
 P,Y,UPI,Unique Primary Index,Primary Index
 P,N,NUPI,Non-Unique Primary Index,Primary Index
 Q,-,PPI,Partitioned Primary Index,Partition
