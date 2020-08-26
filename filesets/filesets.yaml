@@ -524,19 +524,3 @@ internal_qbr:
       enddate:    "Current_Date - 1"
     align01:
       gitfile:    "internal_qbr/dim_alignment_ams_west_csm.csv"
-
-
-gss_resusage:
-  active:           "True"
-  fileset_version:  "1.0"
-  startdate:        "Current_Date - 43"
-  enddate:          "Current_Date - 1"
-  files:
-    gss_resusage_1620_dbc:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20"]
-      gitfile:      "gss_resusage/gss_resusage.1620.dbc.coa.sql"
-    gss_resusage_1610_dbc:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.10"]
-      gitfile:      "gss_resusage/gss_resusage.1610.dbc.coa.sql"
