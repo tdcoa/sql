@@ -33,7 +33,7 @@ Select /*dbql_core*/ '{siteid}' as Site_ID
 ,sum(cast(CPUUServ  as decimal(18,2))) as CPU_OS
 ,sum(cast(CPUUExec  as decimal(18,2))) as CPU_DBS
 ,CPU_Idle+CPU_IOWait+CPU_OS+CPU_DBS as CPU_Total
-from {resusagespma}
+from pdcrinfo.ResUsageSPMA_Hst
 where TheDate between {startdate} and {enddate}
 Group by LogDate, LogHour
 ;
@@ -171,7 +171,7 @@ FROM
   ,zeroifnull(avg((AMPCPUTime / nullifzero(MaxAmpCPUTime*NumOfActiveAMPs))-1)) as CPUSec_Skew_AvgPCt
   ,zeroifnull(avg((TotalIOCount / nullifzero(MaxAmpIO*NumOfActiveAMPs))-1) )   as IOCnt_Skew_AvgPct
 
-  From {dbqlogtbl} /* pdcrinfo.dbqlogtbl_hst */ as dbql
+  From pdcrinfo.DBQLogTbl_Hst as dbql
   where dbql.LogDate between {startdate} and {enddate}
   Group by
    LogTS
@@ -279,7 +279,7 @@ SELECT /*dbql_core*/
 ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >3600                             THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_3600_plus
 
 
-From {dbqlogtbl} /* pdcrinfo.dbqlogtbl_hst */ as dbql
+From pdcrinfo.DBQLogTbl_Hst as dbql
 /* TODO: union with DBQL_Summary table - Paul */
 
 join dim_user usr
