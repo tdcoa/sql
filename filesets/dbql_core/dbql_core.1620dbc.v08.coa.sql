@@ -204,7 +204,7 @@ Group by
 /*{{call:{db_coa}.sp_dat_DBQL_Core_QryCnt_Ranges('{fileset_version}')}}*/
 SELECT /*dbql_core*/
  '{siteid}'  as Site_ID
-,LogDate
+,cast(dbql.StartTime as date) as LogDate
 ,usr.User_Bucket
 ,usr.User_Department
 ,usr.User_SubDepartment
