@@ -175,12 +175,16 @@ customer_data_space:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       gitfile:      "db_objects/objects_cds_by_database.dbc.coa.sql"
+      startdate:    "Current_Date - 7"
+      enddate:      "Current_Date"
     cds_by_database_pdcr_sql:
       spoolpct:     "0.20"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       day_of_week:  "1"  # for weekly CDS, use first day of week
       gitfile:      "db_objects/objects_cds_by_database.pdcr.coa.sql"
+      startdate:    "Current_Date - 7"
+      enddate:      "Current_Date - 1"      
     upload_template:
       gitfile:      "db_objects/upload-manifest.template.json"
 
