@@ -84,7 +84,7 @@ FROM
             ObjectType
             ,SUM(CAST(FreqofUse AS BIGINT)) AS Frequency_of_Use
         FROM
-            {dbqlobjtbl} OT
+            pdcrinfo.DBQLObjTbl OT
         WHERE
             LogDate BETWEEN {startdate} AND {enddate}  
             AND OT.ObjectDatabaseName NOT IN (select dbname from "dim_tdinternal_databases.csv")
