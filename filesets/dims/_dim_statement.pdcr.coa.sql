@@ -19,7 +19,7 @@ create volatile table dim_statement as
   ,coalesce(p.Pattern_Type,'Equal')  as Pattern_Type
   ,coalesce(p.Pattern, o.StatementType) as Pattern
   ,coalesce(p.SiteID, 'None')        as SiteID_
-  from (select distinct StatementType from {dbqlogtbl}
+  from (select distinct StatementType from pdcrinfo.DBQLogTbl_Hst
         where LogDate between {startdate} and {enddate}) as o
   left join "dim_statement.csv"  as p
     on (case
