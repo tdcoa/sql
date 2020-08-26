@@ -139,7 +139,7 @@ dbql_core:
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620.pdcr.v08.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
@@ -147,7 +147,7 @@ dbql_core:
     dbql_core_dbc16:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620.dbc.v08.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620dbc.v08.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "dbc.DBQLogTbl"
