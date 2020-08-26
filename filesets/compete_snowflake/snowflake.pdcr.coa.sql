@@ -53,7 +53,7 @@ from column_types
 /*{{save:dat_snowflake_indextype.csv}}*/
 select
    '{siteid}' as Site_ID 
-  ,CAST(CAST(SUM(CASE WHEN IndexTypeDesc = 'Unique Primary Index (UPI)' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS UPI 
+  ,CAST(CAST(SUM(CASE WHEN IndexTypeDesc = 'Unique Primary Index' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS UPI 
   ,CAST(CAST(SUM(CASE WHEN IndexTypeDesc LIKE 'Partitioned Primary Index%' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS PPI 
 from index_types_by_database
 Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv");
