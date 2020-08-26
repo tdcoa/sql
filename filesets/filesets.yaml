@@ -81,14 +81,12 @@ dim_app:
       gitfile:      "dims/_dim_app.pdcr.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     dim_app_sql_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_app.dbc.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
 
 
 dim_statement:
@@ -105,15 +103,13 @@ dim_statement:
       gitfile:      "dims/_dim_statement.pdcr.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     dim_statement_sql_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_statement.dbc.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
-
+      
 
 autotune_check:
   active:           "True"
@@ -142,16 +138,12 @@ dbql_core:
       gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-      resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
     dbql_core_dbc16:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core.1620dbc.v08.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
-      resusagespma: "dbc.ResUsageSPMA"
+      enddate:      "Current_Date"
     upload_manifest_template:
       gitfile:      "dbql_core/upload-manifest.template.json"
 
@@ -238,15 +230,13 @@ compete_snowflake:
       gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
       startdate:    "Current_Date - 7"
       enddate:      "Current_Date - 1"
-      dbqlobjtbl:   "pdcrinfo.DBQLObjTbl"
     compete01_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       iopernode_90pct: 0
       gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
       startdate:    "Current_Date - 7"
-      enddate:      "Current_Date - 1"
-      dbqlobjtbl:   "dbc.QryLogObjectsV"
+      enddate:      "Current_Date"
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
