@@ -143,7 +143,7 @@ dbql_core:
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core.1620dbc.v08.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date"
+      enddate:      "Current_Date - 1"
     upload_manifest_template:
       gitfile:      "dbql_core/upload-manifest.template.json"
 
@@ -176,7 +176,7 @@ customer_data_space:
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       gitfile:      "db_objects/objects_cds_by_database.dbc.coa.sql"
       startdate:    "Current_Date - 7"
-      enddate:      "Current_Date"
+      enddate:      "Current_Date - 1"
     cds_by_database_pdcr_sql:
       spoolpct:     "0.20"
       collection:   ["pdcr"]
@@ -240,7 +240,7 @@ compete_snowflake:
       iopernode_90pct: 0
       gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
       startdate:    "Current_Date - 7"
-      enddate:      "Current_Date"
+      enddate:      "Current_Date - 1"
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
