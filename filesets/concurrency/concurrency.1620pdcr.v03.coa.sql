@@ -21,7 +21,7 @@ FROM
    , clockTick  /* Every 10 seconds */
    , SUM(QryCount)  PointConcurrency
    ,(row_number() OVER(PARTITION BY StartTmHr ORDER BY PointConcurrency)- 1) * 100
-                 / COUNT(*) OVER(PARTITION BY StartTmHr) AS Ntile   --Ntile for the 600 10 second samples within the hour
+                 / COUNT(*) OVER(PARTITION BY StartTmHr) AS Ntile   /* Ntile for the 600 10 second samples within the hour */
     FROM
         (  /* the expand  by anchor second clause duplicates the dbql columns for each second between the firststeptime and firstresptime.
             grouping on the second tells us how many concurrent queries were running during that second */
