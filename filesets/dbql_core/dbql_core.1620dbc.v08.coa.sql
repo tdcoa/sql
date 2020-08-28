@@ -155,8 +155,8 @@ FROM
     else 0 end as FLOAT))) AS TransferTime_Sec
 
   /* ====== Metrics: CPU & IO ====== */
-  ,zeroifnull(sum( cast(dbql.ParserCPUTime  as decimal(18,2)))) as CPU_Parse_Sec
-  ,zeroifnull(sum( cast(dbql.AMPCPUtime     as decimal(18,2)))) as CPU_AMP_Sec
+  ,zeroifnull(sum( cast(dbql.ParserCPUTime    as decimal(18,2)))) as CPU_Parse_Sec
+  ,zeroifnull(sum( cast(dbql.AMPCPUtime       as decimal(18,2)))) as CPU_AMP_Sec
   /* TODO: check if failed queries log CPU consumption */
   ,zeroifnull(sum( cast(ReqPhysIO/1e6         as decimal(18,2)))) as IOCntM_Physical
   ,zeroifnull(sum( cast(TotalIOCount/1e6      as decimal(18,2)))) as IOCntM_Total
@@ -171,15 +171,63 @@ FROM
   ,zeroifnull(avg((AMPCPUTime / nullifzero(MaxAmpCPUTime*NumOfActiveAMPs))-1)) as CPUSec_Skew_AvgPCt
   ,zeroifnull(avg((TotalIOCount / nullifzero(MaxAmpIO*NumOfActiveAMPs))-1) )   as IOCnt_Skew_AvgPct
 
-  From dbc.DBQLogTbl as dbql
-  where cast(dbql.StartTime as date) between {startdate} and {enddate}
+  From dbc.QryLogV as dbql
+  where dbql.LogDate between {startdate} and {enddate}
   Group by
    LogTS
   ,Site_ID
   ,username
   ,appid
   ,StatementType
-) as dbql
+
+union all
+
+SELECT
+   '{siteid}'  as Site_ID
+  ,cast(StartTime as char(13))||':00:00' as LogTS
+  ,HashAmp() + 1 as Total_AMPs
+  ,username
+  ,appid
+  ,'Summary' as StatementType
+  ,zeroifnull(sum(cast(smry.QueryCount as decimal(18,2)))) as Request_Cnt
+  ,zeroifnull(sum(cast(smry.QueryCount as decimal(18,2)))) as Query_Cnt
+  ,null as Query_MultiStatement_Cnt
+  ,null as Query_Error_Cnt
+  ,null as Query_Abort_Cnt
+  ,null as Query_NoIO_cnt
+  ,null as Query_InMem_Cnt
+  ,null as Query_PhysIO_Cnt
+  ,null as Query_Tactical_Cnt
+  ,null as Query_Complexity_Score_Avg
+  ,null as Returned_Row_Cnt
+  ,null as DelayTime_Sec
+  ,null as RunTime_Parse_Sec
+  ,null as Runtime_AMP_Sec
+  ,zeroifnull(sum(cast(smry.QuerySeconds as decimal(18,2)))) as RunTime_Total_Sec -- not sure if exactly equivalent
+  ,null as TransferTime_Sec
+  ,zeroifnull(sum(cast(smry.ParserCPUTime as decimal(18,2)))) as CPU_Parse_Sec
+  ,zeroifnull(sum(cast(smry.AMPCPUTime as decimal(18,2)))) as CPU_AMP_Sec
+  ,zeroifnull(sum(cast(smry.ReqPhysIO/1e6 as decimal(18,2)))) as IOCntM_Physical
+  ,zeroifnull(sum(cast(smry.TotalIOCount/1e6 as decimal(18,2)))) as IOCntM_Total
+  ,zeroifnull(sum(cast(smry.ReqPhysIOKB/1e6 as decimal(18,2)))) as IOGB_Physical
+  ,null as IOGB_Total
+  ,zeroifnull(sum(cast(smry.UsedIota/1e9 as decimal(18,2)))) as IOTA_Used_cntB
+  ,null as NumOfActiveAMPs_Avg
+  ,null as Spool_GB
+  ,zeroifnull(avg(1-(ReqPhysIO/nullifzero(TotalIOCount)))) as CacheHit_Pct
+  ,null as CPUSec_Skew_AvgPCt
+  ,null as IOCnt_Skew_AvgPct
+
+  From dbc.QryLogSummaryV smry  
+  where smry.LogDate between {startdate} and {enddate}    
+  Group by
+   LogTS
+  ,Site_ID
+  ,username
+  ,appid
+  ,StatementType
+
+)dbql
 
 join dim_app as app     on dbql.AppID = app.AppID
 join dim_Statement stm  on dbql.StatementType = stm.StatementType
@@ -193,8 +241,8 @@ Group by
 ,usr.User_Bucket
 ,usr.User_Department
 ,usr.User_SubDepartment
-/* TODO: add DBQL_Summary pull - Paul */
 ;
+
 
 
 /* Query_Breakouts by User Buckets */
@@ -279,7 +327,7 @@ SELECT /*dbql_core*/
 ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >3600                             THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_3600_plus
 
 
-From dbc.DBQLogTbl as dbql
+From dbc.QryLogV as dbql
 /* TODO: union with DBQL_Summary table - Paul */
 
 join dim_user usr
