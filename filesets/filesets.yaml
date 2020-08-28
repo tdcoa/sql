@@ -85,8 +85,8 @@ dim_app:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_app.dbc.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
+      startdate:    "Current_Date - 7" # 6 weeks
+      enddate:      "Current_Date"
 
 
 dim_statement:
@@ -107,8 +107,8 @@ dim_statement:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_statement.dbc.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
+      startdate:    "Current_Date - 7" # 6 weeks
+      enddate:      "Current_Date"
       
 
 autotune_check:
@@ -142,8 +142,8 @@ dbql_core:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core.1620dbc.v08.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
+      startdate:    "Current_Date - 7" # 6 weeks
+      enddate:      "Current_Date"
     upload_manifest_template:
       gitfile:      "dbql_core/upload-manifest.template.json"
 
