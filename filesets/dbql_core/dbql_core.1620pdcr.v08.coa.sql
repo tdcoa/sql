@@ -203,7 +203,7 @@ SELECT
   ,null as DelayTime_Sec
   ,null as RunTime_Parse_Sec
   ,null as Runtime_AMP_Sec
-  ,zeroifnull(sum(cast(smry.QuerySeconds as decimal(18,2)))) as RunTime_Total_Sec -- not sure if exactly equivalent
+  ,zeroifnull(sum(cast(smry.QuerySeconds as decimal(18,2)))) as RunTime_Total_Sec 
   ,null as TransferTime_Sec
   ,zeroifnull(sum(cast(smry.ParserCPUTime as decimal(18,2)))) as CPU_Parse_Sec
   ,zeroifnull(sum(cast(smry.AMPCPUTime as decimal(18,2)))) as CPU_AMP_Sec
