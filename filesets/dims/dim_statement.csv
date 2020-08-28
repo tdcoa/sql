@@ -32,6 +32,7 @@ Default,Equal,Show,Other,370
 Default,Equal,UCAbort ,Admin,380
 Default,Equal,Unrecognized type ,Other,390
 Default,Equal,Update,Merge/Update/Delete,400
+Default,Equal,Summary,Summary,410
 Default,Like,%load%,Load,10000
 Default,Like,%Transaction%,Other,10010
 Default,Like,Create%,Create/Drop,10020
