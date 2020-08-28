@@ -172,7 +172,7 @@ FROM
   ,zeroifnull(avg((TotalIOCount / nullifzero(MaxAmpIO*NumOfActiveAMPs))-1) )   as IOCnt_Skew_AvgPct
 
   From dbc.QryLogV as dbql
-  where dbql.LogDate between {startdate} and {enddate}
+  where cast(dbql.StartTime as date) between {startdate} and {enddate}
   Group by
    LogTS
   ,Site_ID
@@ -219,7 +219,7 @@ SELECT
   ,null as IOCnt_Skew_AvgPct
 
   From dbc.QryLogSummaryV smry  
-  where smry.LogDate between {startdate} and {enddate}    
+  where cast(smry.StartTime as date) between {startdate} and {enddate}    
   Group by
    LogTS
   ,Site_ID
