@@ -20,8 +20,12 @@ create volatile table dim_app as
   ,coalesce(p.Pattern_Type,'Equal')  as Pattern_Type
   ,coalesce(p.Pattern, o.AppID)      as Pattern
   ,coalesce(p.SiteID, 'None')        as SiteID_
-  from (select distinct AppID from dbc.DBQLogTbl
-        where cast(StartTime as date) between {startdate} and {enddate}) as o
+  from (select distinct AppID from pdcrinfo.DBQLogTbl_Hst
+        where LogDate between {startdate} and {enddate}
+        union
+        select distinct AppID from pdcrinfo.DBQLSummaryTbl_Hst
+        where LogDate between {startdate} and {enddate}
+        ) as o
   left join "dim_app.csv" as p
     on (case
         when p.Pattern_Type = 'Equal' and o.AppID = p.Pattern then 1
