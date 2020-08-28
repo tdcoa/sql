@@ -22,7 +22,8 @@ SELECT SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9
 /*{{load:{db_stg}.stg_dat_dbql_core_maxcpu}}*/
 /*{{call:{db_coa}.sp_dat_dbql_core_maxcpu('{fileset_version}')}}*/
 Select /*dbql_core*/ '{siteid}' as Site_ID
-,TheDate as LogDate, Floor(TheTime/1e4) as LogHour
+,cast(TheDate as fornat 'Y4-MM-DD') as LogDate
+,Floor(TheTime/1e4) as LogHour
 ,SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9 FOR 6) as UTC_Offset
 ,cast(max(NodeType) as varchar(10)) as Node_Type
 ,cast(count(distinct NodeID) as smallint) as Node_Cnt
@@ -203,7 +204,7 @@ SELECT
   ,null as DelayTime_Sec
   ,null as RunTime_Parse_Sec
   ,null as Runtime_AMP_Sec
-  ,zeroifnull(sum(cast(smry.QuerySeconds as decimal(18,2)))) as RunTime_Total_Sec -- not sure if exactly equivalent
+  ,zeroifnull(sum(cast(smry.QuerySeconds as decimal(18,2)))) as RunTime_Total_Sec
   ,null as TransferTime_Sec
   ,zeroifnull(sum(cast(smry.ParserCPUTime as decimal(18,2)))) as CPU_Parse_Sec
   ,zeroifnull(sum(cast(smry.AMPCPUTime as decimal(18,2)))) as CPU_AMP_Sec
@@ -252,7 +253,7 @@ Group by
 /*{{call:{db_coa}.sp_dat_DBQL_Core_QryCnt_Ranges('{fileset_version}')}}*/
 SELECT /*dbql_core*/
  '{siteid}'  as Site_ID
-,cast(dbql.StartTime as date) as LogDate
+,cast(dbql.StartTime as date fornmat 'Y4-MM-DD') as LogDate
 ,usr.User_Bucket
 ,usr.User_Department
 ,usr.User_SubDepartment
