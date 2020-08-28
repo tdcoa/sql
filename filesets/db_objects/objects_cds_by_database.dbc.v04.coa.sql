@@ -9,9 +9,9 @@ create volatile table db_objects_cds as
 (
     SELECT
     Current_Date AS LogDate
-    case when s.DatabaseName is null
-        then '*** Total ***'
-        else s.DatabaseName end as DBName
+    ,case when s.DatabaseName is null
+          then '*** Total ***'
+          else s.DatabaseName end as DBName
     ,cast( {spoolpct} as decimal(4,3)) as SpoolPct
     ,case when s.DatabaseName is null
           then '** Entire Teradata System (minus '||
@@ -50,7 +50,7 @@ create volatile table db_objects_cds_week_formatted as
    ,CurrentPermGB as "CurrPerm GB"
    ,FilledPct as "Fill Pct"
    ,rank() over(partition by "Week ID" order by "CurrPerm GB" desc)-1 as "CurrPerm Rank"
-   from db_objects
+   from db_objects_cds
  ) with data no primary index on commit preserve rows
  ;
 
@@ -70,4 +70,3 @@ where "DB Name" <> '*** Total ***'
 and "CurrPerm Rank" <= 10
 ;
 
-drop table db_objects_dates;

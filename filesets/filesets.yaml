@@ -59,20 +59,12 @@ dim_user:
       gitfile:      "dims/dim_user.csv"
     dim_user_override:
       gitfile:      "dims/dim_user_override.sql"
-    dim_user_sql_pdcr:
-      collection:   ["pdcr"]
+    dim_user_sql:
+      collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_user.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    dim_user_sql_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
 
 
 dim_app:
@@ -86,17 +78,15 @@ dim_app:
     dim_app_sql_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_app.coa.sql"
+      gitfile:      "dims/_dim_app.pdcr.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     dim_app_sql_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_app.coa.sql"
+      gitfile:      "dims/_dim_app.dbc.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
 
 
 dim_statement:
@@ -110,18 +100,16 @@ dim_statement:
     dim_statement_sql_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_statement.coa.sql"
+      gitfile:      "dims/_dim_statement.pdcr.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
     dim_statement_sql_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_statement.coa.sql"
+      gitfile:      "dims/_dim_statement.dbc.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
-
+      
 
 autotune_check:
   active:           "True"
@@ -150,16 +138,12 @@ dbql_core:
       gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-      resusagespma: "pdcrinfo.ResUsageSPMA_Hst"
     dbql_core_dbc16:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620dbc.v08.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
-      dbqlogtbl:    "dbc.DBQLogTbl"
-      resusagespma: "dbc.ResUsageSPMA"
     upload_manifest_template:
       gitfile:      "dbql_core/upload-manifest.template.json"
 
@@ -191,12 +175,16 @@ customer_data_space:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       gitfile:      "db_objects/objects_cds_by_database.dbc.coa.sql"
+      startdate:    "Current_Date - 7"
+      enddate:      "Current_Date - 1"
     cds_by_database_pdcr_sql:
       spoolpct:     "0.20"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
       day_of_week:  "1"  # for weekly CDS, use first day of week
       gitfile:      "db_objects/objects_cds_by_database.pdcr.coa.sql"
+      startdate:    "Current_Date - 7"
+      enddate:      "Current_Date - 1"      
     upload_template:
       gitfile:      "db_objects/upload-manifest.template.json"
 
@@ -246,15 +234,13 @@ compete_snowflake:
       gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
       startdate:    "Current_Date - 7"
       enddate:      "Current_Date - 1"
-      dbqlobjtbl:   "pdcrinfo.DBQLObjTbl"
     compete01_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       iopernode_90pct: 0
-      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
+      gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
       startdate:    "Current_Date - 7"
       enddate:      "Current_Date - 1"
-      dbqlobjtbl:   "dbc.QryLogObjectsV"
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
@@ -524,19 +510,3 @@ internal_qbr:
       enddate:    "Current_Date - 1"
     align01:
       gitfile:    "internal_qbr/dim_alignment_ams_west_csm.csv"
-
-
-gss_resusage:
-  active:           "True"
-  fileset_version:  "1.0"
-  startdate:        "Current_Date - 43"
-  enddate:          "Current_Date - 1"
-  files:
-    gss_resusage_1620_dbc:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20"]
-      gitfile:      "gss_resusage/gss_resusage.1620.dbc.coa.sql"
-    gss_resusage_1610_dbc:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.10"]
-      gitfile:      "gss_resusage/gss_resusage.1610.dbc.coa.sql"
