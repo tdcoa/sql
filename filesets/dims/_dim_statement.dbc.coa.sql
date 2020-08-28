@@ -19,11 +19,11 @@ create volatile table dim_statement as
   ,coalesce(p.Pattern_Type,'Equal')  as Pattern_Type
   ,coalesce(p.Pattern, o.StatementType) as Pattern
   ,coalesce(p.SiteID, 'None')        as SiteID_
-  from (select distinct StatementType from pdcrinfo.DBQLogTbl_Hst
-        where LogDate between {startdate} and {enddate}
+  from (select distinct StatementType from dbc.QryLogV
+        where CAST(StartTime AS DATE) between {startdate} and {enddate}
         union all
-        select distinct 'Summary' from pdcrinfo.DBQLSummaryTbl_Hst 
-        where LogDate between {startdate} and {enddate}) as o
+        select distinct 'Summary' from dbc.QryLogSummaryV 
+        where CAST(StartTime AS DATE) between {startdate} and {enddate}) as o
   left join "dim_statement.csv"  as p
     on (case
         when p.Pattern_Type = 'Equal' and o.StatementType = p.Pattern then 1
