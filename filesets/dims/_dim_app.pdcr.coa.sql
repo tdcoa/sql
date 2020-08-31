@@ -28,8 +28,8 @@ create volatile table dim_app as
         ) as o
   left join "dim_app.csv" as p
     on (case
-        when p.Pattern_Type = 'Equal' and o.AppID = p.Pattern then 1
-        when p.Pattern_Type = 'Like'  and o.AppID like p.Pattern then 1
+        when p.Pattern_Type = 'Equal' and o.AppID = p.Pattern (NOT CS) then 1
+        when p.Pattern_Type = 'Like'  and o.AppID like p.Pattern (NOT CS) then 1
         when p.Pattern_Type = 'RegEx'
          and character_length(regexp_substr(o.AppID, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
