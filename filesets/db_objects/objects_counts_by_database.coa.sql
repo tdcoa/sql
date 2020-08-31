@@ -71,3 +71,5 @@ Select
 from db_objects_counts
 where DBName = '*** Total ***'
 ;
+
+drop table "dim_tablekind.csv";
