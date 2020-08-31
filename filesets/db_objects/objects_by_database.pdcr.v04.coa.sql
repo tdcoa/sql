@@ -57,7 +57,7 @@ create volatile table db_objects as
   	,logdate
       ,sum(MaxPerm) as MaxPerm
       ,sum(CurrentPerm) as CurrentPerm
-      FROM PDCRDATA.DatabaseSpace_Hst
+      FROM PDCRInfo.DatabaseSpace_Hst
   	where logdate in (select LogDate from db_objects_dates)
       Group By 1,2
   ) s
