@@ -106,7 +106,7 @@ SELECT
 FROM
  (SELECT
    '{siteid}'  as Site_ID
-  ,cast(StartTime as char(13))||':00:00' as LogTS
+  ,cast(cast(starttime as format 'YYYY-MM-DDBHH') AS CHAR(13)) as LogTS
   ,cast(HashAmp()+1 as Integer) as Total_AMPs
   ,username
   ,appid
@@ -184,7 +184,7 @@ union all
 
 SELECT
    '{siteid}'  as Site_ID
-  ,cast(StartTime as char(13))||':00:00' as LogTS
+  ,cast(cast(starttime as format 'YYYY-MM-DDBHH') AS CHAR(13)) as LogTS
   ,HashAmp() + 1 as Total_AMPs
   ,username
   ,appid
@@ -229,9 +229,9 @@ SELECT
 
 )dbql
 
-join dim_app as app     on dbql.AppID = app.AppID
-join dim_Statement stm  on dbql.StatementType = stm.StatementType
-join dim_user usr       on dbql.UserName = usr.UserName
+join dim_app as app     on dbql.AppID = app.AppID (NOT CS)
+join dim_Statement stm  on dbql.StatementType = stm.StatementType (NOT CS)
+join dim_user usr       on dbql.UserName = usr.UserName (NOT CS)
 Group by
  Site_ID
 ,LogTS
