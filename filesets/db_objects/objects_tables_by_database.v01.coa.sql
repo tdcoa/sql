@@ -3,6 +3,7 @@
    Database is only used as a filter in outer scripts.
 */
 
+/*{{temp:dim_tablekind.csv}}*/
 
 create volatile table table_kinds_by_database as 
 (
