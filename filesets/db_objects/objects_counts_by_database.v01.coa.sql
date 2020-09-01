@@ -2,7 +2,6 @@
    NOT by history, just point-in-time
    Parameters:
    - siteid:     {siteid}
-   - spoolpct:   {spoolpct}  default 20%
 */
 
 /*{{temp:dim_tablekind.csv}}*/
@@ -43,7 +42,7 @@ create volatile table db_objects_counts as
 ;
 
 
-/*{{save:db_objects_counts-all.csv}}*/
+/*{{save:dat_objectkind_count-all.csv}}*/
 Select
  '{siteid}' as Site_ID
 ,DBName
@@ -57,7 +56,7 @@ Select
 from db_objects_counts
 ;
 
-/*{{save:db_objects_counts-total.csv}}*/
+/*{{save:dat_objectkind_count-total.csv}}*/
 Select
  '{siteid}' as Site_ID
 ,DBName as "Database Name"

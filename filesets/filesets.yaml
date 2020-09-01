@@ -204,6 +204,16 @@ db_objects:
   files: &db_objects
     <<: *dim_object
     <<: *customer_data_space
+    dim_indexkind:
+      gitfile:      "dims/dim_indextype.csv"
+    dim_tablekind:
+      gitfile:      "dims/dim_tablekind.csv"
+    dim_datatype:
+      gitfile:      "dims/dim_datatype.csv"
+    object_counts_by_database_sql:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      gitfile:      "db_objects/objects_counts_by_database.v01.coa.sql"         
     indices_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
