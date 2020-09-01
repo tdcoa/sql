@@ -4,7 +4,6 @@
    - siteid:     {siteid}
 */
 
-/*{{temp:dim_tablekind.csv}}*/
 create volatile table db_objects_counts as
 (
     SELECT
