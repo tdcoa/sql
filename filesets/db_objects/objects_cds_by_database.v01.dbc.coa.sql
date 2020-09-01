@@ -34,7 +34,7 @@ create volatile table db_objects_cds as
 ) with data no primary index on commit preserve rows
 ;
 
-                
+
 /* build formatted return for pptx operations: */
 create volatile table db_objects_cds_week_formatted as
 (
@@ -54,19 +54,18 @@ create volatile table db_objects_cds_week_formatted as
  ) with data no primary index on commit preserve rows
  ;
 
-                 
-/*{{save:db_objects_cds-all.csv}}*/
+
+/*{{save:dat_cds-all.csv}}*/
 Select * from db_objects_cds_week_formatted
 ;
 
-/*{{save:db_objects_cds-total.csv}}*/
+/*{{save:dat_cds-total.csv}}*/
 Select * from db_objects_cds_week_formatted
 where "DB Name" = '*** Total ***'
 ;
 
-/*{{save:db_objects_cds-top10.csv}}*/
+/*{{save:dat_cds-top10.csv}}*/
 Select * from db_objects_cds_week_formatted
 where "DB Name" <> '*** Total ***'
 and "CurrPerm Rank" <= 10
 ;
-

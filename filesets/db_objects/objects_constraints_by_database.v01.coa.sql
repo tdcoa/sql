@@ -1,20 +1,20 @@
-/* Contraint analysis 
+/* Contraint analysis
 Details and counts by DB
 */
 
-create volatile table constraint_details as 
+create volatile table constraint_details as
 (
-        SELECT  
+        SELECT
               DatabaseName,
               TableName,
               CASE WHEN IndexType IN ('U','P','Q') THEN 'Unique'
                    WHEN IndexType IN ('K') THEN 'Primary Key'
               END (VARCHAR(30)) AS ConstraintType,
-              TRIM(TRAILING ',' 
+              TRIM(TRAILING ','
                    FROM XMLAGG(ColumnName || ','
                    ORDER BY ColumnPosition)(VARCHAR(255))) AS Details
         FROM  DBC.IndicesV
-        WHERE IndexType IN ('K','U','P','Q') 
+        WHERE IndexType IN ('K','U','P','Q')
           AND UniqueFlag = 'Y'
         GROUP BY  DatabaseName, TableName, IndexType, IndexNumber
 
@@ -58,10 +58,14 @@ create volatile table constraint_details as
 ) with data no primary index on commit preserve rows
 ;
 
+/*{{save:dat_dbobject_constraint_detail.csv}}*/
+Select * from constraint_details;
 
-create volatile table constraint_type_by_database as 
+
+
+create volatile table constraint_type_by_database as
 (
-SELECT 
+SELECT
    ctt.ConstraintType
   ,COALESCE(ctc.DatabaseName, '') AS DatabaseName
   ,ZEROIFNULL(ctc.ConstraintCount) AS ConstraintCount
@@ -81,7 +85,11 @@ LEFT JOIN
     ,COUNT(*) AS ConstraintCount
   FROM constraint_details
   GROUP BY 1,2
-) ctc     
+) ctc
 ON ctt.ConstraintType = ctc.ConstraintType
 ) with data no primary index on commit preserve rows
 ;
+
+
+/*{{save:dat_dbobject_constraint_count_per_database.csv}}*/
+select * from constraint_type_by_database;
