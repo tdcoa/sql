@@ -116,16 +116,18 @@ dim_object:
   show_in_gui: "False"
   description:   "builds a collection of volatile tables containing look-up values for database objects, including dim_tablekind, dim_datatype, dim_indextype, etc.  Most often run as prerequisite to other filesets."
   files: &dim_object
+    coa_sql_runfile:
+      gitfile:      "dims/_dim_dbobject_all.coa.sql"
     dim_indexkind:
       gitfile:      "dims/dim_indextype.csv"
     dim_tablekind:
       gitfile:      "dims/dim_tablekind.csv"
     dim_datatype:
       gitfile:      "dims/dim_datatype.csv"
-    dim_tdinternal_databases:
-      gitfile:      "dims/dim_tdinternal_databases.csv"
     dim_dbobject:
       gitfile:      "dims/dim_dbobject.csv"
+    dim_tdinternal_databases:
+      gitfile:      "dims/dim_tdinternal_databases.csv"
 
 autotune_check:
   active:           "True"
@@ -213,7 +215,7 @@ db_objects:
     object_counts_by_database_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
-      gitfile:      "db_objects/objects_counts_by_database.v01.coa.sql"         
+      gitfile:      "db_objects/objects_counts_by_database.v01.coa.sql"
     indices_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
