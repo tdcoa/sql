@@ -229,9 +229,9 @@ SELECT
 
 )dbql
 
-join dim_app as app     on dbql.AppID = app.AppID (NOT CS)
-join dim_Statement stm  on dbql.StatementType = stm.StatementType (NOT CS)
-join dim_user usr       on dbql.UserName = usr.UserName (NOT CS)
+join dim_app as app     on dbql.AppID = app.AppID 
+join dim_Statement stm  on dbql.StatementType = stm.StatementType 
+join dim_user usr       on dbql.UserName = usr.UserName
 Group by
  Site_ID
 ,LogTS
