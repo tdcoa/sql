@@ -22,31 +22,6 @@ demo:
     upload_template:
       gitfile:  "demo/upload-manifest.template.json"
 
-problem:
-  active:     "True"
-  show_in_gui: "False"
-  fileset_version: "1.15"
-  startdate:  "Current_Date - 7"
-  enddate:    "Current_Date - 1"
-  some_value: "Donkey"
-  birthday:   "1974-12-17"
-  files:
-    file01:
-      gitfile:  "demo/dates.csv"
-    file02:
-      gitfile:   "demo/dbcinfo.coa.sql"
-      startdate: "Date-7"
-      enddate:   "Date-1"
-      some_value: "Elephant"
-    file03:
-      gitfile:  "demo/today.sql"
-    file04:
-      gitfile:  "demo/alldates.py"
-    file05:
-      gitfile:  "demo/AgeReport_problem.pptx"
-    upload_template:
-      gitfile:  "demo/upload-manifest.template.json"
-
 dim_user:
   active:           "True"
   fileset_version:  "1.0"
@@ -206,12 +181,6 @@ db_objects:
   files: &db_objects
     <<: *dim_object
     <<: *customer_data_space
-    dim_indexkind:
-      gitfile:      "dims/dim_indextype.csv"
-    dim_tablekind:
-      gitfile:      "dims/dim_tablekind.csv"
-    dim_datatype:
-      gitfile:      "dims/dim_datatype.csv"
     object_counts_by_database_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
@@ -232,7 +201,6 @@ db_objects:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_constraints_by_database.v01.coa.sql"
-
 
 compete_snowflake:
   active:           "True"
@@ -256,7 +224,6 @@ compete_snowflake:
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
-
 concurrency:
   active:           "True"
   fileset_version:  "1.0"
@@ -273,7 +240,6 @@ concurrency:
     upload_template:
       gitfile:      "concurrency/upload-manifest.template.json"
 
-
 feature_usage:
   active:           "True"
   fileset_version:  "1.2"
@@ -286,7 +252,6 @@ feature_usage:
       startdate:    "Current_Date - 43"  # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-
 
 level1_how_much:
   active:           "True"
@@ -327,7 +292,6 @@ level1_how_much:
     upload_template:
       gitfile:    "level1_how_much/upload-manifest.template.json"
 
-
 success_plan:
   active:           "True"
   fileset_version:  "1.0"
@@ -354,7 +318,6 @@ success_plan:
       gitfile:      "success_plan/cpu_summary.py"
     upload_template:
       gitfile:      "success_plan/upload-manifest.template.json"
-
 
 vantage_health_check:
   active:           "True"
@@ -461,7 +424,6 @@ vantage_health_check:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
 
-
 biz_usage_decoded:
   active: "True"
   show_id_gui: "True"
@@ -501,24 +463,22 @@ biz_usage_decoded:
     links:
       gitfile:      "biz_usage_decoded/links.txt"
 
-
-test:
-  active:           "True"
+gss_resusage_macro:
+  active:     "True"
   show_in_gui: "False"
-  fileset_version:  "1.0"
+  fileset_version: "1.0"
+  startdate:  "Current_Date - 43"  # last 6 weeks
+  enddate:    "Current_Date - 1"
   files:
-    user_counts:
-      gitfile:  "dims/_dim_date.coa.sql"
-
-
-internal_qbr:
-  active:           "True"
-  show_in_gui: "False"
-  fileset_version:  "1.0"
-  files:
-    qbr01:
-      gitfile:    "internal_qbr/csm_qbr_ams_west_csm.coa.sql"
-      startdate:  "Current_Date - 43" # 6 weeks
-      enddate:    "Current_Date - 1"
-    align01:
-      gitfile:    "internal_qbr/dim_alignment_ams_west_csm.csv"
+    dbc_1620:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20"]
+      gitfile:      "gss_resusage_macro/gss_resusage.dbc.1620.coa.sql"
+    dbc_1610:
+      collection:   ["dbc"]
+      dbsversion:   ["16.10"]
+      gitfile:      "gss_resusage_macro/gss_resusage.dbc.1610.coa.sql"
+    dbc_1510:
+      collection:   ["dbc"]
+      dbsversion:   ["15.10"]
+      gitfile:      "gss_resusage_macro/gss_resusage.dbc.1510.coa.sql"
