@@ -60,7 +60,7 @@ Select these columns for charting in Excel:
 
 LOCK ROW FOR ACCESS
 SELECT
- SiteID
+ SiteID as Site_ID
 ,Current_Date (format'YYYY-MM-DD') (CHAR(10)) as "Report Date"
 ,TheDate(format'YYYY-MM-DD') (CHAR(10)) as "Log Date"
 ,TotalMaxPerm as "Total Max Perm"
