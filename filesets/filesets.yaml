@@ -473,12 +473,12 @@ gss_resusage_macro:
     dbc_1620:
       collection:   ["dbc"]
       dbsversion:   ["16.20"]
-      gitfile:      "gss_resusage_macro/gss_resusage.dbc.1620.coa.sql"
+      gitfile:      "gss_resusage/gss_resusage.dbc.1620.coa.sql"
     dbc_1610:
       collection:   ["dbc"]
       dbsversion:   ["16.10"]
-      gitfile:      "gss_resusage_macro/gss_resusage.dbc.1610.coa.sql"
+      gitfile:      "gss_resusage/gss_resusage.dbc.1610.coa.sql"
     dbc_1510:
       collection:   ["dbc"]
       dbsversion:   ["15.10"]
-      gitfile:      "gss_resusage_macro/gss_resusage.dbc.1510.coa.sql"
+      gitfile:      "gss_resusage/gss_resusage.dbc.1510.coa.sql"
