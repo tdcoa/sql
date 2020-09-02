@@ -16,36 +16,36 @@ Target Table: {db_coa}.coat_dat_level1_CPU_Forecast
 
 
 CPU Utilization 4-Hour Variable Peak from ResusageSpma (Viewpoint CPU Utilization Method).
-•	Evaluates the percentage of time CPU’s in the collection period that CPU’s were busy processing requests (CPUUServ + CPUUExec ??CPUNice??
-•	AvgCPUBusyPct is an average of CPU utilization across the entire system. The premise is that when CPU’s reach 80% busy (i.e., reserve capacity level) the system will likely suffer performance impact.
-•	Evaluates 365 days of history (weekdays only) and the busiest 4-hours of each day (whenever they occur).  Peak periods are contiguous 4-hour periods (not individual hours) and may vary (PeakStart & PeakEnd displayed in result) depending on utilization.
-•	Peak periods may start on one day and end in the next – peak periods are always recorded on the day in which they end.
-•	Simple linear regression is used to determine trend line with slope & intercept.
-•	The slope of the trend line is used to extend anticipated usage 365 days into the future or when utilization is forecasted to exceed 100% (whichever comes first).
-•	21 day Moving Average is included to emphasize recent activity in addition to the longer trend (typically 21 business days in a calendar month).
-•	Reserve Capacity is set at 80% (workload performance will likely be impacted when CPU’s exceed 80% utilization).
-•	Reserve Horizon represents the (future) point in time at which utilization is expected to exceed 80%.
-•	Slope is the daily percentage increase/decrease in utilization of the trend line (positive = increasing utilization, negative = decreasing utilization).
-•	SQL uses UNION to combine historical trend with future forecast – identical changes typically must be made to both SQL statements in UNION.
-•
+- Evaluates the percentage of time CPU’s in the collection period that CPU’s were busy processing requests (CPUUServ + CPUUExec ??CPUNice??)
+- AvgCPUBusyPct is an average of CPU utilization across the entire system. The premise is that when CPU’s reach 80% busy (i.e., reserve capacity level) the system will likely suffer performance impact.
+- Evaluates 365 days of history (weekdays only) and the busiest 4-hours of each day (whenever they occur).  Peak periods are contiguous 4-hour periods (not individual hours) and may vary (PeakStart & PeakEnd displayed in result) depending on utilization.
+- Peak periods may start on one day and end in the next – peak periods are always recorded on the day in which they end.
+- Simple linear regression is used to determine trend line with slope & intercept.
+- The slope of the trend line is used to extend anticipated usage 365 days into the future or when utilization is forecasted to exceed 100% (whichever comes first).
+- 21 day Moving Average is included to emphasize recent activity in addition to the longer trend (typically 21 business days in a calendar month).
+- Reserve Capacity is set at 80% (workload performance will likely be impacted when CPU’s exceed 80% utilization).
+- Reserve Horizon represents the (future) point in time at which utilization is expected to exceed 80%.
+- Slope is the daily percentage increase/decrease in utilization of the trend line (positive = increasing utilization, negative = decreasing utilization).
+- SQL uses UNION to combine historical trend with future forecast – identical changes typically must be made to both SQL statements in UNION.
+
 Execution Instructions
-•	Copy/Paste below query into favorite query tool & execute.
-•	Copy/Paste result set from query tool into .csv and save
-o	Don’t export results (impacts formatting).
-o	Don’t save results to spreadsheeting (impacts formatting).
-•	Use visualization tool to import results for analysis (coming soon).
+- Copy/Paste below query into favorite query tool & execute.
+- Copy/Paste result set from query tool into .csv and save
+- Don’t export results (impacts formatting).
+- Don’t save results to spreadsheeting (impacts formatting).
+- Use visualization tool to import results for analysis (coming soon).
 
 Using the results to drive customer discussions
-•	Trending up or down? What is the growth rate (monthly change in percent utilization)?
-•	How long before trend hits 80% (reserve horizon) and 100% maximum?
-•	What happens when actual utilization hits the reserve amount (~80%)
-o	Performance becomes more variable as more requests compete for limited resources
-o	Delay queue gets longer, and response time increases for the same type of requests
-o	Tactical queries may miss SLA’s without proper workload management rules
-o	Customer submits more Performance P1’s – “queries are slow – my system is broken!”
-•	Teradata can help address the risk of not having enough resources to meet workload demand
-o	Release COD or system expansion
-o	Is there enough time for performance optimization (probably requires 3 to 6 month runway).
+- Trending up or down? What is the growth rate (monthly change in percent utilization)?
+- How long before trend hits 80% (reserve horizon) and 100% maximum?
+- What happens when actual utilization hits the reserve amount (~80%)
+- Performance becomes more variable as more requests compete for limited resources
+- Delay queue gets longer, and response time increases for the same type of requests
+- Tactical queries may miss SLA’s without proper workload management rules
+- Customer submits more Performance P1’s – "queries are slow – my system is broken!"
+- Teradata can help address the risk of not having enough resources to meet workload demand
+- Release COD or system expansion
+- Is there enough time for performance optimization (probably requires 3 to 6 month runway).
 
 
 Hard-Coded parameters
