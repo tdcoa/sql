@@ -1,5 +1,5 @@
 import pandas as pd
-pd.options.mode.chained_assignment = None 
+pd.options.mode.chained_assignment = None
 import os
 import datetime
 import matplotlib
@@ -150,7 +150,7 @@ def heatmap(data, row_labels, col_labels, ax=None,
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=0, ha="right",
              rotation_mode="anchor")
-    
+
     plt.setp(ax.get_yticklabels(), rotation=0, ha="right",
              rotation_mode="anchor")
 
@@ -260,7 +260,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
 # # plt.title("Concurrency_Peak")
 # ax.set_ylabel('Date',size = 30,labelpad =10)
 # ax.set_xlabel('Hour',size=30,labelpad =10)
-# ax.xaxis.set_label_position('top') 
+# ax.xaxis.set_label_position('top')
 # size = fig.get_size_inches()*fig.dpi
 # ax.set_title('Heatmap showing ' + concurrency_list[0], y=-0.05,size=36, pad=20)
 
@@ -353,7 +353,7 @@ while i < len(concurrency_list):
     fig.savefig('concurrency.heatmap_' + concurrency_list[i] + '.png', bbox_inches='tight', dpi=fig.dpi)
 
     i += 1
-    
+
 
 
 # In[ ]:
@@ -489,7 +489,7 @@ df_weekly_mean_modified = df_weekly_mean.melt(id_vars=["Date"],
 
 fig, ax = plt.subplots(figsize=(30,20))
 g = sns.lineplot(x=df_weekly_mean_modified["Date"], y='Value', data=df_weekly_mean_modified, hue="Concurrency", sort=True, linewidth=3)
-x_dates = df_weekly_mean_modified['Date'].unique()
+x_dates = df_weekly_mean_modified['Date']
 plt.xticks(plt.xticks()[0], x_dates, rotation=30)
 
 ax.xaxis.set_major_locator(ticker.MultipleLocator(7))
