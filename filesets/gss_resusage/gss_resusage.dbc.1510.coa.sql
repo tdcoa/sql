@@ -1,9 +1,9 @@
 /*
 replace macro systemfe.gss_resusage_td150
-( BEGINDATE (DATE, DEFAULT DATE)   -- becomes {startdate}
-, ENDDATE (DATE, DEFAULT DATE)     -- becomes {enddate}
-, BEGINTIME (INT, DEFAULT 0)       -- becomes 0
-, ENDTIME (INT, DEFAULT 240000)    -- becomes 240000
+( BEGINDATE (DATE, DEFAULT DATE)   - becomes {startdate}
+, ENDDATE (DATE, DEFAULT DATE)     - becomes {enddate}
+, BEGINTIME (INT, DEFAULT 0)       - becomes 0
+, ENDTIME (INT, DEFAULT 240000)    - becomes 240000
 )
 AS (
 */
