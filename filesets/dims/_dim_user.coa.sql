@@ -42,12 +42,12 @@ create volatile table dim_user as
         ) as o
   left join "dim_user.csv" as p
     on (case
-        when p.Pattern_Type = 'Equal' and o.UserName = p.Pattern (NOT CS) then 1
-        when p.Pattern_Type = 'Like'  and o.UserName like p.Pattern (NOT CS) then 1
+        when p.Pattern_Type = 'Equal' and lower(o.UserName) = lower(p.Pattern) then 1
+        when p.Pattern_Type = 'Like'  and lower(o.UserName) like lower(p.Pattern) then 1
         when p.Pattern_Type = 'RegEx'
          and character_length(regexp_substr(o.UserName, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
-    and (SiteID_ in('default','None') or '{siteid}' like SiteID_)
+    and (lower(SiteID_) in('default','none') or lower('{siteid}') like lower(SiteID_))
   qualify Priority_ = min(Priority_)over(partition by o.UserName)
 ) with data
 primary index (UserName)
