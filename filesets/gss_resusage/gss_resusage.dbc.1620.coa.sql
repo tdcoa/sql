@@ -605,6 +605,6 @@ on spma_dt.LogDate = spdsk_dt.LogDate
 and spma_dt.LogTime = spdsk_dt.LogTime
 and spma_dt.nodeid = spdsk_dt.nodeid
 where  info.infokey (NOT CS) = 'VERSION' (NOT CS)
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
-order by 5,14,17,18
+group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+order by 6,15,18,19
 ;
