@@ -1,4 +1,4 @@
-/*
+/* RUN GSS_RESUSAGE MACRO for DBC / 16.10
 replace macro systemfe.gss_resusage_td160
 ( BEGINDATE (DATE, DEFAULT DATE)   - becomes {startdate}
 , ENDDATE (DATE, DEFAULT DATE)     - becomes {enddate}
@@ -8,6 +8,7 @@ replace macro systemfe.gss_resusage_td160
 AS (
 */
 
+/*{{save:gss_resusage-{siteid}.csv}}*/
 select
  '{siteid}' as Site_ID
 ,'TD16v1.72' (named "Version")
