@@ -184,7 +184,7 @@ union all
 
 SELECT
    '{siteid}'  as Site_ID
-  ,cast(cast(starttime as format 'YYYY-MM-DDBHH') AS CHAR(13)) ':00:00' as LogTS
+  ,cast(cast(starttime as format 'YYYY-MM-DDBHH') AS CHAR(13)) || ':00:00' as LogTS
   ,HashAmp() + 1 as Total_AMPs
   ,username
   ,appid
