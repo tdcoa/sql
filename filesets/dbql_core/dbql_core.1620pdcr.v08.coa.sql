@@ -22,7 +22,7 @@ SELECT SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9
 /*{{load:{db_stg}.stg_dat_dbql_core_maxcpu}}*/
 /*{{call:{db_coa}.sp_dat_dbql_core_maxcpu('{fileset_version}')}}*/
 Select /*dbql_core*/ '{siteid}' as Site_ID
-,TheDate as LogDate, Floor(TheTime/1e4) as LogHour
+,CAST(TheDate as FORMAT 'YYYY-MM-DD') as LogDate, Floor(TheTime/1e4) as LogHour
 ,SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9 FOR 6) as UTC_Offset
 ,cast(max(NodeType) as varchar(10)) as Node_Type
 ,cast(count(distinct NodeID) as smallint) as Node_Cnt
