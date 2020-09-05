@@ -20,16 +20,19 @@ create volatile table dim_statement as
   ,coalesce(p.Pattern, o.StatementType) as Pattern
   ,coalesce(p.SiteID, 'None')        as SiteID_
   from (select distinct StatementType from pdcrinfo.DBQLogTbl_Hst
+        where LogDate between {startdate} and {enddate}
+        union all
+        select distinct 'Summary' from pdcrinfo.DBQLSummaryTbl_Hst 
         where LogDate between {startdate} and {enddate}) as o
   left join "dim_statement.csv"  as p
     on (case
-        when p.Pattern_Type = 'Equal' and o.StatementType = p.Pattern then 1
-        when p.Pattern_Type = 'Like'  and o.StatementType like p.Pattern then 1
+        when p.Pattern_Type = 'Equal' and lower(o.StatementType) = lower(p.Pattern) then 1
+        when p.Pattern_Type = 'Like'  and lower(o.StatementType) like lower(p.Pattern) then 1
         when p.Pattern_Type = 'RegEx'
          and character_length(regexp_substr(o.StatementType, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
   qualify Priority_ = min(Priority_)over(partition by o.StatementType)
-  where (SiteID_ in('default','None') or '{siteid}' like SiteID_)
+  where (lower(SiteID_) in('default','none') or lower('{siteid}') like lower(SiteID_))
 ) with data
 no primary index
 on commit preserve rows;

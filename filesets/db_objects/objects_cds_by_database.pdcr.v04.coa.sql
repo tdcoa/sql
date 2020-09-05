@@ -3,8 +3,7 @@
    Parameters:
    - siteid:     {siteid}
    - spoolpct:   {spoolpct}  default 20%
-   - startdate:  {startdate}
-   - enddate:    {enddate}
+   - day_of_week: {day_of_week}   default 1
 */
 
 create volatile table db_objects_cds as
@@ -26,7 +25,7 @@ create volatile table db_objects_cds as
   ,rank() over (partition by s.LogDate order by CurrentPermGB desc) as CDSRank
   FROM
   (
-      Select
+      Select 
        DatabaseName
   	   ,logdate
       ,sum(MaxPerm) as MaxPerm
@@ -40,7 +39,7 @@ create volatile table db_objects_cds as
 ) with data no primary index on commit preserve rows
 ;
 
-
+              
 /* build formatted return for pptx operations: */
 create volatile table db_objects_cds_week_formatted as
 (
@@ -59,21 +58,22 @@ create volatile table db_objects_cds_week_formatted as
    from db_objects_cds
    group by "Week ID", "DB Name", "Spool Pct", "Comments"
 ) with data no primary index on commit preserve rows
-;
+;              
 
-/*{{save:dat_cds-all.csv}}*/
+/*{{save:db_objects_cds-all.csv}}*/
 Select * from db_objects_cds_week_formatted
 ;
 
-/*{{save:dat_cds-total.csv}}*/
+/*{{save:db_objects_cds-total.csv}}*/
 Select * from db_objects_cds_week_formatted
 where "DB Name" = '*** Total ***'
 qualify "Week ID" = Max("Week ID") over()
 ;
 
-/*{{save:dat_cds_top10.csv}}*/
+/*{{save:db_objects_cds_top10.csv}}*/
 Select * from db_objects_cds_week_formatted
 where "DB Name" <> '*** Total ***'
 qualify "CurrPerm Rank" <= 10
     and "Week ID" = Max("Week ID") over()
 ;
+
