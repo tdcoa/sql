@@ -203,7 +203,7 @@ SELECT
   ,null as DelayTime_Sec
   ,null as RunTime_Parse_Sec
   ,null as Runtime_AMP_Sec
-  ,zeroifnull(sum(cast(smry.QuerySeconds as decimal(18,2)))) as RunTime_Total_Sec 
+  ,zeroifnull(sum(cast(smry.QuerySeconds as decimal(18,2)))) as RunTime_Total_Sec
   ,null as TransferTime_Sec
   ,zeroifnull(sum(cast(smry.ParserCPUTime as decimal(18,2)))) as CPU_Parse_Sec
   ,zeroifnull(sum(cast(smry.AMPCPUTime as decimal(18,2)))) as CPU_AMP_Sec
@@ -218,8 +218,8 @@ SELECT
   ,null as CPUSec_Skew_AvgPCt
   ,null as IOCnt_Skew_AvgPct
 
-  From PDCRINFO.DBQLSummaryTbl_Hst smry  
-  where smry.LogDate between {startdate} and {enddate}    
+  From PDCRINFO.DBQLSummaryTbl_Hst smry
+  where smry.LogDate between {startdate} and {enddate}
   Group by
    LogTS
   ,Site_ID
@@ -229,8 +229,8 @@ SELECT
 
 )dbql
 
-join dim_app as app     on dbql.AppID = app.AppID 
-join dim_Statement stm  on dbql.StatementType = stm.StatementType 
+join dim_app as app     on dbql.AppID = app.AppID
+join dim_Statement stm  on dbql.StatementType = stm.StatementType
 join dim_user usr       on dbql.UserName = usr.UserName
 Group by
  Site_ID
