@@ -118,7 +118,7 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12
 ) spma_dt 
 
 where  info.infokey (NOT CS) = 'VERSION' (NOT CS) 
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
-order by 5,13
+group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+order by 6,14
 ;
 
