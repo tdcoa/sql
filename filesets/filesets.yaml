@@ -426,7 +426,7 @@ vantage_health_check:
 
 biz_usage_decoded:
   active: "True"
-  show_id_gui: "True"
+  show_in_gui: "True"
   files:
     <<: *dim_user
     setup_xref_tables:
@@ -465,7 +465,6 @@ biz_usage_decoded:
 
 gss_resusage_macro:
   active:     "True"
-  show_in_gui: "True"
   fileset_version: "1.0"
   startdate:  "Current_Date - 90"  
   enddate:    "Current_Date - 1"
