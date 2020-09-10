@@ -13,12 +13,10 @@
 
 /*{{save:gss_vantage_units.{siteid}.csv}}*/
 select
+'{siteid}' as Site_ID,
 (
-        SELECT
-            SystemName
-        FROM
-            TABLE (SYSLIB.MonitorSystemPhysicalConfig()) AS SystemConfig
-
+    SELECT SystemName
+      FROM TABLE (SYSLIB.MonitorSystemPhysicalConfig()) AS SystemConfig
 ) AS SystemName,
 coalesce(vu1.logdate, vu4.logdate) as LogDate,
 coalesce(vu1.loghr, vu4.loghr) as LogHour,
@@ -89,6 +87,5 @@ group by 1, 2) vu4
 on
 vu1.logdate = vu4.logdate and
 vu1.loghr = vu4.loghr
-order by
-vu1.logdate,
-vu1.loghr;
+order by vu1.logdate, vu1.loghr
+;
