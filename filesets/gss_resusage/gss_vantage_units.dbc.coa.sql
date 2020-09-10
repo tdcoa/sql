@@ -17,6 +17,7 @@
 
 /*{{save:gss_vantage_units.{siteid}.csv}}*/
 select
+'{siteid}' as Site_ID,
 coalesce(vu1.logdate, vu4.logdate) as LogDate,
 coalesce(vu1.loghr, vu4.loghr) as LogHr,
 zeroifnull(vu1.vantageunithrs) + zeroifnull(vu4.vantageunitutilityhrs) (format 'ZZ9.999') as CPU_VU,
@@ -86,6 +87,5 @@ group by 1, 2) vu4
 on
 vu1.logdate = vu4.logdate and
 vu1.loghr = vu4.loghr
-order by
-vu1.logdate,
-vu1.loghr;
+order by vu1.logdate, vu1.loghr
+;
