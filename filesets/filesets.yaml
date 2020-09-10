@@ -26,7 +26,7 @@ dim_user:
   active:           "True"
   fileset_version:  "1.0"
   fileset_type:  "atomic"
-  show_in_gui: "False"
+  show_in_gui:   "True"
   description:   "builds the dim_user volatile table, with user/dept mappings using either .csv or pre-built table.  Most often run as prerequisite to other filesets."
   files:  &dim_user
     dim_user:
