@@ -61,18 +61,31 @@ create volatile table db_objects_cds_week_formatted as
 ) with data no primary index on commit preserve rows
 ;
 
-/*{{save:dat_cds-all.csv}}*/
-Select * from db_objects_cds_week_formatted
+
+/*{{save:db_objects_permspace-all.csv}}*/
+/*{{load:{db_stg}.stg_dat_permspace_week}}*/
+/*{{call:{db_coa}.sp_dat_permspace_week('v1')}}*/
+Select '{siteid}' as Site_ID
+,"Week ID" as Week_ID
+,"DB Name" as DatabaseName
+,"Spool Pct" as Spool_Pct
+,"Comments" as CommentString
+,"MaxPerm GB" as MaxPerm_GB
+,"CurrPerm GB" as CurrPerm_GB
+,"Fill Pct" as Fill_Pct
+,"CurrPerm Rank" as CurrPerm_Rank
+from db_objects_cds_week_formatted as cds
 ;
 
-/*{{save:dat_cds-total.csv}}*/
-Select * from db_objects_cds_week_formatted
+/*{{save:db_objects_permspace-total.csv}}*/
+Select '{siteid}' as Site_ID, cds.*
+from db_objects_cds_week_formatted as cds
 where "DB Name" = '*** Total ***'
-qualify "Week ID" = Max("Week ID") over()
 ;
 
-/*{{save:dat_cds_top10.csv}}*/
-Select * from db_objects_cds_week_formatted
+/*{{save:db_objects_permspace_top10.csv}}*/
+Select '{siteid}' as Site_ID, cds.*
+from db_objects_cds_week_formatted as cds
 where "DB Name" <> '*** Total ***'
 qualify "CurrPerm Rank" <= 10
     and "Week ID" = Max("Week ID") over()
