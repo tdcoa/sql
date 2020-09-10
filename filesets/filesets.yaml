@@ -467,18 +467,37 @@ gss_resusage_macro:
   active:     "True"
   show_in_gui: "False"
   fileset_version: "1.0"
-  startdate:  "Current_Date - 43"  # last 6 weeks
+  startdate:  "Current_Date - 90"  
   enddate:    "Current_Date - 1"
   files:
-    dbc_1620:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20"]
-      gitfile:      "gss_resusage/gss_resusage.dbc.1620.coa.sql"
-    dbc_1610:
-      collection:   ["dbc"]
-      dbsversion:   ["16.10"]
-      gitfile:      "gss_resusage/gss_resusage.dbc.1610.coa.sql"
-    dbc_1510:
+    resusage_dbc_1510:
       collection:   ["dbc"]
       dbsversion:   ["15.10"]
       gitfile:      "gss_resusage/gss_resusage.dbc.1510.coa.sql"
+    resusage_dbc_1610:
+      collection:   ["dbc"]
+      dbsversion:   ["16.10"]
+      gitfile:      "gss_resusage/gss_resusage.dbc.1610.coa.sql"
+    resusage_dbc_1620:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20"]
+      gitfile:      "gss_resusage/gss_resusage.dbc.1620.coa.sql"
+    resusage_pdcr_1620:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20"]
+      gitfile:      "gss_resusage/gss_resusage.pdcr.1620.coa.sql"
+    resusage_EPOD_dbc_1620:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20"]
+      gitfile:      "gss_resusage/gss_resusage_EPOD.dbc.1620.coa.sql"
+      enabledtcore:  306
+      baselinetcore: 221
+      reads90:       77318.22
+    vu_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20"]
+      gitfile:      "gss_resusage/gss_vantage_units.dbc.coa.sql"
+    vu_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20"]
+      gitfile:      "gss_resusage/gss_vantage_units.pdcr.coa.sql"
