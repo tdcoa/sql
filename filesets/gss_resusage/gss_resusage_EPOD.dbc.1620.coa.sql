@@ -8,8 +8,8 @@ replace macro systemfe.gss_resusage_td160_EPOD
 , BEGINTIME  (INT, DEFAULT 0)
 , ENDTIME    (INT, DEFAULT 240000)
 )
-- Example execution:  exec systemfe.gss_resusage_td160_EPOD(306,201,77318.22,date,date,,);  
-- May require this permission to exec:  grant select on dbc to systemfe with grant option; 
+- Example execution:  exec systemfe.gss_resusage_td160_EPOD(306,201,77318.22,date,date,,)
+- May require this permission to exec:  grant select on dbc to systemfe with grant option
 AS (
 */
 
