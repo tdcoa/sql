@@ -311,7 +311,7 @@ WHERE  c1.calendar_date= s1.TheDate
 AND c1.day_of_week IN (2,3,4,5,6) 
 and s1.LdvType='DISK'
 AND s1.ldvreads > 0
-AND s1.TheDate BETWEEN {startdate_history} AND {enddate_history  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN {startdate_history} AND {enddate_history}  /* Enter number of days for history.  Typically 365  */
 ) as AA
 Qualify NumDiskPct >= .80
 group by TheDate, Month_Of_Calendar, TheHour, TheMinute, AvgDiskPct2, NodeID, CtlID, LdvID, DiskPct
