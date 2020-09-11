@@ -56,15 +56,15 @@ nullifzero(sum(SPMAPhysReadKB + SPMAPhysPreReadKB + SPMAPhysWriteKB)) * 100) (fo
 
 /* EPOD data */
 
-,:ENABLEDTCORE (named "EnabledTCore")
-,:BASELINETCORE (named "BaselineTCore")
-,:READS90 (named "90% 96KB Array MB/sec")
+,{enabledtcore} (named "EnabledTCore")
+,{baselinetcore} (named "BaselineTCore")
+,{reads90} (named "90% 96KB Array MB/sec")
 ,WMCOD/100*EnabledTCore*(AvgCPUBusy/100) (named "CPUTCore")
-,IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero(:READS90)/NumNodes)) (named "IOTCore")
+,IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero({reads90})/NumNodes)) (named "IOTCore")
 
-,case when (WMCOD/100*EnabledTCore*(AvgCPUBusy/100)) > (IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero(:READS90)/NumNodes)))
+,case when (WMCOD/100*EnabledTCore*(AvgCPUBusy/100)) > (IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero({reads90})/NumNodes)))
    then (WMCOD/100*EnabledTCore*(AvgCPUBusy/100))
-   else (IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero(:READS90)/NumNodes)))
+   else (IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero({reads90})/NumNodes)))
    end (named "TCoreUsed")
 
 ,case when ((TCoreUsed - BaselineTCore)/6) > 0
@@ -72,9 +72,9 @@ nullifzero(sum(SPMAPhysReadKB + SPMAPhysPreReadKB + SPMAPhysWriteKB)) * 100) (fo
    else 0
    end (named "EPOD")
 
-,case when (WMCOD/100*EnabledTCore*(AvgCPUBusy_ETCore/100)) > (IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero(:READS90)/NumNodes)))
+,case when (WMCOD/100*EnabledTCore*(AvgCPUBusy_ETCore/100)) > (IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero({reads90})/NumNodes)))
    then (WMCOD/100*EnabledTCore*(AvgCPUBusy_ETCore/100))
-   else (IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero(:READS90)/NumNodes)))
+   else (IOCOD/100*EnabledTCore*(AvgMBSecNode/(nullifzero({reads90})/NumNodes)))
    end (named "TCoreUsed_ETCore")
 
 ,case when ((TCoreUsed_ETCore - BaselineTCore)/6) > 0
