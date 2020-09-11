@@ -3,6 +3,7 @@
 <head>
 <title>Consumption Analytics  </title>
 <style>
+  a { color: yellow;}
 	hr  {border-style: dashed;}
 	table {border: 0px; margin-left: auto; margin-right: auto;}
 	td {border: 3px dotted white; padding: 10px; text-align: left; vertical-align: top;}
@@ -34,6 +35,25 @@
 <tbody>
 	<tr>
 		<td style="width: 50%;" id="pinky" rowspan="2">
+
+			<!-- version  updates -->
+			<h3><u>Version 0.4.0.3 (Sept 10, 2020)</u></h3>
+			<ul>
+				<li>Added an installer, <a href="https://github.com/tdcoa/tdcsm/releases/download/v0.1.0/tdcsm-install.py">found here</a>, that installs application into a Python Virtual Environment, reducing the number of environmental conflicts and making it work more smoothly on many more machines
+				<li>Moved the requirement back to Python 3.8.x (from 3.8.5, although 3.8.5+ is still recommended)
+				<li>Added a real commandline utility, indepedent of Python.  To get started, open up a terminal /command window and run the help command:</br><code>tdcsm -h</code>
+				<li>Many GUI changes to help make the experience more intuative
+				<li>Added an alternate path to Execute, informally called "" for those sites that don't have permission to execute directly:  "Assisted Run"
+					<ul>
+					  <li>Download Files and Prepare SQL, as per normal
+						<li>Instead of "Execute Run", users can now "Make Customer Files"
+						<li>This generates both SQL and BTEQ files, including a singular *.combined.sql and *.combined.bteq files, that can be handed to customers to execute
+						<li>Once you get .csv or .psv (pipe-delimited) files back from the customer, you can "Process Return Data" to continue processing visualizations and PPTx generation
+						<li>This "Process Return Data" also builds an upload manifest, so returned data can be uploaded to Transcend per the normal final step
+					</ul>
+				<li>Simplified the Teradata connection object to dramatically speed up execution of SQL (on local computer)
+				<li>PPTx module improved & bug fixes
+			</ul></br>
 
 			<!-- version  updates -->
 			<h3><u>Version 0.3.9.6.9 (July 7, 2020)</u></h3>
@@ -117,15 +137,30 @@
 			<h3><u>Useful Links</u></h2>
 			<ul>
 				<li><a id="inky" target="_blank" href="https://teradata.sharepoint.com/:w:/r/teams/Sales/ConsumptionAnalytics/Libraries/Documentation/COA%20Python%20Project%20User%27s%20Guide%20v1.0.docx?d=w4649565c1de344328a424007858a4db7&csf=1&web=1&e=1eT4cI">Getting Starting Guide</a>
-				<li><a id="inky" target="_blank" href="https://app.powerbi.com/groups/me/reports/8fb8cf5b-4c5b-4c82-a934-e757541c5111?ctid=9151cbaa-fc6b-4f48-89bb-8c4a71982138">PowerBI Reports (requires DBQL_Core fileset upload)</a>
+				<li><a id="inky" target="_blank" href="https://app.powerbi.com/groups/6d187dfd-cff0-4365-8437-b6b49e6e76cc/reports/ec5fca03-42a1-4b14-973d-9766f669c920?ctid=9151cbaa-fc6b-4f48-89bb-8c4a71982138">PowerBI Reports (requires DBQL_Core fileset upload)</a>
 				<li><a id="inky" target="_blank" href="https://teradata.sharepoint.com/teams/Sales/ConsumptionAnalytics">Consumption Analytics SharePoint</a>
 				<li><a id="inky" target="_blank" href="https://trello.com/b/9IoDVkKH/customer-success-platform">COA Trello Project Board</a>
 				<li><a id="inky" target="_blank" href="https://github.com/tdcoa/sql/tree/master/filesets">COA SQL on GitHub</a>
 			</ul>
 
+		</br>
+			<h3><u>Quick Install Instructions</u></h2>
+		  <ol>
+			 <li>Confirm Python 3.8:<code>&nbsp&nbsp python --version</code>
+			 <li>Download the installer <a href="https://github.com/tdcoa/tdcsm/releases/download/v0.1.0/tdcsm-install.py">from here</a>
+			 <li>Open a terminal window and run: <code>&nbsp&nbsp python tdcsm-install.py</code>
+			 <li>The installer will
+				 <ul>
+					 <li>setup a virutal environment
+					 <li>install TDCSM
+					 <li>create a desktop shortcut, allowing you double-click access
+				 </ul>
+			</ol>
+			</br>
+			To Update: re-run install above, or <code>&nbsp&nbsp pip install tdcsm --upgrade</code></br>
+			</br>
+			To Start: in a terminal window type <code>&nbsp&nbsp tdcsm</code></br>
 
-			To Update:  <code>pip install tdcsm --upgrade</code></br>
-			To Start:  <code>&nbsp python -c "from tdcsm.tdgui import coa;c=coa()"</code></br>
 
 		</td>
 	</tr>
