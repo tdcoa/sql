@@ -1,11 +1,9 @@
 
 /*
 Query 6
--------------------------------------
 ###########################################
 Query Output File Name: CPUTrendSpmaAvgCPUBusyPct 
 Tableau Dashboard: Consumption CPU & I/O & Space Trend
-
 
 CPU Trend Spma AvgCPUBusyPct
 CPU Utilization 4-Hour Variable Peak from ResusageSpma (Viewpoint CPU Utilization Method).  
