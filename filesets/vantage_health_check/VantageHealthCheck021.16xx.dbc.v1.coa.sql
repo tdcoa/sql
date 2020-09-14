@@ -3,8 +3,7 @@
 Query 21
 Use the output of following query to create the ca_user_xref categorization username, Department, BusinessGroup
 
-
--Select * FROM DBC.Databases;
+-Select * FROM DBC.Databases
 */
 
 /*{{save:ca_user_xref.csv}}*/
