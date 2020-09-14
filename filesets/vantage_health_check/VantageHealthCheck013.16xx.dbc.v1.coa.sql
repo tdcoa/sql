@@ -36,5 +36,5 @@ Locking Row for Access
       
        Where  DelayTime > 0
        AND CAST(a.Starttime as DATE) between {startdate} and {enddate}
-       Group By 1,2,3,4,5,6,7,8,9,10,11;
+       Group By 1,2,3,4,5,6,7,8,9,10;
 
