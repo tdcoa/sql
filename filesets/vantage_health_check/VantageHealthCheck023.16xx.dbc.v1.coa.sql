@@ -73,7 +73,6 @@ FROM (
                 ON QTU1.QueryID=QTU2.QueryID
                
                 INNER JOIN DBC.DBQLogTbl QU /* uncomment for DBC */
-                -- INNER JOIN DBC.DBQLogTbl QU /* uncomment for PDCR */
                 ON QTU1.QueryID=QU.QueryID
 				
 				LEFT OUTER JOIN (
