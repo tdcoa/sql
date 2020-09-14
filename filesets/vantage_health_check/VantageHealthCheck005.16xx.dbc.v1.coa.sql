@@ -307,8 +307,8 @@ SELECT
             ,QryLog.CacheFlag				
 				
  /* 30-Day Max CPU & I/O  */  				
-            ,(select MAX(QryLogX.AMPCPUTime) FROM DBC.DBQLogTbl QryLogX WHERE LogDate BETWEEN {startdate} AND {enddate} AND StartTime IS NOT NULL) as MAXCPU   --Observed CPU Cieling				
-            ,(select MAX(QryLogX.TotalIOCount) FROM DBC.DBQLogTbl QryLogX WHERE LogDate BETWEEN {startdate} AND {enddate} AND StartTime IS NOT NULL) as MAXIO  --Observed I/O Ceiling				
+            ,(select MAX(AMPCPUTime) FROM DBC.DBQLogTbl WHERE CAST(StartTime AS DATE) BETWEEN {startdate} AND {enddate} AND StartTime IS NOT NULL) as MAXCPU   --Observed CPU Cieling				
+            ,(select MAX(TotalIOCount) FROM DBC.DBQLogTbl WHERE CAST(StartTime AS DATE) BETWEEN {startdate} AND {enddate} AND StartTime IS NOT NULL) as MAXIO  --Observed I/O Ceiling				
             				
  /* Request Groupings */            				
             ,CASE				
