@@ -193,7 +193,7 @@ sys_calendar.CALENDAR c1
 WHERE  c1.calendar_date= s1.TheDate
 AND s1.vproc1 > 0
 AND c1.day_of_week IN (2,3,4,5,6)
-AND s1.TheDate BETWEEN ({startdate_history} - 365) AND {enddate_history}  /* Enter number of days for history.  Typically 365  */
+AND s1.TheDate BETWEEN {startdate_history} AND {enddate_history}  /* Enter number of days for history.  Typically 365  */
 GROUP BY 1,2,3,4) a1
 QUALIFY ROW_NUMBER () OVER (PARTITION BY TheDate ORDER BY VPeakAvgCPUPct  DESC) = 1) a2
 ) a3
