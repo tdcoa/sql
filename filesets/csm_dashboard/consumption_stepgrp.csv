@@ -1,0 +1,22 @@
+﻿StepGroupName,StepGroupDesc,ComplexityWeight
+EXP,Data Export,0
+JOIN,Joins,1
+AFUNC,Analytic Functions,1
+SET,Set based Analytics,0
+Graphs,A query that may generate a graph,0
+SELECT,Select Data,0
+MISC,Miscellaneous Steps,0
+SFUNC,Standard Functions,0.25
+Complex Set Operations,A query that performs complex set operations,0
+UTIL,Load Utility,0
+Literals Only,A query that does not reference any tables,0
+Discovery,Ad Hoc queries supporting analysis/data discovery etcetera,0
+DCL,Data Control Language,0
+STATS,Statistics,0
+MAINT,Data Maintenance,0
+AGG,Aggregations,0.25
+BuiltinFunction,"Built in functions such as, SESSION, CURRENT_TIMESTAMP etc",0
+DDL,Data Definition Language,0
+OFUNC,Custom Functions,0.5
+Pattern Analysis,Queries that are looking for patterns or trends in data sets,0
+FLEX,Flexible Data Structure,0

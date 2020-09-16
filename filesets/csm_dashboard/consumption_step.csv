@@ -1,0 +1,134 @@
+﻿StepName,StepDescription,StepGroup
+SplDB,Spoil database information in Data Dictionary,MISC
+DTB,Drop table,DDL
+Session,Returns the number of the session for the current user.,BuiltinFunction
+EPF,End plan fragment; the presence of this step indicates the end of a plan fragment for a dynamic plan,MISC
+VJT,VJT Validate journal table,MISC
+DIRI,Drop inconsistent reference index,DDL
+RpChg,Subscriber replication change row message,MISC
+Account,Returns the account string for the current user.,BuiltinFunction
+LCP,Data-Load CHECKPOINT LOADING,UTIL
+CkNPK,Check N parent keys,DCL
+DEL,Delete row,MAINT
+MRD,Merge delete two tables based on row hash code,MAINT
+RAE,Remove abort entry from TOABORT list,MISC
+EXE,Execute edit,UTIL
+Database,Returns the name of the default database for the current user.,BuiltinFunction
+InvJHI,Invalidate Join/Hash index,MISC
+TRET,Trigger retrieve step,MISC
+EDM,Prepare for deblocker/application task (DML),UTIL
+LOT2VM,Forward LOT to Virtual Mailbox,FLEX
+Okay,Operation worked,MISC
+FDS,Flush DBSpace accounting table entry,MISC
+OAR,One AMP reply,MISC
+HLA,High-Level Large Object Access,FLEX
+Current_Role,Returns the current role of the current authorized user.,BuiltinFunction
+MRM,Merge Row Multiple Operations Step,MAINT
+CTRts,Create table privileges,DDL
+SplPSC,Spoil Parser session information,MISC
+DRIDR,Delete RID Row,MAINT
+Ad Hoc,Queries that are slowly changing over time,Discovery
+MiIns,Merge-Into insert,MAINT
+MTH,Modify table header,DDL
+PKA,Prime key abort,MISC
+MiRet,"Merge-Into retrieve. There is a Merge-Into table reference in a RET (that is, retrieve) query.",MAINT
+CIX,Create secondary index,DDL
+LOT,Large object transport,FLEX
+User,Provides the session user name.,BuiltinFunction
+DJT,Delete journal table,DDL
+Set Operators,A query that uses set operators (e.g. UNION),Complex Set Operations
+Edt,End transaction,MAINT
+Warn,Warn Warning response,MISC
+FLGRI,Flag reference index,MISC
+INS,Insert a row,MAINT
+CSSUM,Collect Statistics aggregate operations (Note that this step is now obsolete),STATS
+SplRTS,Spoil Stored Procedure cache information,MISC
+MRG,Merge two tables based on row hash code,MAINT
+SUM,Perform local aggregate operations,AGG
+CKP,Checkpoint database,DCL
+LobFet,Large object fetch,FLEX
+Graphs,A query that may generate a graph,Graphs
+Role,Returns the current session role.,BuiltinFunction
+LCM,Load config map,MISC
+MDT,Merge delete tables,MAINT
+OKELCT,Send StpOKElicitData message to notify Dispatcher that it is fine to send next step within the same request. It is required to prevent deadlocks and serve as a form of flow control.,MISC
+PFN,Process function,SFUNC
+SQL,SQL step for Request Text storage,MISC
+LFI,Data-Load END LOADING,UTIL
+DrpGrp,Drop a replication group,DDL
+Temporal_Date,Returns the current transaction date where the evaluation is based on the session time zone.,BuiltinFunction
+ExpRL,Export Release Locks Step,EXP
+StpRLK,Release lock,MISC
+BMSMS,Bit map set manipulations such as intersect and union,SET
+MRL,Merge utility locks,MAINT
+Constants,A query that references constant values,Literals only
+ExpHR,Export Horizontal Redistribution step,EXP
+Many Tables,A query that references many tables,Complex Set Operations
+Fail,Operation did not work,MISC
+SRD,Sort a table,MISC
+SplQL,Spoil the DBQL Rule cache,MISC
+AltGrp,Alter replication group,DCL
+MRU,Merge update,MAINT
+JIN,Join,JOIN
+INSQT,Insert a row to a queue table,MAINT
+DRI,Delete reference index,DDL
+CSUPD,Collect Statistics update,STATS
+MiUpd,Merge-Into update,MAINT
+JTmp,Journal temporary tables,MISC
+SMS,"Set manipulations such as intersect, union, minus",SET
+AAB,Asynchronous Abort of a DBC/SQL request,DCL
+MTB,"MTB Modify table. To modify the table internally, the table header must also be modified",DDL
+SplTAB,Spoil Table information in Data Dictionary,MISC
+Current_User,Provides the user name of the current authorized user.,BuiltinFunction
+QryLgn,Query logon on step,MISC
+MVN,Modify version number in table header,DDL
+EEN,END edit step,MISC
+Builtins,"A query that references session values (a.k.a. builtin functions such as USER, DATE)",Literals only
+PRELOB,InsPreLob step,FLEX
+SAT,Synchronous abort test step from DBC/SQL statement,MISC
+UpsIns,UpsIns Upsert insert,MAINT
+MLK,Multi-Lock: several LCK Messages in one,MISC
+UPD,Update row,MAINT
+Temporal_Timestamp,Returns the current transaction timestamp where the evaluation is based on the session time zone.,BuiltinFunction
+LogAOn,Logging for online archive on,MAINT
+RepPh1,Replication Phase 1 step,MISC
+CRI,Create reference index,DDL
+CrtGrp,Create replication group,DCL
+Ctb,Create table header,DDL
+Time,Returns the current time.,BuiltinFunction
+SQB,Set Query_Band,MISC
+ALT,Insert target and originating table IDs into the HUT Control Segment for a Logon Sequence Number,UTIL
+EED,Prepare MLOAD work tables,UTIL
+RSF,Release spool files,MISC
+Current_Date,Returns the current date.,BuiltinFunction
+DTmp,Delete temporary tables,DDL
+EVT,Create event table row,UTIL
+LIN,Data-Load USING ... INSERT,UTIL
+INSLDC,Insert Deferred Lob Constant,MAINT
+RET,Retrieve row,SELECT
+HUL,Host utility set lock,UTIL
+Semi-constrained,A query that joins individual rose from a large table to many other rows,Pattern Analysis
+Hcs,Add table record info and privileges into the Hut Control Segment for a Logon Sequence Number,UTIL
+ESR,Sort MLOAD work tables,UTIL
+RepRCR,Replication replay changed rows message,MISC
+EBD,BEGIN EDIT DELETE,UTIL
+MTmp,Materialize temporary tables,MISC
+FCF,Forward configuration,MISC
+ExpVR,Export Vertical Redistribution step,EXP
+DIX,Delete secondary index,DDL
+ESD,Data acquisition,UTIL
+Current_Timestamp,Returns the current timestamp.,BuiltinFunction
+NEXTOK,It is okay to send the next step,MISC
+Current_Time,Returns the current time.,BuiltinFunction
+UpsUpd,UpsUpd Upsert update,MAINT
+Profile,Returns the current profile for the session or NULL if none.,BuiltinFunction
+EBE,BEGIN MLOAD,UTIL
+ExecSP,Execute Stored Procedure,OFUNC
+LogAOf,Logging for online archive off,MAINT
+ILR,Contain access log entries,MISC
+Date,Returns the current date.,BuiltinFunction
+ERE,Release MLOAD work tables,UTIL
+DELQT,Delete row from queue table,MAINT
+SAMP,Perform sampling from table/spool,STATS
+STATFN,Perform statistical functions,AFUNC
+STATFN,Perform statistical functions,AGG
