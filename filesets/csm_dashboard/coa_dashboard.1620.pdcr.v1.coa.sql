@@ -19,7 +19,7 @@ Parameters:
 
 /*{{temp:consumption_step.csv}}*/ ;
 /*{{temp:consumption_stepgrp.csv}}*/ ;
-/*{{temp:stepgroupfunctions.csv}}*/ ;
+/*{{temp:stepgrpfunctions.csv}}*/ ;
 
 CREATE VOLATILE TABLE CB_DAILY_TCORE_METRICS ,FALLBACK ,
      NO BEFORE JOURNAL,
