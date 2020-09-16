@@ -17,7 +17,6 @@ Parameters:
   - daterange:		{daterange}
 */
 
-/*{{temp:dates.csv}}*/ ;
 /*{{temp:consumption_step.csv}}*/ ;
 /*{{temp:consumption_stepgrp.csv}}*/ ;
 /*{{temp:stepgroupfunctions.csv}}*/ ;
