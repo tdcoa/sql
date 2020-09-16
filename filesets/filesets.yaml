@@ -322,104 +322,196 @@ success_plan:
 vantage_health_check:
   active:           "True"
   fileset_version:  "1.0"
-  startdate:          "Current_Date - 30"
-  enddate:            "Current_Date - 1"
-  startdate_history:  "Current_Date - 365"
-  enddate_history:    "Current_Date"
+  startdate:         "Current_Date - 30"
+  enddate:           "Current_Date - 1"
+  startdate_history: "Current_Date - 365"
+  enddate_history:   "Current_Date"
   files:
-    vhc_sql01:
+    vhc_sql01_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck001.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql01_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck001.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql02:
+    vhc_sql02_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck002.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql02_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck002.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql03:
+    vhc_sql03_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck003.16xx.dbc.v1.sql" 
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql03_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck003.16xx.pdcr.v1.sql"  # disabled
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql04:
+    vhc_sql04_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck004.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql04_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck004.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql05:
+    vhc_sql05_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck005.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql05_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck005.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql06:
+    vhc_sql06_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck006.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql06pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck006.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql07:
+    vhc_sql07_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck007.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql07_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck007.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql08:
+    vhc_sql08_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck008.16xx.dbc.v1.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql08_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck008.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql09:
+    vhc_sql09_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck009.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql09_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck009.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql10:
+    vhc_sql10_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck010.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql10_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck010.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql11:
+    vhc_sql11_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck011.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql11_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck011.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
     vhc_sql12:
       gitfile:      "vantage_health_check/VantageHealthCheck012.16xx.pdcr.v1.sql"
-      collection:   ["pdcr"]
+      collection:   ["dbc","pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql13:
+    vhc_sql13_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck013.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql13_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck013.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql14:
+    vhc_sql14_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck014.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql14_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck014.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql15:
+    vhc_sql15_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck015.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql15_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck015.16xx.pdcr.v1.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql16:
+    vhc_sql16_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck016.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql16_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck016.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]    
+    vhc_sql17_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck017.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql17:
+    vhc_sql17_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck017.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql18:
+    vhc_sql18_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck018.16xx.dbc.v1.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql18_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck018.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql19:
+    vhc_sql19_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck019.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql19_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck019.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql20:
+    vhc_sql20_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck020.16xx.dbc.v1.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql20_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck020.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql21:
+    vhc_sql21_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck021.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql21_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck021.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql22:
+    vhc_sql22_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck022.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql22_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck022.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql23:
+    vhc_sql23_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck023.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql23_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck023.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql24:
+    vhc_sql24_dbc:
+      gitfile:      "vantage_health_check/VantageHealthCheck024.16xx.dbc.v1.coa.sql"
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+    vhc_sql24_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck024.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]

@@ -69,7 +69,6 @@ FROM(
         --        ON ObjectDatabaseName = DatabaseName
         --        AND ObjectDatabaseName = Tablename
         WHERE Logdate BETWEEN {startdate} AND {enddate}
-				-- current_date - 30 AND current_date -1
         AND ObjectType = 'Tab') as O
 
             ON D.QueryID = O.QueryID
@@ -92,7 +91,7 @@ FROM(
                 FROM PDCRINFO.DBQLObjTbl_Hst --INNER JOIN systemfe.ca_table_xref
                 --        ON ObjectDatabaseName = DatabaseName
                 --        AND ObjectTableName = Tablename
-                WHERE Logdate BETWEEN current_date - 30 AND current_date -1
+                WHERE Logdate BETWEEN {startdate} AND {enddate}
                 AND ObjectType = 'Tab') as A GROUP BY 1)  as A
 
     ON A.QueryID = D.QueryID

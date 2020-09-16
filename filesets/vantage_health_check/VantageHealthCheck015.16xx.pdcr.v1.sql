@@ -134,5 +134,5 @@ Tableau Dashboard: Feature Usage By User
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -136)))) AS "ODBC Scalar Functions"
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -137)))) AS "Multisource"
 FROM PDCRINFO.DBQLOGTBL_HST A
-WHERE LogDate BETWEEN current_date - 30  AND current_date
+WHERE LogDate BETWEEN {startdate}  AND {enddate}
 GROUP BY 1,2;

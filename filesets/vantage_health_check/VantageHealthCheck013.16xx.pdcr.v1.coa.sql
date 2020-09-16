@@ -16,7 +16,6 @@ Locking Row for Access
      ,WDName
      ,Starttime
      ,a.firststeptime
-     ,a.firststepTime
      ,Zeroifnull(DelayTime) as DelayTime
       , (CAST(extract(hour
          From     ((a.firststeptime - a.StartTime) HOUR(2) TO SECOND(6) ) ) * 3600 + extract(minute
@@ -37,4 +36,4 @@ Locking Row for Access
 
        Where  DelayTime > 0
        AND a.Logdate BETWEEN {startdate} and {enddate}
-       Group By 1,2,3,4,5,6,7,8,9,10,11;
+       Group By 1,2,3,4,5,6,7,8,9,10;
