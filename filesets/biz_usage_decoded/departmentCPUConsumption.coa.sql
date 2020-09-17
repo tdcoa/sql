@@ -10,7 +10,7 @@ parameters:
 
 /*{{save:DepartmentCPUConsumption.csv}}*/
 SELECT
-D.LogDate
+ CAST(D.LogDate AS FORMAT 'YYYY-MM-DD') AS LogDate
 ,StatementType
 ,CASE WHEN StatementType = 'Merge Into' THEN 'Ingest & Prep'
 	  WHEN StatementType = 'Begin Loading' THEN 'Ingest & Prep'
