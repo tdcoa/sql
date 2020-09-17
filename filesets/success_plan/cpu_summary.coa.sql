@@ -15,7 +15,7 @@ database pdcrinfo;
 /*{{vis:cpu_summary.csv}}*/
 SELECT
  '{siteid}' as SiteID
-,theDate as LogDate
+,cast(theDate as format 'Y4-MM-DD') as LogDate
 ,floor(theTime/10000) as LogHour
 
 /* CPU reported in Centiseconds, hence 1e8 to produce CPU Seconds in Millions: */
