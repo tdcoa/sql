@@ -9,7 +9,7 @@ Create Volatile Table Concurrency as
 (
 SELECT
 '{siteid}' as Site_ID
-,cast(StartTmHr as date) LogDate
+,cast(cast(StartTmHr as format 'YYYY-MM-DD') AS CHAR(10)) as LogDate
 ,extract(HOUR from StartTmHr) as LogHour
 ,round(avg(PointConcurrency),0) as Concurrency_Avg
 ,max(case when Ntile <= 80 then PointConcurrency else null end) as Concurrency_80Pctl
@@ -51,11 +51,11 @@ Select * from Concurrency order by 2,3
 /*{{save:concurrency_summary.csv}}*/
 Select
  max(Concurrency_Peak) as Peak_max
-,avg(Concurrency_Peak) as Peak_avg
+,cast(avg(Concurrency_Peak) as decimal(15,2)) as Peak_avg
 ,max(Concurrency_95Pctl) as p95_max
-,avg(Concurrency_95Pctl) as p95_avg
+,cast(avg(Concurrency_95Pctl) as decimal(15,2)) as p95_avg
 ,max(Concurrency_80Pctl) as p80_max
-,max(Concurrency_Avg) as Avg_max
-,avg(Concurrency_Avg) as Avg_avg
+,cast(max(Concurrency_Avg) as decimal(15,2)) as Avg_max
+,cast(avg(Concurrency_Avg) as decimal(15,2)) as Avg_avg
 from Concurrency
 ;

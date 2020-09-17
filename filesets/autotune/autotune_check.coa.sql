@@ -18,7 +18,7 @@
 /*{{save:autotune_potential.csv}}*/
 LOCKING ROW FOR ACCESS
 SELECT '{siteid}' SiteID
-      ,Current_Date TheDate
+      ,cast(Current_Date as format 'YYYY-MM-DD') TheDate
       ,Statistics_Type "Statistics Type"
       ,Count(distinct DatabaseName) "Number Databases"
       ,Count(distinct DatabaseName || Tablename ) "Number Tables"
