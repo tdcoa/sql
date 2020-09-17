@@ -55,7 +55,7 @@ Select
 ,max(Concurrency_95Pctl) as p95_max
 ,cast(avg(Concurrency_95Pctl) as decimal(15,2)) as p95_avg
 ,max(Concurrency_80Pctl) as p80_max
-,max(Concurrency_Avg) as Avg_max
+,cast(max(Concurrency_Avg) as decimal(15,2)) as Avg_max
 ,cast(avg(Concurrency_Avg) as decimal(15,2)) as Avg_avg
 from Concurrency
 ;
