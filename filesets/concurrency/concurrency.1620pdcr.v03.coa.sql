@@ -9,7 +9,7 @@ Create Volatile Table Concurrency as
 (
 SELECT
 '{siteid}' as Site_ID
-,cast(StartTmHr as date format 'Y4-MM-DD') LogDate
+,cast(cast(StartTmHr as format 'YYYY-MM-DD') AS CHAR(10)) as LogDate
 ,extract(HOUR from StartTmHr) as LogHour
 ,round(avg(PointConcurrency),0) as Concurrency_Avg
 ,max(case when Ntile <= 80 then PointConcurrency else null end) as Concurrency_80Pctl
