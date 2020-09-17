@@ -132,7 +132,7 @@ FROM
               +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
                as FLOAT))) <= 1  /* Runtime_AMP_Sec */
            then 1 else 0 end as Integer))) as Query_Tactical_Cnt
-  ,avg(cast(dbql.NumSteps as decimal(18,4))) as Query_Complexity_Score_Avg
+  ,cast(avg(dbql.NumSteps) as decimal(15,4)) as Query_Complexity_Score_Avg
   ,zeroifnull(sum(cast(dbql.NumResultRows as BigInt) )) as Returned_Row_Cnt
 
   /* ====== Metrics: RunTimes ====== */
@@ -166,7 +166,7 @@ FROM
   ,zeroifnull(sum( cast(dbql.UsedIOTA/1e9     as decimal(18,2)))) as IOTA_Used_cntB
 
   /* ====== Metrics: Other ====== */
-  ,zeroifnull(avg(cast(NumOfActiveAMPs as decimal(18,4)))) as NumOfActiveAMPs_Avg
+  ,zeroifnull(cast(avg(NumOfActiveAMPs) as decimal(15,4))) as NumOfActiveAMPs_Avg
   ,zeroifnull(sum(SpoolUsage/1e9))  as Spool_GB
   ,zeroifnull(avg(1-(ReqPhysIO/nullifzero(TotalIOCount)))) as CacheHit_Pct
   ,zeroifnull(avg((AMPCPUTime / nullifzero(MaxAmpCPUTime*NumOfActiveAMPs))-1)) as CPUSec_Skew_AvgPCt
