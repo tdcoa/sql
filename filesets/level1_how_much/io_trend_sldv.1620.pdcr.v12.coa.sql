@@ -1,4 +1,6 @@
+
 /*==== Description ==== ==== ==== ==== ====
+
 I/O Trend Sldv 80Pct
 DBC Option (uses dbc.ResusageSldv)
 Version 12 (2019-05-09)
@@ -7,9 +9,12 @@ Parameters:
   siteid          = {siteid}
   startdate       = {startdate}
   enddate         = {enddate}
+
+
 Stage Table:  {db_stg}.stg_dat_level1_IO_Forecast
 Stored Proc:  {db_coa}.sp_dat_level1_IO_Forecast('{fileset_version}')
 Target Table: {db_coa}.coat_dat_level1_IO_Forecast
+
 I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilization Method).
 -	Evaluates the percentage of time in the collection period that devices were busy processing I/O requests (ldvOutReqTime) for ldvreads > 0 & ldvtype = 'DISK' (no need for Archie or I/O capacity estimates).
 -	IOBusyPct assessment is at 80th percentile of busiest drives (not an average). 80% of devices are less busy, 20% of drives are more busy.  The premise is that when 20% of drives reach 80% busy (i.e., reserve capacity level) the system will likely suffer performance impact.
@@ -22,12 +27,15 @@ I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilizatio
 -	Reserve Horizon represents the (future) point in time at which utilization is expected to exceed 80%.
 -	Slope is the daily percentage increase/decrease in utilization of the trend line (positive = increasing utilization, negative = decreasing utilization).
 -	SQL uses UNION to combine historical trend with future forecast – identical changes typically must be made to both SQL statements in UNION.
+
 Execution Instructions
 -	Copy/Paste below query into favorite query tool & execute.
 -	Copy/Paste result set from query tool into .csv and save
 -	Don’t export results (impacts formatting).
 -	Don’t save results to spreadsheeting (impacts formatting).
 -	Use visualization tool to import results for analysis (coming soon).
+
+
 Using the results to drive customer discussions
 -	Trending up or down? What is the growth rate (monthly change in percent utilization)?
 -	How long before trend hits 80% (reserve horizon) and 100% maximum?
@@ -39,6 +47,7 @@ Using the results to drive customer discussions
 -	Teradata can help address the risk of not having enough resources to meet workload demand
 -	Release COD or system expansion
 -	Is there enough time for performance optimization (probably requires 3 to 6 month runway).
+
 Configurable parameters
 Changes can be made by modifying the SQL below (change the yellow highlighted values):
 (1) Change the literal ‘SiteID’ to the actual SiteID for the customer system.
@@ -51,6 +60,8 @@ Changes can be made by modifying the SQL below (change the yellow highlighted va
 AND s1.TheDate BETWEEN (Current_Date - 365) AND Current_Date
 (5) Future forecast - number of days into the future for extended trend line – two changes required.
 WHERE  c2.calendar_date BETWEEN a5.TheDate+1 AND a5.TheDate + 365
+
+
 ===== SQL ===== ===== ===== ===== =====*/
 
 /*{{save:level1_io_trend_spma.coa.csv}}*/
