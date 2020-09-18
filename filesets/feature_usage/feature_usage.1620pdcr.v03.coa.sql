@@ -14,7 +14,7 @@
 /*{{load:{db_stg}.stg_dat_feature_usage_log}}*/
 /*{{call:{db_coa}.sp_dat_feature_usage_log('v1')}}*/
 SELECT
- '{siteid}' (VARCHAR(100)) as SiteID
+ '{siteid}' (VARCHAR(100)) as Site_ID
 ,cast(A.LogDate as format 'Y4-MM-DD') as LogDate
 ,u.User_Bucket
 ,u.User_Department
