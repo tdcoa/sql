@@ -519,7 +519,7 @@ vantage_health_check:
 
 biz_usage_decoded:
   active: "True"
-  show_in_gui: "True"
+  show_in_gui: "False"
   files:
     <<: *dim_user
     setup_xref_tables:
