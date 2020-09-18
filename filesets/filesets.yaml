@@ -322,6 +322,7 @@ success_plan:
 vantage_health_check:
   active:           "True"
   fileset_version:  "1.0"
+  show_in_gui: "False"
   startdate:         "Current_Date - 30"
   enddate:           "Current_Date - 1"
   startdate_history: "Current_Date - 365"
