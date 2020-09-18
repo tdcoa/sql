@@ -589,14 +589,6 @@ gss_resusage_macro:
       enabledtcore:  306
       baselinetcore: 221
       reads90:       77318.22
-    vu_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20"]
-      gitfile:      "gss_resusage/gss_vantage_units.dbc.coa.sql"
-    vu_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20"]
-      gitfile:      "gss_resusage/gss_vantage_units.pdcr.coa.sql"
 
 csm_dashboard:
   active:     "True"
@@ -613,3 +605,19 @@ csm_dashboard:
       gitfile:  "csm_dashboard/consumption_stepgrp.csv"
     stepgrpfunctions:
       gitfile:  "csm_dashboard/stepgrpfunctions.csv"
+      
+consumption_pricing:
+  active:     "True"
+  fileset_version: "1.0"
+  startdate:  "Current_Date - 365"
+  enddate:    "Current_Date - 1"
+  files:
+    vu_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20"]
+      gitfile:      "consumption_pricing/gss_vantage_units.dbc.coa.sql"
+    vu_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20"]
+      gitfile:      "consumption_pricing/gss_vantage_units.pdcr.coa.sql"
+ 
