@@ -15,7 +15,7 @@
 /*{{call:{db_coa}.sp_dat_feature_usage_log('v1')}}*/
 SELECT
  '{siteid}' (VARCHAR(100)) as SiteID
-,A.LogDate as LogDate
+,cast(A.LogDate as format 'Y4-MM-DD') as LogDate
 ,u.User_Bucket
 ,u.User_Department
 /*  dbsversion is required */
