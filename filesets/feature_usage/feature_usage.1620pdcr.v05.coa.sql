@@ -14,22 +14,21 @@ create volatile table Feature_Log as
       select
        LogDate
       ,featureusage
-      ,count(*) as Request_Cnt
+      ,count(*) as Query_Cnt
       from pdcrinfo.dbqlogtbl_hst a
-      where logdate between DATE-9 and DATE-1
-        and featureusage is not null
+      where logdate between {startdate} and {enddate}
+	  and featureusage is not null
       group by 1,2
     )
     select
      dbql.LogDate
-    ,feat.FeatureName
-    ,feat.featurebitpos as BitPos
-    ,sum(dbql.Request_Cnt) as Request_Cnt
-    from dbql
-    inner join dbc.qrylogfeaturelistv feat
+    ,feat.featurename
+    ,sum(zeroifnull(dbql.Query_Cnt)) Tot_cnt
+    from dbc.qrylogfeaturelistv feat 
+    left join dbql
       on bytes(dbql.featureusage) = 256
      and getbit(dbql.featureusage,(2047-feat.featurebitpos)) = 1
-    group by LogDate, FeatureName, featurebitpos
+    group by LogDate, FeatureName
 ) with data
   No Primary Index
   on commit preserve rows
@@ -37,6 +36,9 @@ create volatile table Feature_Log as
 
 
 
+/*{{save:feature_usage.csv}}*/
+/*{{load:{db_stg}.stg_dat_feature_usage_log}}*/
+/*{{call:{db_coa}.sp_dat_feature_usage_log('v1')}}*/
 select
  x.LogDate
 ,x.FeatureName
