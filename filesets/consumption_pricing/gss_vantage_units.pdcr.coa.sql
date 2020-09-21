@@ -18,7 +18,7 @@ select
     SELECT SystemName
       FROM TABLE (SYSLIB.MonitorSystemPhysicalConfig()) AS SystemConfig
 ) AS SystemName,
-coalesce(vu1.logdate, vu4.logdate) as LogDate,
+cast(coalesce(vu1.logdate, vu4.logdate) as format 'Y4-MM-DD') as LogDate,
 coalesce(vu1.loghr, vu4.loghr) as LogHour,
 zeroifnull(vu1.vantageunithrs) + zeroifnull(vu4.vantageunitutilityhrs) (format 'ZZ9.999') as CPU_VU,
 zeroifnull(vu1.vantageunitTB) + zeroifnull(vu4.vantageunitutilityTB) (format 'ZZ9.999') as IO_VU
