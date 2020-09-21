@@ -244,14 +244,14 @@ feature_usage:
   active:           "True"
   fileset_version:  "1.2"
   files:
-    <<: *dim_user
     feature_usage_1620pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20"]
-      gitfile:      "feature_usage/feature_usage.1620pdcr.v03.coa.sql"
+      gitfile:      "feature_usage/feature_usage.1620pdcr.v05.coa.sql"
       startdate:    "Current_Date - 43"  # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+
 
 level1_how_much:
   active:           "True"
@@ -605,7 +605,7 @@ csm_dashboard:
       gitfile:  "csm_dashboard/consumption_stepgrp.csv"
     stepgrpfunctions:
       gitfile:  "csm_dashboard/stepgrpfunctions.csv"
-      
+
 consumption_pricing:
   active:     "True"
   fileset_version: "1.0"
@@ -620,4 +620,3 @@ consumption_pricing:
       collection:   ["pdcr"]
       dbsversion:   ["16.20"]
       gitfile:      "consumption_pricing/gss_vantage_units.pdcr.coa.sql"
- 

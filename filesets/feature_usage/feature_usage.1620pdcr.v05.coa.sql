@@ -22,9 +22,9 @@ create volatile table Feature_Log as
     select
      dbql.LogDate
     ,feat.featurename
-    ,feat.featurebitpos as BitPos	
+    ,feat.featurebitpos as BitPos
     ,sum(zeroifnull(dbql.Query_Cnt)) Tot_cnt
-    from dbc.qrylogfeaturelistv feat 
+    from dbc.qrylogfeaturelistv feat
     left join dbql
       on bytes(dbql.featureusage) = 256
      and getbit(dbql.featureusage,(2047-feat.featurebitpos)) = 1
@@ -34,7 +34,7 @@ create volatile table Feature_Log as
   on commit preserve rows
 ;
 
-		
+
 /*{{save:feature_usage.csv}}*/
 /*{{load:{db_stg}.stg_dat_feature_usage_log}}*/
 /*{{call:{db_coa}.sp_dat_feature_usage_log('v1')}}*/
