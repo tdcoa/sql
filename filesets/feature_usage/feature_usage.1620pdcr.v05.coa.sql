@@ -13,7 +13,7 @@ create volatile table Feature_Log as
       select
        LogDate
       ,featureusage
-      ,count(*) as Query_Cnt
+      ,count(*) as rec_count
       from pdcrinfo.dbqlogtbl_hst a
       where logdate between {startdate} and {enddate}
         and featureusage is not null
@@ -23,7 +23,7 @@ create volatile table Feature_Log as
      dbql.LogDate
     ,feat.featurename
     ,feat.featurebitpos as BitPos
-    ,sum(zeroifnull(dbql.Query_Cnt)) Tot_cnt
+    ,sum(zeroifnull(dbql.rec_count)) as Query_Cnt
     from dbc.qrylogfeaturelistv feat
     left join dbql
       on bytes(dbql.featureusage) = 256
@@ -43,6 +43,7 @@ select
 ,cast(LogDate as format 'Y4-MM-DD') as LogDate
 ,featurename
 ,BitPos
-,Tot_cnt
+,Query_Cnt
 from Feature_Log
+order by tot_cnt
 ;
