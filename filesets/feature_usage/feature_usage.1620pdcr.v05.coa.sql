@@ -2,7 +2,6 @@
     by user bucket / department. Mapping to Feature_IDs happen in Transcend.
 
   parameters
-     dbqlogtbl  = {dbqlogtbl}
      siteid     = {siteid}
      startdate  = {startdate}
      enddate    = {enddate}
