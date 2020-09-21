@@ -17,7 +17,7 @@ create volatile table Feature_Log as
       ,count(*) as Query_Cnt
       from pdcrinfo.dbqlogtbl_hst a
       where logdate between {startdate} and {enddate}
-	  and featureusage is not null
+        and featureusage is not null
       group by 1,2
     )
     select
@@ -34,21 +34,14 @@ create volatile table Feature_Log as
   on commit preserve rows
 ;
 
-
-
+		
 /*{{save:feature_usage.csv}}*/
 /*{{load:{db_stg}.stg_dat_feature_usage_log}}*/
 /*{{call:{db_coa}.sp_dat_feature_usage_log('v1')}}*/
 select
- x.LogDate
-,x.FeatureName
-,x.BitPos
-,coalesce(l.Request_Cnt,0) as Request_Cnt
-from Feature_Log as l
-right outer join
-    (Select Calendar_Date as LogDate, FeatureBitPos as BitPos, FeatureName
-     from sys_calendar.calendar cross join dbc.qrylogfeaturelistv
-     where Calendar_Date between DATE-2 and DATE-1) as x
- on l.LogDate = x.LogDate
-and l.BitPos = x.BitPos
+ '{siteid}' as Site_ID
+,cast(LogDate as format 'Y4-MM-DD') as LogDate
+,feat.featurename
+,Tot_cnt
+from Feature_Log
 ;
