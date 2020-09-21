@@ -41,7 +41,7 @@ create volatile table Feature_Log as
 select
  '{siteid}' as Site_ID
 ,cast(LogDate as format 'Y4-MM-DD') as LogDate
-,feat.featurename,
+,featurename
 ,BitPos
 ,Tot_cnt
 from Feature_Log
