@@ -23,12 +23,13 @@ create volatile table Feature_Log as
     select
      dbql.LogDate
     ,feat.featurename
+    ,feat.featurebitpos as BitPos	
     ,sum(zeroifnull(dbql.Query_Cnt)) Tot_cnt
     from dbc.qrylogfeaturelistv feat 
     left join dbql
       on bytes(dbql.featureusage) = 256
      and getbit(dbql.featureusage,(2047-feat.featurebitpos)) = 1
-    group by LogDate, FeatureName
+    group by LogDate, FeatureName, BitPos
 ) with data
   No Primary Index
   on commit preserve rows
@@ -41,7 +42,8 @@ create volatile table Feature_Log as
 select
  '{siteid}' as Site_ID
 ,cast(LogDate as format 'Y4-MM-DD') as LogDate
-,feat.featurename
+,feat.featurename,
+,BitPos
 ,Tot_cnt
 from Feature_Log
 ;
