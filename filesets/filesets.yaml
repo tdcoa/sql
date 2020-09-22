@@ -198,8 +198,6 @@ db_objects:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_constraints_by_database.v01.coa.sql"
-    cleanup_coa_sql:
-      gitfile:      "db_objects/objects_zcleanup.coa.sql"
 
 compete_snowflake:
   active:           "True"
