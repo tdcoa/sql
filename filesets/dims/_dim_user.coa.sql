@@ -76,6 +76,9 @@ on commit preserve rows
 drop table "dim_user.csv"
 ;
 
+drop table "dim_tdinternal_databases.csv" 
+;
+
 collect stats on dim_user column(UserName)
 ;
 
