@@ -7,7 +7,7 @@ for any table.
 
 
 /*
-delete from "dim_user.csv"  where User_Bucket <> 'TDInternal' ;
+delete from "dim_user.csv"  where User_Bucket <> 'TDInternal'
 */
 
 /*

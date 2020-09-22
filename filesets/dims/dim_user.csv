@@ -10,3 +10,5 @@ Default,Like,%_ARC,Admin,IT,DBA,None,5700
 Default,Like,DBADMIN%,Admin,IT,DBA,None,5800
 Default,Like,%_ADMIN,Admin,IT,DBA,None,5900
 Default,Like,%_DBA,Admin,IT,DBA,None,6000
+TRANSCEND%,Regex,[a-z]{2}[0-9]{6},Quicklook ID,TDOrg,Other,None,1000000
+TRNAWS%,Regex,[a-z]{2}[0-9]{6},Quicklook ID,TDOrg,Other,None,1000000

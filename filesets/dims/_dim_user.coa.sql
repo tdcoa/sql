@@ -21,6 +21,7 @@ Parameters:
        i.e. don't delete these records if you want them
 */
 insert into "dim_user.csv"
+  select
   'Default'     as Site_ID
   ,'Equal'      as Pattern_Type
   ,trim(dbname) as Pattern
