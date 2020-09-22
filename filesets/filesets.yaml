@@ -589,6 +589,7 @@ csm_dashboard:
   startdate:  "Current_Date - 7"
   enddate:    "Current_Date - 1"
   files:
+    <<: *dim_user
     controlfile_pdcr:
       gitfile:  "csm_dashboard/coa_dashboard.1620.pdcr.v1.coa.sql"
     consumption_step:
