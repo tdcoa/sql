@@ -11,24 +11,55 @@ create volatile table Feature_Log as
 (
     with dbql as (
       select
-       LogDate
-      ,featureusage
+       dbq.LogDate
+      ,dbq.featureusage
+      ,usr.UserName
+      ,usr.UserHash
+      ,usr.User_Bucket
+      ,usr.User_Department
+      ,usr.User_SubDepartment
+      ,usr.User_Region
       ,count(*) as rec_count
-      from pdcrinfo.dbqlogtbl_hst a
-      where logdate between {startdate} and {enddate}
+      from pdcrinfo.dbqlogtbl_hst as dbq
+      join dim_user as usr
+        on usr.UserName = dbq.UserName
+      where dbq.LogDate between {startdate} and {enddate}
         and featureusage is not null
-      group by 1,2
+      group by
+      dbq.LogDate
+     ,dbq.featureusage
+     ,usr.UserName
+     ,usr.UserHash
+     ,usr.User_Bucket
+     ,usr.User_Department
+     ,usr.User_SubDepartment
+     ,usr.User_Region
     )
     select
      dbql.LogDate
     ,feat.featurename
     ,feat.featurebitpos as BitPos
+    ,dbql.UserName
+    ,dbql.UserHash
+    ,dbql.User_Bucket
+    ,dbql.User_Department
+    ,dbql.User_SubDepartment
+    ,dbql.User_Region
     ,sum(zeroifnull(dbql.rec_count)) as Query_Cnt
     from dbc.qrylogfeaturelistv feat
     left join dbql
       on bytes(dbql.featureusage) = 256
      and getbit(dbql.featureusage,(2047-feat.featurebitpos)) = 1
-    group by LogDate, FeatureName, BitPos
+    group by
+    dbql.LogDate
+   ,feat.featurename
+   ,feat.featurebitpos
+   ,dbql.UserName
+   ,dbql.UserHash
+   ,dbql.User_Bucket
+   ,dbql.User_Department
+   ,dbql.User_SubDepartment
+   ,dbql.User_Region
 ) with data
   No Primary Index
   on commit preserve rows
@@ -43,7 +74,12 @@ select
 ,cast(LogDate as format 'Y4-MM-DD') as LogDate
 ,featurename
 ,BitPos
-,Query_Cnt
+,User_Bucket
+,User_Department
+,User_SubDepartment
+,User_Region
+,sum(Query_Cnt) as Query_Cnt
 from Feature_Log
-order by Query_Cnt desc
+group by 1,2,3,4,5,6,7,8
+order by 9 desc
 ;
