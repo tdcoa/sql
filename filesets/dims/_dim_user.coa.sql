@@ -12,7 +12,25 @@ Parameters:
    or a customer-specific table.  To use, review
    and fill-in the .sql file content:
 */
+
+/*{{temp:dim_tdinternal_databases.csv}}*/ ;
 /*{{temp:dim_user.csv}}*/ ;
+
+/* insert the list of internal databases into dim_user
+   --> if you use dim_user_override, be aware this happens BEFORE your override
+       i.e. don't delete these records if you want them
+*/
+insert into "dim_user.csv"
+  'Default'     as Site_ID
+  ,'Equal'      as Pattern_Type,
+  ,trim(dbname) as Pattern
+  ,'TDInternal' as User_Bucket
+  ,'TDInternal' as User_Department
+  ,'TDInternal' as User_SubDepartment
+  ,'TDInternal' as User_Region
+  ,1            as Priority
+from "dim_tdinternal_databases.csv" idb;
+
 /*{{file:dim_user_override.sql}}*/ ;
 
 create volatile table dim_user as
