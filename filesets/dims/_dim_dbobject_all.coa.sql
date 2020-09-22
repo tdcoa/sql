@@ -13,11 +13,11 @@
 /*{{temp:dim_dbobject.csv}}*/;
 /*{{temp:dim_tdinternal_databases.csv}}*/;
 
-create table dim_indextype as "dim_indextype.csv" with data;
-create table dim_tablekind as "dim_tablekind.csv" with data;
-create table dim_datatype as "dim_datatype.csv" with data;
-create table dim_dbobject as "dim_dbobject.csv" with data;
-create table dim_tdinternal_databases as "dim_tdinternal_databases.csv" with data;
+create volatile table dim_indextype as "dim_indextype.csv" with data on commit preserve rows;
+create volatile table dim_tablekind as "dim_tablekind.csv" with data on commit preserve rows;
+create volatile table dim_datatype as "dim_datatype.csv" with data on commit preserve rows;
+create volatile table dim_dbobject as "dim_dbobject.csv" with data on commit preserve rows;
+create volatile table dim_tdinternal_databases as "dim_tdinternal_databases.csv" with data on commit preserve rows;
 
 drop table "dim_indextype.csv";
 drop table "dim_tablekind.csv";
