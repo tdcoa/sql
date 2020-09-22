@@ -32,7 +32,7 @@ create volatile table db_objects_counts as
     ,sum( case when tk.Table_Bucket in('Other','Journal')
                  or tk.Table_Bucket is null then 1 else 0 end) as OtherCount
     FROM dbc.Tables t
-    LEFT OUTER JOIN "dim_tablekind.csv" tk
+    LEFT OUTER JOIN dim_tablekind tk
     on t.TableKind = tk.TableKind
     group by 1
     ) d

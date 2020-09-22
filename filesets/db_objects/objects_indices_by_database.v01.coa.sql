@@ -22,7 +22,7 @@ create volatile table index_types_by_database as
     FROM DBC.IndicesV
     GROUP BY 1,2,3
   ) Inds
-  FULL OUTER JOIN "dim_indextype.csv" AS IK
+  FULL OUTER JOIN dim_indextype AS IK
    ON IK.IndexType = Inds.IndexType
   AND IK.UniqueFlag = Inds.UniqueFlag
 ) with data

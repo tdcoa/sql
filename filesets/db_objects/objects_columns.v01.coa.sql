@@ -85,7 +85,7 @@ create volatile table column_types as
     WHERE ColumnType IS NOT NULL
     GROUP BY 1,2,3,4,5
  ) C
-  FULL OUTER JOIN  "dim_datatype.csv" DT
+  FULL OUTER JOIN dim_datatype DT
    ON DT.DataType = C.ColumnType
   AND DT.StorageFormat = C.StorageFormat
 )with data no primary index on commit preserve rows;

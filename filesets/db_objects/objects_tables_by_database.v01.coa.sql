@@ -24,7 +24,7 @@ create volatile table table_kinds_by_database as
    FROM DBC.TablesV
    GROUP BY 1,2,3
   ) t
-  FULL OUTER JOIN "dim_tablekind.csv" as tk
+  FULL OUTER JOIN dim_tablekind as tk
   on t.TableKind = tk.TableKind
 ) with data
 no primary index on commit preserve rows;
