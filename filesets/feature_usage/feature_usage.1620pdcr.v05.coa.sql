@@ -45,5 +45,5 @@ select
 ,BitPos
 ,Query_Cnt
 from Feature_Log
-order by tot_cnt
+order by Query_Cnt desc
 ;
