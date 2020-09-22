@@ -22,7 +22,7 @@ Parameters:
 */
 insert into "dim_user.csv"
   'Default'     as Site_ID
-  ,'Equal'      as Pattern_Type,
+  ,'Equal'      as Pattern_Type
   ,trim(dbname) as Pattern
   ,'TDInternal' as User_Bucket
   ,'TDInternal' as User_Department
