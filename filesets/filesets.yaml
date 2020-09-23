@@ -235,7 +235,7 @@ concurrency:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "concurrency/concurrency.1620dbc.v03.coa.sql"
-   file:
+    concurrency_vis:
       gitfile:      "concurrency/concurrency.py"
       
 
