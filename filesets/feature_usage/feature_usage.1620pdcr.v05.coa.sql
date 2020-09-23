@@ -78,7 +78,7 @@ select
 ,User_Department
 ,User_SubDepartment
 ,User_Region
-,sum(Query_Cnt) as Query_Cnt
+,sum(Query_Cnt) as Feature_Usage_Cnt
 from Feature_Log
 group by 1,2,3,4,5,6,7,8
 order by 9 desc
