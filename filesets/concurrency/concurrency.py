@@ -489,8 +489,8 @@ df_weekly_mean_modified = df_weekly_mean.melt(id_vars=["Date"],
 
 fig, ax = plt.subplots(figsize=(30,20))
 g = sns.lineplot(x=df_weekly_mean_modified["Date"], y='Value', data=df_weekly_mean_modified, hue="Concurrency", sort=True, linewidth=3)
-x_dates = df_weekly_mean_modified['Date']
-plt.xticks(plt.xticks()[0], x_dates, rotation=30)
+locations, labels = plt.xticks()
+plt.xticks(locations, labels, rotation=30)
 
 ax.xaxis.set_major_locator(ticker.MultipleLocator(7))
 
