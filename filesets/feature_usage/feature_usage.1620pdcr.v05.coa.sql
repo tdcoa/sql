@@ -47,7 +47,7 @@ create volatile table Feature_Log as
     ,dbql.User_Region
     ,sum(zeroifnull(dbql.rec_count)) as Query_Cnt
     from dbc.qrylogfeaturelistv feat
-    left join dbql
+    join dbql
       on bytes(dbql.featureusage) = 256
      and getbit(dbql.featureusage,(2047-feat.featurebitpos)) = 1
     group by
