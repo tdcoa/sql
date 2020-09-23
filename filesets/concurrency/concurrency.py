@@ -401,8 +401,8 @@ df_daily_max_modified = df_daily_max.melt(id_vars=["Date"],
 
 fig, ax = plt.subplots(figsize=(30,20))
 g = sns.lineplot(x=df_daily_max_modified["Date"], y='Value', data=df_daily_max_modified, hue="Concurrency", sort=True, linewidth=3)
-x_dates = df_daily_max_modified['Date'].sort_values().unique()
-plt.xticks(plt.xticks()[0], x_dates, rotation=30)
+locations, labels = plt.xticks()
+plt.xticks(locations, labels, rotation=30)
 
 ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
@@ -438,8 +438,8 @@ df_daily_mean_modified = df_daily_mean.melt(id_vars=["Date", "week_day"],
 
 fig, ax = plt.subplots(figsize=(30,20))
 g = sns.lineplot(x=df_daily_mean_modified["week_day"], y='Value', data=df_daily_mean_modified, hue="Concurrency", sort=True, linewidth=3)
-x_dates = df_daily_mean_modified['week_day'].unique()
-plt.xticks(plt.xticks()[0], x_dates, rotation=30)
+locations, labels = plt.xticks()
+plt.xticks(locations, labels, rotation=30)
 
 ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
