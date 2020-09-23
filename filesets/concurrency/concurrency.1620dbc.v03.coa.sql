@@ -28,8 +28,8 @@ FROM
         ,cast(SUBSTR(CAST(ClockTick AS  VARCHAR(30)), 1, 17) || '0'  as timestamp(0)) as StartTm10s
         , CAST(1 AS SMALLINT) QryCount
         , PERIOD(firststeptime,firstresptime+ interval '0.001' second) QryDurationPeriod
-        FROM pdcrinfo.dbqlogtbl_hst as lg
-        WHERE logdate   BETWEEN  {startdate}  AND {enddate}
+        FROM dbc.QryLogV as lg
+        WHERE cast(StartTime as date)   BETWEEN  {startdate}  AND {enddate}
           AND NumOfActiveAmps >  0
          EXPAND ON QryDurationPeriod AS Qper BY ANCHOR ANCHOR_SECOND
         ) qrylog
