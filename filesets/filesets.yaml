@@ -224,16 +224,20 @@ compete_snowflake:
 concurrency:
   active:           "True"
   fileset_version:  "1.0"
+  startdate:        "Current_Date - 43"  # 6 weeks
+  enddate:          "Current_Date - 1"  
   files: &concurrency
-    concurrency_sql01:
+    concurrency_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
-      startdate:    "Current_Date - 43"  # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
-    concurrency_vis:
+    concurrency_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "concurrency/concurrency.1620dbc.v03.coa.sql"
+   file:
       gitfile:      "concurrency/concurrency.py"
+      
 
 feature_usage:
   active:           "True"
