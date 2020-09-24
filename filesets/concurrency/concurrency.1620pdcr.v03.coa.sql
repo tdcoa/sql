@@ -10,7 +10,7 @@ SELECT
 '{siteid}' as Site_ID
 ,cast(cast(StartTmHr as format 'YYYY-MM-DD') AS CHAR(10)) as LogDate
 ,extract(HOUR from StartTmHr) as LogHour
-,cast(round(avg(PointConcurrency),0) as decimal(9,0)) as Concurrency_Avg
+,cast(round(avg(PointConcurrency),0) as integer) as Concurrency_Avg
 ,max(case when Ntile <= 80 then PointConcurrency else null end) as Concurrency_80Pctl
 ,max(case when Ntile <= 95 then PointConcurrency else null end) as Concurrency_95Pctl
 ,max(PointConcurrency) as Concurrency_Peak
