@@ -11,7 +11,7 @@
  - Does not handle NOS system errors
 */
 
-/*{{save:202009_{siteid}_VU.csv}}*/
+/*{{save:{YYYYMM}_{siteid}_VU.csv}}*/
 select
 '{siteid}' as Site_ID,
 (
