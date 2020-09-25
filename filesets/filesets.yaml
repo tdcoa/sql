@@ -558,6 +558,7 @@ gss_resusage_macro:
   fileset_version: "1.0"
   startdate:  "Current_Date - 90"
   enddate:    "Current_Date - 1"
+  YYYYMM:     "202009"
   files:
     resusage_dbc_1510:
       collection:   ["dbc"]
@@ -609,6 +610,7 @@ consumption_pricing:
   fileset_version: "1.0"
   startdate:  "Current_Date - 365"
   enddate:    "Current_Date - 1"
+  YYYYMM:     "202009"
   files:
     vu_dbc:
       collection:   ["dbc"]
