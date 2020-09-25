@@ -1,17 +1,17 @@
 /*
  Version: 1.0
  Date: 28-06-2020
- Description: 
+ Description:
  - Updated for VCM 2.0 GA
  - This script reports CPU hours and Logical IO as Vantage Unit columns(CPU_VU, IO_VU)
    from PDCRINFO views by date and per hour granularity.
  - Excludes system errors and users for calculating Vantage Units
- - Phase wise Utility Data for Load Jobs 
+ - Phase wise Utility Data for Load Jobs
  - Reports from current date to 365 days back (1 year data)
  - Does not handle NOS system errors
 */
 
-/*{{save:gss_vantage_units.{siteid}.csv}}*/
+/*{{save:202009_{siteid}_VU.csv}}*/
 select
 '{siteid}' as Site_ID,
 (

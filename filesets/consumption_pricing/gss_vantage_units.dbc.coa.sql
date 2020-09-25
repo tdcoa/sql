@@ -1,12 +1,12 @@
 /*
  Version: 1.0
  Date: 28-06-2020
- Description: 
+ Description:
  - Updated for VCM 2.0 GA
  - Reports CPU hours and Logical IO as Vantage Unit columns(CPU_VU, IO_VU)
    from DBQL tables by date and per hour granularity.
  - Excludes system errors and users for calculating Vantage Units
- - Phase wise Utility Data for Load Jobs 
+ - Phase wise Utility Data for Load Jobs
  - Reports from current date to 365 days back (1 year data)
  - Does not handle NOS system errors
  - CPU_VU column gives the CPU based VU
@@ -15,7 +15,7 @@
  - It will return the data for last one year
 */
 
-/*{{save:gss_vantage_units.{siteid}.csv}}*/
+/*{{save:202009_{siteid}_VU.csv}}*/
 select
 '{siteid}' as Site_ID,
 cast(coalesce(vu1.logdate, vu4.logdate) as format 'Y4-MM-DD') as LogDate,

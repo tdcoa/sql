@@ -2,13 +2,13 @@
 replace macro systemfe.gss_resusage_td160_PDCR
 ( BEGINDATE (DATE, DEFAULT DATE)  - becomes {startdate}
 , ENDDATE (DATE, DEFAULT DATE)    - becomes {enddate}
-, BEGINTIME (INT, DEFAULT 0)      
-, ENDTIME (INT, DEFAULT 240000)    
+, BEGINTIME (INT, DEFAULT 0)
+, ENDTIME (INT, DEFAULT 240000)
 )
 AS (
 */
 
-/*{{save:gss_resusage.pdcr.1620.{siteid}.csv}}*/
+/*{{save:202009_{siteid}_GSS.csv}}*/
 sel
  '{siteid}' as Site_ID
 ,'TD16v2.0_PDCR' (named "Version")
@@ -51,8 +51,8 @@ end) ) as decimal(5,2)) (named "NodeCPUPower")
 
 ,NodeCPUPower * NumNodes * AvgCPUBusy / 100 (format 'ZZ,ZZ9.9') (Named "ConsumedCPUPower")
 
-,case when CPUs/2 < (.2 * (ConsumedTCPU) + .8 * (ConsumedTIO / 350 / CPUs / 2)) then CPUs/2 
-	else (.2 * (ConsumedTCPU) + .8 * (ConsumedTIO / 350 / CPUs / 2)) 
+,case when CPUs/2 < (.2 * (ConsumedTCPU) + .8 * (ConsumedTIO / 350 / CPUs / 2)) then CPUs/2
+	else (.2 * (ConsumedTCPU) + .8 * (ConsumedTIO / 350 / CPUs / 2))
 	end (named "ConsumedTCore")
 
 ,NumNodes * CPUs / 2 * AvgCPUBusy / 100 (format 'ZZ,ZZ9.9') (Named "ConsumedTCPU")
@@ -294,7 +294,7 @@ END) (FORMAT 'ZZ9.9', named "TotalCacheEffKB")
 ,max(TotalAMPCPUBusy) / CPUs / RSSInterval (format 'ZZ9.9') (named "MaxAMPCPUBusy")
 ,sum(TotalGTW_PECPUBusy) / NumNodes / CPUs / RSSInterval (format 'ZZ9.9') (named "AvgGTW_PECPUBusy")
 ,max(TotalGTW_PECPUBusy) / CPUs / RSSInterval (format 'ZZ9.9') (named "MaxGTW_PECPUBusy")
- 
+
 /* VH Cache */
 
 ,sum(VHAgedOut) / NumNodes / RSSInterval (format 'ZZ,ZZ9.9')(named "AvgVHAgedOut_SVPR")
@@ -328,19 +328,19 @@ END) (FORMAT 'ZZ9.9', named "TotalCacheEffKB")
 ,zeroifnull(PctCPUComp) / 100 * NumNodes * CPUs / 2 / (PMCOD / 100) (named "TtlTCPUComp_Est1")
 ,zeroifnull(PctCPUUnComp) / 100 * NumNodes  * CPUs / 2 / (PMCOD / 100)   (named "TtlTCPUUnComp_Est1")
 
-,zeroifnull(PreCompMBSecNode_SVPR) * NumNodes * 0.025 / 2  (named "TtlTCPUComp_Est2") 
-,zeroifnull(PostUnCompMBSecNode_SVPR) * NumNodes * 0.0035 / 2  (named "TtlTCPUUnComp_Est2") 
+,zeroifnull(PreCompMBSecNode_SVPR) * NumNodes * 0.025 / 2  (named "TtlTCPUComp_Est2")
+,zeroifnull(PostUnCompMBSecNode_SVPR) * NumNodes * 0.0035 / 2  (named "TtlTCPUUnComp_Est2")
 
-,PhyPermWriteMBSecNode_SVPR * NumNodes * 0.025 / 2  (named "TtlTCPUComp_Est3") 
-,LogPermReadMBSecNode_SVPR * NumNodes * 0.0035 / 2  (named "TtlTCPUUnComp_Est3") 
+,PhyPermWriteMBSecNode_SVPR * NumNodes * 0.025 / 2  (named "TtlTCPUComp_Est3")
+,LogPermReadMBSecNode_SVPR * NumNodes * 0.0035 / 2  (named "TtlTCPUUnComp_Est3")
 
 ,zeroifnull(sum(CompCPUMS) / NumNodes / RSSInterval / nullifzero(PreCompMBSecNode_SVPR))  (named "CPUMSMBComp")
 ,zeroifnull(sum(UnCompCPUMS) / NumNodes / RSSInterval / nullifzero(PostUnCompMBSecNode_SVPR))  (named "CPUMSMBUnComp")
 
 /* NCS Node sizing */
 
-,AvgGTW_PECPUBusy / 100 * NumNodes * CPUs / 2 / (PMCOD / 100) / 100 (named "TotalTCPUForNCSNodes") 
-,AvgGTW_PECPUBusy / 100 * NumNodes * CPUs / 2 / (PMCOD / 100) / 100 (named "AvgTCPUForNCSNode") 
+,AvgGTW_PECPUBusy / 100 * NumNodes * CPUs / 2 / (PMCOD / 100) / 100 (named "TotalTCPUForNCSNodes")
+,AvgGTW_PECPUBusy / 100 * NumNodes * CPUs / 2 / (PMCOD / 100) / 100 (named "AvgTCPUForNCSNode")
 ,MaxGTW_PECPUBusy / 100 * NumNodes * CPUs / 2 / (PMCOD / 100) / 100 (named "MaxTCPUForNCSNode")
 
 ,sum(NtwReadKB) / NumNodes / RSSInterval / 1024.0 (format 'ZZZ,ZZ9.9') (named "AvgNtwReadMBSecNode")
@@ -535,7 +535,7 @@ WHERE THEDATE BETWEEN {startdate} AND {enddate}
 
 group by 1,2,3,4
 
-) svpr_dt 
+) svpr_dt
 on spma_dt.LogDate = svpr_dt.LogDate
 and spma_dt.LogTime = svpr_dt.LogTime
 and spma_dt.nodeid = svpr_dt.nodeid
@@ -592,8 +592,7 @@ group by 1,2,3,4
 on spma_dt.LogDate = spdsk_dt.LogDate
 and spma_dt.LogTime = spdsk_dt.LogTime
 and spma_dt.nodeid = spdsk_dt.nodeid
-where  info.infokey (NOT CS) = 'VERSION' (NOT CS) 
+where  info.infokey (NOT CS) = 'VERSION' (NOT CS)
 group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
 order by 6,15,18,19
 ;
-

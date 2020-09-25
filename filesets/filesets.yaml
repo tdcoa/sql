@@ -225,7 +225,7 @@ concurrency:
   active:           "True"
   fileset_version:  "1.0"
   startdate:        "Current_Date - 43"  # 6 weeks
-  enddate:          "Current_Date - 1"  
+  enddate:          "Current_Date - 1"
   files: &concurrency
     concurrency_pdcr:
       collection:   ["pdcr"]
@@ -237,7 +237,7 @@ concurrency:
       gitfile:      "concurrency/concurrency.1620dbc.v03.coa.sql"
     concurrency_vis:
       gitfile:      "concurrency/concurrency.py"
-      
+
 
 feature_usage:
   active:           "True"
@@ -291,8 +291,9 @@ level1_how_much:
       resusagesldv: "dbc.ResUsageSldv"
 
 success_plan:
-  active:           "True"
+  active:           "False"
   fileset_version:  "1.0"
+  show_in_gui:      "False"
   files:
     <<: *dim_user
     <<: *concurrency

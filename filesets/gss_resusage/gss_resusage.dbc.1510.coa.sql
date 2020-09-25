@@ -8,7 +8,7 @@ replace macro systemfe.gss_resusage_td150
 AS (
 */
 
-/*{{save:gss_resusage.dbc.1510.{siteid}.csv}}*/
+/*{{save:202009_{siteid}_GSS.csv}}*/
 select
  '{siteid}' as Site_ID
 ,'TD15v1.72' (named "Version")
