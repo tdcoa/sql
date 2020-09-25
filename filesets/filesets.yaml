@@ -580,13 +580,13 @@ gss_resusage_macro:
       collection:   ["pdcr"]
       dbsversion:   ["16.20"]
       gitfile:      "gss_resusage/gss_resusage.pdcr.1620.coa.sql"
-    resusage_EPOD_dbc_1620:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20"]
-      gitfile:      "gss_resusage/gss_resusage_EPOD.dbc.1620.coa.sql"
-      enabledtcore:  306
-      baselinetcore: 221
-      reads90:       77318.22
+    #resusage_EPOD_dbc_1620:
+    #  collection:   ["dbc"]
+    #  dbsversion:   ["16.20"]
+    #  gitfile:      "gss_resusage/gss_resusage_EPOD.dbc.1620.coa.sql"
+    #  enabledtcore:  306
+    #  baselinetcore: 221
+    #  reads90:       77318.22
 
 csm_dashboard:
   active:     "True"
