@@ -12,7 +12,7 @@ SELECT
      '{siteid}' as Site_ID
     ,CAST(CAST(SUM(ObjectCount) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS JICount
 FROM table_kinds_by_database
-WHERE DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")
+WHERE DatabaseName NOT IN  (select dbname from dim_tdinternal_databases)
   AND TableKindDesc = 'Join Index'
 ;
 
@@ -52,7 +52,7 @@ select
   ,CAST(CAST(SUM(CASE WHEN IndexTypeDesc = 'Unique Primary Index' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS UPI
   ,CAST(CAST(SUM(CASE WHEN IndexTypeDesc LIKE 'Partitioned Primary Index%' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS PPI
 from index_types_by_database
-Where DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv");
+Where DatabaseName NOT IN  (select dbname from dim_tdinternal_databases);
 
 
 /*{{save:dat_snowflake_constrainttype.csv}}*/
@@ -62,7 +62,7 @@ SELECT
  ,CAST(CAST(SUM(CASE WHEN ConstraintType = 'Primary Key' THEN ConstraintCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS PKC_Count
  ,CAST(CAST(SUM(CASE WHEN ConstraintType = 'Foreign Key' THEN ConstraintCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS FKC_Count
 FROM constraint_type_by_database
-WHERE DatabaseName NOT IN  (select dbname from "dim_tdinternal_databases.csv")
+WHERE DatabaseName NOT IN  (select dbname from dim_tdinternal_databases)
 ;
 
 
@@ -73,7 +73,7 @@ SELECT
     ,ObjectTypeDesc
     ,CAST(CAST(ZEROIFNULL(Frequency_of_Use) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS Frequency_of_Use
 FROM
-    "dim_dbobject.csv" FT
+    dim_dbobject FT
     LEFT OUTER JOIN
     (
         SELECT
@@ -83,7 +83,7 @@ FROM
             pdcrinfo.DBQLObjTbl OT
         WHERE
             LogDate BETWEEN {startdate} AND {enddate}
-            AND OT.ObjectDatabaseName NOT IN (select dbname from "dim_tdinternal_databases.csv")
+            AND OT.ObjectDatabaseName NOT IN (select dbname from dim_tdinternal_databases)
             AND ObjectType = 'Tmp'   -- Global Temp only
         GROUP BY 1
     ) OT
