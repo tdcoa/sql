@@ -7,7 +7,7 @@ Parameters:
 */
 
 
-/*{{temp:dim_dboject.csv}}*/
+/*{{temp:dim_dbobject.csv}}*/
 /*{{save:dat_snowflake_tablekind.csv}}*/
 SELECT
      '{siteid}' as Site_ID
