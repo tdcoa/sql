@@ -118,7 +118,7 @@ autotune_check:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "autotune/autotune_check.pptx"
-
+      
 dbql_core:
   active:           "True"
   fileset_version:  "6.0"
@@ -625,8 +625,8 @@ workload_analytics:
   active:           "True"
   fileset_version:  "1.0"
   files: 
-    <<: *top_users
     <<: *dbql_core
+    <<: *top_users
     wlanalys_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
