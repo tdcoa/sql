@@ -630,7 +630,7 @@ workload_analytics:
     wlanalys_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "workload_analytics/workloadanalytics.pdcr.coa.sql"
+      gitfile:      "workload_analytics/workload_analytics.pdcr.coa.sql"
       startdate:    "Current_Date - 90"
       enddate:      "Current_Date - 1"
     wlanalys_pptx:
