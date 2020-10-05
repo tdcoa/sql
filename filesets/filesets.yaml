@@ -123,7 +123,7 @@ dbql_core:
   active:           "True"
   fileset_version:  "6.0"
   fileset_type:     "core"
-  files:
+  files: &dbql_core
     <<: *dim_user
     <<: *dim_statement
     <<: *dim_app
