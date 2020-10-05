@@ -626,7 +626,7 @@ workload_analytics:
   fileset_version:  "1.0"
   files: 
     <<: *top_users
-    <<: *dbql_core    
+    <<: *dbql_core
     wlanalys_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
