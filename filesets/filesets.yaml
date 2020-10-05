@@ -625,7 +625,6 @@ workload_analytics:
   active:           "True"
   fileset_version:  "1.0"
   files: &workload_analytics
-    <<: *dbql_core
     compete01_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
@@ -640,6 +639,6 @@ workload_analytics:
       gitfile:      "workload_analytics/workloadanalytics.pdcr.coa.sql"
       startdate:    "Current_Date - 90"
       enddate:      "Current_Date - 1"
-    pptx_migration_blockers:
+    pptx_workload:
       gitfile:      "workload_analytics/workload_characteristics.pptx"      
       
