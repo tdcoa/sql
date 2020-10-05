@@ -625,20 +625,18 @@ workload_analytics:
   active:           "True"
   fileset_version:  "1.0"
   files: &workload_analytics
-    compete01_pdcr:
+    wlanalys_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      iopernode_90pct: 0
       gitfile:      "workload_analytics/workloadanalytics.pdcr.coa.sql"
       startdate:    "Current_Date - 90"
       enddate:      "Current_Date - 1"
-    compete01_dbc:
+    wlanalys_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      iopernode_90pct: 0
       gitfile:      "workload_analytics/workloadanalytics.pdcr.coa.sql"
       startdate:    "Current_Date - 90"
       enddate:      "Current_Date - 1"
-    pptx_workload:
+    wlanalys_pptx:
       gitfile:      "workload_analytics/workload_characteristics.pptx"      
       
