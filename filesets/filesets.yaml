@@ -624,7 +624,8 @@ consumption_pricing:
 workload_analytics:
   active:           "True"
   fileset_version:  "1.0"
-  files: &workload_analytics
+  files: 
+    <<: *dbql_core
     wlanalys_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
