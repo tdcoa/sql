@@ -641,5 +641,5 @@ workload_analytics:
       startdate:    "Current_Date - 90"
       enddate:      "Current_Date - 1"
     pptx_migration_blockers:
-      gitfile:      "workload_analytics/Workload_Characteristics.pptx"      
+      gitfile:      "workload_analytics/workload_characteristics.pptx"      
       
