@@ -130,7 +130,7 @@ dbql_core:
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v09.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dbql_core_dbc16:
@@ -620,3 +620,26 @@ consumption_pricing:
       collection:   ["pdcr"]
       dbsversion:   ["16.20"]
       gitfile:      "consumption_pricing/gss_vantage_units.pdcr.coa.sql"
+      
+workload_analytics:
+  active:           "True"
+  fileset_version:  "1.0"
+  files: &workload_analytics
+    <<: *dbql_core
+    compete01_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      iopernode_90pct: 0
+      gitfile:      "workload_analytics/workloadanalytics.pdcr.coa.sql"
+      startdate:    "Current_Date - 90"
+      enddate:      "Current_Date - 1"
+    compete01_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      iopernode_90pct: 0
+      gitfile:      "workload_analytics/workloadanalytics.pdcr.coa.sql"
+      startdate:    "Current_Date - 90"
+      enddate:      "Current_Date - 1"
+    pptx_migration_blockers:
+      gitfile:      "workload_analytics/Workload Characteristics.pptx"      
+      
