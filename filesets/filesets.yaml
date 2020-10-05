@@ -625,6 +625,7 @@ workload_analytics:
   active:           "True"
   fileset_version:  "1.0"
   files: 
+    <<: *top_users
     wlanalys_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
