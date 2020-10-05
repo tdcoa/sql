@@ -22,7 +22,7 @@ Parameters:
 */
 insert into "dim_user.csv"
   select
-  'Default'     as Site_ID
+   SiteID       as Site_ID
   ,'Equal'      as Pattern_Type
   ,trim(dbname) as Pattern
   ,'TDInternal' as User_Bucket
@@ -98,7 +98,9 @@ from dim_user
 ;
 
 /*{{save:users_total.csv}}*/
-select cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZZ') as varchar(32)) as Total_User_Cnt
+select 
+cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZZ') as varchar(32)) as Total_User_Cnt
+cast(sum(case when User_Bucket = 'TDInternal' then 0 else 1 end) as format'ZZZ,ZZZ,ZZZ') as User_LessInternal_Cnt 
 from dim_user
 ;
 
