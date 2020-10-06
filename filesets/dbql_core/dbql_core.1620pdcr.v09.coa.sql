@@ -140,7 +140,6 @@ SELECT
   where dbql.LogDate between {startdate} and {enddate}
   Group by
    LogTS
-  ,Site_ID
   ,username
   ,appid
   ,StatementType
@@ -186,7 +185,6 @@ SELECT
   where smry.LogDate between {startdate} and {enddate}
   Group by
    LogTS
-  ,Site_ID
   ,username
   ,appid
   ,StatementType
