@@ -95,7 +95,7 @@ SELECT
               +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
               +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
                as FLOAT))) <= 1  /* Runtime_AMP_Sec */
-           then 1 else 0 end as Integer))) as Query_Tactical_Cntd
+           then 1 else 0 end as Integer))) as Query_Tactical_Cnt
   ,cast(avg(dbql.NumSteps) as decimal(15,4)) as Query_Complexity_Score_Avg
   ,zeroifnull(sum(cast(dbql.NumResultRows as BigInt) )) as Returned_Row_Cnt
 
