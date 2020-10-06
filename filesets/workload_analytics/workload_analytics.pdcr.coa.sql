@@ -74,6 +74,7 @@ select
 ,sum(Request_Cnt) AS RequestCnt
 ,sum(Query_Tactical_Cnt) AS TacticalQueryCnt
 from dbql_core_hourly
+group by 1                    
 ) dt1
 ;
 
@@ -86,6 +87,7 @@ select
 ,sum(Request_Cnt) AS RequestCnt
 ,sum(Query_Tactical_Cnt) AS TacticalQueryCnt
 from dbql_core_hourly
+group by 2                    
 ;
 
 
