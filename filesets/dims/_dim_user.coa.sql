@@ -98,9 +98,10 @@ from dim_user
 ;
 
 /*{{save:users_total.csv}}*/
-select 
-cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZZ') as varchar(32)) as Total_User_Cnt
-cast(sum(case when User_Bucket = 'TDInternal' then 0 else 1 end) as format'ZZZ,ZZZ,ZZZ') as User_LessInternal_Cnt 
+select
+ '{siteid}' as Site_ID
+,cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZZ') as varchar(32)) as Total_User_Cnt
+,cast(sum(case when User_Bucket = 'TDInternal' then 0 else 1 end) as format'ZZZ,ZZZ,ZZZ') as User_LessInternal_Cnt 
 from dim_user
 ;
 
