@@ -65,7 +65,7 @@ order by 1
 select 
  '{siteid}'  as Site_ID
 ,avg(RequestCnt) AS AvgQueriesPerDay
-,AvgQueriesPerDate / (24*3600) AS AvgQueriesPerSecond
+,AvgQueriesPerDay / (24*3600) AS AvgQueriesPerSecond
 ,sum(TacticalQueryCnt) / sum(RequestCnt) * 100 AS TacticalPct
 FROM
 (
