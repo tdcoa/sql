@@ -103,7 +103,7 @@ SELECT DBQL_Obj.QueryID
       ,count(*) as QueryObjCount 
   FROM PDCRInfo.DBQLObjTbl_Hst DBQL_Obj
  WHERE DBQL_Obj.ObjectType in ('Tab', 'Viw')
-   AND DBQL_Qry.LogDate BETWEEN {startdate} AND {enddate}
+   AND DBQL_Obj.LogDate BETWEEN {startdate} AND {enddate}
  GROUP BY 1
 ) dt1
 GROUP BY 2
