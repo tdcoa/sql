@@ -69,6 +69,7 @@ select
 ,sum(TacticalQueryCnt) / sum(RequestCnt) * 100 AS TacticalPct
 FROM
 (
+select   
  cast(LogTS as CHAR(10)) AS LogDate
 ,sum(Request_Cnt) AS RequestCnt
 ,sum(Query_Tactical_Cnt) AS TacticalQueryCnt
