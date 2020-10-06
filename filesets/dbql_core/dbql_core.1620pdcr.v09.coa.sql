@@ -248,7 +248,6 @@ SELECT
 ,sum(CacheHit_Pct               ) as CacheHit_Pct
 ,avg(CPUSec_Skew_AvgPCt         ) as CPUSec_Skew_AvgPCt
 ,avg(IOCnt_Skew_AvgPct          ) as IOCnt_Skew_AvgPct
-FROM
 from dbql_core_hourly dbql
 join dim_app as app     on dbql.AppID = app.AppID
 join dim_Statement stm  on dbql.StatementType = stm.StatementType
