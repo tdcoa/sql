@@ -210,7 +210,6 @@ in Transcend.
 /*{{save:DBQL_Core.csv}}*/
 /*{{load:{db_stg}.stg_dat_DBQL_Core}}*/
 /*{{call:{db_coa}.sp_dat_DBQL_Core('{fileset_version}')}}*/
-select 
 SELECT
  '{siteid}'  as Site_ID
 ,LogTS
