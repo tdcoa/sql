@@ -8,14 +8,38 @@ Parameters:
   - resusagespma: {resusagespma}
 */
 
-/* This is similar to dim_users/top users but logic to extract not same, this filters more*/
-
 /* Slide 2 - active users, from fs top_users */
 
+/* Slide 2 - object counts, from db_objects - use dat_objectkind_count-total.csv */
 
-/*graph on slide 3 */
+/* Slide 2 - query counts. Slide 4 - titles */
+/*{{save:dat_query_counts.csv}}*/
+select 
+ '{siteid}'  as Site_ID
+ count(distinct cast(LogTS as date)) as DayCnt
+,sum(Request_Cnt) AS TotalRequestCnt
+,TotalRequestCnt / DayCnt AS AvgQryPerDay
+,TotalRequestCnt / DayCnt  / 1e6 AS AvgMilQryPerDay
+,AvgMilQryPerDay * 30 AS AvgMilQryPerMonth
+,TotalRequestCnt / DayCnt / 3600 AS AvgQryPerSecond
+,TotalRequestCnt * 365 / DayCnt AS QryPerYear
+,TotalRequestCnt * 365 / DayCnt / 1e9 AS BilQryPerYear
+,sum(TacticalQueryCnt) AS TotalTacticalCnt
+,TotalTacticalCnt / TotalRequestCnt * 100 AS TacticalPct
+from dbql_core_hourly
+;
+
+
+/* Slide 2 */
+/*{{save:dat_apps_total.csv}}*/
+sel  '{siteid}'  as Site_ID, count(distinct AppId) as TotalApps
+from dbql_core_hourly;
+
+
+/*Slide 3  - graph */
 /*{{save:dat_daily_data_transfer.csv}}*/
-select LogDate
+select '{siteid}'  as Site_ID
+      ,LogDate
       ,SUM(HostRead_KB) as InboundKB
       ,SUM(HostWrite_KB) as OutboundKB
       ,CASE
@@ -33,28 +57,10 @@ select LogDate
           ELSE CAST((OutboundKB) AS DECIMAL(5, 2)) || 'KB'
       END AS OutboundAbbrev
 from cpu_summary_hourly
-group by 1
-order by 1
+group by 2
+order by 2
 ;
 
-
-/*  titles on slide 4 */
-/*{{save:dat_avg_query_and_tactical_pct.csv}}*/
-select 
- '{siteid}'  as Site_ID
-,avg(RequestCnt) / 1e6 AS AvgQueriesPerDay
-,avg(RequestCnt) / (24*3600) AS AvgQueriesPerSecond
-,sum(TacticalQueryCnt) / sum(RequestCnt) * 100 AS TacticalPct
-FROM
-(
-select   
- cast(LogTS as CHAR(10)) AS LogDate
-,sum(Request_Cnt) AS RequestCnt
-,sum(Query_Tactical_Cnt) AS TacticalQueryCnt
-from dbql_core_hourly
-group by 1                    
-) dt1
-;
 
 
 /* graph on slide 4 */
@@ -101,7 +107,7 @@ order by 3 desc;
 
 /* slide 6 */
 /*{{save:dat_apps_frequency.csv}}*/
-select 
+select top 24
      '{siteid}' as Site_ID
     ,AppId
     ,sum(Request_Cnt) AS RequestCnt
