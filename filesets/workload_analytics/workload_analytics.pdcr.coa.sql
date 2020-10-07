@@ -10,29 +10,7 @@ Parameters:
 
 /* This is similar to dim_users/top users but logic to extract not same, this filters more*/
 
-/* Slide 2 - active users, total users */
-SELECT  
-'System' as SystemName
-,dbs.DatabaseName as UserName
-,actusr.ActiveUserName
-,actusr.ActiveStartDate
-,actusr.ActiveEndDate
-from dbc.databasesV dbs
-left join
-(
-  Select 
-   UserName as ActiveUserName
-  ,min(cast(StartTime as date)) as ActiveStartDate
-  ,max(cast(StartTime as date)) as ActiveEndDate
-  from pdcrinfo.dbqlogtbl_hst
-  where logdate  BETWEEN current_date - 90   AND current_date
-  group by 1
-) actusr
-on actusr.ActiveUserName = dbs.DatabaseName 
-where dbkind = 'U'
-  and OwnerName <> 'DBC'
-  and DatabaseName not in ('EXTUSER','Viewpoint')
-;
+/* Slide 2 - active users, from fs top_users */
 
 
 /*graph on slide 3 */
