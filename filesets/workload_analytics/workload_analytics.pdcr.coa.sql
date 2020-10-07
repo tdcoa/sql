@@ -110,6 +110,7 @@ select
 from dbql_core_hourly
 group by 2
 order by 4 desc;
-
+                                                                        
+/*{{pptx:workload_characteristics.pptx}}*/
 
 /* End COA: WL Analytics */
