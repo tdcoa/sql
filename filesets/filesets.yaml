@@ -627,6 +627,7 @@ workload_analytics:
   files: 
     <<: *dbql_core
     <<: *top_users
+    <<: *compete_snowflake
     wlanalys_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
