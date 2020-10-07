@@ -64,8 +64,8 @@ order by 1
 /*{{save:dat_avg_query_and_tactical_pct.csv}}*/
 select 
  '{siteid}'  as Site_ID
-,avg(RequestCnt) AS AvgQueriesPerDay
-,AvgQueriesPerDay / (24*3600) AS AvgQueriesPerSecond
+,avg(RequestCnt) / 1e6 AS AvgQueriesPerDay
+,avg(RequestCnt) / (24*3600) AS AvgQueriesPerSecond
 ,sum(TacticalQueryCnt) / sum(RequestCnt) * 100 AS TacticalPct
 FROM
 (
