@@ -137,6 +137,7 @@ select
 ,count(distinct case when User_Bucket = 'TDInternal' THEN NULL ELSE username end) as Active_LessInternal_User_Cnt  
 ,(sel count(distinct LogDate) from  Top_Users_DBQL_preagg) as Days_Cnt
 from Top_Users_Rank
+group by 1
 ;
  
 
