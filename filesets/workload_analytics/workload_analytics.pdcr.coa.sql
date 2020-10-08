@@ -24,7 +24,7 @@ select
 ,TotalRequestCnt / DayCnt / 3600 AS AvgQryPerSecond
 ,TotalRequestCnt * 365 / DayCnt AS QryPerYear
 ,TotalRequestCnt * 365 / DayCnt / 1e9 AS BilQryPerYear
-,sum(TacticalQueryCnt) AS TotalTacticalCnt
+,sum(Query_Tactical_Cnt) AS TotalTacticalCnt
 ,TotalTacticalCnt / TotalRequestCnt * 100 AS TacticalPct
 from dbql_core_hourly
 ;
