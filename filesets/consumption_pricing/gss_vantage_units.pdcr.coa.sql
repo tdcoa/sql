@@ -14,10 +14,6 @@
 /*{{save:{YYYYMM}_{siteid}_VU.csv}}*/
 select
 '{siteid}' as Site_ID,
-(
-    SELECT SystemName
-      FROM TABLE (SYSLIB.MonitorSystemPhysicalConfig()) AS SystemConfig
-) AS SystemName,
 cast(coalesce(vu1.logdate, vu4.logdate) as format 'Y4-MM-DD') as LogDate,
 coalesce(vu1.loghr, vu4.loghr) as LogHour,
 zeroifnull(vu1.vantageunithrs) + zeroifnull(vu4.vantageunitutilityhrs) (format 'ZZ9.999') as CPU_VU,
