@@ -16,7 +16,7 @@ Parameters:
 /*{{save:dat_query_counts.csv}}*/
 select 
  '{siteid}'  as Site_ID
-,count(distinct cast(LogTS as date)) as DayCnt
+,count(distinct cast(LogTS as char(10))) as DayCnt
 ,sum(Request_Cnt) AS TotalRequestCnt
 ,TotalRequestCnt / DayCnt AS AvgQryPerDay
 ,TotalRequestCnt / DayCnt  / 1e6 AS AvgMilQryPerDay
