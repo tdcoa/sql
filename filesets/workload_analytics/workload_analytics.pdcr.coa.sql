@@ -116,7 +116,93 @@ select top 24
 from dbql_core_hourly
 group by 2
 order by 4 desc;
-                                                                        
+
+
+create volatile table tables_size_10g as
+(
+SELECT	
+    DataBaseName
+   ,TableName
+   ,cast(Sum(CurrentPerm/(2**30)) AS decimal(9,1)) CurrentPerm_GB
+   ,cast(Sum(PeakPerm/(2**30)) AS decimal(9,1)) AS PeakPerm_GB    
+FROM	Dbc.TableSizeV
+GROUP BY 1,2
+HAVING CurrentPerm_GB > 10
+) with data 
+no primary index 
+on commit preserve rows
+;
+
+
+/* slide 7 */
+/*{{save:dat_tables_size10g_cnt.csv}}*/
+SELECT 
+    '{siteid}' as Site_ID
+    ,coalesce(count(*), 0) AS Tbl10gCnt
+from tables_size_10g;
+
+
+/* slide 7 */
+/*{{save:dat_tables_size10g_list.csv}}*/
+SELECT	
+    '{siteid}' as Site_ID
+   ,DataBaseName
+   ,TableName
+   ,CurrentPerm_GB
+FROM tables_size_10g
+ORDER BY 4 DESC;
+
+
+/* slides 8 and 9 */
+
+create volatile table tables_insupddel as
+(
+SELECT QryLog.LogDate
+      ,QryObj.ObjectDatabaseName
+      ,QryObj.ObjectTableName
+      ,COUNT(QryLog.StatementType) StatementCountPerTable
+ FROM PDCRINFO.DBQLogTbl_Hst QryLog
+INNER JOIN PDCRINFO.DBQLObjTbl_Hst QryObj
+   ON QryLog.LogDate = QryObj.LogDate
+  AND QryLog.QueryID = QryObj.QueryID
+WHERE
+      QryLog.LogDate BETWEEN {startdate} AND {enddate}
+  AND QryLog.StatementType IN ('insert', 'update', 'delete')
+  AND QryLog.ObjectType = 'Tab'
+GROUP BY 1,2,3
+HAVING StatementCountPerTable > 1500
+) with data 
+no primary index 
+on commit preserve rows
+;
+
+
+/* slide 8 */
+/* subtitle */
+/*{{save:dat_avg_1500_tblcnt.csv}}*/
+sel '{siteid}' as Site_ID, count(*) / count(distinct LogDate) as AvgTblCnt;
+
+/* graph data */
+/*{{save:dat_tables_1500_insupdel.csv}}*/
+sel '{siteid}' as Site_ID
+   ,LogDate
+   ,count(*) as TableCnt
+from table tables_insupddel
+group by 2
+order by 2;   
+
+
+/* slide 9 */
+/*{{save:dat_dbs_1500_insupdel.csv}}*/
+sel '{siteid}' as Site_ID
+   ,ObjectDatabaseName
+   ,avg(StatementCountPerTable) as AvgStCntPerTbl
+from table tables_insupddel
+group by 2
+order by 3 desc;
+
+
+/*{{pptx:big_query_migration_blockers.pptx}}*/                                                                   
 /*{{pptx:workload_characteristics.pptx}}*/
 
 /* End COA: WL Analytics */
