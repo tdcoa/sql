@@ -168,7 +168,7 @@ INNER JOIN PDCRINFO.DBQLObjTbl_Hst QryObj
 WHERE
       QryLog.LogDate BETWEEN {startdate} AND {enddate}
   AND QryLog.StatementType IN ('insert', 'update', 'delete')
-  AND QryLog.ObjectType = 'Tab'
+  AND QryObj.ObjectType = 'Tab'
 GROUP BY 1,2,3
 HAVING StatementCountPerTable > 1500
 ) with data 
@@ -180,14 +180,15 @@ on commit preserve rows
 /* slide 8 */
 /* subtitle */
 /*{{save:dat_avg_1500_tblcnt.csv}}*/
-sel '{siteid}' as Site_ID, count(*) / count(distinct LogDate) as AvgTblCnt;
+sel '{siteid}' as Site_ID, count(*) / count(distinct LogDate) as AvgTblCnt
+from tables_insupddel;
 
 /* graph data */
 /*{{save:dat_tables_1500_insupdel.csv}}*/
 sel '{siteid}' as Site_ID
    ,LogDate
    ,count(*) as TableCnt
-from table tables_insupddel
+from tables_insupddel
 group by 2
 order by 2;   
 
@@ -197,7 +198,7 @@ order by 2;
 sel '{siteid}' as Site_ID
    ,ObjectDatabaseName
    ,avg(StatementCountPerTable) as AvgStCntPerTbl
-from table tables_insupddel
+from tables_insupddel
 group by 2
 order by 3 desc;
 
