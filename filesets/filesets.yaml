@@ -635,5 +635,5 @@ workload_analytics:
       startdate:    "Current_Date - 90"
       enddate:      "Current_Date - 1"
     wlanalys_pptx:
-      gitfile:      "workload_analytics/workload_characteristics.pptx"      
+      gitfile:      "workload_analytics/big_query_migration_blockers.pptx"      
       
