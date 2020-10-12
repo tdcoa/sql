@@ -204,6 +204,5 @@ order by 3 desc;
 
 
 /*{{pptx:big_query_migration_blockers.pptx}}*/                                                                   
-/*{{pptx:workload_characteristics.pptx}}*/
 
 /* End COA: WL Analytics */
