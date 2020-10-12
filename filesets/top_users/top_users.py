@@ -146,11 +146,6 @@ for user_category in user_category_list:
 
                 lgnd = plt.legend(loc="upper left", bbox_to_anchor=(1, 1), scatterpoints=1, fontsize=20)
 
-                legend_handle_counter = 1
-                for cat in user_bucket_unique_list:
-                    lgnd.legendHandles[legend_handle_counter]._sizes = [200]
-                    legend_handle_counter += 1
-
                 xlabels = []
                 for x in scatterplot.get_xticks():
                     if x >= 1000000000:
