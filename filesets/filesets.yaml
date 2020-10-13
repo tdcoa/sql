@@ -26,6 +26,8 @@ dim_user:
   fileset_version:  "1.0"
   fileset_type:  "atomic"
   show_in_gui:   "True"
+  startdate:    "Current_Date - 43" # 6 weeks
+  enddate:      "Current_Date - 1"
   description:   "builds the dim_user volatile table, with user/dept mappings using either .csv or pre-built table.  Most often run as prerequisite to other filesets."
   files:  &dim_user
     dim_user:
@@ -34,12 +36,14 @@ dim_user:
       gitfile:      "dims/dim_tdinternal_databases.csv"
     dim_user_override:
       gitfile:      "dims/dim_user_override.sql"
-    dim_user_sql:
-      collection:   ["pdcr","dbc"]
+    dim_user_sql_pdcr:
+      collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
+      gitfile:      "dims/_dim_user.pcdr.coa.sql"
+    dim_user_sql_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_user.dbc.coa.sql"
 
 dim_app:
   active:           "True"
@@ -632,12 +636,11 @@ compete_bigquery:
   enddate:          "Current_Date - 1"  
   files: 
     <<: *dbql_core
-    <<: *top_users
     <<: *db_objects
-    compete_dbobjects_pdcr:
-      collection:   ["pdcr"]
+    compete_dbobjects_dbc:
+      collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql" 
+      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql" 
     compete_bigquery_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
