@@ -16,23 +16,38 @@ Parameters:
 /*{{save:dat_query_counts.csv}}*/
 select 
  '{siteid}'  as Site_ID
-,count(distinct cast(LogTS as char(10))) as DayCnt
-,sum(Request_Cnt) AS TotalRequestCnt
-,TotalRequestCnt / DayCnt AS AvgQryPerDay
-,TotalRequestCnt / DayCnt  / 1e6 AS AvgMilQryPerDay
+,cast(cast(LogDayCnt as format 'ZZZ,ZZ9') as varchar(32)) as LogDayCnt
+,cast(cast(TotalQryCnt as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as TotalQryCnt
+,cast(cast(AvgQryPerDay as Integer format 'ZZZ,ZZZ,ZZ9') as varchar(32)) as AvgQryPerDay
+,cast(cast(AvgMilQryPerDay as Decimal(9,1) format 'ZZZ,ZZZ,ZZ9.9') as varchar(32)) as AvgMilQryPerDay
+,cast(cast(AvgMilQryPerMonth as Decimal(9,1) format 'ZZZ,ZZZ,ZZ9.9') as varchar(32)) as AvgMilQryPerMonth
+,cast(cast(AvgQryPerSecond as Integer format 'ZZZ,ZZZ,ZZ9') as varchar(32)) as AvgQryPerSecond
+,cast(cast(QryCntPerYear as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as QryCntPerYear
+,cast(cast(BilQryCntPerYear as Decimal(9,1) format 'ZZZ,ZZZ,ZZ9.9') as varchar(32)) as BilQryCntPerYear
+,cast(cast(TotalTacticalCnt as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as TotalTacticalCnt
+,cast(cast(TacticalPct as Decimal(5,1) format 'ZZ9.9') as varchar(32)) as TacticalPct
+from
+(
+select
+ count(distinct cast(LogTS as char(10))) as LogDayCnt
+,sum(Request_Cnt) AS TotalQryCnt
+,TotalQryCnt / LogDayCnt AS AvgQryPerDay
+,AvgQryPerDay  / 1e6 AS AvgMilQryPerDay
 ,AvgMilQryPerDay * 30 AS AvgMilQryPerMonth
-,TotalRequestCnt / DayCnt / 3600 AS AvgQryPerSecond
-,TotalRequestCnt * 365 / DayCnt AS QryPerYear
-,TotalRequestCnt * 365 / DayCnt / 1e9 AS BilQryPerYear
+,AvgQryPerDay / 3600 AS AvgQryPerSecond
+,TotalQryCnt * 365 / LogDayCnt AS QryCntPerYear
+,QryCntPerYear / 1e9 AS BilQryCntPerYear
 ,sum(Query_Tactical_Cnt) AS TotalTacticalCnt
-,TotalTacticalCnt / TotalRequestCnt * 100 AS TacticalPct
+,TotalTacticalCnt / TotalQryCnt * 100 AS TacticalPct
 from dbql_core_hourly
+) d1
 ;
 
 
 /* Slide 2 */
 /*{{save:dat_apps_total.csv}}*/
-sel  '{siteid}'  as Site_ID, count(distinct AppId) as TotalApps
+sel  '{siteid}'  as Site_ID 
+    ,cast(cast(count(distinct AppId) as format 'Z,ZZZ,ZZ9') as varchar(32)) as TotalApps
 from dbql_core_hourly;
 
 
@@ -63,7 +78,7 @@ order by 2
 
 
 
-/* graph on slide 4 */
+/*Slide 4 - graph */
 /*{{save:dat_daily_query_and_tactical_cnt.csv}}*/
 select 
  '{siteid}'  as Site_ID
@@ -79,8 +94,8 @@ group by 2
 /*{{save:dat_join_frequency.csv}}*/
  SELECT
    '{siteid}' as Site_ID
-  ,CASE WHEN QueryObjCount <= 5 THEN (QueryObjCount (FORMAT 'Z9') (CHAR(2))) ELSE ' 5+' END JoinObjs
-  ,count(*) as RequestCnt
+  ,CASE WHEN QueryObjCount <= 5 THEN (QueryObjCount (FORMAT 'Z9') (CHAR(2))) ELSE ' 5+' END as "Number of Joins"
+  ,cast(cast(count(*) as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Number of Queries"
 FROM
 (      
 SELECT DBQL_Obj.QueryID
@@ -98,11 +113,11 @@ ORDER BY 2;
 /*{{save:dat_statement_frequency.csv}}*/
 select 
      '{siteid}' as Site_ID
-    ,StatementType
-    ,sum(Request_Cnt) AS RequestCnt
+    ,StatementType as "Statement Type"
+    ,cast(cast(sum(Request_Cnt) as format 'ZZZ,ZZZ,ZZ9') as varchar(32))  AS "Query Volume"
 from dbql_core_hourly
 group by 2
-order by 3 desc;
+order by sum(Request_Cnt) desc;
 
 
 /* slide 6 */
@@ -110,12 +125,12 @@ order by 3 desc;
 select top 24
      '{siteid}' as Site_ID
     ,AppId
-    ,sum(Request_Cnt) AS RequestCnt
-    ,sum(Returned_Row_Cnt) AS TotalFetchedRows
-    ,TotalFetchedRows/RequestCnt AS AvgRowsPerQry
+    ,cast(cast(sum(Request_Cnt) as format 'ZZZ,ZZZ,ZZ9') as varchar(32)) AS "Total Queries"
+    ,cast(cast(sum(Returned_Row_Cnt) as bigint format 'ZZZ,ZZZ,ZZ9') as varchar(32)) AS "Total Fetched Rows"
+    ,cast(cast(sum(Returned_Row_Cnt)/sum(Request_Cnt) as integer format 'ZZZ,ZZZ,ZZ9') as varchar(32)) AS "Avg Rows Per Query"
 from dbql_core_hourly
 group by 2
-order by 5 desc;
+order by sum(Returned_Row_Cnt)/sum(Request_Cnt) desc;
 
 
 create volatile table tables_size_10g as
@@ -138,7 +153,7 @@ on commit preserve rows
 /*{{save:dat_tables_size10g_cnt.csv}}*/
 SELECT 
     '{siteid}' as Site_ID
-    ,coalesce(count(*), 0) AS Tbl10gCnt
+    ,cast(cast(coalesce(count(*), 0) as format 'ZZZ,ZZZ,ZZ9') as varchar(32))  AS Tbl10gCnt
 from tables_size_10g;
 
 
@@ -148,9 +163,9 @@ SELECT
     '{siteid}' as Site_ID
    ,DataBaseName
    ,TableName
-   ,CurrentPerm_GB
+   ,cast(cast(CurrentPerm_GB as format 'ZZZ,ZZZ,ZZ9.9') as varchar(32)) AS "CurrentPerm GB" 
 FROM tables_size_10g
-ORDER BY 4 DESC;
+ORDER BY CurrentPerm_GB DESC;
 
 
 /* slides 8 and 9 */
@@ -180,7 +195,8 @@ on commit preserve rows
 /* slide 8 */
 /* subtitle */
 /*{{save:dat_avg_1500_tblcnt.csv}}*/
-sel '{siteid}' as Site_ID, count(*) / count(distinct LogDate) as AvgTblCnt
+sel '{siteid}' as Site_ID
+   ,count(*) / count(distinct LogDate) as AvgTblCnt
 from tables_insupddel;
 
 /* graph data */
@@ -197,11 +213,10 @@ order by 2;
 /*{{save:dat_dbs_1500_insupdel.csv}}*/
 sel '{siteid}' as Site_ID
    ,ObjectDatabaseName
-   ,avg(StatementCountPerTable) as AvgStCntPerTbl
+   ,cast(cast(avg(StatementCountPerTable) as integer format 'ZZZ,ZZZ,ZZ9') as varchar(32)) as "Avg Statement Count Per Table"
 from tables_insupddel
 group by 2
-order by 3 desc;
-
+order by avg(StatementCountPerTable) desc;
 
 /*{{pptx:big_query_migration_blockers.pptx}}*/                                                                   
 
