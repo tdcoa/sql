@@ -39,7 +39,7 @@ dim_user:
     dim_user_sql_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.pcdr.coa.sql"
+      gitfile:      "dims/_dim_user.pdcr.coa.sql"
     dim_user_sql_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
