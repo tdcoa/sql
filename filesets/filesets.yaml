@@ -637,14 +637,22 @@ compete_bigquery:
   files: 
     <<: *dbql_core
     <<: *db_objects
-    compete_dbobjects_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql" 
     compete_bigquery_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql" 
+    compete_bigquery_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql"
+    compete_shared_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
+    compete_shared_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
     wlanalys_pptx:
       gitfile:      "compete_bigquery/big_query_migration_blockers.pptx"      
       
