@@ -109,7 +109,7 @@ from dim_user
 select
  '{siteid}' as Site_ID
 ,cast(cast(count(distinct UserName) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Active_User_Cnt
-,count(distinct case when User_Bucket = 'TDInternal' THEN NULL ELSE username end) (format 'ZZZ,ZZZ,ZZ9') as Active_User_LessInternal_Cnt  
+,count(distinct case when User_Bucket = 'TDInternal' THEN NULL ELSE dbql.username end) (format 'ZZZ,ZZZ,ZZ9') as Active_User_LessInternal_Cnt  
  from pdcrinfo.dbqlogtbl_hst as dbql
  join Dim_User as u
    on dbql.UserName = u.UserName
