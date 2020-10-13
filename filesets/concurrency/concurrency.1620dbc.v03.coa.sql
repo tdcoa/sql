@@ -31,6 +31,7 @@ FROM
         FROM dbc.QryLogV as lg
         WHERE cast(StartTime as date)   BETWEEN  {startdate}  AND {enddate}
           AND NumOfActiveAmps >  0
+          AND firststeptime <= firstresptime
          EXPAND ON QryDurationPeriod AS Qper BY ANCHOR ANCHOR_SECOND
         ) qrylog
     WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)  /* GIVES 600 POINTS PER 1 HOUR INTERVAL SO NTILE DOESN'T HAVE BIG EDGE EFFECT  */
