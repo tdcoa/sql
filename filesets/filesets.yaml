@@ -229,6 +229,33 @@ compete_snowflake:
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
+compete_bigquery:
+  active:           "True"
+  fileset_version:  "1.0"
+  startdate:        "Current_Date - 90"
+  enddate:          "Current_Date - 1"  
+  files: 
+    <<: *dbql_core
+    <<: *db_objects
+    compete_bigquery_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql" 
+    compete_bigquery_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql"
+    compete_shared_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
+    compete_shared_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
+    wlanalys_pptx:
+      gitfile:      "compete_bigquery/big_query_migration_blockers.pptx"    
+      
 concurrency:
   active:           "True"
   fileset_version:  "1.0"
@@ -628,31 +655,5 @@ consumption_pricing:
       collection:   ["pdcr"]
       dbsversion:   ["16.20"]
       gitfile:      "consumption_pricing/gss_vantage_units.pdcr.coa.sql"
-      
-compete_bigquery:
-  active:           "True"
-  fileset_version:  "1.0"
-  startdate:        "Current_Date - 90"
-  enddate:          "Current_Date - 1"  
-  files: 
-    <<: *dbql_core
-    <<: *db_objects
-    compete_bigquery_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql" 
-    compete_bigquery_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql"
-    compete_shared_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
-    compete_shared_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
-    wlanalys_pptx:
-      gitfile:      "compete_bigquery/big_query_migration_blockers.pptx"      
+  
       
