@@ -101,7 +101,7 @@ from dim_user
 select
  '{siteid}' as Site_ID
 ,cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Total_User_Cnt
-,cast(count(case when User_Bucket = 'TDInternal' then NULL else username end) as format'ZZZ,ZZZ,ZZ9') as User_LessInternal_Cnt 
+,cast(cast(count(case when User_Bucket = 'TDInternal' then NULL else username end) as format'ZZZ,ZZZ,ZZ9') as varchar(32)) as User_LessInternal_Cnt 
 from dim_user
 ;
 
@@ -109,7 +109,7 @@ from dim_user
 select
  '{siteid}' as Site_ID
 ,cast(cast(count(distinct dbql.UserName) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Active_User_Cnt
-,cast(count(distinct case when User_Bucket = 'TDInternal' THEN NULL ELSE dbql.username end) as format 'ZZZ,ZZZ,ZZ9') as Active_User_LessInternal_Cnt  
+,cast(cast(count(distinct case when User_Bucket = 'TDInternal' THEN NULL ELSE dbql.username end) as format 'ZZZ,ZZZ,ZZ9') as varchar(32)) as Active_User_LessInternal_Cnt  
  from pdcrinfo.dbqlogtbl_hst as dbql
  join Dim_User as u
    on dbql.UserName = u.UserName
