@@ -637,7 +637,7 @@ compete_bigquery:
     compete_bigquery_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_bigquery/bigquery.pdcr.coa.sql"
+      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql"
     wlanalys_pptx:
       gitfile:      "compete_bigquery/big_query_migration_blockers.pptx"      
       
