@@ -218,6 +218,10 @@ compete_snowflake:
       gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
       startdate:    "Current_Date - 7"
       enddate:      "Current_Date - 1"
+    compete_pptx:
+      collection:   ["dbc","pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/snowflake_pptx.coa.sql"    
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
