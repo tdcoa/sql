@@ -130,17 +130,6 @@ collect stats on Top_Users_Rank column(UserName)
 ;
 
 
-/*{{save:users_active.csv}}*/
-select 
- Site_ID
-,cast(cast(count(distinct UserName) as BigInt format'ZZZ,ZZZ,ZZZ,ZZZ') as varchar(32)) as Active_User_Cnt
-,count(distinct case when User_Bucket = 'TDInternal' THEN NULL ELSE username end) as Active_LessInternal_User_Cnt  
-,(sel count(distinct LogDate) from  Top_Users_DBQL_preagg) as Days_Cnt
-from Top_Users_Rank
-group by 1
-;
- 
-
 drop table Top_Users_DBQL_preagg
 ;
 
