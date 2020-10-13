@@ -68,12 +68,6 @@ Create Volatile Table Top_Users_DBQL_preagg  as(
   on commit preserve rows
 ;
 
-/*{{save:users_active.csv}}*/
-select cast(cast(count(distinct UserName) as BigInt format'ZZZ,ZZZ,ZZZ,ZZZ') as varchar(32)) as Active_User_Cnt
-,count(distinct LogDate) as Days_Cnt
-from  Top_Users_DBQL_preagg
-;
-
 
 Create Volatile Table Top_Users_DBQL  as(
     Select UserName, dt.WeekID, dt.MonthID
@@ -93,8 +87,6 @@ Create Volatile Table Top_Users_DBQL  as(
 ;
 
 drop table top_user_dates
-;
-drop table Top_Users_DBQL_preagg
 ;
 
 collect stats on Top_Users_DBQL column(UserName)
@@ -136,6 +128,11 @@ drop table Top_Users_DBQL
 
 collect stats on Top_Users_Rank column(UserName)
 ;
+
+
+drop table Top_Users_DBQL_preagg
+;
+
 
 /*{{save:top_users.csv}}*/
 /*{{load:{db_stg}.stg_dat_top_users}}*/

@@ -91,4 +91,3 @@ FROM
 WHERE FT.ObjectType = 'Tmp'          -- dim_dboject has all obj types but this resultset is only for Tmp
 ;
 
-/*{{pptx:snowflake_migration_blockers.pptx}}*/

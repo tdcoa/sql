@@ -22,7 +22,7 @@ Parameters:
 */
 insert into "dim_user.csv"
   select
-  'Default'     as Site_ID
+   SiteID       as Site_ID
   ,'Equal'      as Pattern_Type
   ,trim(dbname) as Pattern
   ,'TDInternal' as User_Bucket
@@ -98,8 +98,22 @@ from dim_user
 ;
 
 /*{{save:users_total.csv}}*/
-select cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZZ') as varchar(32)) as Total_User_Cnt
+select
+ '{siteid}' as Site_ID
+,cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Total_User_Cnt
+,count(case when User_Bucket = 'TDInternal' then NULL else username end) (format'ZZZ,ZZZ,ZZ9') as User_LessInternal_Cnt 
 from dim_user
+;
+
+/*{{save:users_active.csv}}*/
+select
+ '{siteid}' as Site_ID
+,cast(cast(count(distinct dbql.UserName) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Active_User_Cnt
+,count(distinct case when User_Bucket = 'TDInternal' THEN NULL ELSE dbql.username end) (format 'ZZZ,ZZZ,ZZ9') as Active_User_LessInternal_Cnt  
+ from dbc.QryLogV as dbql
+ join Dim_User as u
+   on dbql.UserName = u.UserName
+where CAST(StartTime AS DATE) between {startdate} and {enddate}
 ;
 
 /* End COA: Dim_User */

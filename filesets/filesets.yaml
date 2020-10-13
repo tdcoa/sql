@@ -26,6 +26,8 @@ dim_user:
   fileset_version:  "1.0"
   fileset_type:  "atomic"
   show_in_gui:   "True"
+  startdate:    "Current_Date - 43" # 6 weeks
+  enddate:      "Current_Date - 1"
   description:   "builds the dim_user volatile table, with user/dept mappings using either .csv or pre-built table.  Most often run as prerequisite to other filesets."
   files:  &dim_user
     dim_user:
@@ -34,12 +36,14 @@ dim_user:
       gitfile:      "dims/dim_tdinternal_databases.csv"
     dim_user_override:
       gitfile:      "dims/dim_user_override.sql"
-    dim_user_sql:
-      collection:   ["pdcr","dbc"]
+    dim_user_sql_pdcr:
+      collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
-      gitfile:      "dims/_dim_user.coa.sql"
-      startdate:    "Current_Date - 43" # 6 weeks
-      enddate:      "Current_Date - 1"
+      gitfile:      "dims/_dim_user.pdcr.coa.sql"
+    dim_user_sql_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      gitfile:      "dims/_dim_user.dbc.coa.sql"
 
 dim_app:
   active:           "True"
@@ -118,19 +122,19 @@ autotune_check:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "autotune/autotune_check.pptx"
-
+      
 dbql_core:
   active:           "True"
   fileset_version:  "6.0"
   fileset_type:     "core"
-  files:
+  files: &dbql_core
     <<: *dim_user
     <<: *dim_statement
     <<: *dim_app
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v08.coa.sql"
+      gitfile:      "dbql_core/dbql_core.1620pdcr.v09.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dbql_core_dbc16:
@@ -218,9 +222,40 @@ compete_snowflake:
       gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
       startdate:    "Current_Date - 7"
       enddate:      "Current_Date - 1"
+    compete_pptx:
+      collection:   ["dbc","pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/snowflake_pptx.coa.sql"    
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
 
+compete_bigquery:
+  active:           "True"
+  fileset_version:  "1.0"
+  startdate:        "Current_Date - 90"
+  enddate:          "Current_Date - 1"  
+  files: 
+    <<: *dbql_core
+    <<: *db_objects
+    compete_bigquery_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql" 
+    compete_bigquery_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql"
+    compete_shared_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
+    compete_shared_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
+    wlanalys_pptx:
+      gitfile:      "compete_bigquery/big_query_migration_blockers.pptx"    
+      
 concurrency:
   active:           "True"
   fileset_version:  "1.0"
@@ -620,3 +655,5 @@ consumption_pricing:
       collection:   ["pdcr"]
       dbsversion:   ["16.20"]
       gitfile:      "consumption_pricing/gss_vantage_units.pdcr.coa.sql"
+  
+      
