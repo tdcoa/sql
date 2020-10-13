@@ -27,10 +27,11 @@ FROM
         SELECT   BEGIN(Qper)  ClockTick
         ,cast(SUBSTR(CAST(ClockTick AS  VARCHAR(30)), 1, 17) || '0'  as timestamp(0)) as StartTm10s
         , CAST(1 AS SMALLINT) QryCount
-        , PERIOD(firststeptime,firstresptime+ interval '0.001' second) QryDurationPeriod
+        , PERIOD(firststeptime, firstresptime+ interval '0.001' second) QryDurationPeriod
         FROM pdcrinfo.dbqlogtbl_hst as lg
         WHERE logdate   BETWEEN  {startdate}  AND {enddate}
           AND NumOfActiveAmps >  0
+          AND firststeptime <= firstresptime
          EXPAND ON QryDurationPeriod AS Qper BY ANCHOR ANCHOR_SECOND
         ) qrylog
     WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)  /* GIVES 600 POINTS PER 1 HOUR INTERVAL SO NTILE DOESN'T HAVE BIG EDGE EFFECT  */
