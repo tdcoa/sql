@@ -38,7 +38,7 @@ select
 ,TotalQryCnt * 365 / LogDayCnt AS QryCntPerYear
 ,QryCntPerYear / 1e9 AS BilQryCntPerYear
 ,sum(Query_Tactical_Cnt) AS TotalTacticalCnt
-,TotalTacticalCnt / TotalQryCnt * 100 AS TacticalPct
+,cast(TotalTacticalCnt as decimal(18,4)) / TotalQryCnt * 100 AS TacticalPct
 from dbql_core_hourly
 ) d1
 ;
