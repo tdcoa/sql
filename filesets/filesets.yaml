@@ -621,19 +621,23 @@ consumption_pricing:
       dbsversion:   ["16.20"]
       gitfile:      "consumption_pricing/gss_vantage_units.pdcr.coa.sql"
       
-workload_analytics:
+compete_bigquery:
   active:           "True"
   fileset_version:  "1.0"
+  startdate:        "Current_Date - 90"
+  enddate:          "Current_Date - 1"  
   files: 
     <<: *dbql_core
     <<: *top_users
-    <<: *compete_snowflake
-    wlanalys_pdcr:
+    <<: *db_objects
+    compete_dbobjects_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "workload_analytics/workload_analytics.pdcr.coa.sql"
-      startdate:    "Current_Date - 90"
-      enddate:      "Current_Date - 1"
+      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql" 
+    compete_bigquery_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/bigquery.pdcr.coa.sql"
     wlanalys_pptx:
-      gitfile:      "workload_analytics/big_query_migration_blockers.pptx"      
+      gitfile:      "compete_bigquery/big_query_migration_blockers.pptx"      
       
