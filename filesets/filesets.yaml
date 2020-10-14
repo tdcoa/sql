@@ -639,7 +639,7 @@ csm_dashboard:
     consumption_stepgroup:
       gitfile:  "csm_dashboard/consumption_stepgrp.csv"
     stepgrpfunctions:
-      gitfile:  "csm_dashboard/stepgrpfunctions.csv"
+      gitfile:  "csm_dashboard/stepgrpfunction.csv"
 
 consumption_pricing:
   active:     "True"

@@ -2,7 +2,7 @@
 SplDB,Spoil database information in Data Dictionary,MISC
 DTB,Drop table,DDL
 Session,Returns the number of the session for the current user.,BuiltinFunction
-EPF,End plan fragment; the presence of this step indicates the end of a plan fragment for a dynamic plan,MISC
+EPF,End plan fragment. the presence of this step indicates the end of a plan fragment for a dynamic plan,MISC
 VJT,VJT Validate journal table,MISC
 DIRI,Drop inconsistent reference index,DDL
 RpChg,Subscriber replication change row message,MISC

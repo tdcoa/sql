@@ -17,9 +17,11 @@ Parameters:
   - daterange:		{daterange}
 */
 
+
 /*{{temp:consumption_step.csv}}*/ ;
 /*{{temp:consumption_stepgrp.csv}}*/ ;
 /*{{temp:stepgrpfunctions.csv}}*/ ;
+
 
 CREATE VOLATILE TABLE CB_DAILY_TCORE_METRICS ,FALLBACK ,
      NO BEFORE JOURNAL,
@@ -33,7 +35,6 @@ CREATE VOLATILE TABLE CB_DAILY_TCORE_METRICS ,FALLBACK ,
       SYSTEM_VERSION VARCHAR(16384) CHARACTER SET LATIN NOT CASESPECIFIC,
       SYSTEM_NODE_CNT INTEGER,
       SYSTEM_TCORE_CAPACITY INTEGER,
- --     HOUR_DT SMALLINT,
       CPU_RATIO DECIMAL(10,5),
       IO_RATIO DECIMAL(10,5),
       TCORE_HRS_DAY INTEGER,
@@ -43,133 +44,127 @@ CREATE VOLATILE TABLE CB_DAILY_TCORE_METRICS ,FALLBACK ,
       USR_NM VARCHAR(12) CHARACTER SET UNICODE NOT CASESPECIFIC,
       EDW_START_TSP TIMESTAMP(6) WITH TIME ZONE)
 PRIMARY INDEX ( LOGDATE )  ON COMMIT PRESERVE ROWS
-
 ;
 
 
-INSERT INTO CB_DAILY_TCORE_METRICS
-SELECT Logdate ,
-	System_id,
-	system_version,
-	numnodes as System_Node_Cnt,
-	System_TCore_Capacity,
-	--hour_dt,
-    CPU_Ratio,
-	IO_Ratio,
-	CAST(ROUND(TCore_hrs_day,0) as INT) (named "TCore_hrs_day"),
-	CAST(ROUND(TCore_hrs_MTD,0) as INT) (named "TCore_hrs_MTD"),
-    CAST(ROUND(Daily_Avg,0) as INT) (named "MTD_Avg"),
-	'CB_DAILY_TCORE_METRICS_Load',
-	'COA_Usr',
-	current_timestamp(6)
-
-    FROM
-
-    (SELECT System_id,
-    system_version,
-    numnodes,
-    System_TCore_Capacity,
-    Logdate,
-	hour_dt,
-    TCore_hrs_day,
-	CPU_Ratio,
-	IO_Ratio,
-    TCore_hrs_MTD/EXTRACT(DAY
-    FROM logdate) AS Daily_Avg,
-    SUM(TCore_hrs_day) OVER (ORDER BY logdate ROWS UNBOUNDED PRECEDING) AS TCore_hrs_MTD
-    FROM
-
-    (SELECT System_id,
-    system_version,
-    System_TCore_Capacity,
-    numnodes,
-    Logdate,
-	hour_dt,
-	sum(TCore_CPU_cnt)/(sum(TCore_CPU_cnt) + sum(TCore_IO_cnt)) as CPU_Ratio,
-	sum(TCore_IO_cnt)/(sum(TCore_CPU_cnt) + sum(TCore_IO_cnt)) as IO_Ratio,
---  SUM(normalized_tcore_consumed)/6  AS TCore_hrs_day	--Replace 6 (Hardcode) into lookup table
-    SUM(normalized_tcore_consumed)/{dbqlflushrate}  AS TCore_hrs_day
-    FROM
-
-    (SELECT
-    CAST(core_dt.System_ID AS VARCHAR(100)) (NAMED "System_ID")
-    ,core_dt.NumNodes
-    ,core_dt.System_Version
-    ,core_dt.LogDate
-    ,core_dt.Timestamp_dt
-    ,core_dt.Hour_dt
-    ,CAST(core_dt.AvgCPUBusy/100 AS FLOAT) (NAMED "Percent_Compute_consumed")
---  ,CAST(core_dt.AvgMBSecNode/3122 AS FLOAT) (NAMED "Percent_IO_consumed") --Replace 3122 (Hardcode) into lookup table
-    ,CAST(core_dt.AvgMBSecNode/{avgmbsecratio} AS FLOAT) (NAMED "Percent_IO_consumed")
-    ,CAST(System_TCore_Capacity AS INT) (NAMED "System_TCore_Capacity")
-    ,CAST(CEILING(System_TCore_Capacity * Percent_Compute_consumed) AS INT) (NAMED "TCore_CPU_consumed")
-    ,CAST(CEILING(System_TCore_Capacity * Percent_IO_consumed) AS INT) (NAMED "TCore_IO_consumed")
-    ,CAST(GREATEST(TCore_CPU_consumed,TCore_IO_consumed) AS INT) (NAMED "TCore_consumed")
-    ,case when ( TCore_CPU_consumed > TCore_IO_consumed ) then 1.00000 else 0.00000 end as TCore_CPU_cnt
-	,case when ( TCore_CPU_consumed <= TCore_IO_consumed ) then 1.00000 else 0.00000 end as TCore_IO_cnt
-
-    ,CASE
-        WHEN TCore_consumed >= System_TCore_Capacity THEN System_TCore_Capacity
-    ELSE TCore_consumed
-    END AS Normalized_TCore_consumed
+INSERT INTO CB_DAILY_TCORE_METRICS 
+SELECT 
+			Logdate , 
+			System_id,
+			system_version,
+			numnodes as System_Node_Cnt,
+			System_TCore_Capacity,
+			CPU_Ratio,
+			IO_Ratio,
+			CAST(ROUND(TCore_hrs_day,0) as INT) (named "TCore_hrs_day"),
+			CAST(ROUND(TCore_hrs_MTD,0) as INT) (named "TCore_hrs_MTD"),
+			CAST(ROUND(Daily_Avg,0) as INT) (named "MTD_Avg"),
+			'CB_DAILY_TCORE_METRICS_Load' as JOB_NM,
+			'CSM_Usr' as USR_NM,
+			current_timestamp(6) as EDW_START_TSP	
     FROM
     (
-    SELECT
-        /* Time Data */
+			SELECT 
+				System_id,
+				system_version,
+				numnodes,
+				System_TCore_Capacity,
+				Logdate,
+				TCore_hrs_day,
+				CPU_Ratio,
+				IO_Ratio,
+				TCore_hrs_MTD/EXTRACT(DAY
+				FROM logdate) AS Daily_Avg,
+				SUM(TCore_hrs_day) OVER (ORDER BY logdate ROWS UNBOUNDED PRECEDING) AS TCore_hrs_MTD
+			FROM
+				
+			(
+				SELECT 
+					System_id,
+					system_version,
+					System_TCore_Capacity,
+					numnodes,
+					Logdate,
+					sum(TCore_CPU_cnt)/(sum(TCore_CPU_cnt) + sum(TCore_IO_cnt)) as CPU_Ratio,
+					sum(TCore_IO_cnt)/(sum(TCore_CPU_cnt) + sum(TCore_IO_cnt)) as IO_Ratio,
+					SUM(normalized_tcore_consumed)/{dbqlflushrate}  AS TCore_hrs_day
+				FROM
+							
+					(
+						SELECT
+							CAST(core_dt.System_ID AS VARCHAR(100)) (NAMED "System_ID")
+							,core_dt.NumNodes
+							,core_dt.System_Version
+							,core_dt.LogDate
+							,core_dt.Timestamp_dt
+							,core_dt.Hour_dt
+							,CAST(core_dt.AvgCPUBusy/100 AS FLOAT) (NAMED "Percent_Compute_consumed")
+							,CAST(core_dt.AvgMBSecNode/{avgmbsecratio} AS FLOAT) (NAMED "Percent_IO_consumed")
+							,CAST(System_TCore_Capacity AS INT) (NAMED "System_TCore_Capacity")
+							,CAST(CEILING(System_TCore_Capacity * Percent_Compute_consumed) AS INT) (NAMED "TCore_CPU_consumed")
+							,CAST(CEILING(System_TCore_Capacity * Percent_IO_consumed) AS INT) (NAMED "TCore_IO_consumed")
+							,CAST(GREATEST(TCore_CPU_consumed,TCore_IO_consumed) AS INT) (NAMED "TCore_consumed")
+							,case when ( TCore_CPU_consumed > TCore_IO_consumed ) then 1.00000 else 0.00000 end as TCore_CPU_cnt 
+							,case when ( TCore_CPU_consumed <= TCore_IO_consumed ) then 1.00000 else 0.00000 end as TCore_IO_cnt 
+							,CASE
+								WHEN TCore_consumed >= System_TCore_Capacity THEN System_TCore_Capacity
+							ELSE TCore_consumed
+							END AS Normalized_TCore_consumed
+						FROM 
+							(
+									SELECT
+											/* Time Data */
+											
+										spma_dt.LogDate (NAMED "LogDate")
+										,CAST((spma_dt.LogDate || ' ' || spma_dt.LogTime) AS TIMESTAMP(0)) (NAMED "Timestamp_dt")
+										,EXTRACT(HOUR FROM "Timestamp_dt") (NAMED "Hour_dt")
+										,SPMAInterval (NAMED "RSSInterval")
+											
+											/* System data */
+											
+										,'{siteid}' (NAMED "System_ID")
+										,info.infodata (NAMED "System_Version")
+										,{tcorecapacity} (NAMED "System_TCore_Capacity")
+										,spma_dt.NCPUs (NAMED "CPUs")
+										,COUNT(DISTINCT(spma_dt.NodeID)) (NAMED "NumNodes")
+											
+											/* CPU/IO data */
+											
+										,CAST(SUM(CPUUtil) / NumNodes / CPUs / RSSInterval AS FLOAT) (NAMED "AvgCPUBusy")
+										,CAST(SUM(SPMAPhysReadKB + SPMAPhysPreReadKB + SPMAPhysWriteKB) / 1024.0 / NumNodes / RSSInterval AS FLOAT) (NAMED "AvgMBSecNode")
+									FROM dbc.dbcinfo info,
+										(
+											SELECT
+												thedate (FORMAT 'yyyy-mm-dd')(NAMED "LogDate")
+												,CAST(thetime AS INT) / 1000 * 1000   (FORMAT '99:99:99') (NAMED "LogTime")
+												,{spmainterval} (NAMED "SPMAInterval")
+												,NodeID
+												,NCpus
+													
+													/* CPU */
+													
+												,CAST(SUM(CPUUExec+CPUUServ) AS FLOAT) (NAMED "CPUUtil")
+													
+													/* Physical I/O */
+													
+												,CAST(SUM(FileAcqReadKB) AS FLOAT)  (NAMED "SPMAPhysReadKB")
+												,CAST(SUM(FilePreReadKB) AS FLOAT) (NAMED "SPMAPhysPreReadKB")
+												,CAST(SUM(FileWriteKB) AS FLOAT) (NAMED "SPMAPhysWriteKB")
+											FROM pdcrinfo.ResUsageSpma
+												WHERE ( ( THEDATE > ({startdate} ) AND THETIME >= 0 ) OR	( THEDATE = ({startdate} ) ) )
+												AND   ( ( THEDATE = ({enddate}) AND THETIME <= 240000 ) OR ( THEDATE < ({enddate}) ) )
+												GROUP BY 1,2,3,4,5
+										) spma_dt
+										WHERE  info.infokey (NOT CS) = 'VERSION' (NOT CS)
+										GROUP BY 1,2,3,4,5,6,7,8
+							) core_dt
+					) tcore_metrics_eng
+					GROUP BY 1,2,3,4,5
 
-    spma_dt.LogDate (NAMED "LogDate")
-    ,CAST((spma_dt.LogDate || ' ' || spma_dt.LogTime) AS TIMESTAMP(0)) (NAMED "Timestamp_dt")
-    ,EXTRACT(HOUR
-    FROM "Timestamp_dt") (NAMED "Hour_dt")
-    ,SPMAInterval (NAMED "RSSInterval")
-
-        /* System data */
-
-    ,'{siteid}' (NAMED "System_ID")
-    ,info.infodata (NAMED "System_Version")
-    ,'{tcorecapacity}' (NAMED "System_TCore_Capacity")
-    ,spma_dt.NCPUs (NAMED "CPUs")
-    ,COUNT(DISTINCT(spma_dt.NodeID)) (NAMED "NumNodes")
-
-        /* CPU/IO data */
-
-    ,CAST(SUM(CPUUtil) / NumNodes / CPUs / RSSInterval AS FLOAT) (NAMED "AvgCPUBusy")
-    ,CAST(SUM(SPMAPhysReadKB + SPMAPhysPreReadKB + SPMAPhysWriteKB) / 1024.0 / NumNodes / RSSInterval AS FLOAT) (NAMED "AvgMBSecNode")
-    FROM dbc.dbcinfo info,
-    (
-    SELECT
-    thedate (FORMAT 'yyyy-mm-dd')(NAMED "LogDate")
-    ,CAST(thetime AS INT) / 1000 * 1000   (FORMAT '99:99:99') (NAMED "LogTime")
-    ,{spmainterval} (NAMED "SPMAInterval")
-    ,NodeID
-    ,NCpus
-
-        /* CPU */
-
-    ,CAST(SUM(CPUUExec+CPUUServ) AS FLOAT) (NAMED "CPUUtil")
-
-        /* Physical I/O */
-
-    ,CAST(SUM(FileAcqReadKB) AS FLOAT)  (NAMED "SPMAPhysReadKB")
-    ,CAST(SUM(FilePreReadKB) AS FLOAT) (NAMED "SPMAPhysPreReadKB")
-    ,CAST(SUM(FileWriteKB) AS FLOAT) (NAMED "SPMAPhysWriteKB")
-    FROM pdcrinfo.ResUsageSpma
-    WHERE ( ( THEDATE > {startdate} AND THETIME >= 0 ) OR
-    ( THEDATE = {startdate} ) )
-    AND
-    ( ( THEDATE = {enddate} AND THETIME <= 240000 ) OR
-    ( THEDATE < {enddate} ) )
-    GROUP BY 1,2,3,4,5
-    ) spma_dt
-    WHERE  info.infokey (NOT CS) = 'VERSION' (NOT CS)
-    GROUP BY 1,2,3,4,5,6,7,8
-    ) core_dt
-    ) tcore_metrics_eng
-    GROUP BY 1,2,3,4,5,6) a
-    ) b
-
-;
-
+			) a
+		) b 
+	;
+	
 CREATE VOLATILE TABLE CB_DAILY_TCORE_METRICS_RATIO ,FALLBACK ,
      NO BEFORE JOURNAL,
      NO AFTER JOURNAL,
@@ -186,76 +181,58 @@ CREATE VOLATILE TABLE CB_DAILY_TCORE_METRICS_RATIO ,FALLBACK ,
       USR_NM VARCHAR(40) CHARACTER SET LATIN NOT CASESPECIFIC NOT NULL,
       EDW_START_TSP TIMESTAMP(6) NOT NULL)
 PRIMARY INDEX ( LOGDATE ) ON COMMIT PRESERVE ROWS
-
 ;
 
-INSERT INTO  CB_DAILY_TCORE_METRICS_RATIO
-SELECT
-      logdate,
-	  --hour_dt,
-	  CPU_Ratio,
-	  IO_Ratio,
-	  TCore_hrs_day,
-	  ratio as TCoreRatioPerDay,
-		'CB_DAILY_TCORE_METRICS_Load',
-		'CSM_Usr',
-		current_timestamp(6)
-
-
-
-FROM
-(
-
-SELECT c.logdate,
-	   c.hour_dt,
-	   cast((c.TCore_hrs_day*c.CPU_Ratio)/(b.cpuusage) as dec(20,15)) as CPU_Ratio,                       --Calc the adj CPU_Ratio without the Golden Gate CPU time
-	   cast((c.TCore_hrs_day*c.IO_Ratio)/(b.TotalIOCount) as dec(20,15)) as IO_Ratio,                --Calc the adj IO_Ratio without the Gold Gate IO
-	   c.TCore_hrs_day,
-	   c."MTD_Avg",
-	   c.TCore_hrs_MTD,
-	   b.cpuusage,
-	   cast(c.TCore_hrs_day/b.cpuusage as dec(20,10) ) as ratio
-    FROM
-		CB_DAILY_TCORE_METRICS c
-	inner join
-
-	(select logdate,
-			EXTRACT(HOUR FROM collecttimestamp) AS HOUR_DT,
-			cast((sum(l.AmpCPUTime + l.ParserCPUTime)) as dec(20,10)) as cpuusage,
-		sum(TotalIOCount) as TotalIOCount
-		from pdcrinfo.dbqlogtbl_hst  l
-		where logdate >= {startdate}
-		group by 1,2
-    )b
-	on c.logdate = b.logdate
-	and  C.HOUR_DT = B.HOUR_DT
-
-	) E
-
-
-;
-
-CREATE VOLATILE TABLE vt_cleansedSQL AS
-(
-	SELECT
-			ql.procid,
-			ql.queryid,
-			qls.SQLRowNo,
-		--		EDWDECODED.sqlnormalisation_WL(CAST (TRANSLATE(COALESCE(qls.sqltextinfo, ql.QueryText) USING UNICODE_TO_LATIN WITH ERROR) AS VARCHAR(25000))) cleansed
-		(CAST (TRANSLATE(COALESCE(qls.sqltextinfo, ql.QueryText) USING UNICODE_TO_LATIN WITH ERROR) AS VARCHAR(25000))) cleansed
-		FROM pdcrinfo.DbqLogTbl ql
-		LEFT OUTER JOIN pdcrinfo.DBQLSqlTbl qls
-			ON ql.QueryId = qls.QueryId
-			AND ql.LogDate = qls.LogDate
-			AND qls.LogDate > {startdate}
-		WHERE ql.LogDate > {enddate}
-		AND qls.SqlRowNo = 1
-		AND TRANSLATE_CHK(qls.sqltextinfo USING UNICODE_TO_LATIN) = 0
-		AND TRANSLATE_CHK(ql.QueryText USING UNICODE_TO_LATIN) = 0
-		GROUP BY 1,2,3,4
-) WITH DATA PRIMARY INDEX (queryid)
-ON COMMIT PRESERVE ROWS
-
+INSERT INTO CB_DAILY_TCORE_METRICS_RATIO
+select 
+				logdate,
+				CPU_Ratio,
+				IO_Ratio,
+				TCore_hrs_day,
+				ratio as TCoreRatioPerDay,	
+				'CB_DAILY_TCORE_METRICS_Load' as JOB_NM,
+				'CSM_User' as USR_NM,
+				current_timestamp(6) as EDW_START_TSP		  	
+			
+			
+			
+			from 
+			(
+			
+				SELECT 
+				c.logdate,
+				cast((c.TCore_hrs_day*c.CPU_Ratio)/(b.cpuusage /*+ d.GG_CPUTime*/) as dec(20,15)) as CPU_Ratio,                       --Calc the adj CPU_Ratio without the Golden Gate CPU time
+				cast((c.TCore_hrs_day*c.IO_Ratio)/(b.TotalIOCount /*+ d.GG_TotalIOCount*/) as dec(20,15)) as IO_Ratio,                --Calc the adj IO_Ratio without the Gold Gate IO 
+				c.TCore_hrs_day,
+				c."MTD_Avg",
+				c.TCore_hrs_MTD,
+				b.cpuusage,
+				cast(c.TCore_hrs_day/b.cpuusage as dec(20,10) ) as ratio
+				FROM 
+					CB_DAILY_TCORE_METRICS c                                                             --Only the portion from DBQL Log
+				inner join 				
+					(
+						select 
+						logdate,
+						cast((sum(l.AmpCPUTime + l.ParserCPUTime)) as dec(20,10)) as cpuusage,
+						sum(TotalIOCount) as TotalIOCount	
+						from pdcrinfo.dbqlogtbl_hst  l
+						where logdate between {startdate} and {enddate}
+						group by 1
+					)b	
+					on c.logdate = b.logdate
+					/*left outer join                                                                                                   --include Golden Gate from DBQLSummaryTbl_Hst table
+					(
+						SELECT	logdate, 
+								sum(TotalIOCount) as GG_TotalIOCount,
+								sum( AMPCPUTime) as GG_CPUTime
+						FROM	pdcrinfo.DBQLSummaryTbl_Hst
+						where logdate between :DTE -(select COLUMNVALUE from CB_DIM_CONSTANT_REF where COLUMNNAME = 'DAY_BACK') and :DTE - 1 
+						and appid in ('GGSCI', 'Replicat') 
+						group by 1
+					) d
+					on c.logdate = d.logdate*/
+			) E	
 ;
 
 CREATE VOLATILE TABLE CB_ComplexityScore ,FALLBACK ,
@@ -273,62 +250,93 @@ CREATE VOLATILE TABLE CB_ComplexityScore ,FALLBACK ,
       USR_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
       EDW_START_TSP TIMESTAMP(6) NOT NULL)
 PRIMARY INDEX ( LOGDATE ,PROCID ,QUERYID ) ON COMMIT PRESERVE ROWS
+;
 
+CREATE VOLATILE TABLE vt_cleansedSQL AS
+(
+	SELECT 
+		ql.procid,
+		ql.queryid,
+		ql.logdate,
+		COALESCE(qls.SqlRowNo,1) as SQLRowNo,
+		(CAST (TRANSLATE (coalesce(qls.sqltextinfo,ql.QueryText) USING UNICODE_TO_LATIN WITH ERROR) AS VARCHAR(25000))) cleansed,
+	    'CB_DAILY_TCORE_METRICS_Load' as JOB_NM,
+	    'CSM_Usr' as USR_NM,
+		current_timestamp(6) as EDW_START_TSP	
+		FROM pdcrinfo.DbqLogTbl ql
+		LEFT OUTER JOIN pdcrinfo.dbqlsqltbl qls
+			on ql.queryid = qls.queryid
+			and ql.logdate = qls.logdate
+		WHERE ql.LogDate between {startdate} and {enddate}
+		AND TRANSLATE_CHK(ql.QueryText USING UNICODE_TO_LATIN) = 0
+		AND TRANSLATE_CHK(qls.sqltextinfo USING UNICODE_TO_LATIN) = 0
+		AND qls.sqlrowno = 1
+		GROUP BY 1,2,3,4,5
+) WITH DATA PRIMARY INDEX (queryid)
+ON COMMIT PRESERVE ROWS
 ;
 
 
 INSERT INTO CB_ComplexityScore
-
-		SELECT
-			q.procid as procid
+SELECT 
+			q.logdate
+		,	q.procid as procid 
 		,	q.queryid (DECIMAL(18,0)) QueryId
 		,	SUM(q.StepComplexityScore) (FLOAT) QueryComplexityScore
-		FROM
+		,   'CB_ComplexityScore_Load' as Job_nm
+		,   'CSM_Usr' as USR_NM
+		,   Current_timestamp(6) as EDW_START_TSP
+		FROM 
 		(
 
 			SELECT
-				dbql.procid
+				dbql.logdate
+			,	dbql.procid
 			,	dbql.queryid
 			, 	sg.stepgroupname
 			, 	sg.StepGroupDesc
-			, 	SUM(COALESCE(sg.complexityweight,0)) StepComplexityScore
+			, 	SUM(COALESCE(sg.complexityweight,0)) StepComplexityScore 
 			--, count(*)  CountOfUses
-			FROM
-			(
-				SELECT
-					procId
+			FROM 
+			( 
+				SELECT 
+					logdate
+				,	procId
 				, 	queryId
-				, 	stepName
-				FROM  PDCRINFO.dbqlsteptbl
-				WHERE logdate > {startdate}
+				, 	stepName 
+				FROM  PDCRINFO.dbqlsteptbl 
+				WHERE logdate between {startdate} and {enddate}
 			)  ST
 			JOIN PDCRINFO.dbqlogtbl dbql
-				ON dbql.procid  = ST.procid
+				ON  dbql.logdate = ST.logdate
+				and dbql.procid  = ST.procid
 				AND dbql.queryid = ST.queryid
 			JOIN "consumption_step.csv" s
 				ON s.StepName = ST.StepName
 			JOIN "consumption_stepgrp.csv" sg
 				ON sg.StepGroupName = s.StepGroup
 			WHERE 1=1
-			--AND sg.complexityweight IS NOT NULL
-			AND dbql.LogDate > {startdate}
-			GROUP BY 1,2,3,4
-
+			AND sg.complexityweight IS NOT NULL
+			AND dbql.LogDate between {startdate} and {enddate}
+			GROUP BY 1,2,3,4,5
+     
 			UNION ALL
-
+     
 	 		/* M. Beek/April-2018: As we are now including the SQLRowNo from the QrylogSql table (to capture all SQL)
 			** We will need to do a MAX aggregation here, not to double count the scores for long queries (as that is not done
 			** for short queries either */
 			SELECT
-				dt.procid
+				dt.logdate
+			,	dt.procid
 			,	dt.queryid
 			, 	dt.stepgroupname
 			, 	dt.StepGroupDesc
 			,	MAX(StepComplexityScore) AS StepComplexityScore
-			FROM
+			FROM 
 			(
 						SELECT
-							SQ.procid
+							SQ.logdate
+						,	SQ.procid
 						,	SQ.queryid
 						,	SQ.SQLRowNo
 						, 	sg.stepgroupname
@@ -336,8 +344,8 @@ INSERT INTO CB_ComplexityScore
 						, 	SUM(sg.complexityweight) StepComplexityScore
 			                /* Match using patterns based upon common punctuation forms. */
 			                /* In the examples, FN is the function name being matched. */
-						FROM  vt_cleansedSQL SQ
-						JOIN "stepgroupfunctions.csv" sgf
+						FROM vt_cleansedSQL SQ 
+						JOIN "stepgrpfunctions.csv" sgf 
 							ON 	SQ.cleansed like '% ' || sgf.functionname || ' %'   /* example: select FN ( */
 							OR  SQ.cleansed like '% ' || sgf.functionname || '(%'   /* example: select FN( */
 							OR  SQ.cleansed like '%,' || sgf.functionname || ' %'   /* example: select x,FN ( */
@@ -346,28 +354,75 @@ INSERT INTO CB_ComplexityScore
 							OR  SQ.cleansed like '%.' || sgf.functionname || '(%'   /* example: select TD_SYSFNLIB.FN( */
 						JOIN "consumption_stepgrp.csv" sg
 							ON sgf.stepgroupname = sg.stepgroupname
-						GROUP BY 1,2,3,4,5
+							AND SQ.LogDate between {startdate} and {enddate}
+						GROUP BY 1,2,3,4,5,6
 			) AS dt
-			GROUP BY 1,2,3,4
+			GROUP BY 1,2,3,4,5
 
-		) q group by 1,2
-	;
+		) q group by 1,2,3 
+		
+;
 
+CREATE MULTISET VOLATILE TABLE CB_DAILY_QUERY_METRICS ,FALLBACK ,
+     NO BEFORE JOURNAL,
+     NO AFTER JOURNAL,
+     CHECKSUM = DEFAULT,
+     DEFAULT MERGEBLOCKRATIO,
+     MAP = TD_MAP2
+     (
+      QUERYID DECIMAL(18,0),
+      LOGDATE DATE FORMAT 'YYYY-MM-DD',
+      LOGHOUR INTEGER,
+      USERNAME VARCHAR(120) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      USERID BYTE(4),
+      FIRST_NAME VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      LAST_NAME VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      EMAIL_ADDR VARCHAR(60) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      REGION VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+	  LOCATION VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      DEPARTMENT VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      SUBDEPARTMENT_L1 VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      SUBDEPARTMENT_L2 VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      SUBDEPARTMENT_L3 VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      DIRECT_MGR VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC ,
+      L5_MGR_NM VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC ,
+      L4_MGR_NM VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      L3_MGR_NM VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      L2_MGR_NM VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      EMPLOYEE_STATUS VARCHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      STATEMENTTYPE CHAR(20) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      FINALWDNAME VARCHAR(128) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      NUMSTEPS SMALLINT, 
+      APPID CHAR(30) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      TOTALIOCOUNT FLOAT,
+      AMPCPUTIME FLOAT,
+      TOTALCPU DECIMAL(15,7),
+      TCORERATIOPERDAY DECIMAL(20,10),
+      TCOREUSAGE DECIMAL(15,10),
+      COMPLEXITYLEVEL BYTEINT,
+      PJI FLOAT,
+      UII FLOAT,
+      JOB_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC,
+      USR_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
+      EDW_START_TSP TIMESTAMP(6) NOT NULL )
+PRIMARY INDEX ( QUERYID )
+PARTITION BY RANGE_N(LOGDATE  BETWEEN DATE '2020-01-01' AND '2025-12-31' EACH INTERVAL '1' DAY ) ON COMMIT PRESERVE ROWS
+;
 
-/*{{save:COA_DashboardDailyDetail.csv}}*/
+INSERT INTO CB_DAILY_QUERY_METRICS
 SELECT        DISTINCT
                  l.QueryId,
-                 l.LogDate AS LogDate,
+                 l.LogDate AS LogDate, 
                  EXTRACT(HOUR FROM l.collecttimestamp) AS LogHour,
-                 l.UserName,
+                 d.Pattern as UserName,
 				 l.UserId,
-				 'Unknown' as  FIRST_NAME          ,
-				 'Unknown' as  LAST_NAME           ,
-				 'Unknown' as  EMAIL_ADDR          ,
-				 coalesce(d.REGION,'Unknown') as  REGION          ,
-				 'Unknown' as  LOCATION          ,
-				 coalesce(d.DEPARTMENT, 'Unknown') as  DEPARTMENT          ,
-				 coalesce(d.SUBDEPARTMENT,'Unknown') as  SUBDEPARTMENT_L1       ,
+				 'Unknown' as  FIRST_NAME          ,      
+				 'Unknown' as  LAST_NAME           ,      
+				 'Unknown' as  EMAIL_ADDR          ,      
+				 d.User_Region as  REGION          ,      
+				 'Unknown' as  LOCATION          ,      
+				 d.User_Department as  DEPARTMENT          ,      
+				 d.User_SubDepartment as  SUBDEPARTMENT_L1       ,
 				 'Unknown' as  SUBDEPARTMENT_L2       ,
 				 'Unknown' as  SUBDEPARTMENT_L3       ,
 				 'Unknown' as  DIRECT_MGR          ,
@@ -377,59 +432,72 @@ SELECT        DISTINCT
 				 'Unknown' as  L2_MGR_NM          ,
 				 'Unknown' as  EMPLOYEE_STATUS ,
 	             l.StatementType,
+				 l.FINALWDNAME,
+                 l.numsteps,
                  l.appid,
                  l.TotalIOCount,
                  l.Ampcputime,
-                 cast(l.AmpCPUTime + l.ParserCPUTime as dec(15,7))          AS TotalCPU,
+                 cast(l.AmpCPUTime + l.ParserCPUTime as float)          AS TotalCPU,
   				 r.TCoreRatioPerDay,
-                 (cast((l.AmpCPUTime + l.ParserCPUTime) as Float) *  cast(r.CPU_Ratio as Float)) +  (cast(l.TotalIOCount as Float) *   cast(r.IO_Ratio as Float)) as TCoreUsage,
-				 case when (COALESCE((c.QueryComplexityScore - e.minCompScore) / (e.maxCompScore - e.minCompScore),0)) < .2 THEN 0
-					  WHEN (COALESCE((c.QueryComplexityScore - e.minCompScore) / (e.maxCompScore - e.minCompScore),0)) < .4 THEN 1
-					  WHEN (COALESCE((c.QueryComplexityScore - e.minCompScore) / (e.maxCompScore - e.minCompScore),0)) < .6 THEN 2
-					  WHEN (COALESCE((c.QueryComplexityScore - e.minCompScore) / (e.maxCompScore - e.minCompScore),0)) < .8 THEN 3
-				ELSE 4
-				END AS ComplexityLevel,
-
-	            case
-					when l.TotalIOCount = 0 then 0
-					else (l.ampcputime*1000)/l.totaliocount
+                 (cast((l.AmpCPUTime + l.ParserCPUTime) as float) *  cast(r.CPU_Ratio as float)) +  (cast(l.TotalIOCount as float) *   cast(r.IO_Ratio as float)) as TCoreUsage,
+				 				 
+				case 
+					when QueryComplexityScore between  0.01 and 10.00 then 1
+					when QueryComplexityScore between 10.01 and 20.00 then 2
+					when QueryComplexityScore between 20.01 and 30.00 then 3
+					when QueryComplexityScore >= 30.01                then 4
+					else 0
+				END AS ComplexityLevel,	 
+				
+	            case 
+					when l.TotalIOCount = 0 then 0 
+					else (l.ampcputime*1000)/l.totaliocount 
 				end as PJI ,
-				case
-					when l.TotalIOCount = 0 or l.ampcputime = 0 then 0
-					else l.totaliocount/(l.ampcputime*1000)
+				case 
+					when l.TotalIOCount = 0 or l.ampcputime = 0 then 0 
+					else l.totaliocount/(l.ampcputime*1000) 
 				end as UII ,
 				'CB_DAILY_TCORE_METRICS_Load' as JOB_NM,
-				User as USR_NM,
+				'CSM_Usr' as USR_NM,
 				Current_Timestamp(6) as EDW_START_TSP
 
-                 0
+                 
+
+   FROM 
+        pdcrinfo.dbqlogtbl_hst  l
+         
+   left outer join  CB_DAILY_TCORE_METRICS_RATIO r
     on l.logdate= r.logdate
-	and  r.hour_dt = EXTRACT(HOUR FROM l.collecttimestamp)
    left outer join CB_ComplexityScore c
    	on    l.procid = c.procid
 	and   l.queryid = c.queryid
 	and   l.logdate = c.logdate
-
-
-	left outer join ca_user_xref d
-
-	on d.USERNAME = l.username
-
+	
+	
+	left outer join dim_user d
+	
+	on d.USERNAME = l.username 
+    
 	left outer join (
-	select
+	select 
 		min(queryComplexityScore) as minCompScore
 		,max(queryComplexityScore) as maxCompScore
 	from
 	CB_ComplexityScore
 	) e
 	on 1= 1
-
-	where logdate between {startdate} and {enddate}
-
+	where l.logdate between {startdate} and {enddate} 
+	
+	
+	
+	-- END OF DAILY DETAIL GRAIN
+	
+	
 ;
 
+	-- START OF DAILY SUMMARY
 
-CREATE MULTISET TABLE CB_DAILY_SUMMARY_CURR_PREV_WK ,FALLBACK ,
+CREATE MULTISET VOLATILE TABLE CB_DAILY_SUMMARY_CURR_PREV_WK ,FALLBACK ,
      NO BEFORE JOURNAL,
      NO AFTER JOURNAL,
      CHECKSUM = DEFAULT,
@@ -452,36 +520,35 @@ CREATE MULTISET TABLE CB_DAILY_SUMMARY_CURR_PREV_WK ,FALLBACK ,
       BENCHMARK_AMT INTEGER,
       COMPLEXITY_SCORE INTEGER,
       NBR_ACTIVE_USERS INTEGER)
-NO PRIMARY INDEX
+NO PRIMARY INDEX ON COMMIT PRESERVE ROWS
 ;
 
 
 
-
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'TC'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
@@ -491,19 +558,30 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 ,'' as DASH_METRIC_DESC
 ,sum(cast(TCoreUsage as dec(25,5))) as MEASURE_AMT
 ,Max(B.TCORE_BUDGET_HOURS) as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	CB_DAILY_QUERY_METRICS A
-inner join (
+inner join 
 
-select 50000 as TCORE_BUDGET_HOURS
-from dbc.dbcinfo
-where START_DT >= {startdate} and END_DT <= (select monthend from Sys_Calendar.BusinessCalendar where calendar_date = {enddate})
 
+ (
+select {tcorebudget} as TCORE_BUDGET_HOURS
+/*select sum(TCORE_BUDGET_HOURS) as TCORE_BUDGET_HOURS
+from CB_DIM_BUDGET_REF 
+where START_DT >= 
+(case when {daterange} between 5 and 6 then (select  ADD_MONTHS(QuarterBegin, (SELECT cast(COLUMNVALUE as int) FROM  CB_DIM_CONSTANT_REF WHERE COLUMNNAME='QTR_OFFSET')) from CB_DIM_BusinessCalendar where calendar_date = {startdate})
+	  else {startdate} end)
+
+and END_DT <= 
+(case when {daterange} between 3 and 4 then (select monthend from CB_DIM_BusinessCalendar where calendar_date = {enddate})
+	  when {daterange} between 5 and 6 then (select monthend from CB_DIM_BusinessCalendar where calendar_date in  (select ADD_MONTHS(QuarterEnd, (SELECT cast(COLUMNVALUE as int) FROM  CB_DIM_CONSTANT_REF WHERE COLUMNNAME='QTR_OFFSET')) from CB_DIM_BusinessCalendar where calendar_date = {enddate}))
+	 else {enddate} end)*/
  ) B
-on 1=1
+
+	on 1=1
+
 
 
 where A.LOGDATE between {startdate} and {enddate};
@@ -513,29 +591,29 @@ where A.LOGDATE between {startdate} and {enddate};
 
 --Summary TCORE HR DAILY AVG
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'THDA'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (TD_Consumption_DB_BASE_T.day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	"consumption_step.csv"  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
@@ -545,40 +623,40 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 ,'' as DASH_METRIC_DESC
 ,sum(cast(TCoreUsage as dec(25,5)))/(({enddate} - {startdate})+1) as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	CB_DAILY_QUERY_METRICS A
-where A.LOGDATE between {startdate} and {enddate};
+where A.LOGDATE between {startdate} and {enddate};	
 
 
 
---Summary Total TotalCpu
+--Summary Total TotalCpu 
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'TTLCPU'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
@@ -588,7 +666,7 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 ,'' as DASH_METRIC_DESC
 ,sum(cast(TotalCPU as dec(25,5))) as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
@@ -597,29 +675,29 @@ where A.LOGDATE between {startdate} and {enddate};
 
 --Summary Total TotalIO
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'TTLIO'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
@@ -629,125 +707,172 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 ,'' as DASH_METRIC_DESC
 ,sum(cast(TotalIOCount as dec(25,5))) as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	CB_DAILY_QUERY_METRICS A
-where A.LOGDATE between {startdate} and {enddate};
+where A.LOGDATE between {startdate} and {enddate};		
 
 
 
---Summary NBR QUERIES
+--Summary Nbr Queries
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'NBRQRY'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
 ,'NBR QUERIES'  as METRIC_NAME
-,'NBR QUERIES' as DASH_METRIC_NAME
-,'NBR QUERIES' as DASH_METRIC_NAME_SHORT
+,'Number of Queries' as DASH_METRIC_NAME
+,'Queries' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
 ,cast(Count(Distinct Queryid ) as bigint) as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	CB_DAILY_QUERY_METRICS A
-where A.LOGDATE between {startdate} and {enddate};
+where A.LOGDATE between {startdate} and {enddate}
+and queryid > 0;	
 
 
 
 
---Summary ACTIVE USERS
+
+--Summary Nbr Queries GT 1 second
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
+ {daterange} as DateRange
+,'NBRQRYGT'
+,{startdate} as Date_Start
+,{enddate} as Date_End
+,case when ({daterange} = 1) then (select  
+	case when (day_of_week = 1) then 'SUN'
+	 when (day_of_week = 2) then 'MON'
+	 when (day_of_week = 3) then 'TUE'
+	 when (day_of_week = 4) then 'WED'
+	 when (day_of_week = 5) then 'THU'
+	 when (day_of_week = 6) then 'FRI'
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
+	  when ({daterange} = 3) then 'MONTH'
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
+	  END as DASH_DATE_LEVEL
+	  
+,case when ({daterange} = 1) then 'LW'
+	  when ({daterange} = 3) then 'LM'
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
+	  END as DASH_DATE_LABEL
+,'SUMMARY' as AGGREGATE_LEVEL
+,Null as AGGREGATE_NAME
+,'NBR QUERIES GT1'  as METRIC_NAME
+,'# Queries > 1 CPU Second' as DASH_METRIC_NAME
+,'# Queries >1CPU' as DASH_METRIC_NAME_SHORT
+,'' as DASH_METRIC_DESC
+,cast(Count(Distinct Queryid ) as bigint) as MEASURE_AMT
+,0 as BENCHMARK_AMT,
+  
+	null as COMPLEXITY_SCORE,
+	null as NBR_ACTIVE_USERS
+
+FROM	CB_DAILY_QUERY_METRICS A
+where A.LOGDATE between {startdate} and {enddate}
+and TotalCpu >= 1
+and queryid > 0;	
+
+
+
+--Summary Active Users
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
  {daterange} as DateRange
 ,'ACTUSER'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
 ,'ACTIVE USERS'  as METRIC_NAME
-,'ACTIVE USERS' as DASH_METRIC_NAME
-,'ACTIVE USERS' as DASH_METRIC_NAME_SHORT
+,'Active Users' as DASH_METRIC_NAME
+,'Active Users' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
 ,count(distinct(userName)) as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	CB_DAILY_QUERY_METRICS A
-where A.LOGDATE between {startdate} and {enddate};
+where A.LOGDATE between {startdate} and {enddate};		
 
 --Summary TCORE HR COST PER QUERY
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'TCHRCostPerQry'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
@@ -755,164 +880,168 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 ,'T-Core Hours Cost per Query' as DASH_METRIC_NAME
 ,'Per Query' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-,(1000000)*1.000/cast(count(distinct queryid ) as dec(25,10))  as MEASURE_AMT
+,({systemcost}/12)/nullif(cast(count(distinct queryid ) as dec(25,10)),0)  as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	CB_DAILY_QUERY_METRICS A
-where A.LOGDATE between {startdate} and {enddate};
+where A.LOGDATE between {startdate} and {enddate}
+and queryid > 0;	
 
-CREATE VOLATILE TABLE CB_DAILY_CONCURRENCY_WK ,FALLBACK ,
+
+CREATE MULTISET VOLATILE TABLE CB_DAILY_CONCURRENCY_WK ,FALLBACK ,
      NO BEFORE JOURNAL,
      NO AFTER JOURNAL,
      CHECKSUM = DEFAULT,
      DEFAULT MERGEBLOCKRATIO,
-     MAP = TD_MAP1
+     MAP = TD_MAP2
      (
       LOGDATE DATE FORMAT 'YYYY-MM-DD',
-      AVGCON_AVG_PER_HR FLOAT,
-      MAXCON_PEAK_PER_HR INTEGER,
+      LOGHOUR INTEGER,
+      CONCURRENCY_AVG FLOAT,
+      CONCURRENCY_PEAK INTEGER,
       JOB_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
       USR_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
       EDW_START_TSP TIMESTAMP(6) NOT NULL)
-PRIMARY INDEX ( LOGDATE )
-
+PRIMARY INDEX ( LOGDATE ) ON COMMIT PRESERVE ROWS
 ;
 
 
-
---Summary vt_Concurrency
+--Summary vt_Concurrency 
 insert into CB_DAILY_CONCURRENCY_WK
-select
-logdate,
-round(Avg(Concurrency_Avg)) as AvgCon_Avg_Per_hr,
-Max(Concurrency_Peak) as MaxCon_Peak_Per_hr
-,'CB_DAILY_CONCURRENCY_WK_LOAD'
-,user
-,current_timestamp
-
-from
-(
 SELECT
  cast(StartTmHr as date) LogDate
 ,extract(HOUR from StartTmHr) as LogHour
 ,round(avg(PointConcurrency),0) as Concurrency_Avg
 ,max(PointConcurrency) as Concurrency_Peak
+,'CB_DAILY_CONCURRENCY_WK_LOAD'
+,user
+,current_timestamp 
+
+
+
 FROM
   (SELECT
-   cast(SUBSTR(CAST(ClockTick AS  VARCHAR(30)), 1, 14) || '00:00' as timestamp(0))  StartTmHr
+      cast(SUBSTR(CAST(ClockTick AS  VARCHAR(30)), 1, 14) || '00:00' as timestamp(0))  StartTmHr
    , clockTick  /* Every 10 seconds */
    , SUM(QryCount)  PointConcurrency
-     FROM
+   ,(row_number() OVER(PARTITION BY StartTmHr ORDER BY PointConcurrency)- 1) * 100
+                 / COUNT(*) OVER(PARTITION BY StartTmHr) AS Ntile   --Ntile for the 600 10 second samples within the hour
+    FROM
         (  /* the expand  by anchor second clause duplicates the dbql columns for each second between the firststeptime and firstresptime.
             grouping on the second tells us how many concurrent queries were running during that second */
         SELECT   BEGIN(Qper)  ClockTick
         ,cast(SUBSTR(CAST(ClockTick AS  VARCHAR(30)), 1, 17) || '0'  as timestamp(0)) as StartTm10s
         , CAST(1 AS SMALLINT) QryCount
-        , PERIOD(firststeptime,firstresptime+ interval '1' second) QryDurationPeriod
+         , case when   ( firststeptime< firstresptime+ interval '0.001' second)  then  PERIOD(firststeptime,firstresptime + interval '0.001' second) else PERIOD (firststeptime,firstresptime + interval '1' second) end QryDurationPeriod
         FROM pdcrinfo.dbqlogtbl as lg
+	
         WHERE logdate   BETWEEN  {startdate}  AND {enddate}
           AND NumOfActiveAmps >  0
          EXPAND ON QryDurationPeriod AS Qper BY ANCHOR ANCHOR_SECOND
         ) qrylog
-    WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)
+    WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)  /* GIVES 600 POINTS PER 1 HOUR INTERVAL SO NTILE DOESNT HAVE BIG EDGE EFFECT  */
     GROUP BY 1, 2
   ) ex
-GROUP BY 1,2 ) a
-GROUP BY 1
-
-;
+GROUP BY 1,2 ;
 
 
 
---Summary PEAK CONCURRENCY
+--Summary Peak Concurrency
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'PKCONC'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
 ,'PEAK CONCURRENCY'  as METRIC_NAME
-,'PEAK CONCURRENCY' as DASH_METRIC_NAME
-,'PEAK CONCURRENCY' as DASH_METRIC_NAME_SHORT
+,'Peak Concurrency' as DASH_METRIC_NAME
+,'Peak Concurrency' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-,MAX(MaxCon_Peak_Per_hr)  as MEASURE_AMT
+,Max(Concurrency_Peak)  as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
-FROM	CB_DAILY_CONCURRENCY_WK  A
-where A.LOGDATE between {startdate} and {enddate};
+FROM	(
+SELECT	logdate, sum(concurrency_avg) as concurrency_avg ,max(concurrency_peak) as concurrency_peak
+FROM	CB_DAILY_CONCURRENCY_WK
+group by 1)  A
+;
 
 
-
---Summary CONCURRENT USERS
+--Summary Concurrent Users
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'CONCUSER'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
 ,'CONCURRENT USERS'  as METRIC_NAME
-,'CONCURRENT USERS' as DASH_METRIC_NAME
-,'CONCURRENT USERS' as DASH_METRIC_NAME_SHORT
+,'Concurrent Users' as DASH_METRIC_NAME
+,'Concurrent Users' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-,AVG(AvgCon_Avg_Per_hr)  as MEASURE_AMT
+,round(avg(A.concurrency_avg))  as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
-FROM CB_DAILY_CONCURRENCY_WK A
-where A.LOGDATE between {startdate} and {enddate};
+FROM (
+SELECT	logdate, sum(concurrency_avg) as concurrency_avg ,max(concurrency_peak) as concurrency_peak
+FROM	CB_DAILY_CONCURRENCY_WK
+group by 1)  A
+;	
 
 
-CREATE VOLATILE TABLE CB_DAILY_EXTRACT_WK ,FALLBACK ,
+
+
+CREATE MULTISET VOLATILE TABLE CB_DAILY_EXTRACT_WK ,FALLBACK ,
      NO BEFORE JOURNAL,
      NO AFTER JOURNAL,
      CHECKSUM = DEFAULT,
@@ -928,11 +1057,10 @@ CREATE VOLATILE TABLE CB_DAILY_EXTRACT_WK ,FALLBACK ,
       POSSIBLE_PCT_OF_CPU_USED_FOR_EXTRACTS FLOAT,
       JOB_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
       USR_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
-      EDW_START_TSP TIMESTAMP(6) NOT NULL)
-PRIMARY INDEX ( LOGDATE )
-
+      EDW_START_TSP TIMESTAMP(6) NOT NULL
+      )
+PRIMARY INDEX ( LOGDATE ) ON COMMIT PRESERVE ROWS
 ;
-
 
 
 insert into CB_DAILY_EXTRACT_WK
@@ -945,7 +1073,7 @@ SELECT  t1.LOGDATE
 		,SUM(PossExCPU)*100.00/SUM(QueryCPU) as "Possible Pct of CPU Used for Extracts" -- percentage of cpu dedicated to extracts
 		,'CB_DAILY_EXTRACT_WK_LOAD'
 		,user
-		,current_timestamp
+		,current_timestamp 
 	--
 FROM (	SELECT LogDate
 		    , LogIORat
@@ -965,7 +1093,7 @@ FROM (	SELECT LogDate
 		            		else TotalIOCount/(AMPCPUTime *1e3) end  as UII
 		  				From  pdcrinfo.DBQLogTbl_hst
 						where  logdate BETWEEN {startdate} and {enddate}           /* Modify window as desired */
-						-- Since we're looking for high UII< there has to be SOME AMP work involved
+						-- Since were looking for high UII< there has to be SOME AMP work involved
 		  				and NumSteps > 0 and AMPCPUTime > 0e0 and NumOfActiveAMPS > 0
 		  				-- Elminate BAR
 		  				and AppID <> 'DSMAIN' and UserName <> 'MOSDECODE02'
@@ -973,241 +1101,250 @@ FROM (	SELECT LogDate
 		  			Group by 1
 			) extracts
 	) t1
-
+	
 	INNER JOIN CB_DAILY_TCORE_METRICS_RATIO t2
 	ON t1.logdate = t2.logdate
-
-	GROUP BY 1
+	
+	GROUP BY 1 
 ;
 
 
 
 --Summary EXTRACTS
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'EXT'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
 ,'EXTRACTS'  as METRIC_NAME
-,'Extracts' as DASH_METRIC_NAME
-,'Extracts' as DASH_METRIC_NAME_SHORT
+,'Extracts Daily Average' as DASH_METRIC_NAME
+,'Extracts T-Core' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-,SUM(ExtractByTCore)  as MEASURE_AMT
+,AVG(ExtractByTCore)  as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	CB_DAILY_EXTRACT_WK  A
-where A.LOGDATE between {startdate} and {enddate};
+where A.LOGDATE between {startdate} and {enddate};	
 
 
 
 --Summary DATA EGRESS
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'EGRESS'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
 ,'DATA EGRESS'  as METRIC_NAME
-,'Data Egress' as DASH_METRIC_NAME
-,'Data Egress' as DASH_METRIC_NAME_SHORT
+,'Data Egress Daily Average in GB' as DASH_METRIC_NAME
+,'Data Egress (GB)' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-,SUM(DATA_EGRESS)/1099511627776  as MEASURE_AMT
+,AVG(DATA_EGRESS)/1073741824   as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	CB_DAILY_EXTRACT_WK  A
-where A.LOGDATE between {startdate} and {enddate};
+where A.LOGDATE between {startdate} and {enddate};	
 
 
 --Summary DATA INGRESS
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'INGRESS'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
 ,'DATA INGRESS'  as METRIC_NAME
-,'Data Ingress' as DASH_METRIC_NAME
-,'Data Ingress' as DASH_METRIC_NAME_SHORT
+,'Data Ingress Daily Average in GB' as DASH_METRIC_NAME
+,'Data Ingress (GB)' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-,SUM(currentperm)/1099511627776 as MEASURE_AMT
+,AVG(currentperm)/1073741824 as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+  
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	pdcrinfo.TableSpace_Hst A
-where A.LOGDATE between {startdate} and {enddate};
+where A.LOGDATE between {startdate} and {enddate};	
 
 
 
 --Summary STORAGE
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'STORAGE'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'SUMMARY' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
 ,'STORAGE'  as METRIC_NAME
-,'Storage in TB' as DASH_METRIC_NAME
-,'Storage' as DASH_METRIC_NAME_SHORT
+,'Storage Daily Average in TB' as DASH_METRIC_NAME
+,'Storage (TB)' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-, Total_CDS_TB as MEASURE_AMT
+, AVG(AVG_CDS_TB) as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+    
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
 
 FROM	(
 
-
-SELECT
-       sum(Object_cds) as Total_CDS,
-       CAST(ROUND(Total_CDS/1000,0) as INTEGER) as Total_CDS_TB
-    FROM(
-    SELECT CASE
-        WHEN DBKIND = 'U' THEN 'User'
-        WHEN DBKIND = 'D' THEN 'Database'
-        ELSE 'Misc'
-        END  Object_type,
+SELECT logdate, 
+       AVG(Object_cds) as Total_CDS,
+       CAST((Total_CDS/1000.00) as float) as AVG_CDS_TB
+    FROM( 
+    SELECT 
+	    b.logdate,
         b.databasename as Object_name,
-        1442833.9 AS CurrentPerm_Threshold,
-        601180.8 AS system_CDS,
+        {currentpermThreshold} AS CurrentPerm_Threshold,
+        {systemcds}  AS system_CDS,
         CAST(SUM(a.CurrentPerm) AS FLOAT)/1000/1000/1000 AS Object_CurrentPerm_GB,
         CAST(((Object_CurrentPerm_GB/CurrentPerm_Threshold)*System_CDS) AS Float) AS Object_CDS
         FROM dbc.diskspace a
-        JOIN dbc.databases b
+	    JOIN pdcrinfo.DatabaseSpace_Hst b
         ON a.databasename=b.databasename
+		where LOGDATE between {startdate} and {enddate}
         GROUP BY 1,2,3,4) cds
+		
+		group by 1
+		
  ) A
-;
+;	
 
 
-
-CREATE VOLATILE TABLE CB_DAILY_UTIL_WK ,FALLBACK ,
+--UTIL 
+CREATE MULTISET VOLATILE TABLE CB_DAILY_UTIL_WK ,FALLBACK ,
      NO BEFORE JOURNAL,
      NO AFTER JOURNAL,
      CHECKSUM = DEFAULT,
      DEFAULT MERGEBLOCKRATIO,
-     MAP = TD_MAP1
+     MAP = TD_MAP2
      (
-      TTL BIGINT,
-      ANSW BIGINT,
-      MAIN BIGINT,
-      ETL BIGINT,
-      SYSPROC BIGINT,
+      TTL DECIMAL(28,10),
+      ANSW DECIMAL(28,10),
+      MAIN DECIMAL(28,10),
+      ETL DECIMAL(28,10),
+      SYSPROC DECIMAL(28,10),
+	  TTLWD DECIMAL(28,10),
+	  ADHOC DECIMAL(28,10),
+	  BI DECIMAL(28,10),
+	  D3 DECIMAL(28,10),
+	  ETLWD DECIMAL(28,10),
+	  API DECIMAL(28,10),
+	  SYSMGMT DECIMAL(28,10),
       JOB_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
       USR_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
       EDW_START_TSP TIMESTAMP(6) NOT NULL)
-NO PRIMARY INDEX ;
-
+PRIMARY INDEX ( TTL ) ON COMMIT PRESERVE ROWS
+;
 
 insert into CB_DAILY_UTIL_WK
 select
-(select cast(count(distinct queryid) as bigint) as ttl from
+(select sum(cast(TCOREUSAGE as dec(15,5))) as ttl from 
 CB_DAILY_QUERY_METRICS
 where logdate between {startdate} and {enddate}
 ) as ttl
-,(select cast(count(distinct queryid) as bigint) as answ from
+,(select sum(cast(TCOREUSAGE as dec(15,5))) as answ from 
 CB_DAILY_QUERY_METRICS
 where statementtype in ('select')
-and logdate between {startdate} and {enddate}) as Answ
-,(select cast(count(distinct queryid) as bigint) as Main from
+and logdate between {startdate} and {enddate}
+) as Answ
+,(select sum(cast(TCOREUSAGE as dec(15,5))) as Main from 
 CB_DAILY_QUERY_METRICS
 where statementtype  in ('collect statistics')
-and logdate between{startdate} and {enddate}) as Main
+and logdate between {startdate} and {enddate}
+) as Main
 
-,(select cast(count(distinct queryid) as bigint) as ETL from
+,(select sum(cast(TCOREUSAGE as dec(15,5))) as ETL from 
 CB_DAILY_QUERY_METRICS
 where statementtype  in (
  'Merge Into'
@@ -1223,11 +1360,52 @@ where statementtype  in (
 ,'Begin Mload'
 ,'Execute Mload'
 ,'Commit Work'
+,'GOLDEN GATE'
 )
-and logdate between{startdate} and {enddate}) as ETL
+and logdate between {startdate} and {enddate}
+) as ETL
 
 
 ,cast(ttl - Answ - Main - ETL as bigint) as SysProc
+
+
+,(select sum(cast(TCOREUSAGE as dec(15,5))) as TTLWD from 
+CB_DAILY_QUERY_METRICS
+where logdate between {startdate} and {enddate}
+) as TTLWD
+
+,(select sum(cast(TCOREUSAGE as dec(15,5))) as AdHoc from 
+CB_DAILY_QUERY_METRICS
+where FinalWDName like any ('%Adhoc%','%DSC%', '%Ops%', '%Users%', '%Sandbox%')
+and logdate between {startdate} and {enddate}
+) as AdHoc
+
+,(select sum(cast(TCOREUSAGE as dec(15,5))) as BI from 
+CB_DAILY_QUERY_METRICS
+where FinalWDName like any ('%CSR%', '%RPT%')
+and logdate between {startdate} and {enddate}
+) as BI
+
+,(select sum(cast(TCOREUSAGE as dec(15,5))) as D3 from 
+CB_DAILY_QUERY_METRICS
+where FinalWDName like any ('%D3%')
+and logdate between {startdate} and {enddate}
+) as D3
+
+,(select sum(cast(TCOREUSAGE as dec(15,5))) as ETLWD from 
+CB_DAILY_QUERY_METRICS
+where FinalWDName like any ('%ETL%', '%Utils%', '%TPUMPs%')
+and logdate between {startdate} and {enddate}
+) as ETLWD
+
+,(select sum(cast(TCOREUSAGE as dec(15,5))) as API from 
+CB_DAILY_QUERY_METRICS
+where FinalWDName like any ('%REST%', '%Web%')
+and logdate between {startdate} and {enddate}
+) as API
+
+,cast(TTLWD - AdHoc - BI - D3 - ETLWD - API as bigint) as SysMgmt
+
 ,'CB_DAILY_UTIL_WK_LOAD'
 ,user
 ,current_timestamp
@@ -1235,31 +1413,31 @@ and logdate between{startdate} and {enddate}) as ETL
 ;
 
 
---UTILIZATION Answers
+--UTILIZATION Answers   
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'ANSW'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'UTILIZATION' as AGGREGATE_LEVEL
 ,Null as AGGREGATE_NAME
@@ -1269,40 +1447,40 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 ,'' as DASH_METRIC_DESC
 ,Answ as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+	
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
-FROM	CB_DAILY_UTIL_WK
+FROM	CB_DAILY_UTIL_WK 
 ;
 
 
 
 
---UTILIZATION UTIL INGEST ETL
+--UTILIZATION UTIL INGEST ETL   
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'ETL'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'UTILIZATION' as AGGREGATE_LEVEL
 ,NULL as AGGREGATE_NAME
@@ -1312,41 +1490,41 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 ,'' as DASH_METRIC_DESC
 ,ETL as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+	
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
-FROM	CB_DAILY_UTIL_WK
+FROM	CB_DAILY_UTIL_WK 
 ;
 
 
 
 
 
---UTILIZATION UTIL MAINTENANCE
+--UTILIZATION UTIL MAINTENANCE   
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'MAIN'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'UTILIZATION' as AGGREGATE_LEVEL
 ,NULL as AGGREGATE_NAME
@@ -1356,58 +1534,305 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 ,'' as DASH_METRIC_DESC
 ,Main as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+	
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
-FROM	CB_DAILY_UTIL_WK
+FROM	CB_DAILY_UTIL_WK 
 ;
 
 
 
 
---UTILIZATION UTIL System/Procedural
+--UTILIZATION UTIL System/Procedural   
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,'SysProc'
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'UTILIZATION' as AGGREGATE_LEVEL
 ,NULL as AGGREGATE_NAME
-,'UTIL System/Procedural'  as METRIC_NAME
+,'UTIL SYSTEM/PROCEDURAL'  as METRIC_NAME
 ,'System/Procedural' as DASH_METRIC_NAME
 ,'System/Procedural' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
 ,SysProc as MEASURE_AMT
 ,0 as BENCHMARK_AMT,
-
+	
 	null as COMPLEXITY_SCORE,
 	null as NBR_ACTIVE_USERS
-FROM	CB_DAILY_UTIL_WK
+FROM	CB_DAILY_UTIL_WK 
 ;
 
 
 
-CREATE VOLATILE TABLE CB_DAILY_DEPT_WK ,FALLBACK ,
+--UTILIZATION Workload AdHoc   
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
+ {daterange} as DateRange
+,'AdHoc'
+,{startdate} as Date_Start
+,{enddate} as Date_End
+,case when ({daterange} = 1) then (select  
+	case when (day_of_week = 1) then 'SUN'
+	 when (day_of_week = 2) then 'MON'
+	 when (day_of_week = 3) then 'TUE'
+	 when (day_of_week = 4) then 'WED'
+	 when (day_of_week = 5) then 'THU'
+	 when (day_of_week = 6) then 'FRI'
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
+	  when ({daterange} = 3) then 'MONTH'
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
+	  END as DASH_DATE_LEVEL
+	  
+,case when ({daterange} = 1) then 'LW'
+	  when ({daterange} = 3) then 'LM'
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
+	  END as DASH_DATE_LABEL
+,'UTILIZATION' as AGGREGATE_LEVEL
+,'Ad-Hoc' as AGGREGATE_NAME
+,'UTIL WORKLOAD TCORE'  as METRIC_NAME
+,'Workload T-Core Usage ' as DASH_METRIC_NAME
+,'Workload T-Core' as DASH_METRIC_NAME_SHORT
+,'' as DASH_METRIC_DESC
+,AdHoc as MEASURE_AMT
+,0 as BENCHMARK_AMT,
+	
+	null as COMPLEXITY_SCORE,
+	null as NBR_ACTIVE_USERS
+FROM	CB_DAILY_UTIL_WK 
+;
+
+
+--UTILIZATION Workload BI   
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
+ {daterange} as DateRange
+,'BI'
+,{startdate} as Date_Start
+,{enddate} as Date_End
+,case when ({daterange} = 1) then (select  
+	case when (day_of_week = 1) then 'SUN'
+	 when (day_of_week = 2) then 'MON'
+	 when (day_of_week = 3) then 'TUE'
+	 when (day_of_week = 4) then 'WED'
+	 when (day_of_week = 5) then 'THU'
+	 when (day_of_week = 6) then 'FRI'
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
+	  when ({daterange} = 3) then 'MONTH'
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
+	  END as DASH_DATE_LEVEL
+	  
+,case when ({daterange} = 1) then 'LW'
+	  when ({daterange} = 3) then 'LM'
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
+	  END as DASH_DATE_LABEL
+,'UTILIZATION' as AGGREGATE_LEVEL
+,'BI' as AGGREGATE_NAME
+,'UTIL WORKLOAD TCORE'  as METRIC_NAME
+,'Workload T-Core Usage ' as DASH_METRIC_NAME
+,'Workload T-Core' as DASH_METRIC_NAME_SHORT
+,'' as DASH_METRIC_DESC
+,BI as MEASURE_AMT
+,0 as BENCHMARK_AMT,
+	
+	null as COMPLEXITY_SCORE,
+	null as NBR_ACTIVE_USERS
+FROM	CB_DAILY_UTIL_WK 
+;
+
+
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
+ {daterange} as DateRange
+,'D3'
+,{startdate} as Date_Start
+,{enddate} as Date_End
+,case when ({daterange} = 1) then (select  
+	case when (day_of_week = 1) then 'SUN'
+	 when (day_of_week = 2) then 'MON'
+	 when (day_of_week = 3) then 'TUE'
+	 when (day_of_week = 4) then 'WED'
+	 when (day_of_week = 5) then 'THU'
+	 when (day_of_week = 6) then 'FRI'
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
+	  when ({daterange} = 3) then 'MONTH'
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
+	  END as DASH_DATE_LEVEL
+	  
+,case when ({daterange} = 1) then 'LW'
+	  when ({daterange} = 3) then 'LM'
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
+	  END as DASH_DATE_LABEL
+,'UTILIZATION' as AGGREGATE_LEVEL
+,'D3' as AGGREGATE_NAME
+,'UTIL WORKLOAD TCORE'  as METRIC_NAME
+,'Workload T-Core Usage ' as DASH_METRIC_NAME
+,'Workload T-Core' as DASH_METRIC_NAME_SHORT
+,'' as DASH_METRIC_DESC
+,D3 as MEASURE_AMT
+,0 as BENCHMARK_AMT,
+	
+	null as COMPLEXITY_SCORE,
+	null as NBR_ACTIVE_USERS
+FROM	CB_DAILY_UTIL_WK 
+;
+
+
+
+
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
+ {daterange} as DateRange
+,'ETLWD'
+,{startdate} as Date_Start
+,{enddate} as Date_End
+,case when ({daterange} = 1) then (select  
+	case when (day_of_week = 1) then 'SUN'
+	 when (day_of_week = 2) then 'MON'
+	 when (day_of_week = 3) then 'TUE'
+	 when (day_of_week = 4) then 'WED'
+	 when (day_of_week = 5) then 'THU'
+	 when (day_of_week = 6) then 'FRI'
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
+	  when ({daterange} = 3) then 'MONTH'
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
+	  END as DASH_DATE_LEVEL
+	  
+,case when ({daterange} = 1) then 'LW'
+	  when ({daterange} = 3) then 'LM'
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
+	  END as DASH_DATE_LABEL
+,'UTILIZATION' as AGGREGATE_LEVEL
+,'ETL' as AGGREGATE_NAME
+,'UTIL WORKLOAD TCORE'  as METRIC_NAME
+,'Workload T-Core Usage ' as DASH_METRIC_NAME
+,'Workload T-Core' as DASH_METRIC_NAME_SHORT
+,'' as DASH_METRIC_DESC
+,ETLWD as MEASURE_AMT
+,0 as BENCHMARK_AMT,
+	
+	null as COMPLEXITY_SCORE,
+	null as NBR_ACTIVE_USERS
+FROM	CB_DAILY_UTIL_WK 
+;
+
+
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
+ {daterange} as DateRange
+,'API'
+,{startdate} as Date_Start
+,{enddate} as Date_End
+,case when ({daterange} = 1) then (select  
+	case when (day_of_week = 1) then 'SUN'
+	 when (day_of_week = 2) then 'MON'
+	 when (day_of_week = 3) then 'TUE'
+	 when (day_of_week = 4) then 'WED'
+	 when (day_of_week = 5) then 'THU'
+	 when (day_of_week = 6) then 'FRI'
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
+	  when ({daterange} = 3) then 'MONTH'
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
+	  END as DASH_DATE_LEVEL
+	  
+,case when ({daterange} = 1) then 'LW'
+	  when ({daterange} = 3) then 'LM'
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
+	  END as DASH_DATE_LABEL
+,'UTILIZATION' as AGGREGATE_LEVEL
+,'API' as AGGREGATE_NAME
+,'UTIL WORKLOAD TCORE'  as METRIC_NAME
+,'Workload T-Core Usage ' as DASH_METRIC_NAME
+,'Workload T-Core' as DASH_METRIC_NAME_SHORT
+,'' as DASH_METRIC_DESC
+,API as MEASURE_AMT
+,0 as BENCHMARK_AMT,
+	
+	null as COMPLEXITY_SCORE,
+	null as NBR_ACTIVE_USERS
+FROM	CB_DAILY_UTIL_WK 
+;
+
+
+
+
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
+ {daterange} as DateRange
+,'SysMgmt'
+,{startdate} as Date_Start
+,{enddate} as Date_End
+,case when ({daterange} = 1) then (select  
+	case when (day_of_week = 1) then 'SUN'
+	 when (day_of_week = 2) then 'MON'
+	 when (day_of_week = 3) then 'TUE'
+	 when (day_of_week = 4) then 'WED'
+	 when (day_of_week = 5) then 'THU'
+	 when (day_of_week = 6) then 'FRI'
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
+	  when ({daterange} = 3) then 'MONTH'
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
+	  END as DASH_DATE_LEVEL
+	  
+,case when ({daterange} = 1) then 'LW'
+	  when ({daterange} = 3) then 'LM'
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
+	  END as DASH_DATE_LABEL
+,'UTILIZATION' as AGGREGATE_LEVEL
+,'Sys-Mgmt' as AGGREGATE_NAME
+,'UTIL WORKLOAD TCORE'  as METRIC_NAME
+,'Workload T-Core Usage ' as DASH_METRIC_NAME
+,'Workload T-Core' as DASH_METRIC_NAME_SHORT
+,'' as DASH_METRIC_DESC
+,SysMgmt as MEASURE_AMT
+,0 as BENCHMARK_AMT,
+	
+	null as COMPLEXITY_SCORE,
+	null as NBR_ACTIVE_USERS
+FROM	CB_DAILY_UTIL_WK 
+;
+
+--DEPT
+
+CREATE MULTISET VOLATILE TABLE CB_DAILY_DEPT_WK ,FALLBACK ,
      NO BEFORE JOURNAL,
      NO AFTER JOURNAL,
      CHECKSUM = DEFAULT,
@@ -1421,10 +1846,10 @@ CREATE VOLATILE TABLE CB_DAILY_DEPT_WK ,FALLBACK ,
       COMPLEXITYSCOREPERUSER DECIMAL(38,5),
       JOB_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
       USR_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
-      EDW_START_TSP TIMESTAMP(6) NOT NULL)
-NO PRIMARY INDEX ;
-
-
+      EDW_START_TSP TIMESTAMP(6) NOT NULL
+      )
+NO PRIMARY INDEX ON COMMIT PRESERVE ROWS
+;
 
 
 Insert into CB_DAILY_DEPT_WK
@@ -1433,16 +1858,16 @@ DEPARTMENT,
 ActiveUser,
 TCoreUsage,
 ComplexityLevel,
-ComplexityLevel/ActiveUser,
+ComplexityLevel/NULLIFZERO(ActiveUser),
 'CB_DAILY_DEPT_WK_LOAD',
 USER,
 current_timestamp
-from
+from 
 (
 select DEPARTMENT,
 count(distinct Username) as ActiveUser,
 sum(ComplexityLevel) as ComplexityLevel,
-sum(cast(TCoreUsage as dec(25,5))) as TCoreUsage
+sum(cast(TCoreUsage as dec(38,10))) as TCoreUsage
 FROM	CB_DAILY_QUERY_METRICS
 where LOGDATE between {startdate} and {enddate}
 group by 1
@@ -1451,98 +1876,184 @@ group by 1
 
 
 
-
-
-
-
---DEPT RESOURCE SHARING  (TCORE HR TOTAL)
+--DEPT (Resource Sharing) 
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,b.DEPARTMENT
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'DEPT' as AGGREGATE_LEVEL
 ,b.DEPARTMENT as AGGREGATE_NAME
-,'TCORE HR TOTAL'  as METRIC_NAME
-,'TCORE HR TOTAL' as DASH_METRIC_NAME
-,'TCORE HR TOTAL' as DASH_METRIC_NAME_SHORT
+,'RESOURCE SHARING'  as METRIC_NAME
+,'Resource Sharing' as DASH_METRIC_NAME
+,'Resource Sharing' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-,b.TCoreUsage as MEASURE_AMT
+,b.TCoreUsage / (select sum(TCoreUsage) from CB_DAILY_DEPT_WK)  as MEASURE_AMT
 ,0 as BENCHMARK_AMT
 ,NULL as COMPLEXITY_SCORE
 ,Null as NBR_ACTIVE_USERS
 FROM (
 
 
-	select
+	select 
 	DEPARTMENT,
 	TCoreUsage
-	from
+	from 
 	(
 			Select
 			DEPARTMENT,
-			sum(cast(TCoreUsage as dec(15,2))) as TCoreUsage
+			sum(cast(TCoreUsage as dec(38,10))) as TCoreUsage
 			from CB_DAILY_QUERY_METRICS A
-			where a.logdate between {startdate} and {enddate}
+			where a.logdate between {startdate} and {enddate} 
 			group by 1
-
+	
 	) a
-
+	
+	
+	
+	
 ) b;
 
 
 
---DEPT RESOURCE SHARING  (ACTIVE USERS)
+
+--DEPT (TCORE HR TOTAL)
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,b.DEPARTMENT
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
+	  END as DASH_DATE_LABEL
+,'DEPT' as AGGREGATE_LEVEL
+,b.DEPARTMENT as AGGREGATE_NAME
+,'TCORE HR TOTAL'  as METRIC_NAME
+,'T-Core Hours Total' as DASH_METRIC_NAME
+,'Total' as DASH_METRIC_NAME_SHORT
+,'' as DASH_METRIC_DESC
+,cast(b.TCoreUsage as dec(38,10)) as MEASURE_AMT
+,B.TCORE_BUDGET_HOURS as BENCHMARK_AMT
+,NULL as COMPLEXITY_SCORE
+,Null as NBR_ACTIVE_USERS
+FROM (
+
+
+	select 
+	DEPARTMENT,
+	TCoreUsage,
+	{tcorebudget} as TCORE_BUDGET_HOURS
+	from 
+	(
+			Select
+			DEPARTMENT,
+			sum(cast(TCoreUsage as dec(38,10))) as TCoreUsage
+			from CB_DAILY_QUERY_METRICS A
+			where a.logdate between {startdate} and {enddate} 
+			group by 1
+	
+	) a
+	
+	
+	
+	left outer join 
+
+ (
+select 50000 as TCORE_BUDGET_HOURS
+/*select sum(TCORE_BUDGET_HOURS) as TCORE_BUDGET_HOURS
+from CB_DIM_BUDGET_REF 
+where START_DT >= 
+
+(   
+    case when {daterange} between 1 and 4 then (select  MonthBegin from CB_DIM_BusinessCalendar where calendar_date = {startdate})
+	     when {daterange} between 5 and 6 then (select  ADD_MONTHS(QuarterBegin, (SELECT cast(COLUMNVALUE as int) FROM  CB_DIM_CONSTANT_REF WHERE COLUMNNAME='QTR_OFFSET')) from CB_DIM_BusinessCalendar where calendar_date = {startdate})
+	else {startdate} end)
+
+and END_DT <= 
+(     
+	case  when {daterange} between 1 and 4 then (select monthend from CB_DIM_BusinessCalendar where calendar_date = {enddate})
+		  when {daterange} between 5 and 6 then (select monthend from CB_DIM_BusinessCalendar where calendar_date in  (select ADD_MONTHS(QuarterEnd, (SELECT cast(COLUMNVALUE as int) FROM  CB_DIM_CONSTANT_REF WHERE COLUMNNAME='QTR_OFFSET')) from CB_DIM_BusinessCalendar where calendar_date = {enddate}))
+	else {enddate} end)*/
+ ) B
+
+	on 1=1
+	
+	
+) b;
+
+
+
+
+
+
+--DEPT  (Active Users) 
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
+ {daterange} as DateRange
+,b.DEPARTMENT
+,{startdate} as Date_Start
+,{enddate} as Date_End
+,case when ({daterange} = 1) then (select  
+	case when (day_of_week = 1) then 'SUN'
+	 when (day_of_week = 2) then 'MON'
+	 when (day_of_week = 3) then 'TUE'
+	 when (day_of_week = 4) then 'WED'
+	 when (day_of_week = 5) then 'THU'
+	 when (day_of_week = 6) then 'FRI'
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
+	  when ({daterange} = 3) then 'MONTH'
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
+	  END as DASH_DATE_LEVEL
+	  
+,case when ({daterange} = 1) then 'LW'
+	  when ({daterange} = 3) then 'LM'
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'DEPT' as AGGREGATE_LEVEL
 ,b.DEPARTMENT as AGGREGATE_NAME
 ,'ACTIVE USERS'  as METRIC_NAME
-,'ACTIVE USERS' as DASH_METRIC_NAME
-,'ACTIVE USERS' as DASH_METRIC_NAME_SHORT
+,'Active Users' as DASH_METRIC_NAME
+,'Active Users' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
 ,b.ActiveUser as MEASURE_AMT
 ,0 as BENCHMARK_AMT
@@ -1551,53 +2062,53 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 FROM (
 
 
-	select
+	select 
 	DEPARTMENT,
 	ActiveUser
-	from
+	from 
 	(
 			Select
 			DEPARTMENT,
 			count(distinct userid) as ActiveUser
 			from CB_DAILY_QUERY_METRICS A
-			where A.LOGDATE between {startdate} and {enddate}
+			where A.LOGDATE between {startdate} and {enddate} 
 			group by 1
-
+	
 	) a
 ) b;
 
 
---DEPT RESOURCE SHARING  (NBR QUERIES)
+--DEPT  (Nbr Queries) 
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,b.DEPARTMENT
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'DEPT' as AGGREGATE_LEVEL
 ,b.DEPARTMENT as AGGREGATE_NAME
 ,'NBR QUERIES'  as METRIC_NAME
-,'NBR QUERIES' as DASH_METRIC_NAME
-,'NBR QUERIES' as DASH_METRIC_NAME_SHORT
+,'Number of Queries' as DASH_METRIC_NAME
+,'Queries' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
 ,cast(b.QueryNum  as bigint)as MEASURE_AMT
 ,0 as BENCHMARK_AMT
@@ -1606,55 +2117,100 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 FROM (
 
 
-	select
+	select 
 	DEPARTMENT,
 	QueryNum
-	from
+	from 
 	(
 			Select
 			DEPARTMENT,
 			count(distinct queryid) as QueryNum
 			from CB_DAILY_QUERY_METRICS A
 			where A.LOGDATE between {startdate} and {enddate}
+			and queryid > 0			
 			group by 1
-
+	
 	) a
 ) b;
 
 
---DEPT RESOURCE SHARING  (PEAK CONCURRENCY and AvgConcurry Worktable)
 
-CREATE VOLATILE TABLE CB_DAILY_CONCURRENCY_DEPT_WK ,FALLBACK ,
-     NO BEFORE JOURNAL,
-     NO AFTER JOURNAL,
-     CHECKSUM = DEFAULT,
-     DEFAULT MERGEBLOCKRATIO,
-     MAP = TD_MAP1
-     (
-      DEPARTMENT VARCHAR(255) CHARACTER SET UNICODE NOT CASESPECIFIC,
-      CONCURRENCY_PEAK INTEGER,
-      CONCURRENCY_AVG FLOAT,
-      JOB_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
-      USR_NM VARCHAR(40) CHARACTER SET UNICODE NOT CASESPECIFIC NOT NULL,
-      EDW_START_TSP TIMESTAMP(6) NOT NULL)
-PRIMARY INDEX ( DEPARTMENT );
+--DEPT  (NBR QUERIES GT1) 
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
+ {daterange} as DateRange
+,b.DEPARTMENT
+,{startdate} as Date_Start
+,{enddate} as Date_End
+,case when ({daterange} = 1) then (select  
+	case when (day_of_week = 1) then 'SUN'
+	 when (day_of_week = 2) then 'MON'
+	 when (day_of_week = 3) then 'TUE'
+	 when (day_of_week = 4) then 'WED'
+	 when (day_of_week = 5) then 'THU'
+	 when (day_of_week = 6) then 'FRI'
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
+	  when ({daterange} = 3) then 'MONTH'
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
+	  END as DASH_DATE_LEVEL
+	  
+,case when ({daterange} = 1) then 'LW'
+	  when ({daterange} = 3) then 'LM'
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
+	  END as DASH_DATE_LABEL
+,'DEPT' as AGGREGATE_LEVEL
+,b.DEPARTMENT as AGGREGATE_NAME
+,'NBR QUERIES GT1'  as METRIC_NAME
+,'# Queries > 1 CPU Second' as DASH_METRIC_NAME
+,'# Queries >1CPU' as DASH_METRIC_NAME_SHORT
+,'' as DASH_METRIC_DESC
+,cast(b.QueryNum  as bigint)as MEASURE_AMT
+,0 as BENCHMARK_AMT
+,NULL as COMPLEXITY_SCORE
+,NULL NBR_ACTIVE_USERS
+FROM (
+
+
+	select 
+	DEPARTMENT,
+	QueryNum
+	from 
+	(
+			Select
+			DEPARTMENT,
+			count(distinct queryid) as QueryNum
+			from CB_DAILY_QUERY_METRICS A
+			where A.LOGDATE between {startdate} and {enddate}
+			and queryid > 0	
+			and TotalCpu >= 1	
+			group by 1
+	
+	) a
+) b;
 
 
 
-insert into CB_DAILY_CONCURRENCY_DEPT_WK
-select
-DEPARTMENT,
-Max(PointConcurrency) as Concurrency_Peak,
-round(avg(PointConcurrency),0) as Concurrency_Avg,
-'CB_DAILY_SUMMARY_CURR_PREV_LOAD',
-user,
-current_timestamp
 
-from
+
+--DEPT  (Peak Concurrency and AvgConcurry Worktable)
+
+CREATE MULTISET VOLATILE TABLE CB_DAILY_CONCURRENCY_DEPT_WK AS
 (
-  SELECT
-
-   DEPARTMENT,
+SELECT
+DEPARTMENT
+,cast(StartTmHr as date) LogDate
+,extract(HOUR from StartTmHr) as LogHour
+,round(avg(PointConcurrency),0) as Concurrency_Avg
+,max(PointConcurrency) as Concurrency_Peak
+,'CB_DAILY_SUMMARY_CURR_PREV_LOAD' AS JOB_NM
+,user AS USR_NM
+,current_timestamp AS EDW_START_TSP
+FROM
+  (SELECT
+   User_DEPARTMENT as Department,
    cast(SUBSTR(CAST(ClockTick AS  VARCHAR(30)), 1, 14) || '00:00' as timestamp(0))  StartTmHr
    , clockTick  /* Every 10 seconds */
    , SUM(QryCount)  PointConcurrency
@@ -1663,149 +2219,150 @@ from
     FROM
         (  /* the expand  by anchor second clause duplicates the dbql columns for each second between the firststeptime and firstresptime.
             grouping on the second tells us how many concurrent queries were running during that second */
-     SELECT
-            BEGIN(Qper)  ClockTick
-            ,cast(SUBSTR(CAST(ClockTick AS  VARCHAR(30)), 1, 17) || '0'  as timestamp(0)) as StartTm10s
-            ,CAST(1 AS SMALLINT) QryCount
-            ,PERIOD(firststeptime,firstresptime+ interval '1' second) QryDurationPeriod
-
-            ,coalesce(QM.DEPARTMENT,'Unknown') as DEPARTMENT
-
-        FROM
-            pdcrinfo.dbqlogtbl as lg
-
-			left outer join CA_USER_XREF QM
-
-		on LG.USERNAME = QM.username
-
-
-
-
-        WHERE
-            LG.logdate  between {startdate} and {enddate}      --- CHANGE DATE RANGE WITH MACRO PARAMETERS
+        SELECT   BEGIN(Qper)  ClockTick
+    ,User_DEPARTMENT
+        ,cast(SUBSTR(CAST(ClockTick AS  VARCHAR(30)), 1, 17) || '0'  as timestamp(0)) as StartTm10s
+        , CAST(1 AS SMALLINT) QryCount
+        , PERIOD(firststeptime,firstresptime+ interval '0.001' second) QryDurationPeriod
+        FROM pdcrinfo.dbqlogtbl as lg
+              
+      left outer join dim_user QM
+  
+    on LG.USERNAME = QM.username    
+    
+    
+    
+        WHERE logdate   BETWEEN  '2020-09-01'  AND '2020-09-14'
           AND NumOfActiveAmps >  0
-          --AND QM.DEPARTMENT = 'ACCOUNTING'
-
-
          EXPAND ON QryDurationPeriod AS Qper BY ANCHOR ANCHOR_SECOND
-
         ) qrylog
-    WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)  /* GIVES 600 POINTS PER 1 HOUR INTERVAL SO NTILE DOESN'T HAVE BIG EDGE EFFECT  */
-    GROUP BY 1, 2,3
-) a
-group by 1
-;
+    WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)  /* GIVES 600 POINTS PER 1 HOUR INTERVAL SO NTILE DOESNT HAVE BIG EDGE EFFECT  */
+    GROUP BY 1, 2, 3
+  ) ex
+GROUP BY 1,2,3
+) WITH DATA
+PRIMARY INDEX(DEPARTMENT,LOGDATE) ON COMMIT PRESERVE ROWS;
 
-----DEPT RESOURCE SHARING  (PEAK CONCURRENCY)
+----DEPT  (Peak Concurrency) 
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,b.DEPARTMENT
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'DEPT' as AGGREGATE_LEVEL
 ,b.DEPARTMENT as AGGREGATE_NAME
 ,'PEAK CONCURRENCY'  as METRIC_NAME
-,'PEAK CONCURRENCY' as DASH_METRIC_NAME
-,'PEAK CONCURRENCY' as DASH_METRIC_NAME_SHORT
+,'Peak Concurrency' as DASH_METRIC_NAME
+,'Peak Concurrency' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-,b.Concurrency_Peak as MEASURE_AMT
+,MAX(b.Concurrency_Peak) as MEASURE_AMT
 ,0 as BENCHMARK_AMT
 ,NULL as COMPLEXITY_SCORE
 ,NULL NBR_ACTIVE_USERS
-FROM CB_DAILY_CONCURRENCY_DEPT_WK b;
+FROM 
+(
+SELECT	logdate, DEPARTMENT,max(concurrency_peak) as concurrency_peak
+FROM	CB_DAILY_CONCURRENCY_DEPT_WK
+group by 1,2
+) b
+GROUP BY DEPARTMENT;
 
-----DEPT RESOURCE SHARING  (CONCURRENT USERS)
-insert into  CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+----DEPT  (Concurrent Users) 
+insert into CB_DAILY_SUMMARY_CURR_PREV_WK
+SELECT  
  {daterange} as DateRange
 ,b.DEPARTMENT
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'DEPT' as AGGREGATE_LEVEL
 ,b.DEPARTMENT as AGGREGATE_NAME
 ,'CONCURRENT USERS'  as METRIC_NAME
-,'CONCURRENT USERS' as DASH_METRIC_NAME
-,'CONCURRENT USERS' as DASH_METRIC_NAME_SHORT
+,'Concurrent Users' as DASH_METRIC_NAME
+,'Concurrent Users' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
-,b.Concurrency_Avg as MEASURE_AMT
+,round(avg(b.concurrency_avg))  as MEASURE_AMT
 ,0 as BENCHMARK_AMT
 ,NULL as COMPLEXITY_SCORE
 ,NULL NBR_ACTIVE_USERS
-FROM CB_DAILY_CONCURRENCY_DEPT_WK b;
+FROM (
+SELECT	logdate, DEPARTMENT, sum(concurrency_avg) as concurrency_avg 
+FROM	CB_DAILY_CONCURRENCY_DEPT_WK
+group by 1,2) b
+GROUP BY DEPARTMENT;
 
 
 
 
---DEPT RESOURCE SHARING  (COMPLEXITY SCORE)
+--DEPT  (Complexity Score) 
 insert into CB_DAILY_SUMMARY_CURR_PREV_WK
-SELECT
+SELECT  
  {daterange} as DateRange
 ,b.DEPARTMENT
 ,{startdate} as Date_Start
 ,{enddate} as Date_End
-,case when ({daterange} = 1) then (select
+,case when ({daterange} = 1) then (select  
 	case when (day_of_week = 1) then 'SUN'
 	 when (day_of_week = 2) then 'MON'
 	 when (day_of_week = 3) then 'TUE'
 	 when (day_of_week = 4) then 'WED'
-	 when (day_of_week = 5) then 'THUR'
+	 when (day_of_week = 5) then 'THU'
 	 when (day_of_week = 6) then 'FRI'
-	 ELSE  'SAT' END
-from Sys_Calendar.CALENDAR where calendar_date = {enddate})
+	 ELSE  'SAT' END 
+from sys_calendar.BusinessCalendar where calendar_date = {enddate})
 	  when ({daterange} = 3) then 'MONTH'
-	  when ({daterange} = 5) then 'QTR'
-	  Else ''
+	  when ({daterange} = 5) then 'QTR' 
+	  Else '' 
 	  END as DASH_DATE_LEVEL
-
+	  
 ,case when ({daterange} = 1) then 'LW'
 	  when ({daterange} = 3) then 'LM'
-	  when ({daterange} = 5) then 'LQ'
-	  Else ''
+	  when ({daterange} = 5) then 'LQ' 
+	  Else '' 
 	  END as DASH_DATE_LABEL
 ,'DEPT' as AGGREGATE_LEVEL
 ,b.DEPARTMENT as AGGREGATE_NAME
 ,'COMPLEXITY SCORE'  as METRIC_NAME
-,'COMPLEXITY SCORE' as DASH_METRIC_NAME
-,'COMPLEXITY SCORE' as DASH_METRIC_NAME_SHORT
+,'Complexity Score' as DASH_METRIC_NAME
+,'Complexity' as DASH_METRIC_NAME_SHORT
 ,'' as DASH_METRIC_DESC
 ,b.ComplexityLevel as MEASURE_AMT
 ,0 as BENCHMARK_AMT
@@ -1814,31 +2371,53 @@ from Sys_Calendar.CALENDAR where calendar_date = {enddate})
 FROM (
 
 
-	select
+	select 
 	DEPARTMENT,
-	case when (ComplexityScore between .8 and 1 ) then 4
-		when (ComplexityScore between .6 and .8 ) then 3
-		when (ComplexityScore between .4 and .6 ) then 2
-		when (ComplexityScore between .4 and .2 ) then 1
+	case when (ComplexityScore > .5 ) then 4
+		when (ComplexityScore between .3 and .5 ) then 3
+		when (ComplexityScore between .05 and .2 ) then 2
+		when (ComplexityScore > 0 ) then 1
 		else 0 end as ComplexityLevel
-	from
+	from 
 	(
 			Select
 			DEPARTMENT,
 			(ComplexityScorePerUser - minComplexityScorePerUser) / nullif ((maxComplexityScorePerUser - minComplexityScorePerUser),0) as ComplexityScore
-
+			
 			from CB_DAILY_DEPT_WK A
-			inner join (select max(ComplexityScorePerUser) as maxComplexityScorePerUser,
+			inner join (select max(ComplexityScorePerUser) as maxComplexityScorePerUser, 
 							min(ComplexityScorePerUser) as minComplexityScorePerUser
-			from .CB_DAILY_DEPT_WK) B
-
-
-
+			from CB_DAILY_DEPT_WK) B
+			
+			
+			
 			on 1=1
-
-
+			
+	
 	) a
-) b;
+) b
+;
 
 
-);
+/*{{save:CB_Daily_Summmary_Curr_Prev_Wk.csv}}*/
+/*{{load:{db_stg}.Stg_CB_DAILY_SUMMARY_CURR_PREV_WK}}*/
+/*{{call:{db_coa}.sp_dat_CB_DAILY_SUMMARY_CURR_PREV_WK('{fileset_version}')}}*/
+select '{siteid}' as Site_ID, 
+      DateRange,
+      MatchNm,
+      Date_Start (FORMAT 'yyyy-mm-dd')(NAMED "Date_Start"),
+      Date_End (FORMAT 'yyyy-mm-dd')(NAMED "Date_End"),
+      DASH_DATE_LEVEL,
+      DASH_DATE_LABEL,
+      AGGREGATE_LEVEL,
+      AGGREGATE_NAME,
+      METRIC_NAME,
+      DASH_METRIC_NAME,
+      DASH_METRIC_NAME_SHORT,
+      DASH_METRIC_DESC,
+      MEASURE_AMT,
+      BENCHMARK_AMT,
+      COMPLEXITY_SCORE,
+      NBR_ACTIVE_USERS          
+	  from CB_DAILY_SUMMARY_CURR_PREV_WK a
+;
