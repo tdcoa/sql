@@ -630,6 +630,22 @@ csm_dashboard:
   show_in_gui: "False"
   startdate:  "Current_Date - 7"
   enddate:    "Current_Date - 1"
+  # -- specific defaults:
+  tcorebudget: 500000
+  tcorecapacity: 270
+  qtroffset: 1
+  systemcost: 4000000
+  dbqlflushrate: 6
+  spmainterval: 600
+  avgmbsecratio: 9334
+  daterange: 1
+  prevdaterange: 2
+  currentpermThreshold: 444610
+  systemcds: 370510
+  ppstartdate: "2020-08-14"
+  ppenddate: "2020-08-21"
+  cpstartdate: "2020-09-21"
+  cpenddate: "2020-09-27"
   files:
     <<: *dim_user
     controlfile_pdcr:
