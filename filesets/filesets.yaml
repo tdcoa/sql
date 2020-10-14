@@ -6,20 +6,23 @@ demo:
   some_value: "Donkey"
   birthday:   "1974-12-17"
   files:
-    file01:
+    lookup_csv:
       gitfile:  "demo/dates.csv"
-    file02:
+    main_sql_driver:
       gitfile:   "demo/dbcinfo.coa.sql"
       startdate: "Date-7"
       enddate:   "Date-1"
       some_value: "Elephant"
-    file03:
+    called_sql:
       gitfile:  "demo/today.sql"
-    file04:
+    alldates_vis:
       gitfile:  "demo/alldates.py"
-    file05:
+    example_csv:
+      gitfile:  "demo/example.csv"
+    logo_png:
+      gitfile:  "demo/logo.png"
+    final_pptx:
       gitfile:  "demo/AgeReport.pptx"
-
 
 dim_user:
   active:           "True"
