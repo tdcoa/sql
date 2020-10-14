@@ -14,7 +14,7 @@ Parameters:
 
 /* Slide 2 - query counts. Slide 4 - titles */
 /*{{save:dat_query_counts.csv}}*/
-select 
+select
  '{siteid}'  as Site_ID
 ,cast(cast(LogDayCnt as format 'ZZZ,ZZ9') as varchar(32)) as LogDayCnt
 ,cast(cast(TotalQryCnt as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as TotalQryCnt
@@ -46,7 +46,7 @@ from dbql_core_hourly
 
 /* Slide 2 */
 /*{{save:dat_apps_total.csv}}*/
-sel  '{siteid}'  as Site_ID 
+sel  '{siteid}'  as Site_ID
     ,cast(cast(count(distinct AppId) as format 'Z,ZZZ,ZZ9') as varchar(32)) as TotalApps
 from dbql_core_hourly;
 
@@ -80,13 +80,13 @@ order by 2
 
 /*Slide 4 - graph */
 /*{{save:dat_daily_query_and_tactical_cnt.csv}}*/
-select 
+select
  '{siteid}'  as Site_ID
 ,cast(LogTS as CHAR(10)) AS LogDate
 ,sum(Request_Cnt) AS RequestCnt
 ,sum(Query_Tactical_Cnt) AS TacticalQueryCnt
 from dbql_core_hourly
-group by 2                    
+group by 2
 ;
 
 
@@ -97,9 +97,9 @@ group by 2
   ,CASE WHEN QueryObjCount <= 5 THEN (QueryObjCount (FORMAT 'Z9') (CHAR(2))) ELSE ' 5+' END as "Number of Joins"
   ,cast(cast(count(*) as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Number of Queries"
 FROM
-(      
+(
 SELECT DBQL_Obj.QueryID
-      ,count(*) as QueryObjCount 
+      ,count(*) as QueryObjCount
   FROM PDCRInfo.DBQLObjTbl_Hst DBQL_Obj
  WHERE DBQL_Obj.ObjectType in ('Tab', 'Viw')
    AND DBQL_Obj.LogDate BETWEEN {startdate} AND {enddate}
@@ -111,7 +111,7 @@ ORDER BY 2;
 
 /* slide 5 */
 /*{{save:dat_statement_frequency.csv}}*/
-select 
+select
      '{siteid}' as Site_ID
     ,StatementType as "Statement Type"
     ,cast(cast(sum(Request_Cnt) as format 'ZZZ,ZZZ,ZZ9') as varchar(32))  AS "Query Volume"
@@ -126,7 +126,7 @@ select top 24
      '{siteid}' as Site_ID
     ,AppId
     ,cast(cast(sum(Request_Cnt) as format 'ZZZ,ZZZ,ZZ9') as varchar(32)) AS "Total Queries"
-    ,cast(cast(sum(Returned_Row_Cnt) as bigint format 'ZZZ,ZZZ,ZZ9') as varchar(32)) AS "Total Fetched Rows"
+    ,cast(cast(sum(Returned_Row_Cnt) as bigint format 'ZZZ,ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) AS "Total Fetched Rows"
     ,cast(cast(sum(Returned_Row_Cnt)/sum(Request_Cnt) as integer format 'ZZZ,ZZZ,ZZ9') as varchar(32)) AS "Avg Rows Per Query"
 from dbql_core_hourly
 group by 2
@@ -135,23 +135,23 @@ order by sum(Returned_Row_Cnt)/sum(Request_Cnt) desc;
 
 create volatile table tables_size_10g as
 (
-SELECT	
+SELECT
     DataBaseName
    ,TableName
    ,cast(Sum(CurrentPerm/(2**30)) AS decimal(9,1)) CurrentPerm_GB
-   ,cast(Sum(PeakPerm/(2**30)) AS decimal(9,1)) AS PeakPerm_GB    
+   ,cast(Sum(PeakPerm/(2**30)) AS decimal(9,1)) AS PeakPerm_GB
 FROM	Dbc.TableSizeV
 GROUP BY 1,2
 HAVING CurrentPerm_GB > 10
-) with data 
-no primary index 
+) with data
+no primary index
 on commit preserve rows
 ;
 
 
 /* slide 7 */
 /*{{save:dat_tables_size10g_cnt.csv}}*/
-SELECT 
+SELECT
     '{siteid}' as Site_ID
     ,cast(cast(coalesce(count(*), 0) as format 'ZZZ,ZZZ,ZZ9') as varchar(32))  AS Tbl10gCnt
 from tables_size_10g;
@@ -159,11 +159,11 @@ from tables_size_10g;
 
 /* slide 7 */
 /*{{save:dat_tables_size10g_list.csv}}*/
-SELECT	
+SELECT
     '{siteid}' as Site_ID
    ,DataBaseName
    ,TableName
-   ,cast(cast(CurrentPerm_GB as format 'ZZZ,ZZZ,ZZ9.9') as varchar(32)) AS "CurrentPerm GB" 
+   ,cast(cast(CurrentPerm_GB as format 'ZZZ,ZZZ,ZZ9.9') as varchar(32)) AS "CurrentPerm GB"
 FROM tables_size_10g
 ORDER BY CurrentPerm_GB DESC;
 
@@ -186,8 +186,8 @@ WHERE
   AND QryObj.ObjectType = 'Tab'
 GROUP BY 1,2,3
 HAVING StatementCountPerTable > 1500
-) with data 
-no primary index 
+) with data
+no primary index
 on commit preserve rows
 ;
 
@@ -206,7 +206,7 @@ sel '{siteid}' as Site_ID
    ,count(*) as TableCnt
 from tables_insupddel
 group by 2
-order by 2;   
+order by 2;
 
 
 /* slide 9 */
@@ -218,6 +218,9 @@ from tables_insupddel
 group by 2
 order by avg(StatementCountPerTable) desc;
 
-/*{{pptx:big_query_migration_blockers.pptx}}*/                                                                   
+/*{{save:account.csv}}*/
+Select trim('{account}') as AccountName, trim('{siteid}') as Site_ID;
+
+/*{{pptx:big_query_migration_blockers.pptx}}*/
 
 /* End COA: WL Analytics */
