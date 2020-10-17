@@ -639,16 +639,16 @@ csm_dashboard:
   qtroffset:            0 # 1
   systemcost:           0 # 4000000
   dbqlflushrate:        0 # 6
-  spmainterval:         0 # 600
+  spmainterval:         600
   avgmbsecratio:        0 # 9334
   daterange:            0 # 1
   prevdaterange:        0 # 2
   currentpermThreshold: 0 # 444610
   systemcds:            0 # 370510
-  ppstartdate: "2020-08-14"
-  ppenddate: "2020-08-21"
-  cpstartdate: "2020-09-21"
-  cpenddate: "2020-09-27"
+  ppstartdate:          "2020-08-14"
+  ppenddate:            "2020-08-21"
+  cpstartdate:          "2020-09-21"
+  cpenddate:            "2020-09-27"
   files:
     <<: *dim_user
     controlfile_pdcr:
