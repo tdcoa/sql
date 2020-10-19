@@ -15,8 +15,7 @@ AS (
 
 /*{{save:gss_resusage_epod.dbc.1620.{siteid}.csv}}*/
 sel
- '{siteid}' as Site_ID
-,'TD16v2.3_EPOD' (named "Version")
+ 'TD16v2.3_EPOD' (named "Version")
 ,spma_dt.LogDate (named "LogDate")
 ,cast(spma_dt.LogDay as char(3)) (named "LogDOW")
 ,spma_dt.LogTime (named "LogTime")
@@ -51,7 +50,7 @@ end (Named "AMPS")
 ,sum(SPMAPhysReadKB + SPMAPhysPreReadKB + SPMAPhysWriteKB) / 1024.0 / NumNodes / RSSInterval (format 'ZZZ,ZZ9.9') (named "AvgMBSecNode")
 
 /* PctReadsKB retained for evaluation against READS100, READS90, READS80, READS50, and READS00 */
-,zeroifnull( sum(SPMAPhysReadKB + SPMAPhysPreReadKB) / 
+,zeroifnull( sum(SPMAPhysReadKB + SPMAPhysPreReadKB) /
 nullifzero(sum(SPMAPhysReadKB + SPMAPhysPreReadKB + SPMAPhysWriteKB)) * 100) (format 'ZZ9.9') (named "PctReadsKB")
 
 /* EPOD data */
@@ -115,10 +114,9 @@ from dbc.ResUsageSpma
 WHERE THEDATE BETWEEN {startdate} AND {enddate}
 group by 1,2,3,4,5,6,7,8,9,10,11,12
 
-) spma_dt 
+) spma_dt
 
-where  info.infokey (NOT CS) = 'VERSION' (NOT CS) 
+where  info.infokey (NOT CS) = 'VERSION' (NOT CS)
 group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
 order by 6,14
 ;
-

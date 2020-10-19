@@ -10,8 +10,7 @@ AS (
 
 /*{{save:{YYYYMM}_{siteid}_GSS.csv}}*/
 sel
- '{siteid}' as Site_ID
-,'TD16v2.0_PDCR' (named "Version")
+ 'TD16v2.0_PDCR' (named "Version")
 ,spma_dt.LogDate (named "LogDate")
 ,cast(spma_dt.LogDay as char(3)) (named "LogDOW")
 ,spma_dt.LogTime (named "LogTime")
