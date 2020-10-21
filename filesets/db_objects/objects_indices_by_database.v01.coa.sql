@@ -11,6 +11,7 @@ create volatile table index_types_by_database as
  SEL
    COALESCE(Inds.DatabaseName, '') AS DatabaseName
   ,COALESCE(IK.IndexTypeDesc, 'Unknown - ' || Inds.IndexType) AS IndexTypeDesc
+  ,COALESCE(IK.IndexTypeBucket, 'Unknown - ' || Inds.IndexType) AS IndexTypeBucket   
   ,ZEROIFNULL(Inds.IndexCount) AS IndexCount
   FROM
   (
@@ -27,6 +28,7 @@ create volatile table index_types_by_database as
   AND IK.UniqueFlag = Inds.UniqueFlag
 ) with data
 no primary index on commit preserve rows;
+
 
 /*{{save:dat_indextype_by_database.csv}}*/
 Select * from index_types_by_database;
