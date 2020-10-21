@@ -687,7 +687,7 @@ west_q4_consumption:
   enddate_rollingyear:   "Current_Date - 1"
   files:
     <<: *consumption_pricing
-    <<: top_users
+    <<: *top_users
     <<: *customer_data_space
     topuser_vis:
       gitfile:      "top_users/do_nothing.py" # don't need all the viz files
