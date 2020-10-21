@@ -162,6 +162,25 @@ top_users:
     topuser_vis:
       gitfile:      "top_users/top_users.py"
 
+
+concurrency:
+  active:           "True"
+  fileset_version:  "1.0"
+  startdate:        "Current_Date - 43"  # 6 weeks
+  enddate:          "Current_Date - 1"
+  files: &concurrency
+    concurrency_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
+    concurrency_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "concurrency/concurrency.1620dbc.v03.coa.sql"
+    concurrency_vis:
+      gitfile:      "concurrency/concurrency.py"
+
+
 customer_data_space:
   active:           "True"
   fileset_version:  "1.0"
@@ -241,6 +260,7 @@ compete_bigquery:
   files:
     <<: *dbql_core
     <<: *db_objects
+    <<: *concurrency    
     compete_bigquery_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
@@ -259,23 +279,6 @@ compete_bigquery:
       gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
     wlanalys_pptx:
       gitfile:      "compete_bigquery/big_query_migration_blockers.pptx"
-
-concurrency:
-  active:           "True"
-  fileset_version:  "1.0"
-  startdate:        "Current_Date - 43"  # 6 weeks
-  enddate:          "Current_Date - 1"
-  files: &concurrency
-    concurrency_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
-    concurrency_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "concurrency/concurrency.1620dbc.v03.coa.sql"
-    concurrency_vis:
-      gitfile:      "concurrency/concurrency.py"
 
 
 feature_usage:
