@@ -26,6 +26,7 @@ select
 ,cast(cast(BilQryCntPerYear as Decimal(9,1) format 'ZZZ,ZZZ,ZZ9.9') as varchar(32)) as BilQryCntPerYear
 ,cast(cast(TotalTacticalCnt as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as TotalTacticalCnt
 ,cast(cast(TacticalPct as Decimal(5,1) format 'ZZ9.9') as varchar(32)) as TacticalPct
+,cast(cast(AvgRunTimeSec as Decimal(9,2) format 'Z,ZZZ,ZZ9.99') as varchar(32)) as AvgRunTimeSec
 from
 (
 select
@@ -39,6 +40,7 @@ select
 ,QryCntPerYear / 1e9 AS BilQryCntPerYear
 ,sum(Query_Tactical_Cnt) AS TotalTacticalCnt
 ,cast(TotalTacticalCnt as decimal(18,4)) / TotalQryCnt * 100 AS TacticalPct
+,sum(Runtime_AMP_Sec) / TotalQryCnt AS AvgRunTimeSec
 from dbql_core_hourly
 ) d1
 ;
@@ -49,6 +51,20 @@ from dbql_core_hourly
 sel  '{siteid}'  as Site_ID
     ,cast(cast(count(distinct AppId) as format 'Z,ZZZ,ZZ9') as varchar(32)) as TotalApps
 from dbql_core_hourly;
+
+
+/* Slide 2 */
+/* dataset in customer data space is week avg. this is latest day available on pdcr */
+/* fileset uses 1000, other places use 1024, which one? */
+/*{{save:dat_disk_space_total.csv}}*/
+select
+  '{siteid}'  as Site_ID
+ ,cast(cast(sum(MaxPermGB) / 1024 as format 'Z,ZZZ,ZZ9.999') as varchar(32)) as TotalMaxPermTB
+ ,cast(cast(sum(CurrentPermGB) / 1024 as format 'Z,ZZZ,ZZ9.999') as varchar(32)) as TotalCurrPermTB
+from db_objects_cds
+where DBName = '*** Total ***'
+  and LogDate = (sel max(LogDate) from db_objects_cds)
+;
 
 
 /*Slide 3  - graph */
