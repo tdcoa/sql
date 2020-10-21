@@ -78,7 +78,7 @@ else 0 end as Phase3IO,
 from
 pdcrinfo.dbqlutilitytbl_hst
 where
-logdate between {startdate} and {enddate}) dbu
+logdate between {startdate_rollingyear} and {startdate_rollingyear}) dbu
 group by 1, 2) vu4
 on
 vu1.logdate = vu4.logdate and

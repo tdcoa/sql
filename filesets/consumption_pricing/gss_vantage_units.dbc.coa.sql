@@ -82,7 +82,7 @@ else 0 end as Phase3IO,
 from
 dbc.dbqlutilitytbl
 where
-logdate between {startdate} and {enddate}) dbu
+logdate between {startdate_rollingyear} and {enddate_rollingyear}) dbu
 group by 1, 2) vu4
 on
 vu1.logdate = vu4.logdate and
