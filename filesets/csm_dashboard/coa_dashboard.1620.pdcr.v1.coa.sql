@@ -252,6 +252,8 @@ CREATE VOLATILE TABLE CB_ComplexityScore ,FALLBACK ,
 PRIMARY INDEX ( LOGDATE ,PROCID ,QUERYID ) ON COMMIT PRESERVE ROWS
 ;
 
+/*
+
 CREATE VOLATILE TABLE vt_cleansedSQL AS
 (
 	SELECT
@@ -322,9 +324,9 @@ SELECT
 
 			UNION ALL
 
-	 		/* M. Beek/April-2018: As we are now including the SQLRowNo from the QrylogSql table (to capture all SQL)
-			** We will need to do a MAX aggregation here, not to double count the scores for long queries (as that is not done
-			** for short queries either */
+	 		-- M. Beek/April-2018: As we are now including the SQLRowNo from the QrylogSql table (to capture all SQL)
+			-- We will need to do a MAX aggregation here, not to double count the scores for long queries (as that is not done
+			-- for short queries either
 			SELECT
 				dt.logdate
 			,	dt.procid
@@ -342,16 +344,17 @@ SELECT
 						, 	sg.stepgroupname
 						, 	sg.StepGroupDesc
 						, 	SUM(sg.complexityweight) StepComplexityScore
-			                /* Match using patterns based upon common punctuation forms. */
-			                /* In the examples, FN is the function name being matched. */
+			                -- Match using patterns based upon common punctuation forms.
+			                -- In the examples, FN is the function name being matched.
+
 						FROM vt_cleansedSQL SQ
-						JOIN "stepgrpfunction.csv" sgf 
-							ON 	SQ.cleansed like '% ' || sgf.functionname || ' %'   /* example: select FN ( */
-							OR  SQ.cleansed like '% ' || sgf.functionname || '(%'   /* example: select FN( */
-							OR  SQ.cleansed like '%,' || sgf.functionname || ' %'   /* example: select x,FN ( */
-							OR  SQ.cleansed like '%,' || sgf.functionname || '(%'   /* example: select x, FN( */
-							OR  SQ.cleansed like '%.' || sgf.functionname || ' %'   /* example: select TD_SYSFNLIB.FN ( */
-							OR  SQ.cleansed like '%.' || sgf.functionname || '(%'   /* example: select TD_SYSFNLIB.FN( */
+						JOIN "stepgrpfunction.csv" sgf
+							ON 	SQ.cleansed like '% ' || sgf.functionname || ' %'   -- example: select FN (
+							OR  SQ.cleansed like '% ' || sgf.functionname || '(%'   -- example: select FN(
+							OR  SQ.cleansed like '%,' || sgf.functionname || ' %'   -- example: select x,FN (
+							OR  SQ.cleansed like '%,' || sgf.functionname || '(%'   -- example: select x, FN(
+							OR  SQ.cleansed like '%.' || sgf.functionname || ' %'   -- example: select TD_SYSFNLIB.FN (
+							OR  SQ.cleansed like '%.' || sgf.functionname || '(%'   -- example: select TD_SYSFNLIB.FN(
 						JOIN "consumption_stepgrp.csv" sg
 							ON sgf.stepgroupname = sg.stepgroupname
 							AND SQ.LogDate between {startdate} and {enddate}
@@ -360,8 +363,8 @@ SELECT
 			GROUP BY 1,2,3,4,5
 
 		) q group by 1,2,3
-
 ;
+*/
 
 CREATE MULTISET VOLATILE TABLE CB_DAILY_QUERY_METRICS ,FALLBACK ,
      NO BEFORE JOURNAL,
