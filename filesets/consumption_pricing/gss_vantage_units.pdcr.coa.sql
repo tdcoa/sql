@@ -13,7 +13,7 @@
 
 /*{{save:{YYYYMM}_{siteid}_VU.csv}}*/
 /*{{load:{db_stg}.stg_dat_consumption_vantage_units}}*/
-/*{{call:{do_coa}.sp_dat_consumption_vantage_units}}*/
+/*{{call:{db_coa}.sp_dat_consumption_vantage_units}}*/
 select
  '{siteid}' as Site_ID,
  cast(coalesce(vu1.logdate, vu4.logdate) as format 'Y4-MM-DD') as LogDate,
