@@ -690,4 +690,4 @@ west_q4_consumption:
     <<: *top_users
     <<: *customer_data_space
     topuser_vis:
-      gitfile:      "top_users/do_nothing.py" # don't need all the viz files
+      gitfile:      "other/do_nothing.py" # don't need all the viz files
