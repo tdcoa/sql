@@ -191,7 +191,7 @@ create volatile table tables_insupddel as
 SELECT QryLog.LogDate
       ,QryObj.ObjectDatabaseName
       ,QryObj.ObjectTableName
-      ,COUNT(QryLog.StatementType) StatementCountPerTable
+      ,COUNT(*) StatementCountPerTable
  FROM PDCRINFO.DBQLogTbl_Hst QryLog
 INNER JOIN PDCRINFO.DBQLObjTbl_Hst QryObj
    ON QryLog.LogDate = QryObj.LogDate
