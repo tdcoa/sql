@@ -660,13 +660,13 @@ csm_dashboard:
     stepgrpfunctions:
       gitfile:  "csm_dashboard/stepgrpfunction.csv"
 
+
 consumption_pricing:
   active:     "True"
   fileset_version: "1.0"
-  startdate:  "Current_Date - 365"
-  enddate:    "Current_Date - 1"
-  YYYYMM:     "202009"
-  files:
+  startdate_rollingyear: "Current_Date - 365"
+  enddate_rollingyear:   "Current_Date - 1"
+  files: &consumption_pricing
     vu_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20"]
@@ -675,3 +675,19 @@ consumption_pricing:
       collection:   ["pdcr"]
       dbsversion:   ["16.20"]
       gitfile:      "consumption_pricing/gss_vantage_units.pdcr.coa.sql"
+
+
+
+west_q4_consumption:
+  active: "True"
+  show_in_gui: "False"
+  startdate:             "Current_Date - 91"
+  enddate:               "Current_Date - 1"
+  startdate_rollingyear: "Current_Date - 365"
+  enddate_rollingyear:   "Current_Date - 1"
+  files:
+    <<: *consumption_pricing
+    <<: top_users
+    <<: *customer_data_space
+    topuser_vis:
+      gitfile:      "top_users/do_nothing.py" # don't need all the viz files
