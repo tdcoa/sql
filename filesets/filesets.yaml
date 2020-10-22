@@ -680,7 +680,7 @@ consumption_pricing:
 
 west_q4_consumption:
   active: "True"
-  show_in_gui: "False"
+  show_in_gui: "True"
   startdate:             "Current_Date - 91"
   enddate:               "Current_Date - 1"
   startdate_rollingyear: "Current_Date - 365"
