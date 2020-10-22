@@ -13,7 +13,7 @@
 
 /*{{save:{YYYYMM}_{siteid}_VU.csv}}*/
 /*{{load:{db_stg}.stg_dat_consumption_vantage_units}}*/
-/*{{call:{db_coa}.sp_dat_consumption_vantage_units}}*/
+/*{{call:{db_coa}.sp_dat_consumption_vantage_units('v2')}}*/
 select
  '{siteid}' as Site_ID,
  cast(coalesce(vu1.logdate, vu4.logdate) as format 'Y4-MM-DD') as LogDate,
@@ -27,7 +27,7 @@ from
      zeroifnull(sum(reqiokb)) / (1024*1024*1024) (format 'ZZ9.999') as VantageUnitTB
     from
     pdcrinfo.dbqlogtbl_hst
-    where logdate between {startdate_rollingyear} and {startdate_rollingyear}
+    where logdate between {startdate_rollingyear} and {enddate_rollingyear}
       and errorcode not in (2631, 2646, 3610, 3702, 3710, 3711, 5405, 7453, 7487, 7583, 7596, 9124, 9990)
       and username not in ('vcmuser','PDCRAccess','LockLogShredder','PDCRTPCD','console','tdap_admin','TDPUSER','tdwm',
                            'PDCRAdmin','SystemFe','PDCRCanary1M','PDCRCanary3M','td_ffe_svc_acct','PDCRCanary4M','PDCRCanary0M',
@@ -74,7 +74,7 @@ full outer join
       0 as Phase4CPU,
       0 as Phase4IO
     from pdcrinfo.dbqlutilitytbl_hst
-    where logdate between {startdate_rollingyear} and {startdate_rollingyear}
+    where logdate between {startdate_rollingyear} and {enddate_rollingyear}
   ) dbu
 group by 1, 2) vu4
 on
