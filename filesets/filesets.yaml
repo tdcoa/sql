@@ -678,7 +678,7 @@ consumption_pricing:
 
 
 
-west_q4_consumption:
+west_q4_request:
   active: "True"
   show_in_gui: "True"
   startdate:             "Current_Date - 91"
