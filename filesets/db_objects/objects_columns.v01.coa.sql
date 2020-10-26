@@ -5,17 +5,18 @@
   Dependencies:
   -  dim_object
 */
-
 create volatile table column_types as
 ( SELECT
    COALESCE(DT.DataTypeDesc, 'Unknown - ' || C.ColumnType) AS DataType
   ,COALESCE(DT.ColumnCategory || C.Column_Type_Ext, DT.DataTypeDesc, 'Unknown - ' || C.ColumnType) AS ColumnType
+  ,C.IdColType AS IdentityColumnType
   ,COALESCE(DT.ColumnCategory || C.Column_Category_Ext, DT.ColumnCategory , 'Unknown - ' || C.ColumnType) AS ColumnCategory
   ,C.FormatInd
   ,ZEROIFNULL(C.ColumnCount) AS ColumnCount
  FROM (
        SELECT
          ColumnType
+        ,IdColType
         ,COALESCE(StorageFormat, '') AS StorageFormat
         ,CASE WHEN ColumnFormat IS NOT NULL THEN 'Y' ELSE 'N' END AS FormatInd
         ,CASE ColumnType
@@ -83,12 +84,13 @@ create volatile table column_types as
         ,COUNT(*) as ColumnCount
     FROM dbc.ColumnsV
     WHERE ColumnType IS NOT NULL
-    GROUP BY 1,2,3,4,5
+    GROUP BY 1,2,3,4,5,6
  ) C
   FULL OUTER JOIN dim_datatype DT
    ON DT.DataType = C.ColumnType
   AND DT.StorageFormat = C.StorageFormat
-)with data no primary index on commit preserve rows;
+)with data 
+no primary index on commit preserve rows;
 
 /*{{save:dat_dbobject_count_per_column_type.csv}}*/
 Select'{siteid}' as Site_ID, CURRENT_DATE as LogDate, ColumnType, ColumnCategory

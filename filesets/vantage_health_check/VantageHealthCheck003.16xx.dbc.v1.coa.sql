@@ -10,20 +10,21 @@ The username wil be joined to ca_user_xref to aggregate by SubDepartment and Dep
 
 /*{{save:consumption_feature_usage_v2.csv}}*/
 SELECT 
-	CAST(A.Starttime as Date)  AS LogDate
+   CAST(A.Starttime as Date)  AS LogDate
   ,A.USERNAME as Username
 --  HASHROW(A.USERNAME) as MaskedUserName,
- ,CAST(B.FEATURENAME AS VARCHAR(100)) AS FEATURENAME
- ,SUM(GETBIT(A.FEATUREUSAGE,(2047 - B.FEATUREBITPOS))) AS FeatureUseCount
+  ,CAST(B.FEATURENAME AS VARCHAR(100)) AS FEATURENAME
+  ,SUM(GETBIT(A.FEATUREUSAGE,(2047 - B.FEATUREBITPOS))) AS FeatureUseCount
   ,COUNT(*) AS RequestCount
   ,SUM(AMPCPUTIME) AS AMPCPUTIME
 
 FROM DBC.DBQLOGTBL A, 
      DBC.QRYLOGFEATURELISTV B 
-WHERE CAST(A.Starttime as Date) > DATE-10
+WHERE CAST(A.Starttime as Date) BETWEEN {startdate} AND {enddate}
 GROUP BY 
-	LogDate,
+    LogDate,
     USERNAME, 
-    FeatureName having FeatureUseCount > 0
+    FeatureName 
+having FeatureUseCount > 0
 --  ORDER BY 1,2,3
 ;
