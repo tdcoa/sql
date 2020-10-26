@@ -651,6 +651,8 @@ csm_dashboard:
   cpenddate:            "2020-09-27"
   files:
     <<: *dim_user
+    <<: *dim_app
+    <<: *dim_statement
     controlfile_pdcr:
       gitfile:  "csm_dashboard/coa_dashboard.1620.pdcr.v1.coa.sql"
     consumption_step:
