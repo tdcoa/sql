@@ -16,7 +16,7 @@ Locking Row for Access
       ,WDName
       ,Starttime
       ,a.firststeptime
-	    ,a.FirstRespTime     
+      ,a.FirstRespTime     
       ,Zeroifnull(DelayTime) as DelayTime
       , (CAST(extract(hour
          From     ((a.firststeptime - a.StartTime) HOUR(2) TO SECOND(6) ) ) * 3600 + extract(minute
