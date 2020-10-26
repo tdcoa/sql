@@ -13,14 +13,15 @@ Locking Row for Access
        CAST(a.Starttime as DATE) AS "Log Date"
       ,extract(hour from a.starttime) as "Log Hour"
       ,Username
-     ,WDName
-     ,Starttime
-     ,a.firststeptime
-     ,Zeroifnull(DelayTime) as DelayTime
+      ,WDName
+      ,Starttime
+      ,a.firststeptime
+	    ,a.FirstRespTime     
+      ,Zeroifnull(DelayTime) as DelayTime
       , (CAST(extract(hour
          From     ((a.firststeptime - a.StartTime) HOUR(2) TO SECOND(6) ) ) * 3600 + extract(minute
          From     ((a.firststeptime - a.StartTime) HOUR(2) TO SECOND(6) ) ) * 60 + extract(second
-         From     ((a.firststeptime - a.StartTime) HOUR(2) TO SECOND(6) ) ) AS dec(8,2))) - zeroifnull(cast(delaytime as float)) (float)     as PrsDctnryTime
+         From     ((a.firststeptime - a.StartTime) HOUR(2) TO SECOND(6) ) ) AS dec(8,2))) - zeroifnull(cast(delaytime as float)) (float) as PrsDctnryTime
 
       , Zeroifnull(CAST(extract(hour
          From     ((a.firstresptime - a.firststepTime) HOUR(2) TO SECOND(6) ) ) * 3600 + extract(minute
@@ -36,5 +37,5 @@ Locking Row for Access
       
        Where  DelayTime > 0
        AND CAST(a.Starttime as DATE) between {startdate} and {enddate}
-       Group By 1,2,3,4,5,6,7,8,9,10;
+       Group By 1,2,3,4,5,6,7,8,9,10,11;
 
