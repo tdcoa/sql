@@ -42,7 +42,7 @@ create volatile table db_objects_counts as
 
 /*{{save:dat_dbobject_counts.csv}}*/
 /*{{load:{db_stg}.stg_dat_dbobject_counts}}*/
-/*{{call:{db_coa}.sp_dat_dbobject_counts}}*/
+/*{{call:{db_coa}.sp_dat_dbobject_counts('v1')}}*/
 Select /* for upload */
  '{siteid}' as Site_ID
 ,cast(Current_Date as DATE format 'yyyy-mm-dd')(char(10)) as LogDate
