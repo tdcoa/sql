@@ -40,6 +40,23 @@ create volatile table db_objects_counts as
 ) with data no primary index on commit preserve rows
 ;
 
+/*{{save:dat_dbobject_counts.csv}}*/
+/*{{load:{db_stg}.stg_dat_dbobject_counts}}*/
+/*{{call:{db_coa}.sp_dat_dbobject_counts}}*/
+Select /* for upload */
+ '{siteid}' as Site_ID
+,cast(Current_Date as DATE format 'yyyy-mm-dd')(char(10)) as LogDate
+,trim(DBName) as DBName
+,cast(TableCount     as integer) as Table_Count
+,cast(ViewCount      as integer) as View_Count
+,cast(IndexCount     as integer) as Index_Count
+,cast(MacroCount     as integer) as Macro_Count
+,cast("SP&TrigCount" as integer) as SPTrig_Count
+,cast(UDObjectCount  as integer) as UDObject_Count
+,cast(OtherCount     as integer) as Other_Count
+from db_objects_counts
+;
+
 
 /*{{save:dat_objectkind_count-all.csv}}*/
 Select
@@ -54,6 +71,7 @@ Select
 ,cast(cast(OtherCount     as integer       format'ZZZ,ZZZ,ZZZ,ZZZ')    as varchar(32)) as Other_Count
 from db_objects_counts
 ;
+
 
 /*{{save:dat_objectkind_count-total.csv}}*/
 Select
