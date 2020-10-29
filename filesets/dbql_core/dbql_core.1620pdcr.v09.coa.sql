@@ -16,7 +16,7 @@ SELECT SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9
 
 create volatile table cpu_summary_hourly as
 (
-Select 
+Select
  cast(TheDate as format 'Y4-MM-DD') as LogDate
 ,Floor(TheTime/1e4) as LogHour
 ,SUBSTRING ((Current_Time (FORMAT 'HH:MI:SS.S(F)Z') (VARCHAR (20))) FROM 9 FOR 6) as UTC_Offset
@@ -46,9 +46,9 @@ no primary index on commit preserve rows;
 /*{{save:cpu_summary.csv}}*/
 /*{{load:{db_stg}.stg_dat_dbql_core_maxcpu}}*/
 /*{{call:{db_coa}.sp_dat_dbql_core_maxcpu('{fileset_version}')}}*/
-Select 
+Select
 '{siteid}' as Site_ID
-,LogDate
+,cast(LogDate as DATE format'yyyy-mm-dd')(char(10)) as LogDate
 ,LogHour
 ,UTC_Offset
 ,Node_Type
