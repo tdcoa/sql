@@ -260,7 +260,7 @@ compete_bigquery:
   files:
     <<: *dbql_core
     <<: *db_objects
-    <<: *concurrency    
+    <<: *concurrency
     compete_bigquery_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
@@ -605,17 +605,17 @@ csm_dashboard:
   startdate:  "Current_Date - 7"
   enddate:    "Current_Date - 1"
   # -- specific defaults:
-  tcorebudget:          0 # 500000
-  tcorecapacity:        0 # 270
+  tcorebudget:          1 # 500000
+  tcorecapacity:        1 # 270
   qtroffset:            0 # 1
-  systemcost:           0 # 4000000
-  dbqlflushrate:        0 # 6
+  systemcost:           1 # 4000000
+  dbqlflushrate:        1 # 6
   spmainterval:         600
-  avgmbsecratio:        0 # 9334
-  daterange:            0 # 1
-  prevdaterange:        0 # 2
-  currentpermThreshold: 0 # 444610
-  systemcds:            0 # 370510
+  avgmbsecratio:        1 # 9334
+  daterange:            1 # 1
+  prevdaterange:        1 # 2
+  currentpermThreshold: 1 # 444610
+  systemcds:            1 # 370510
   ppstartdate:          "2020-08-14"
   ppenddate:            "2020-08-21"
   cpstartdate:          "2020-09-21"
@@ -625,7 +625,7 @@ csm_dashboard:
     <<: *dim_app
     <<: *dim_statement
     controlfile_pdcr:
-      gitfile:  "csm_dashboard/coa_dashboard.1620.pdcr.v1.coa.sql"
+      gitfile:  "csm_dashboard/coa_dashboard.1620.pdcr.v3.coa.sql"
     consumption_step:
       gitfile:  "csm_dashboard/consumption_step.csv"
     consumption_stepgroup:
