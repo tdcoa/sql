@@ -574,37 +574,37 @@ telemetry_collection_agent_TCA:
     spma_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "telemetry_collection_agent/resusage.v1.coa.sql"
+      gitfile:      "telemetry_collection_agent/resusage.spma.v1.coa.sql"
       tablename:    "PDCRInfo.ResUsageSPMA_hst"
       suffix:       "spma"
     spma_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "telemetry_collection_agent/resusage.v1.coa.sql"
+      gitfile:      "telemetry_collection_agent/resusage.spma.v1.coa.sql"
       tablename:    "DBC.ResUsageSPMA"
       suffix:       "spma"
     svpr_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "telemetry_collection_agent/resusage.v1.coa.sql"
+      gitfile:      "telemetry_collection_agent/resusage.svpr.v1.coa.sql"
       tablename:    "PDCRInfo.ResUsageSVPR_hst"
       suffix:       "svpr"
     svpr_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "telemetry_collection_agent/resusage.v1.coa.sql"
+      gitfile:      "telemetry_collection_agent/resusage.svpr.v1.coa.sql"
       tablename:    "DBC.ResUsageSVPR"
       suffix:       "svpr"
     spdsk_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "telemetry_collection_agent/resusage.v1.coa.sql"
+      gitfile:      "telemetry_collection_agent/resusage.spdsk.v1.coa.sql"
       tablename:    "PDCRInfo.ResUsageSPDsk_hst"
       suffix:       "spdsk"
     spdsk_dbc:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "telemetry_collection_agent/resusage.v1.coa.sql"
+      gitfile:      "telemetry_collection_agent/resusage.spdsk.v1.coa.sql"
       tablename:    "DBC.ResUsageSPDsk"
       suffix:       "spdsk"
     dbcinfo:
