@@ -41,9 +41,9 @@ on commit preserve rows;
 
 drop table "dim_app.csv";
 
-/*{  removed {save:dim_app_reconcile.csv}}
+/*{{save:dim_app_reconcile.csv}}*/
 Select * from dim_App
 order by case when  App_Bucket='Unknown' then '!!!' else App_Bucket end asc
-*/
+
 
 /* End COA: Dim_App */
