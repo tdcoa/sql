@@ -20,7 +20,7 @@
 /*{{call:{db_coa}.sp_dat_consumption_vantage_units('v2')}}*/
 select
  '{siteid}' as Site_ID,
- cast(coalesce(vu1.logdate, vu4.logdate) as format 'Y4-MM-DD') as LogDate,
+ cast(coalesce(vu1.logdate, vu4.logdate) as format 'Y4-MM-DD') (char(10)) as LogDate,
  coalesce(vu1.loghr, vu4.loghr) as LogHr,
  zeroifnull(vu1.vantageunithrs) + zeroifnull(vu4.vantageunitutilityhrs) (Decimal(18,2)) as CPU_VU,
  zeroifnull(vu1.vantageunitTB) + zeroifnull(vu4.vantageunitutilityTB) (Decimal(18,2)) as IO_VU
