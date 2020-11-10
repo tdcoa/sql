@@ -288,7 +288,7 @@ feature_usage:
     <<: *dim_user
     feature_usage_1620pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20"]
+      dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
       gitfile:      "feature_usage/feature_usage.1620pdcr.v06.coa.sql"
       startdate:    "Current_Date - 43"  # 6 weeks
       enddate:      "Current_Date - 1"
