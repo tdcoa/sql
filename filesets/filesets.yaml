@@ -699,11 +699,11 @@ consumption_pricing:
   files: &consumption_pricing
     vu_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20"]
+      dbsversion:   ["16.20","16.10","16.0","16.00","15.10","15.00","15.0"]
       gitfile:      "consumption_pricing/gss_vantage_units.dbc.coa.sql"
     vu_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20"]
+      dbsversion:   ["16.20","16.10","16.0","16.00","15.10","15.00","15.0"]
       gitfile:      "consumption_pricing/gss_vantage_units.pdcr.coa.sql"
 
 
