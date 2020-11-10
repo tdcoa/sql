@@ -245,7 +245,7 @@ SELECT
 ,sum(IOTA_Used_cntB             ) as IOTA_Used_cntB
 ,avg(NumOfActiveAMPs_Avg        ) as NumOfActiveAMPs_Avg
 ,sum(Spool_GB                   ) as Spool_GB
-,sum(CacheHit_Pct               ) as CacheHit_Pct
+,avg(CacheHit_Pct               ) as CacheHit_Pct
 ,avg(CPUSec_Skew_AvgPCt         ) as CPUSec_Skew_AvgPCt
 ,avg(IOCnt_Skew_AvgPct          ) as IOCnt_Skew_AvgPct
 from dbql_core_hourly dbql
