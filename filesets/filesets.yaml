@@ -289,7 +289,7 @@ feature_usage:
     feature_usage_1620pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20"]
-      gitfile:      "feature_usage/feature_usage.1620pdcr.v05.coa.sql"
+      gitfile:      "feature_usage/feature_usage.1620pdcr.v06.coa.sql"
       startdate:    "Current_Date - 43"  # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
