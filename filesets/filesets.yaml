@@ -682,7 +682,7 @@ csm_dashboard:
     <<: *dim_app
     <<: *dim_statement
     controlfile_pdcr:
-      gitfile:  "csm_dashboard/coa_dashboard.1620.pdcr.v3.coa.sql"
+      gitfile:  "csm_dashboard/coa_dashboard.1620.pdcr.v4.coa.sql"
     consumption_step:
       gitfile:  "csm_dashboard/consumption_step.csv"
     consumption_stepgroup:
