@@ -677,6 +677,8 @@ csm_dashboard:
   ppenddate:            "2020-08-21"
   cpstartdate:          "2020-09-21"
   cpenddate:            "2020-09-27"
+  dailystartdate:       "current_date - 43" # 6 weeks
+  dailyenddate:         "current_date - 1"
   files:
     <<: *dim_user
     <<: *dim_app
