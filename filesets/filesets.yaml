@@ -673,10 +673,10 @@ csm_dashboard:
   prevdaterange:        1 # 2
   currentpermThreshold: 1 # 444610
   systemcds:            1 # 370510
-  ppstartdate:          "2020-08-14"
-  ppenddate:            "2020-08-21"
-  cpstartdate:          "2020-09-21"
-  cpenddate:            "2020-09-27"
+  ppstartdate:          "current_date - 43 - 365" # 6 weeks last year
+  ppenddate:            "current_date - 1  - 365"
+  cpstartdate:          "current_date - 43" # 6 weeks
+  cpenddate:            "current_date - 1"
   dailystartdate:       "current_date - 43" # 6 weeks
   dailyenddate:         "current_date - 1"
   files:
