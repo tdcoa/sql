@@ -796,6 +796,7 @@ FROM
 
         WHERE logdate   BETWEEN  {cpstartdate}  AND {cpenddate}
           AND NumOfActiveAmps >  0
+          AND firststeptime <= firstresptime
          EXPAND ON QryDurationPeriod AS Qper BY ANCHOR ANCHOR_SECOND
         ) qrylog
     WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)  /* GIVES 600 POINTS PER 1 HOUR INTERVAL SO NTILE DOESNT HAVE BIG EDGE EFFECT  */
