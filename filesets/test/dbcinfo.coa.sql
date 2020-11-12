@@ -1,8 +1,8 @@
 
 
 /*{{save:dbcinfo.csv}}*/
-/*{{load:adlste_coa_stg.stg_tca_dbcinfo}}*/
-/*{{call:adlste_coa.sp_tca_dbcinfo()}}*/
+/*{{load:{db_stg}.stg_tca_dbcinfo}}*/
+/*{{call:{db_coa}.sp_tca_dbcinfo()}}*/
 select
   InfoKey
 , InfoData
