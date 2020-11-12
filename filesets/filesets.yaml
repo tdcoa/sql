@@ -154,7 +154,7 @@ top_users:
     <<: *dim_user
     topuser_sql01:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["16.20", "16.10", "16.00", "15.10"]
       gitfile:      "top_users/top_users.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
