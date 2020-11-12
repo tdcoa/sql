@@ -730,3 +730,13 @@ west_q4_request:
     <<: *customer_data_space
     topuser_vis:
       gitfile:      "other/do_nothing.py" # don't need all the viz files
+
+
+
+test_tca:
+  active:     "True"
+  fileset_version: "0.1"
+  show_in_gui: "False"
+  files:
+    dbcinfo_file:
+      gitfile:  "test/dbcinfo.coa.sql"
