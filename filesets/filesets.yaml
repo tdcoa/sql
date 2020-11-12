@@ -154,8 +154,15 @@ top_users:
     <<: *dim_user
     topuser_sql01:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00", "15.10"]
-      gitfile:      "top_users/top_users.coa.sql"
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "top_users/top_users.pdcr.16x.coa.sql"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+    topuser_sql02:
+      collection:   ["pdcr"]
+      dbsversion:   ["15.10","15.00"]
+      gitfile:      "top_users/top_users.pdcr.15x.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
       dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
