@@ -1967,6 +1967,7 @@ FROM
 
         WHERE logdate   BETWEEN  {cpstartdate}  AND {cpenddate}
           AND NumOfActiveAmps >  0
+          AND firststeptime <= firstresptime
          EXPAND ON QryDurationPeriod AS Qper BY ANCHOR ANCHOR_SECOND
         ) qrylog
     WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)  /* GIVES 600 POINTS PER 1 HOUR INTERVAL SO NTILE DOESNT HAVE BIG EDGE EFFECT  */
@@ -2503,6 +2504,7 @@ FROM
 
         WHERE logdate   BETWEEN  {ppstartdate}  AND {ppenddate}
           AND NumOfActiveAmps >  0
+            AND firststeptime <= firstresptime
          EXPAND ON QryDurationPeriod AS Qper BY ANCHOR ANCHOR_SECOND
         ) qrylog
     WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)  /* GIVES 600 POINTS PER 1 HOUR INTERVAL SO NTILE DOESNT HAVE BIG EDGE EFFECT  */
@@ -3610,6 +3612,7 @@ FROM
 
         WHERE logdate   BETWEEN  {ppstartdate}  AND {ppenddate}
           AND NumOfActiveAmps >  0
+          AND firststeptime <= firstresptime
          EXPAND ON QryDurationPeriod AS Qper BY ANCHOR ANCHOR_SECOND
         ) qrylog
     WHERE  extract(second  from ClockTick) in (0,10,20,30,40,50)  /* GIVES 600 POINTS PER 1 HOUR INTERVAL SO NTILE DOESNT HAVE BIG EDGE EFFECT  */
@@ -4418,7 +4421,7 @@ from
 	) d
 	on 1=1*/
 
-	where l.logdate between add_months(DATE {cpenddate} - 1, -6) and DATE {cpenddate} - 1
+	where l.logdate between add_months(CAST( {cpenddate} as DATE) - 1, -6) and CAST( {cpenddate} as DATE) - 1
 ) x
 
 	group by
