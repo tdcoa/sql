@@ -372,7 +372,7 @@ SELECT        DISTINCT
 	CB_ComplexityScore
 	) e
 	on 1= 1
-	where l.logdate between {dailystartdate} and {dailystartdate}
+	where l.logdate between {dailystartdate} and {dailyenddate}
 
 
 
