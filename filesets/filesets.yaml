@@ -739,4 +739,4 @@ test_tca:
   show_in_gui: "False"
   files:
     dbcinfo_file:
-      gitfile:  "test/dbcinfo.coa.sql"
+      gitfile:  "test/tca_dbcinfo.coa.sql"
