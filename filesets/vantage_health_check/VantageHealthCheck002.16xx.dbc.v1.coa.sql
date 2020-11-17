@@ -5,19 +5,19 @@ Query2
 Query Results File name : CrossReferenceUsage
 -Tableau Dashboard Name: Cross-Reference Usage
 
-The following query calculates how much CPU is consumed by a business group when it accesses a certain data domain. 
+The following query calculates how much CPU is consumed by a business group when it accesses a certain data domain.
 The amount of CPU consumed is equally distributed across the number of subject areas accessed.
-How much CPU is consumed by a department when it accesses a certain data domain. 
+How much CPU is consumed by a department when it accesses a certain data domain.
 The amount of CPU consumed is equally distributed across the number of data domains accessed.
-how much CPU is consumed by a business group when it accesses a certain data domain.  
+how much CPU is consumed by a business group when it accesses a certain data domain.
 The amount of CPU consumed is equally distributed across the number of data domains accessed.
 The followng query is made for excel version lookup table so we have aggregated by Username, Databasename, Tablename
 
 #######################################################################
 */
-
+ 
 /*{{save:CrossReferenceUsage.csv}}*/
-SELECT 
+SELECT
 SubDepartment as Username
 ,DataDomain as "DatabaseName"
 ,SubjectArea as Tablename
@@ -39,7 +39,7 @@ FROM(
 	,o.ObjectDatabaseName as DataDomain
 	,o.ObjectTableName as SubjectArea
     ,o.ObjectName as ObjectName
-	
+
 
     FROM
 
@@ -54,7 +54,7 @@ FROM(
         --    ON DBQL.username = U.username
         WHERE CAST(Starttime as DATE) BETWEEN {startdate} AND {enddate}) as D
 
-    INNER JOIN 
+    INNER JOIN
 
         (SELECT
         QueryId,
@@ -67,15 +67,15 @@ FROM(
         FROM DBC.DBQLObjTbl --INNER JOIN systemfe.ca_table_xref
         --        ON ObjectDatabaseName = DatabaseName
         --        AND ObjectDatabaseName = Tablename
-        WHERE CAST(CollectTimeStamp as DATE) BETWEEN {startdate} AND {enddate} 
+        WHERE CAST(CollectTimeStamp as DATE) BETWEEN {startdate} AND {enddate}
         AND ObjectType = 'Tab') as O
 
             ON D.QueryID = O.QueryID
             AND D.LogDate = O.LogDate
 
-    INNER JOIN 
-    
-        (SELECT 
+    INNER JOIN
+
+        (SELECT
         QueryID
         ,COUNT(DISTINCT ObjectDatabaseName) DataDomainCNT
         ,COUNT(DISTINCT ObjectTableName) SubjectAreaCNT
@@ -90,7 +90,7 @@ FROM(
                 FROM DBC.DBQLObjTbl --INNER JOIN systemfe.ca_table_xref
                 --        ON ObjectDatabaseName = DatabaseName
                 --        AND ObjectTableName = Tablename
-                WHERE CAST(CollectTimeStamp as DATE)  BETWEEN {startdate} AND {enddate} 
+                WHERE CAST(CollectTimeStamp as DATE)  BETWEEN {startdate} AND {enddate}
                 AND ObjectType = 'Tab') as A GROUP BY 1)  as A
 
     ON A.QueryID = D.QueryID

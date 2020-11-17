@@ -5,7 +5,7 @@ Query 13
 Query Output File Name: DBQLDelayQueryReport
 Tableau Dashboard: User Delay Experience 24/7, User Delay Experience Core Hours
 
-*/
+*/ 
 
 /*{{save:DBQLDelayQueryReport.csv}}*/
 Locking Row for Access
@@ -16,7 +16,7 @@ Locking Row for Access
       ,WDName
       ,Starttime
       ,a.firststeptime
-      ,a.FirstRespTime     
+      ,a.FirstRespTime
       ,Zeroifnull(DelayTime) as DelayTime
       , (CAST(extract(hour
          From     ((a.firststeptime - a.StartTime) HOUR(2) TO SECOND(6) ) ) * 3600 + extract(minute
@@ -34,8 +34,7 @@ Locking Row for Access
          From     ((a.firstresptime - a.StartTime) HOUR(2) TO SECOND(6) ) ) AS INTEGER) )  as TotalTime
        ,count(*) As NoOfQueries
        from  DBC.DBQLogTbl a
-      
+
        Where  DelayTime > 0
        AND CAST(a.Starttime as DATE) between {startdate} and {enddate}
        Group By 1,2,3,4,5,6,7,8,9,10,11;
-

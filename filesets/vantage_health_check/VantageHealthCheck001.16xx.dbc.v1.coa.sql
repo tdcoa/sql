@@ -5,7 +5,7 @@ Query Results File name : DepartmentCPUConsumption
 - Tableau Dashboard Name: Dashboard1, Dashboard2, Dashboard3
 #######################################################################
 */
-
+ 
 /*{{save:DepartmentCPUConsumption.csv}}*/
 	SELECT
 	CAST(D.Starttime as DATE) AS LogDate

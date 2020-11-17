@@ -17,7 +17,7 @@ I/O Utilization 4-Hour Variable Peak from ResusageSldv (Viewpoint I/O Utilizatio
 •	Slope is the daily percentage increase/decrease in utilization of the trend line (positive = increasing utilization, negative = decreasing utilization).
 •	SQL uses UNION to combine historical trend with future forecast – identical changes typically must be made to both SQL statements in UNION.
 ##################################################################
-*/
+*/ 
 
 /*{{save:IO_Trend_Sldv_80Pct.csv}}*/
 LOCK ROW FOR ACCESS

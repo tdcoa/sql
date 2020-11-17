@@ -5,7 +5,7 @@ Query 16
 Query Output File Name: HighActivityUsers
 Tableau Dashboard: HighActivityUsers, ExportByUser, CPU Dist By Query USage
 
-*/
+*/ 
 
 /*{{save:HighActivityUsers.csv}}*/
 SELECT

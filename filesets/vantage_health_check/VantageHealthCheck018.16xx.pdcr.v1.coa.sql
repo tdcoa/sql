@@ -5,7 +5,7 @@ Query 18
 Query Output File Name: TopTableBySize
 Tableau Dashboard: Top Table Size
 
-*/
+*/ 
 
 /*{{save:TopTableBySize.csv}}*/
  Select

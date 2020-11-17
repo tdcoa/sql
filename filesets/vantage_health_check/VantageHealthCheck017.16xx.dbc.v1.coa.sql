@@ -6,9 +6,9 @@ Query Output File Name: TopDatabasebySpace
 Tableau Dashboard: Database Size, Top Database Size
 
 */
-
+ 
 /*{{save:TopDatabasebySpace.csv}}*/
-Select 
+Select
 	Rank()  OVER (Order by TMP.CURRENTPERM DESC ) as CURRENTPERMRnk
 	,TMP.LogDate AS LogDate
 	,TMP.DatabaseName AS DatabaseName
@@ -20,7 +20,7 @@ Select
 	FROM
 	(SELECT
 	    Case when extract(hour from current_time) LT 6 THEN current_date-1
-	     ELSE date END as LogDate   
+	     ELSE date END as LogDate
 	     ,DatabaseName as DatabaseName
 	     ,AccountName as AccountName
 	     ,SUM(CURRENTPERM)/1E9  as CURRENTPERM
@@ -32,4 +32,3 @@ Select
 	     WHERE   a.maxPERM > 0
 	Group BY 1,2,3) TMP
 ;
-						

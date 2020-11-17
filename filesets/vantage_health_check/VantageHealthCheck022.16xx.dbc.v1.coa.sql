@@ -4,7 +4,7 @@ Query 22
 Use the output of following query to create the ca_tabler_xref categorization Databasename, Tablename, DataDomain,SubjectArea
 
 */
-
+ 
 /*{{save:ca_table_xref.csv}}*/
 SELECT  DatabaseName
         ,TableName

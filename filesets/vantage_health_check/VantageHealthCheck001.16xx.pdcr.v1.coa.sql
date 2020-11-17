@@ -8,7 +8,7 @@ Query Results File name : DepartmentCPUConsumption
 
 #######################################################################
 */
-
+ 
 /*{{save:DepartmentCPUConsumption.csv}}*/
 	SELECT
 	D.LogDate

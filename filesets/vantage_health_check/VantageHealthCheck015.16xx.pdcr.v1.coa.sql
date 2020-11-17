@@ -4,7 +4,7 @@ Query 15
 
 Query Output File Name: consumption_feature_usage_v1
 Tableau Dashboard: Feature Usage By User
-*/
+*/ 
 
 /*{{save:consumption_feature_usage_v1.csv}}*/
  SELECT

@@ -6,7 +6,7 @@ Query Output File Name: TopDatabasebySpace
 Tableau Dashboard: Database Size, Top Database Size
 
 */
-
+ 
 /*{{save:TopDatabasebySpace.csv}}*/
 
 Select

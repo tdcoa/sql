@@ -15,6 +15,7 @@ The followng query is made for excel version lookup table so we have aggregated 
 
 #######################################################################
 */
+
 /*{{save:CrossReferenceUsage.csv}}*/
 SELECT
 SubDepartment as Username

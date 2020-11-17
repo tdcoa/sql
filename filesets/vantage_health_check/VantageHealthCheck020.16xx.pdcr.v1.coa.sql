@@ -5,7 +5,7 @@ Query 20
 Query Output File Name: DatabaseActivitySummary
 Tableau Dashboard: Activity By Database
 
-*/
+*/ 
 
 /*{{save:DatabaseActivitySummary.csv}}*/
   SELECT

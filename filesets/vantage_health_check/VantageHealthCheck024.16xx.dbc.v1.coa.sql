@@ -7,7 +7,7 @@ Query Output File Name: Edge.csv
 - save as csv format
 - Query Edge.csv
 */
-
+ 
 /*{{save:Edge.csv}}*/
 LOCKING ROW for ACCESS
 SELECT    UPPER(TRIM(QTU1.DatabaseName) || '.' || TRIM(QTU1.TableName))  AS "Source"

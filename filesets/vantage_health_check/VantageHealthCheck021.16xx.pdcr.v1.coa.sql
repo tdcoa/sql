@@ -7,7 +7,7 @@ Use the output of following query to create the ca_user_xref categorization user
 - Select * FROM DBC.Databases
 
 */
-
+ 
 /*{{save:ca_user_xref.csv}}*/
 Select
               DatabaseName

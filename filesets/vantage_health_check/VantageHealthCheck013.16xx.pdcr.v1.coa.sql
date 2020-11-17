@@ -5,7 +5,7 @@ Query 13
 Query Output File Name: DBQLDelayQueryReport
 Tableau Dashboard: User Delay Experience 24/7, User Delay Experience Core Hours
 
-*/
+*/ 
 
 /*{{save:DBQLDelayQueryReport.csv}}*/
 Locking Row for Access

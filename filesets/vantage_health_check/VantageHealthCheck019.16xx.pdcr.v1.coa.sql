@@ -5,7 +5,7 @@ Query 19
 Query Output File Name: CPUByOperatingWindow
 Tableau Dashboard: CPU Consumption By Operating Window
 
-*/
+*/ 
 
 /*{{save:CPUByOperatingWindow.csv}}*/
   SELECT

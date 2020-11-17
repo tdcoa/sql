@@ -6,9 +6,9 @@ Query Output File Name: consumption_feature_usage_v1
 Tableau Dashboard: Feature Usage By User
 
 */
- 
+  
 /*{{save:consumption_feature_usage_v1.csv}}*/
- SELECT 
+ SELECT
  CAST(A.Starttime as DATE) as LogDate
 ,A.USERNAME as MaskedUserName
 ,count(*) as Request_Count
@@ -134,6 +134,6 @@ Tableau Dashboard: Feature Usage By User
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -135)))) AS "SET TRANSFORM"
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -136)))) AS "ODBC Scalar Functions"
 ,ZEROIFNULL(SUM(GETBIT(A.FEATUREUSAGE,(2047 -137)))) AS "Multisource"
-FROM DBC.DBQLogTbl A 
+FROM DBC.DBQLogTbl A
 WHERE CAST(A.Starttime as DATE) BETWEEN {startdate} and {enddate}
 GROUP BY 1,2;

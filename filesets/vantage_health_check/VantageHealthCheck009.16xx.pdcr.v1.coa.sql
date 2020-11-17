@@ -5,8 +5,6 @@ CPU and IO heatmap
 
 Query Output File Name: SPMA-Detail-Data
 Tableau Dashboard: CPU Heatmap of Avg % Util  - SPMA Detail
-
-
 */
 
 /*{{save:SPMA-Detail-Data.csv}}*/

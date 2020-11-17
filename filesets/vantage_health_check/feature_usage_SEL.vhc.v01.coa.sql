@@ -17,3 +17,4 @@ select
 from Feature_Usage
 group by 1,2,3
 ;
+ 

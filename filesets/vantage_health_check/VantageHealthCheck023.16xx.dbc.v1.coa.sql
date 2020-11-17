@@ -1,14 +1,14 @@
-/*	
+/*
 Query 23
 Query OutputFile Name: Node.csv
-	
+
 - Generate Node csv output for Gephi
 - Copy and paste to Nodes.csv, remove first column (ie: 1,2,3..n)
 - Make sure you leave in the header row, and that numbers do not have commas or quotes around them
 - save as csv format
-- Query 
+- Query
 */
-
+ 
 /*{{save:Node.csv}}*/
 LOCKING ROW for ACCESS
 SELECT UPPER(SUM_ALLOC.DatabaseName||'.'||SUM_ALLOC.TableName) AS ID
@@ -35,9 +35,9 @@ FROM (
         , SUM(ALLOC.Alloc_TableIO) AS SUM_AllocIO
         , RANK() OVER(ORDER BY SUM_AllocCPU DESC) AS CPURank
         , RANK() OVER(ORDER BY SUM_AllocIO DESC) AS IORank
-       
+
         FROM (
-       
+
                 SELECT QTU1.DatabaseName
                 , QTU1.TableName
                 , QTU1.QueryID
@@ -71,10 +71,10 @@ FROM (
                    GROUP BY 1
                 ) AS QTU2
                 ON QTU1.QueryID=QTU2.QueryID
-               
+
                 INNER JOIN DBC.DBQLogTbl QU /* uncomment for DBC */
                 ON QTU1.QueryID=QU.QueryID
-				
+
 				LEFT OUTER JOIN (
 				    SELECT    thedate
 							, (sum((LogicalDeviceReadKB + LogicalDeviceWriteKB) / (1024 * 1024) ) (FLOAT))/ sum(FileAcqs +FilePreReads +MemTextPageReads +MemCtxtPageWrites+MemCtxtPageReads+FileWrites ) AS AvgIOPerReqGB
@@ -83,13 +83,13 @@ FROM (
 				    GROUP BY thedate
                 ) AS spma
                 ON CAST(QU.CollectTimeStamp AS DATE) = spma.thedate
- 
+
         ) AS ALLOC
- 
+
         GROUP BY 1,2
- 
+
     ) AS SUM_ALLOC
- 
+
 LEFT JOIN
     (
     SELECT
@@ -108,7 +108,7 @@ LEFT JOIN
 	WHERE CAST(CollectTimeStamp AS DATE) BETWEEN {startdate} and {enddate}
     ) AS SumAll
     ON 1=1
- 
+
 LEFT JOIN DBC.AllSpaceV SPACE
         ON SUM_ALLOC.DatabaseName=SPACE.DatabaseName
         AND SUM_ALLOC.TableName=SPACE.TableName

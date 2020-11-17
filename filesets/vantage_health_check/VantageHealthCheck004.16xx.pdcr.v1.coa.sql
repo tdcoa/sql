@@ -5,7 +5,7 @@ Query Results File name : consumption_ux_p1_v3
 -Tableau Dashboard Name: UX-1, UX-2, UX-3, UX-4
 #######################################################################
 */
-
+ 
 /*{{save:consumption_ux_p1_v3.csv}}*/
 SELECT
     LogDate

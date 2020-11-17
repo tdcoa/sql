@@ -7,7 +7,7 @@ Query Output File Name: Edge.csv
  Make sure you leave in the header row, and that numbers do not have commas or quotes around them
  save as csv format
 Query Edge.csv
-*/
+*/ 
 
 /*{{save:Edge.csv}}*/
 LOCKING ROW for ACCESS

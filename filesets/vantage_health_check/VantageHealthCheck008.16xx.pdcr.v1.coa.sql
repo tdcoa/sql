@@ -17,7 +17,7 @@ Storage Trend & Forecast
 •	Slope is the daily percentage increase/decrease in utilization of the trend line (positive = increasing utilization, negative = decreasing utilization).
 •	SQL uses UNION to combine historical trend with future forecast – identical changes typically must be made to both SQL statements in UNION.
 */
-
+ 
 /*{{save:Storage_Trend_DatabaseSpace_AvgCurrentPermPct.csv}}*/
 LOCK ROW FOR ACCESS
 SELECT

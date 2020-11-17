@@ -9,7 +9,7 @@ Query OutputFile Name: Node.csv
  -  save as csv format
  -  Query
 */
-
+ 
 /*{{save:Node.csv}}*/
 LOCKING ROW for ACCESS
 SELECT UPPER(SUM_ALLOC.DatabaseName||'.'||SUM_ALLOC.TableName) AS ID
