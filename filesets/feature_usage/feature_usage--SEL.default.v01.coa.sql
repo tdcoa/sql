@@ -21,3 +21,16 @@ from Feature_Usage
 group by 1,2,3,4,5,6,7,8
 order by 9 desc
 ;
+
+/*{{save:feature_usage_summary.csv}}*/
+select
+ '{siteid}' as Site_ID
+,cast(min(LogDate) as format 'Y4-MM-DD') as StartLogDate
+,cast(max(LogDate) as format 'Y4-MM-DD') as EndLogDate
+,featurename as Feature_Name
+,BitPos
+,sum(Query_Cnt) as Feature_Usage_Cnt
+from Feature_Usage
+group by Site_ID, FeatureName, BitPos
+order by Feature_Name desc
+;
