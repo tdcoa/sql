@@ -290,16 +290,29 @@ compete_bigquery:
 
 feature_usage:
   active:           "True"
-  fileset_version:  "1.2"
-  files:
+  fileset_version:  "2.0"
+  startdate:        "Current_Date - 43"  # 6 weeks
+  enddate:          "Current_Date - 1"
+  files: &feature_usage
     <<: *dim_user
-    feature_usage_1620pdcr:
+    feature_usage_CVT01_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
-      gitfile:      "feature_usage/feature_usage.1620pdcr.v06.coa.sql"
-      startdate:    "Current_Date - 43"  # 6 weeks
-      enddate:      "Current_Date - 1"
-      dbqlogtbl:    "pdcrinfo.DBQLogTbl_Hst"
+      gitfile:      "feature_usage/feature_usage_CVT.all.v07.coa.sql"
+      dbqlogtbl:    "pdcrinfo.dbqlogtbl_hst"
+      logdate:      "LogDate"
+    feature_usage_CVT01_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
+      gitfile:      "feature_usage/feature_usage_CVT.all.v07.coa.sql"
+      dbqlogtbl:    "dbc.dbqlogtbl"
+      logdate:      "CAST(Starttime as Date) as LogDate"
+    feature_usage_SEL:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
+      gitfile:      "feature_usage/feature_usage_SEL.default.v01.coa.sql"
+
+
 
 
 level1_how_much:
@@ -390,14 +403,11 @@ vantage_health_check:
       gitfile:      "vantage_health_check/VantageHealthCheck002.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql03_dbc:
-      gitfile:      "vantage_health_check/VantageHealthCheck003.16xx.dbc.v1.coa.sql"
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-    vhc_sql03_pdcr:
-      gitfile:      "vantage_health_check/VantageHealthCheck003.16xx.pdcr.v1.coa.sql"
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+    <<: *feature_usage
+    feature_usage_SEL:  # override normal export
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
+      gitfile:      "vantage_health_check/feature_usage_SEL.vhc.v01.coa.sql"
     vhc_sql04_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck004.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
