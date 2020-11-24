@@ -750,3 +750,89 @@ test_tca:
   files:
     dbcinfo_file:
       gitfile:  "test/tca_dbcinfo.coa.sql"
+
+
+
+
+
+ms_opportunity_dashboard:
+  active:     "True"
+  fileset_version: "1.0"
+  show_in_gui: "False"
+  files: &ms_opportunity_dashboard
+    sql01:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/01.System_Config.coa.sql"
+    sql02:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/02.Suspect_Query_Summary.coa.sql"
+    sql03:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/03.ImpactCPU_Query_Summary.coa.sql"
+    sql04:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/04.Assessment_Metrics.coa.sql"
+    sql05:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/05.Cumulative_CPU_Short_Queries_Summary.coa.sql"
+    sql06:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/06.Average_8hr_window.coa.sql"
+    sql07:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/07.Answers_Database_Count.coa.sql"
+    sql08:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/08.Answers_Table_Count.coa.sql"
+    sql09:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/09.Answers_User_Count.coa.sql"
+    sql10:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/10.Competitors_Query_Average_Per_Hour.coa.sql"
+    sql11:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/11.Competitors_Query_Complexity.coa.sql"
+    sql12:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/12.Consumption_Available_Space.coa.sql"
+    sql13:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/13.Consumption_Cpu_Peak_Period.coa.sql"
+    sql14:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/14.Consumption_Cpu_Utilization.coa.sql"
+    sql15:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/15.Consumption_IO_Average.coa.sql"
+    sql16:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/16.Consumption_IO_Max_Value.coa.sql"
+    sql17:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/17.Consumption_Query_Count.coa.sql"
+    sql18:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/18.Strategy_Database_Version.coa.sql"
+    sql19:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      gitfile:      "ms_opportunity_dashboard/19.Workload_Suspect_CPU.coa.sql"
