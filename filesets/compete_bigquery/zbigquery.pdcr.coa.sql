@@ -74,18 +74,18 @@ select '{siteid}'  as Site_ID
       ,SUM(HostRead_KB) as InboundKB
       ,SUM(HostWrite_KB) as OutboundKB
       ,CASE
-          WHEN (InboundKB) > POWER(1024,4) THEN CAST((InboundKB) / POWER(1024, 4) AS DECIMAL(5,2)) || 'PB'
-          WHEN (InboundKB) > POWER(1024,3) THEN CAST((InboundKB) / POWER(1024, 3) AS DECIMAL(5,2)) || 'TB'
-          WHEN (InboundKB) > POWER(1024,2) THEN CAST((InboundKB) / POWER(1024, 2) AS DECIMAL(5,2)) || 'GB'
-          WHEN (InboundKB) > POWER(1024,1) THEN CAST((InboundKB) / POWER(1024, 1) AS DECIMAL(5,2)) || 'MB'
-          ELSE CAST((InboundKB) AS DECIMAL(5, 2)) || 'KB'
+          WHEN (InboundKB) > POWER(1024,4) THEN CAST((InboundKB) / POWER(1024, 4) AS DECIMAL(18,2)) || 'PB'
+          WHEN (InboundKB) > POWER(1024,3) THEN CAST((InboundKB) / POWER(1024, 3) AS DECIMAL(18,2)) || 'TB'
+          WHEN (InboundKB) > POWER(1024,2) THEN CAST((InboundKB) / POWER(1024, 2) AS DECIMAL(18,2)) || 'GB'
+          WHEN (InboundKB) > POWER(1024,1) THEN CAST((InboundKB) / POWER(1024, 1) AS DECIMAL(18,2)) || 'MB'
+          ELSE CAST((InboundKB) AS DECIMAL(18, 2)) || 'KB'
        END AS InboundAbbrev
       ,CASE
-          WHEN (OutboundKB) > POWER(1024,4) THEN CAST((OutboundKB) / POWER(1024, 4) AS DECIMAL(5,2)) || 'PB'
-          WHEN (OutboundKB) > POWER(1024,3) THEN CAST((OutboundKB) / POWER(1024, 3) AS DECIMAL(5,2)) || 'TB'
-          WHEN (OutboundKB) > POWER(1024,2) THEN CAST((OutboundKB) / POWER(1024, 2) AS DECIMAL(5,2)) || 'GB'
-          WHEN (OutboundKB) > POWER(1024,1) THEN CAST((OutboundKB) / POWER(1024, 1) AS DECIMAL(5,2)) || 'MB'
-          ELSE CAST((OutboundKB) AS DECIMAL(5, 2)) || 'KB'
+          WHEN (OutboundKB) > POWER(1024,4) THEN CAST((OutboundKB) / POWER(1024, 4) AS DECIMAL(18,2)) || 'PB'
+          WHEN (OutboundKB) > POWER(1024,3) THEN CAST((OutboundKB) / POWER(1024, 3) AS DECIMAL(18,2)) || 'TB'
+          WHEN (OutboundKB) > POWER(1024,2) THEN CAST((OutboundKB) / POWER(1024, 2) AS DECIMAL(18,2)) || 'GB'
+          WHEN (OutboundKB) > POWER(1024,1) THEN CAST((OutboundKB) / POWER(1024, 1) AS DECIMAL(18,2)) || 'MB'
+          ELSE CAST((OutboundKB) AS DECIMAL(18, 2)) || 'KB'
       END AS OutboundAbbrev
 from cpu_summary_hourly
 group by 2
