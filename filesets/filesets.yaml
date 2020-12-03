@@ -749,10 +749,17 @@ test_tca:
   show_in_gui: "False"
   files:
     dbcinfo_file:
-      gitfile:  "test/tca_dbcinfo.coa.sql"
-
-
-
+      gitfile:  "tca/tca_dbcinfo.coa.sql"
+    svpr_16xx_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      resusagesvpr: "pdcrinfo.resusageSVPR_hst"
+      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
+    svpr_16xx_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      resusagesvpr: "dbc.resusageSVPR"
+      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
 
 
 ms_opportunity_dashboard:
