@@ -834,6 +834,7 @@ test_tca:
   files:
     dbcinfo_file:
       gitfile:  "tca/tca_dbcinfo.coa.sql"
+    # SVPR
     svpr_1600_pdcr:
       collection:     ["pdcr"]
       dbsversion:     ["16.00"]
@@ -906,3 +907,151 @@ test_tca:
       dbsversion_label: "1710"
       resusagesvpr: "dbc.resusageSVPR"
       gitfile:  "tca/tca_resusageSVPR.17xx.coa.sql"
+
+    # SPMA 
+    spma_1600_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["16.00"]
+      dbsversion_label: "1600"
+      resusagespma: "pdcrinfo.resusageSPMA_hst"
+      gitfile:  "tca/tca_resusageSPMA.16xx.coa.sql"
+    spma_1600_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["16.00"]
+      dbsversion_label: "1600"
+      resusagespma: "dbc.resusageSPMA"
+      gitfile:  "tca/tca_resusageSPMA.16xx.coa.sql"
+    spma_1610_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["16.10"]
+      dbsversion_label: "1610"
+      resusagespma: "pdcrinfo.resusageSPMA_hst"
+      gitfile:  "tca/tca_resusageSPMA.16xx.coa.sql"
+    spma_1610_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["16.10"]
+      dbsversion_label: "1610"
+      resusagespma: "dbc.resusageSPMA"
+      gitfile:  "tca/tca_resusageSPMA.16xx.coa.sql"
+    spma_1620_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["16.20"]
+      dbsversion_label: "1620"
+      resusagespma: "pdcrinfo.resusageSPMA_hst"
+      gitfile:  "tca/tca_resusageSPMA.16xx.coa.sql"
+    spma_1620_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["16.20"]
+      dbsversion_label: "1620"
+      resusagespma: "dbc.resusageSPMA"
+      gitfile:  "tca/tca_resusageSPMA.16xx.coa.sql"
+    spma_1700_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["17.00"]
+      dbsversion_label: "1700"
+      resusagespma: "pdcrinfo.resusageSPMA_hst"
+      gitfile:  "tca/tca_resusageSPMA.17xx.coa.sql"
+    spma_1700_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["17.00"]
+      dbsversion_label: "1700"
+      resusagespma: "dbc.resusageSPMA"
+      gitfile:  "tca/tca_resusageSPMA.17xx.coa.sql"
+    spma_1705_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["17.05"]
+      dbsversion_label: "1705"
+      resusagespma: "pdcrinfo.resusageSPMA_hst"
+      gitfile:  "tca/tca_resusageSPMA.17xx.coa.sql"
+    spma_1705_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["17.05"]
+      dbsversion_label: "1705"
+      resusagespma: "dbc.resusageSPMA"
+      gitfile:  "tca/tca_resusageSPMA.17xx.coa.sql"
+    spma_1710_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["17.10"]
+      dbsversion_label: "1710"
+      resusagespma: "pdcrinfo.resusageSPMA_hst"
+      gitfile:  "tca/tca_resusageSPMA.17xx.coa.sql"
+    spma_1710_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["17.10"]
+      dbsversion_label: "1710"
+      resusagespma: "dbc.resusageSPMA"
+      gitfile:  "tca/tca_resusageSPMA.17xx.coa.sql"
+
+    # SPDSK
+    spdsk_1600_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["16.00"]
+      dbsversion_label: "1600"
+      resusagespdsk: "pdcrinfo.resusageSPDSK_hst"
+      gitfile:  "tca/tca_resusageSPDSK.16xx.coa.sql"
+    spdsk_1600_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["16.00"]
+      dbsversion_label: "1600"
+      resusagespdsk: "dbc.resusageSPDSK"
+      gitfile:  "tca/tca_resusageSPDSK.16xx.coa.sql"
+    spdsk_1610_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["16.10"]
+      dbsversion_label: "1610"
+      resusagespdsk: "pdcrinfo.resusageSPDSK_hst"
+      gitfile:  "tca/tca_resusageSPDSK.16xx.coa.sql"
+    spdsk_1610_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["16.10"]
+      dbsversion_label: "1610"
+      resusagespdsk: "dbc.resusageSPDSK"
+      gitfile:  "tca/tca_resusageSPDSK.16xx.coa.sql"
+    spdsk_1620_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["16.20"]
+      dbsversion_label: "1620"
+      resusagespdsk: "pdcrinfo.resusageSPDSK_hst"
+      gitfile:  "tca/tca_resusageSPDSK.16xx.coa.sql"
+    spdsk_1620_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["16.20"]
+      dbsversion_label: "1620"
+      resusagespdsk: "dbc.resusageSPDSK"
+      gitfile:  "tca/tca_resusageSPDSK.16xx.coa.sql"
+    spdsk_1700_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["17.00"]
+      dbsversion_label: "1700"
+      resusagespdsk: "pdcrinfo.resusageSPDSK_hst"
+      gitfile:  "tca/tca_resusageSPDSK.17xx.coa.sql"
+    spdsk_1700_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["17.00"]
+      dbsversion_label: "1700"
+      resusagespdsk: "dbc.resusageSPDSK"
+      gitfile:  "tca/tca_resusageSPDSK.17xx.coa.sql"
+    spdsk_1705_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["17.05"]
+      dbsversion_label: "1705"
+      resusagespdsk: "pdcrinfo.resusageSPDSK_hst"
+      gitfile:  "tca/tca_resusageSPDSK.17xx.coa.sql"
+    spdsk_1705_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["17.05"]
+      dbsversion_label: "1705"
+      resusagespdsk: "dbc.resusageSPDSK"
+      gitfile:  "tca/tca_resusageSPDSK.17xx.coa.sql"
+    spdsk_1710_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["17.10"]
+      dbsversion_label: "1710"
+      resusagespdsk: "pdcrinfo.resusageSPDSK_hst"
+      gitfile:  "tca/tca_resusageSPDSK.17xx.coa.sql"
+    spdsk_1710_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["17.10"]
+      dbsversion_label: "1710"
+      resusagespdsk: "dbc.resusageSPDSK"
+      gitfile:  "tca/tca_resusageSPDSK.17xx.coa.sql"
