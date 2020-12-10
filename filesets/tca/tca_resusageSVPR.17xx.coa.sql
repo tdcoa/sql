@@ -1,4 +1,4 @@
-/* TCA Process for ResUsageSVPR == 1620 */ 
+/* TCA Process for ResUsageSVPR == 1710 */ 
 /*  Parameters:
      startdate = {startdate}
      enddate = {enddate}
@@ -24,12 +24,14 @@ Select
  ,NULL as Secs
  ,NULL as NominalSecs
  ,NULL as SummaryFlag
- ,NULL as Reserved
+ ,NULL as ReservedS0
  ,NULL as PM_COD_CPU
  ,NULL as WM_COD_CPU
+ ,NULL as Reserved00
  ,NULL as NCPUs
  ,NULL as vprid
  ,case when VprType like 'PE%' then 'PE' when VprType like 'GTW%' then 'GTW' when VprType like 'AMP%' then 'AMP' else 'OTHER' end as VprType
+ ,NULL as ReservedS1
  ,NULL as MemPDbKBResCU
  ,NULL as MemPCiKBResCU
  ,NULL as MemSDbKBResCU
@@ -156,6 +158,20 @@ Select
  ,NULL as FsgCacheInuseKB
  ,NULL as SpaceAllocated
  ,NULL as SpaceDeallocated
+ ,NULL as NosPhysReadIOs
+ ,NULL as NosPhysReadIOKB
+ ,NULL as NosFiles
+ ,NULL as NosFilesSkipped
+ ,NULL as NosRecordsReturned
+ ,NULL as NosRecordsReturnedKB
+ ,NULL as NosRecordsSkipped
+ ,NULL as NosTotalIOWaitTime
+ ,NULL as NosMaxIOWaitTime
+ ,NULL as NosCPUTime
+ ,NULL as RRDHCount
+ ,NULL as RRDHCascAll
+ ,NULL as RRDHCascMost
+ ,NULL as RRDHCascSome
  ,NULL as Spare00
  ,NULL as Spare01
  ,NULL as Spare02
@@ -462,6 +478,11 @@ Select
  ,NULL as SpaceMsgsCnt
  ,NULL as FileCompDBs_HW
  ,NULL as FileUnCompDBs_HW
+ ,NULL as TJPurges
+ ,NULL as TJDbPurgeReads
+ ,NULL as TJDbPurgeDeletes
+ ,NULL as UdfMemInuseKB
+ ,NULL as UdfVmSizeKB
  ,NULL as SpareInt
 from {resusagesvpr} -- pdcrinfo.resusageSVPR_hst or dbc.resusageSVPR
 where TheDate between {startdate} and {enddate}

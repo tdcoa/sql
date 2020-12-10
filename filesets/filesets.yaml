@@ -742,26 +742,6 @@ west_q4_request:
       gitfile:      "other/do_nothing.py" # don't need all the viz files
 
 
-
-test_tca:
-  active:     "True"
-  fileset_version: "0.1"
-  show_in_gui: "False"
-  files:
-    dbcinfo_file:
-      gitfile:  "tca/tca_dbcinfo.coa.sql"
-    svpr_16xx_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
-      resusagesvpr: "pdcrinfo.resusageSVPR_hst"
-      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
-    svpr_16xx_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
-      resusagesvpr: "dbc.resusageSVPR"
-      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
-
-
 ms_opportunity_dashboard:
   active:     "True"
   fileset_version: "1.0"
@@ -843,3 +823,86 @@ ms_opportunity_dashboard:
       collection:   ["pdcr"]
       dbsversion:   ["16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/19.Workload_Suspect_CPU.coa.sql"
+
+
+
+test_tca:
+  active:     "True"
+  fileset_version: "0.1"
+  dbprefix:  "DEV_"
+  show_in_gui: "False"
+  files:
+    dbcinfo_file:
+      gitfile:  "tca/tca_dbcinfo.coa.sql"
+    svpr_1600_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["16.00"]
+      dbsversion_label: "1600"
+      resusagesvpr: "pdcrinfo.resusageSVPR_hst"
+      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
+    svpr_1600_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["16.00"]
+      dbsversion_label: "1600"
+      resusagesvpr: "dbc.resusageSVPR"
+      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
+    svpr_1610_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["16.10"]
+      dbsversion_label: "1610"
+      resusagesvpr: "pdcrinfo.resusageSVPR_hst"
+      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
+    svpr_1610_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["16.10"]
+      dbsversion_label: "1610"
+      resusagesvpr: "dbc.resusageSVPR"
+      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
+    svpr_1620_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["16.20"]
+      dbsversion_label: "1620"
+      resusagesvpr: "pdcrinfo.resusageSVPR_hst"
+      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
+    svpr_1620_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["16.20"]
+      dbsversion_label: "1620"
+      resusagesvpr: "dbc.resusageSVPR"
+      gitfile:  "tca/tca_resusageSVPR.16xx.coa.sql"
+    svpr_1700_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["17.00"]
+      dbsversion_label: "1700"
+      resusagesvpr: "pdcrinfo.resusageSVPR_hst"
+      gitfile:  "tca/tca_resusageSVPR.17xx.coa.sql"
+    svpr_1700_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["17.00"]
+      dbsversion_label: "1700"
+      resusagesvpr: "dbc.resusageSVPR"
+      gitfile:  "tca/tca_resusageSVPR.17xx.coa.sql"
+    svpr_1705_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["17.05"]
+      dbsversion_label: "1705"
+      resusagesvpr: "pdcrinfo.resusageSVPR_hst"
+      gitfile:  "tca/tca_resusageSVPR.17xx.coa.sql"
+    svpr_1705_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["17.05"]
+      dbsversion_label: "1705"
+      resusagesvpr: "dbc.resusageSVPR"
+      gitfile:  "tca/tca_resusageSVPR.17xx.coa.sql"
+    svpr_1710_pdcr:
+      collection:     ["pdcr"]
+      dbsversion:     ["17.10"]
+      dbsversion_label: "1710"
+      resusagesvpr: "pdcrinfo.resusageSVPR_hst"
+      gitfile:  "tca/tca_resusageSVPR.17xx.coa.sql"
+    svpr_1710_dbc:
+      collection:     ["dbc"]
+      dbsversion:     ["17.10"]
+      dbsversion_label: "1710"
+      resusagesvpr: "dbc.resusageSVPR"
+      gitfile:  "tca/tca_resusageSVPR.17xx.coa.sql"
