@@ -7,11 +7,11 @@
      dbsversion_label = {dbsversion_label}
  */
  
-/*{{save:tca_resusageSVPR_{dbsversion_label}.csv}}*/
+/*{{save:tca_resusageSPMA_{dbsversion_label}.csv}}*/
 /*{{load:{dbprefix}APP_TCA_TMP.stg_tca_resusageSPMA_{dbsversion_label}}}*/
 /*{{call:{dbprefix}APP_TCA_TBL.sp_tca_resusageSPMA_{dbsversion_label}()}}*/
 Select 
-  Site_ID
+  '{siteid}' as Site_ID
  ,TheDate
  ,NodeID
  ,TheTime
