@@ -149,7 +149,7 @@ dbql_core:
     dbql_core_select:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core--SEL.coa.sql"
+      gitfile:      "dbql_core/dbql_core--SEL.sql"
 
 
 top_users:
