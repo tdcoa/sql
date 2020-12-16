@@ -12,9 +12,9 @@
 Select  /*dbql_core*/
    '{siteid}'  as Site_ID
   ,cast(LogDate as format 'Y4-MM-DD')(varchar(128)) as LogDate
-  ,usr.User_Bucket
-  ,usr.User_Department
-  ,usr.User_SubDepartment
+  ,User_Bucket
+  ,User_Department
+  ,User_SubDepartment
   ,cast(qrycnt_in_runtime_0000_0001   as decimal(18,2))   as qrycnt_in_runtime_0000_0001
   ,cast(qrycnt_in_runtime_0001_0005   as decimal(18,2))   as qrycnt_in_runtime_0001_0005
   ,cast(qrycnt_in_runtime_0005_0010   as decimal(18,2))   as qrycnt_in_runtime_0005_0010
