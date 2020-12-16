@@ -269,18 +269,20 @@ compete_bigquery:
   fileset_version:  "1.0"
   startdate:        "Current_Date - 90"
   enddate:          "Current_Date - 1"
+  your_name:        "<your name>"
+  your_title:       "<your title>"
   files:
     <<: *dbql_core
     <<: *db_objects
     <<: *concurrency
-    compete_bigquery_pdcr:
-      collection:   ["pdcr"]
+    compete_bigquery_final:
+      collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql"
-    compete_bigquery_dbc:
-      collection:   ["dbc"]
+    dbql_core_override:
+      collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql"
+      gitfile:      "compete_bigquery/dbql_core--SEL.sql" # override
     compete_shared_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
