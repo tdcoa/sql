@@ -279,10 +279,6 @@ compete_bigquery:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql"
-    dbql_core_override:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_bigquery/dbql_core--SEL.sql" # override
     compete_shared_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
