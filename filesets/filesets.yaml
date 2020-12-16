@@ -137,15 +137,20 @@ dbql_core:
     dbql_core_pdcr16:
       collection:   ["pdcr"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "dbql_core/dbql_core.1620pdcr.v09.coa.sql"
+      gitfile:      "dbql_core/dbql_core--CVT.1620pdcr.v09.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dbql_core_dbc16:
       collection:   ["dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core.1620dbc.v08.coa.sql"
-      startdate:    "Current_Date - 7" # 6 weeks
-      enddate:      "Current_Date"
+      startdate:    "Current_Date - 43" # 6 weeks
+      enddate:      "Current_Date - 1"
+    dbql_core_select:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "dbql_core/dbql_core--SEL.coa.sql"
+
 
 top_users:
   active:           "True"
@@ -908,7 +913,7 @@ test_tca:
       resusagesvpr: "dbc.resusageSVPR"
       gitfile:  "tca/tca_resusageSVPR.17xx.coa.sql"
 
-    # SPMA 
+    # SPMA
     spma_1600_pdcr:
       collection:     ["pdcr"]
       dbsversion:     ["16.00"]
