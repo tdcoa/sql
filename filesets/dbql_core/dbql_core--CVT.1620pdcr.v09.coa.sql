@@ -285,7 +285,7 @@ no primary index on commit preserve rows
 ;
 
 
-/*{{file:dbql_core--SEL.coa.sql}}*/
+/*{{file:dbql_core--SEL.sql}}*/
 
 drop table dbql_core_breakout;
 drop table dbql_core_hourly;
