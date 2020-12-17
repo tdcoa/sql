@@ -285,9 +285,6 @@ no primary index on commit preserve rows
 ;
 
 
-/*{{file:dbql_core--SEL.sql}}*/
-
-
 
 
 /* End COA: DBQL_Core */
