@@ -303,13 +303,13 @@ feature_usage:
       dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
       dbqlogtbl:    "dbc.dbqlogtbl"
       logdate:      "CAST(Starttime as Date) as LogDate"
-      gitfile:      "feature_usage/feature_usage--CVT.all.v07.coa.sql"
+      gitfile:      "feature_usage/feature_usage--CVT.dbc.v07.coa.sql"
     feature_usage_CVT01_pdcr:
       collection:   ["pdcr"]
       dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
       dbqlogtbl:    "pdcrinfo.dbqlogtbl_hst"
       logdate:      "LogDate"
-      gitfile:      "feature_usage/feature_usage--CVT.all.v07.coa.sql"
+      gitfile:      "feature_usage/feature_usage--CVT.pdcr.v07.coa.sql"
     feature_usage_SEL:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
