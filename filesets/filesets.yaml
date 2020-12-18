@@ -313,7 +313,7 @@ feature_usage:
     feature_usage_SEL:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
-      gitfile:      "feature_usage/feature_usage--SEL.default.v01.coa.sql"
+      gitfile:      "feature_usage/feature_usage--SEL.default.v02.coa.sql"
 
 
 
