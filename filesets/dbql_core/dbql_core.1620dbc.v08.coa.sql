@@ -76,34 +76,34 @@ SELECT
 ,usr.User_Bucket
 ,usr.User_Department
 ,usr.User_SubDepartment
-,sum(Request_Cnt                ) as Request_Cnt
-,sum(Query_Cnt                  ) as Query_Cnt
-,sum(Query_MultiStatement_Cnt   ) as Query_MultiStatement_Cnt
-,sum(Query_Error_Cnt            ) as Query_Error_Cnt
-,sum(Query_Abort_Cnt            ) as Query_Abort_Cnt
-,sum(Query_NoIO_cnt             ) as Query_NoIO_cnt
-,sum(Query_InMem_Cnt            ) as Query_InMem_Cnt
-,sum(Query_PhysIO_Cnt           ) as Query_PhysIO_Cnt
-,sum(Query_Tactical_Cnt         ) as Query_Tactical_Cnt
-,avg(Query_Complexity_Score_Avg ) as Query_Complexity_Score_Avg
-,sum(Returned_Row_Cnt           ) as Returned_Row_Cnt
-,sum(DelayTime_Sec              ) as DelayTime_Sec
-,sum(RunTime_Parse_Sec          ) as RunTime_Parse_Sec
-,sum(Runtime_AMP_Sec            ) as Runtime_AMP_Sec
-,sum(RunTime_Total_Sec          ) as RunTime_Total_Sec
-,sum(TransferTime_Sec           ) as TransferTime_Sec
-,sum(CPU_Parse_Sec              ) as CPU_Parse_Sec
-,sum(CPU_AMP_Sec                ) as CPU_AMP_Sec
-,sum(IOCntM_Physical            ) as IOCntM_Physical
-,sum(IOCntM_Total               ) as IOCntM_Total
-,sum(IOGB_Physical              ) as IOGB_Physical
-,sum(IOGB_Total                 ) as IOGB_Total
-,sum(IOTA_Used_cntB             ) as IOTA_Used_cntB
-,avg(NumOfActiveAMPs_Avg        ) as NumOfActiveAMPs_Avg
-,sum(Spool_GB                   ) as Spool_GB
-,sum(CacheHit_Pct               ) as CacheHit_Pct
-,avg(CPUSec_Skew_AvgPCt         ) as CPUSec_Skew_AvgPCt
-,avg(IOCnt_Skew_AvgPct          ) as IOCnt_Skew_AvgPct
+,sum(dbql.Request_Cnt                ) as Request_Cnt
+,sum(dbql.Query_Cnt                  ) as Query_Cnt
+,sum(dbql.Query_MultiStatement_Cnt   ) as Query_MultiStatement_Cnt
+,sum(dbql.Query_Error_Cnt            ) as Query_Error_Cnt
+,sum(dbql.Query_Abort_Cnt            ) as Query_Abort_Cnt
+,sum(dbql.Query_NoIO_cnt             ) as Query_NoIO_cnt
+,sum(dbql.Query_InMem_Cnt            ) as Query_InMem_Cnt
+,sum(dbql.Query_PhysIO_Cnt           ) as Query_PhysIO_Cnt
+,sum(dbql.Query_Tactical_Cnt         ) as Query_Tactical_Cnt
+,avg(dbql.Query_Complexity_Score_Avg ) as Query_Complexity_Score_Avg
+,sum(dbql.Returned_Row_Cnt           ) as Returned_Row_Cnt
+,sum(dbql.DelayTime_Sec              ) as DelayTime_Sec
+,sum(dbql.RunTime_Parse_Sec          ) as RunTime_Parse_Sec
+,sum(dbql.Runtime_AMP_Sec            ) as Runtime_AMP_Sec
+,sum(dbql.RunTime_Total_Sec          ) as RunTime_Total_Sec
+,sum(dbql.TransferTime_Sec           ) as TransferTime_Sec
+,sum(dbql.CPU_Parse_Sec              ) as CPU_Parse_Sec
+,sum(dbql.CPU_AMP_Sec                ) as CPU_AMP_Sec
+,sum(dbql.IOCntM_Physical            ) as IOCntM_Physical
+,sum(dbql.IOCntM_Total               ) as IOCntM_Total
+,sum(dbql.IOGB_Physical              ) as IOGB_Physical
+,sum(dbql.IOGB_Total                 ) as IOGB_Total
+,sum(dbql.IOTA_Used_cntB             ) as IOTA_Used_cntB
+,avg(dbql.NumOfActiveAMPs_Avg        ) as NumOfActiveAMPs_Avg
+,sum(dbql.Spool_GB                   ) as Spool_GB
+,sum(dbql.CacheHit_Pct               ) as CacheHit_Pct
+,avg(dbql.CPUSec_Skew_AvgPCt         ) as CPUSec_Skew_AvgPCt
+,avg(dbql.IOCnt_Skew_AvgPct          ) as IOCnt_Skew_AvgPct
 FROM
  (SELECT
    '{siteid}'  as Site_ID
@@ -136,7 +136,7 @@ FROM
   ,zeroifnull(sum(cast(dbql.NumResultRows as BigInt) )) as Returned_Row_Cnt
 
   /* ====== Metrics: RunTimes ====== */
-  ,sum(cast(dbql.DelayTime as decimal(18,2))) as DelayTime_Sec
+  ,sum(cast(zeroifnull(dbql.DelayTime) as decimal(18,2))) as DelayTime_Sec
   ,sum(ZEROIFNULL(CAST(
      (EXTRACT(HOUR   FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) * 3600)
     +(EXTRACT(MINUTE FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) *   60)
@@ -219,8 +219,8 @@ SELECT
   ,null as CPUSec_Skew_AvgPCt
   ,null as IOCnt_Skew_AvgPct
 
-  From dbc.QryLogSummaryV smry  
-  where cast(smry.StartTime as date) between {startdate} and {enddate}    
+  From dbc.QryLogSummaryV smry
+  where cast(smry.StartTime as date) between {startdate} and {enddate}
   Group by
    LogTS
   ,Site_ID
@@ -228,11 +228,11 @@ SELECT
   ,appid
   ,StatementType
 
-)dbql
+) as dbql
 
-join dim_app as app     on dbql.AppID = app.AppID 
-join dim_Statement stm  on dbql.StatementType = stm.StatementType 
-join dim_user usr       on dbql.UserName = usr.UserName 
+join dim_app as app     on dbql.AppID = app.AppID
+join dim_Statement stm  on dbql.StatementType = stm.StatementType
+join dim_user usr       on dbql.UserName = usr.UserName
 Group by
  Site_ID
 ,LogTS
