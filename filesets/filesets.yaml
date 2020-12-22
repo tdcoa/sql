@@ -1,3 +1,15 @@
+prework:
+  active: "True"
+  fileset_version:  "1.0"
+  fileset_type:  "setup"
+  show_in_gui: "False"
+  description: "handles common pre-work activities common to all filesets."
+  files:  &prework
+    get_environment_details:
+      collection:   ["pdcr"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "prework/setup.16xx.v1.coa.sql"
+
 demo:
   active:     "True"
   fileset_version: "1.15"
@@ -131,6 +143,7 @@ dbql_core:
   fileset_version:  "6.0"
   fileset_type:     "core"
   files: &dbql_core
+    <<: *prework
     <<: *dim_user
     <<: *dim_statement
     <<: *dim_app
