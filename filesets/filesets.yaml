@@ -6,7 +6,7 @@ prework:
   description: "handles common pre-work activities common to all filesets."
   files:  &prework
     get_environment_details:
-      collection:   ["pdcr"]
+      collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "prework/setup.16xx.v1.coa.sql"
 
