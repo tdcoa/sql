@@ -8,7 +8,7 @@ prework:
     get_environment_details:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "prework/setup.16xx.v1.coa.sql"
+      gitfile:      "prework/_!setup.16xx.v1.coa.sql"
 
 demo:
   active:     "True"
