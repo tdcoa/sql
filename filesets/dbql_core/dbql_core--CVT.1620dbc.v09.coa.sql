@@ -178,7 +178,7 @@ SELECT
   ,null as IOCnt_Skew_AvgPct
 
   From dbc.QryLogSummaryV smry
-  where cast(dbql.StartTime as date) between {startdate} and {enddate}
+  where cast(smry.StartTime as date) between {startdate} and {enddate}
   Group by
    LogTS
   ,username
