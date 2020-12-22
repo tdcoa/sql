@@ -197,7 +197,7 @@ create volatile table dbql_core_breakout as
 (
   SELECT /*dbql_core*/
    '{siteid}'  as Site_ID
-  ,cast(LogDate as format 'Y4-MM-DD') as LogDate
+  ,cast(cast(dbql.StartTime as date) as format 'Y4-MM-DD') as LogDate
   ,usr.User_Bucket
   ,usr.User_Department
   ,usr.User_SubDepartment
