@@ -1,6 +1,6 @@
 
 
-/*{save:setup_environment.csv}*/
+/*{{save:_!{siteid}_environment.csv}}*/
 /* DBCInfo on Steroids */
 Select InfoKey, InfoData from dbc.dbcinfo
 union all
@@ -15,5 +15,5 @@ union all
 select 'Spool Space (GB)', trim(cast(SpoolSpace/1e9 as INT)(varchar(64))) from dbc.users where username = USER
 order by 1;
 
-/*{save:setup_session.csv}*/
+/*{{save:_!my_session.csv}}*/
 Help Session;
