@@ -81,7 +81,7 @@ SELECT
   ,zeroifnull(sum(cast(dbql.NumResultRows as BigInt) )) as Returned_Row_Cnt
 
   /* ====== Metrics: RunTimes ====== */
-  ,sum(cast(dbql.DelayTime as decimal(18,2))) as DelayTime_Sec
+  ,sum(cast(zeroifnull(dbql.DelayTime) as decimal(18,2))) as DelayTime_Sec
   ,sum(ZEROIFNULL(CAST(
      (EXTRACT(HOUR   FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) * 3600)
     +(EXTRACT(MINUTE FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) *   60)
