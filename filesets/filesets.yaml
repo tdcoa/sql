@@ -143,7 +143,6 @@ dbql_core:
   fileset_version:  "6.0"
   fileset_type:     "core"
   files: &dbql_core
-    <<: *prework
     <<: *dim_user
     <<: *dim_statement
     <<: *dim_app
