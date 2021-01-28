@@ -97,25 +97,25 @@ Create Volatile Table Top_Users_Rank  as(
   Select '{siteid}' as Site_ID, a.*
   ,rank()over(partition by MonthID, WeekID order by Combined_Score asc) as Total_Rank
   from(
-      Select WeekID, MonthID, u.UserName
-      ,u.UserHash, u.User_Bucket
-      ,u.User_Department, u.User_SubDepartment, u.User_Region
-      ,Query_Cnt
-      ,rank()over(partition by MonthID, WeekID order by Query_Cnt desc) as Query_Cnt_Rank
-      ,Query_Complexity_Score
-      ,rank()over(partition by MonthID, WeekID order by Query_Complexity_Score desc) as Query_Complexity_Score_Rank
-      ,CPU_Sec
-      ,rank()over(partition by MonthID, WeekID order by CPU_Sec desc) as CPU_Sec_Rank
-      ,IOGB
-      ,rank()over(partition by MonthID, WeekID order by IOGB desc) as IOGB_Rank
-      ,Runtime_Sec
-      ,rank()over(partition by MonthID, WeekID order by Runtime_Sec desc) as Runtime_Sec_Rank
-      ,Error_Cnt
-      ,rank()over(partition by MonthID, WeekID order by Error_Cnt desc) as Error_Cnt_Rank
-      ,Query_Cnt_Rank + Query_Complexity_Score_Rank + CPU_Sec_Rank + IOGB_Rank + Runtime_Sec_Rank as Combined_Score
-      from Top_Users_DBQL as d
-      join Dim_User as u
-        on d.UserName = u.UserName
+    Select WeekID, MonthID, u.UserName
+    ,u.UserHash, u.User_Bucket
+    ,u.User_Department, u.User_SubDepartment, u.User_Region
+    ,d.Query_Cnt
+    ,rank()over(partition by MonthID, WeekID order by d.Query_Cnt desc) as Query_Cnt_Rank
+    ,d.Query_Complexity_Score
+    ,rank()over(partition by MonthID, WeekID order by d.Query_Complexity_Score desc) as Query_Complexity_Score_Rank
+    ,d.CPU_Sec
+    ,rank()over(partition by MonthID, WeekID order by d.CPU_Sec desc) as CPU_Sec_Rank
+    ,d.IOGB
+    ,rank()over(partition by MonthID, WeekID order by d.IOGB desc) as IOGB_Rank
+    ,d.Runtime_Sec
+    ,rank()over(partition by MonthID, WeekID order by d.Runtime_Sec desc) as Runtime_Sec_Rank
+    ,d.Error_Cnt
+    ,rank()over(partition by MonthID, WeekID order by d.Error_Cnt desc) as Error_Cnt_Rank
+    ,Query_Cnt_Rank + Query_Complexity_Score_Rank + CPU_Sec_Rank + IOGB_Rank + Runtime_Sec_Rank as Combined_Score
+    from Top_Users_DBQL as d
+    join Dim_User as u
+      on d.UserName = u.UserName
     ) a
 ) with data
   primary index(UserName)
