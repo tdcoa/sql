@@ -64,7 +64,7 @@ select
 ,cast(cast(BilQryCntPerYear as Decimal(18,1) format 'ZZZ,ZZZ,ZZ9.9') as varchar(32)) as "Query Count per Year (B)"
 ,cast(cast(TotalTacticalCntPerDay as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Tactical Query Count per Day"
 ,cast(cast(TotalTacticalCntPerDayMil as Decimal(18,1) format 'ZZZ,ZZZ,ZZZ,ZZ9.9') as varchar(32)) as "Tactical Query Count Per Day (M)"
-,cast(cast(TacticalPct as Decimal(9,2) format 'ZZ9.9') as varchar(32)) as "Tactical % of Total Queries"
+,cast(cast(TacticalPct as Decimal(9,2) format 'ZZ9.9') as varchar(32)) as "Tactical % of Total Queries" --14
 ,cast(cast(AvgRunTimeSec as Decimal(9,2) format 'Z,ZZZ,ZZ9.99') as varchar(32)) as "Average Runtime Seconds" --15
 ,cast(cast(MedianRunTimeSec as Decimal(9,2) format 'Z,ZZZ,ZZ9.99') as varchar(32)) as "Median Runtime Seconds"
 from
@@ -107,11 +107,11 @@ Order by "Rows per Query" desc ;
 
 -- FOR GRAPHING:  Queries per Day
 /*{{save:bq--daily_query_throughput.csv}}*/
-/* { {vis:bq--daily_query_throughput.csv}} */
+/*{{vis:bq--daily_query_throughput.csv}}*/
 select
  cast(LogTS as char(10)) as "Log Date"
-,cast(cast(sum(Query_Cnt) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Queries--#27C1BD"
-,cast(cast(sum(Query_Tactical_Cnt) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Tactical Queries--#636363"
+,sum(Query_Cnt) (BigInt) as "Total Queries--#27C1BD"
+,sum(Query_Tactical_Cnt)(BigInt) as "Tactical Queries--#636363"
 from dbql_core_hourly
 group by cast(LogTS as char(10))
 order by 1 ;

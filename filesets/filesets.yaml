@@ -293,6 +293,10 @@ compete_bigquery:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/zbigquery.v2.pdcr.coa.sql"
+    compete_bigquery_graph_queries:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/bq--daily_query_throughput.py"
     final_pptx:
       gitfile:      "compete_bigquery/!BigQuery_Migration.pptx"
     # these go last, so the above can override (one filename not picked up twice)
