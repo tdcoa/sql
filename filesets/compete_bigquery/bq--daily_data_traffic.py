@@ -9,8 +9,7 @@ def human_format(num, pos):
     # add more suffixes if you need them
     return '%.1f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
 
-
-def coaviz_line_xDate_ySimple(csvfile, title='', height=6, width=16, save=True):
+def coaviz_line_xDate_ySimple(csvfile, height=6, width=16, save=True):
     import numpy
     import pandas as pd
     import matplotlib.pyplot as plt
@@ -23,8 +22,7 @@ def coaviz_line_xDate_ySimple(csvfile, title='', height=6, width=16, save=True):
     df = pd.read_csv(csvfile)
     df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
     x = df[df.columns[0]]
-    if title=='':
-        title = csvfile.split('.')[0].split('--')[-1].replace('_',' ').upper()
+    title = csvfile.split('.')[0].split('--')[-1].replace('_',' ').upper()
     coaprint('x axis column: ', title)
 
     # BUILD OUT Y-AXIS COLLECTION
@@ -82,4 +80,4 @@ def coaviz_line_xDate_ySimple(csvfile, title='', height=6, width=16, save=True):
 
 
 
-coaviz_line_xDate_ySimple('bq--daily_query_throughput.csv')
+coaviz_line_xDate_ySimple('bq--daily_data_traffic.csv', width=10)

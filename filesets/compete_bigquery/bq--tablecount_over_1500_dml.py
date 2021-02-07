@@ -81,5 +81,5 @@ def coaviz_line_xDate_ySimple(csvfile, title='', height=6, width=16, save=True):
         plt.show()
 
 
-
-coaviz_line_xDate_ySimple('bq--daily_query_throughput.csv')
+title = 'Table Count over 1500 daily Inserts/Updates/Deletes'
+coaviz_line_xDate_ySimple('bq--tablecount_over_1500_dml.csv', title=title, width=10)
