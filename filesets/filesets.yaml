@@ -277,30 +277,28 @@ compete_snowflake:
 
 compete_bigquery:
   active:           "True"
-  show_in_gui:      "True"
+  show_in_gui:      "False"
   fileset_version:  "1.0"
   startdate:        "Current_Date - 90"
   enddate:          "Current_Date - 1"
   your_name:        "<your name>"
   your_title:       "<your title>"
   files:
+    compete_bigquery_overwrite01:
+      note: this simply overwrites dbql_core export to skip the big data dump at the end.  this file is empty.
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/dbql_core--SEL.v09.coa.sql"
+    compete_bigquery_newfinal:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/zbigquery.v2.pdcr.coa.sql"
+    final_pptx:
+      gitfile:      "compete_bigquery/!BigQuery_Migration.pptx"
+    # these go last, so the above can override (one filename not picked up twice)
     <<: *dbql_core
     <<: *db_objects
     <<: *concurrency
-    compete_bigquery_final:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_bigquery/zbigquery.pdcr.coa.sql"
-    compete_shared_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
-    compete_shared_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
-    wlanalys_pptx:
-      gitfile:      "compete_bigquery/big_query_migration_blockers.pptx"
 
 
 feature_usage:

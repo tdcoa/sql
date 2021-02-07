@@ -19,13 +19,20 @@ create volatile table dim_app as
   ,coalesce(p.Priority,1e6) as Priority_
   ,coalesce(p.Pattern_Type,'Equal')  as Pattern_Type
   ,coalesce(p.Pattern, o.AppID)      as Pattern
+  ,coalesce(o.Request_Cnt, 0)        as Request_Cnt
   ,coalesce(p.SiteID, 'None')        as SiteID_
-  from (select distinct AppID from pdcrinfo.DBQLogTbl_Hst
-        where LogDate between {startdate} and {enddate}
-        union
-        select distinct AppID from pdcrinfo.DBQLSummaryTbl_Hst
-        where LogDate between {startdate} and {enddate}
-        ) as o
+  from (Select AppID, sum(Request_Cnt) as Request_Cnt
+        from(
+                select AppID, count(*) as Request_Cnt from pdcrinfo.DBQLogTbl_Hst
+                where LogDate between {startdate} and {enddate}
+                group by 1
+                union
+                select AppID, count(*) as Request_Cnt from pdcrinfo.DBQLSummaryTbl_Hst
+                where LogDate between {startdate} and {enddate}
+                group by 1
+        ) as a
+        group by 1
+      ) as o
   left join "dim_app.csv" as p
     on (case
         when p.Pattern_Type = 'Equal' and lower(o.AppID) = lower(p.Pattern) then 1
