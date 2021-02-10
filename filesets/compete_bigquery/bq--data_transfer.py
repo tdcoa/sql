@@ -79,5 +79,10 @@ def coaviz_line_xDate_ySimple(csvfile, height=6, width=16, save=True):
         plt.show()
 
 
+# Set current directory to location of this script
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(current_dir)
 
-coaviz_line_xDate_ySimple('bq--daily_data_traffic.csv', width=10)
+# build and export the graph
+coaviz_line_xDate_ySimple('bq--data_transfer.csv', height=4.5, width=7)

@@ -81,5 +81,11 @@ def coaviz_line_xDate_ySimple(csvfile, title='', height=6, width=16, save=True):
         plt.show()
 
 
+# Set current directory to location of this script
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(current_dir)
+
+# build and export the graph
 title = 'Table Count over 1500 daily Inserts/Updates/Deletes'
-coaviz_line_xDate_ySimple('bq--tablecount_over_1500_dml.csv', title=title, width=10)
+coaviz_line_xDate_ySimple('bq--tablecount_over_1500_dml.csv', title=title, height=4, width=7)
