@@ -93,11 +93,12 @@ from dbql_core_hourly
 -- QUERIES PER APPLICATION
 /*{{save:bq_appid_detail.csv}}*/
 select
- case when app.App_Bucket='Unknown' then app.AppID else app.App_Bucket end as App_Group
+ app.App_Bucket
 ,(DATE-1) - (DATE-15)(INT) as DayCount
 ,cast(cast(sum(dbql.Query_Cnt)/DayCount as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Queries"
 ,cast(cast(sum(dbql.Returned_Row_Cnt)/DayCount as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Fetched Rows"
 ,zeroifnull(cast(cast("Total Fetched Rows" / nullifzero("Total Queries") as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))) as "Rows Per Query"
+,'nothing' as debug_string_please_ignore
 from dbql_core_hourly dbql
 join dim_app as app
   on dbql.AppID = app.AppID
@@ -129,3 +130,253 @@ select
 from db_objects_cds
 where DBName = '*** Total ***'
 qualify LogDate = max(LogDate)over() ;
+
+
+-- OBJECT COUNTS
+/*{{save:bq_object_counts.csv}}*/
+Select
+ '{siteid}' as Site_ID
+,cast(cast(sum(TableCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Table Count"
+,cast(cast(sum(ViewCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "View Count"
+,cast(cast(sum(MacroCount+"SP&TrigCount"+UDObjectCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Program Count"
+,cast(cast(sum(IndexCount+OtherCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Other Count"
+from db_objects_counts ;
+
+
+-- COLUMN FORMATS
+/*{{save:bq_column_formats.csv}}*/
+select
+ '{siteid}' as Site_ID
+,cast(cast(sum(case when FormatInd = 'Y' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Formatted Columns"
+,cast(cast(sum(case when ColumnCategory = 'Interval' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Type Interval"
+,cast(cast(sum(case when ColumnCategory = 'Period' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Type Period"
+,cast(cast(sum(case when ColumnCategory = 'Number' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Type Number" --5
+,cast(cast(sum(case when ColumnCategory = 'BLOB' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Type BLOB"
+,cast(cast(sum(case when ColumnCategory = 'CLOB' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Type CLOB"
+,cast(cast(sum(case when ColumnCategory like any('XML%','_SON%','Avro') then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Type XML/JSON"
+,cast(cast(sum(case when ColumnCategory like 'Geosp%' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Type GeoSpatial" --9
+from column_types ;
+
+
+-- CONSTRAINTS
+/*{{save:bq_constraints.csv}}*/
+select top 10
+ '{siteid}' as Site_ID
+,cast(cast(sum(case when ConstraintType in('Primary Key','Unique') then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Unique PI Constraint"
+,cast(cast(sum(case when ConstraintType = 'Primary Key' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Primary Key Constraint"
+,cast(cast(sum(case when ConstraintType = 'Default' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Column Default"
+,cast(cast(sum(case when ConstraintType = 'Foreign Key' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Foreign Key Constraint" --5
+,cast(cast(sum(case when ConstraintType = 'Column Constraint' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Column Constraint"
+,cast(cast(sum(case when ConstraintType = 'Table Constraint' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Table Constraint"
+from constraint_details ;
+
+
+-- CALCULATE DML COUNTS (INS/UPD/DEL/MERGE) PER TABLE
+create volatile table dml_count_per_table as
+(
+    Select l.LogDate, o.ObjectDatabaseName as DatabaseName, o.ObjectTableName as TableName, count(*) as Request_Count
+    from pdcrinfo.dbqlogtbl_hst as l
+    join pdcrinfo.dbqlobjtbl_hst as o
+      on l.LogDate = o.LogDate
+     and l.QueryID = o.QueryID
+    where l.logdate between {startdate} and {enddate}
+      and l.StatementType in ('Insert','Update','Delete','Merge')
+      and o.ObjectTableName is not null
+    group by 1,2,3
+) with data
+primary index(LogDate, TableName)
+on commit preserve rows ;
+
+-- NUMBER OF TABLES THAT EXCEED 1500 INSERTS/UPDATES/DELETES PER DAY (Graph)
+/*{{save:bq--tablecount_over_1500_dml.csv}}*/
+/*{{vis:bq--tablecount_over_1500_dml.csv}}*/
+Select LogDate, Count(TableName) as "Table Count--#27C1BD"
+from dml_count_per_table
+where Request_Count > 1500
+group by 1
+order by 1 ;
+
+
+-- OVERALL COUNT OF TABLES THAT EXCEED 1500 DML PER DAY
+/*{{save:bq--tablecount_over_1500_dml_average.csv}}*/
+Select
+ '{siteid}' as Site_ID
+,cast(cast(avg(TableCount) as INT format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as TableCount
+from (
+    Select LogDate, Count(TableName) as TableCount
+    from dml_count_per_table where Request_Count > 1500
+    group by 1
+) as a ;
+
+
+-- DATABASES WITH MOST DML PER TABLE
+/*{{save:bq--databases_most_dml_tables.csv}}*/
+Select DatabaseName
+,cast(cast(avg(Request_Count) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Avg DML Request Count per Table"
+from dml_count_per_table
+group by 1
+order by avg(Request_Count) desc ;
+
+
+-- FORMATTED COLUMNS
+/*{{save:bq--column_format_state.csv}}*/
+SELECT '{siteid}' as Site_ID
+,sum(CASE WHEN ColumnFormat IS NOT NULL THEN 1 ELSE 0 END) AS "FORMATTED"
+,sum(CASE WHEN ColumnFormat IS     NULL THEN 1 ELSE 0 END) AS "UNFORMATTED"
+from DBC.COlumnsV group by 1 ;
+
+
+-- DATA TRANSFER NUMBERS
+/*{{save:bq--data_transfer.csv}}*/
+/*{{vis:bq--data_transfer.csv}}*/
+SELECT TheDate AS LogDate
+      ,SUM(HostReadKB)/1e9 as "Inbound TB--#27C1BD"
+      ,SUM(HostWriteKB)/1e9 as "Outbound TB--#636363"
+FROM PDCRINFO.ResUsageSPMA
+WHERE TheDate BETWEEN {startdate} and {enddate}
+GROUP BY LogDate ORDER BY LogDate;
+
+
+-- JOIN FREQUENCY
+-- broken into steps for efficiency
+create volatile table vt_queryid_by_joincount as
+(
+    Select
+    QueryID, LogDate, Count(distinct ObjectTableName) as JoinCount
+    from pdcrinfo.DBQLObjTbl_Hst
+    where ObjectColumnName is null
+      and ObjectTableName is not null
+      and ObjectType in ('Tab', 'Viw')
+      and LogDate between DATE-91 and DATE
+    group by 1,2
+) with data
+primary index (QueryID, LogDate) -- Match PI for DBQL
+on commit preserve rows;
+
+/*{{save:bq--join_frequency.csv}}*/
+Select
+ CASE WHEN JoinCount <= 5 THEN (JoinCount (FORMAT 'Z9') (CHAR(2))) ELSE ' 6+' END as "Number of Joins" --xaxis
+,cast(cast(count(*) as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Number of Queries" --bars
+,cast(cast(sum(dbql.ParserCPUTime+dbql.AMPCPUtime) as decimal(32,2) format 'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "CPU Seconds--#E77109" --line
+from pdcrinfo.dbqlogtbl_hst as dbql
+join vt_queryid_by_joincount as j
+  on dbql.LogDate = j.LogDate
+ and dbql.QueryID = j.QueryID
+group by 1
+order by 1 asc ;
+
+drop table vt_queryid_by_joincount;
+
+
+-- CURRENT TABLES OVER 10GB IN SIZE
+create volatile table tables_size_10g as
+(
+  SELECT
+      DataBaseName
+     ,TableName
+     ,cast(Sum(CurrentPerm/(2**30)) AS decimal(9,1)) CurrentPerm_GB
+     ,cast(Sum(PeakPerm/(2**30)) AS decimal(9,1)) AS PeakPerm_GB
+  FROM	Dbc.TableSizeV
+  GROUP BY 1,2
+  HAVING CurrentPerm_GB > 10
+) with data
+no primary index
+on commit preserve rows
+;
+
+/*{{save:bq--10GB_table_count.csv}}*/
+SELECT
+    '{siteid}' as Site_ID
+    ,cast(cast(coalesce(count(*), 0) as format 'ZZZ,ZZZ,ZZ9') as varchar(32))  AS tbl10GB
+from tables_size_10g
+;
+
+/*{{save:bq--10GB_tables.csv}}*/
+SELECT
+    '{siteid}' as Site_ID
+   ,DataBaseName
+   ,TableName
+   ,cast(cast(CurrentPerm_GB as format 'ZZZ,ZZZ,ZZ9.9') as varchar(32)) AS "CurrentPerm GB"
+FROM tables_size_10g
+ORDER BY CurrentPerm_GB DESC
+;
+
+
+-- OBJECT COUNT BY ATTRIBUTE:
+create volatile table vt_table_kinds_by_database as
+(
+  SELECT
+     COALESCE(DatabaseName, '') AS DatabaseName
+    ,COALESCE(tk.Table_Bucket, 'Unknown - ' || t.TableKind) AS TableBucket
+    ,COALESCE(tk.TableKind_Desc, 'Unknown - ' || t.TableKind) AS TableKindDesc
+    ,CheckOpt AS MultisetInd
+    ,GTTableCount
+    ,ZEROIFNULL(ObjectCount) AS ObjectCount
+  FROM
+  (
+   SELECT
+     DatabaseName
+    ,TableKind
+    ,CheckOpt
+    ,sum(case when CommitOpt <> 'N' then 1 else 0 end) as GTTableCount
+    ,COUNT(*) AS ObjectCount
+   FROM DBC.TablesV
+   GROUP BY 1,2,3
+  ) t
+  FULL OUTER JOIN dim_tablekind as tk
+  on t.TableKind = tk.TableKind
+) with data
+no primary index on commit preserve rows
+;
+
+/*{{save:bq--tablekind_by_database.csv}}*/
+select
+ '{siteid}' as Site_ID
+,cast(cast(sum(ObjectCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Count"
+,cast(cast(sum(case when TableKindDesc = 'Join Index' then ObjectCount else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Join Index Count"
+,cast(cast(sum(case when TableKindDesc = 'Queue Table' then ObjectCount else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Queue Table Count"
+,cast(cast(sum(case when MultiSetInd = 'N' then ObjectCount else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "SET Table Count"
+,cast(cast("SET Table Count" / "Total Count" * 100 as decimal(9,2) format 'ZZ9.99') as varchar(8))||'%' as "Set Table Pct"
+,cast(cast(sum(GTTableCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Global Temp Table Count"
+FROM vt_table_kinds_by_database
+WHERE DatabaseName NOT IN  (select dbname from dim_tdinternal_databases)
+;
+
+
+-- MORE INDEX TYPE SQL
+create volatile table vt_index_types_by_database as
+(
+ SEL
+   COALESCE(Inds.DatabaseName, '') AS DatabaseName
+  ,COALESCE(IK.IndexTypeDesc, 'Unknown - ' || Inds.IndexType) AS IndexTypeDesc
+  ,COALESCE(IK.IndexTypeBucket, 'Unknown - ' || Inds.IndexType) AS IndexTypeBucket
+  ,ZEROIFNULL(Inds.IndexCount) AS IndexCount
+  FROM
+  (
+    SEL
+       DatabaseName
+      ,IndexType
+      ,UniqueFlag
+      ,COUNT(*) AS IndexCount
+    FROM DBC.IndicesV
+    GROUP BY 1,2,3
+  ) Inds
+  FULL OUTER JOIN dim_indextype AS IK
+   ON IK.IndexType = Inds.IndexType
+  AND IK.UniqueFlag = Inds.UniqueFlag
+) with data
+no primary index on commit preserve rows
+;
+
+/*{{save:bq--Index_summary.csv}}*/
+select
+ '{siteid}' as Site_ID
+,CAST(CAST(SUM(CASE WHEN IndexTypeBucket = 'Primary Index' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS UPINUPI
+,CAST(CAST(SUM(CASE WHEN IndexTypeBucket = 'Partition' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS PPI
+,CAST(CAST(SUM(CASE WHEN IndexTypeBucket = 'Secondary Index' THEN IndexCount ELSE 0 END) AS FORMAT 'ZZZ,ZZZ,ZZ9') AS VARCHAR(20)) AS SI
+from vt_index_types_by_database
+Where DatabaseName NOT IN  (select dbname from dim_tdinternal_databases)
+;
+
+-- BUILD FINAL PPTX DOCUMENT
+/*{{pptx:!BigQuery_Migration.pptx}}*/

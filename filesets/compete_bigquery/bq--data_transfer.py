@@ -7,9 +7,9 @@ def human_format(num, pos):
         magnitude += 1
         num /= 1000.0
     # add more suffixes if you need them
-    return '%.1f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+    return '%i%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
 
-def coaviz_line_xDate_ySimple(csvfile, height=6, width=16, save=True):
+def coaviz_line_xDate_ySimple(csvfile, title='', height=6, width=16, save=True):
     import numpy
     import pandas as pd
     import matplotlib.pyplot as plt
@@ -22,7 +22,7 @@ def coaviz_line_xDate_ySimple(csvfile, height=6, width=16, save=True):
     df = pd.read_csv(csvfile)
     df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
     x = df[df.columns[0]]
-    title = csvfile.split('.')[0].split('--')[-1].replace('_',' ').upper()
+    if title=='': title = csvfile.split('.')[0].split('--')[-1].replace('_',' ').upper()
     coaprint('x axis column: ', title)
 
     # BUILD OUT Y-AXIS COLLECTION
@@ -55,15 +55,16 @@ def coaviz_line_xDate_ySimple(csvfile, height=6, width=16, save=True):
         ax.plot(x, y['series'], label=y['name'], color=y['color'], linewidth=2)
         ax.xaxis.label.set_color('grey')
         ax.tick_params(axis='x', colors='grey')
+        ax.tick_params(axis='y', colors='grey')
         ax.yaxis.set_major_formatter(formatter)
 
 
     # build final plot
     #fig.legend()
     handles, labels = ax.get_legend_handles_labels()
-    lgd = ax.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, -0.2), shadow=True, ncol=5)
+    lgd = ax.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, -0.3), shadow=True, ncol=5)
     plt.xticks(x)  # forces all values to be displayed
-    plt.title(title, fontsize=16, y=1.0, pad=30, color='grey')
+    plt.title(title, fontsize=12, fontname='Arial', y=1.0, pad=30, color='grey')
 
     # turn all backgrounds transparent
     for item in [fig, ax]:
@@ -85,4 +86,4 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(current_dir)
 
 # build and export the graph
-coaviz_line_xDate_ySimple('bq--data_transfer.csv', height=4.5, width=7)
+coaviz_line_xDate_ySimple('bq--data_transfer.csv', height=4.5, width=10, title="Data Transfer")
