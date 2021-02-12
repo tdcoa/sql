@@ -1,6 +1,6 @@
 
 -- COLLECT SITE ID, ACCOUNT, OTHER BASIC STUFF
-/*{{save:bq_intro.csv}}*/
+/*{{save:bq--intro.csv}}*/
 select '{siteid}' as Site_ID
 ,'{customer_name}' as Customer_Name
 ,case when InfoKey='VERSION' then infodata end as Database_Version
@@ -16,7 +16,7 @@ where Database_Version is not null ;
 
 
 -- ACTIVE AND TOTAL USERS
-/*{{save:bq_user_counts.csv}}*/
+/*{{save:bq--user_counts.csv}}*/
 select
  '{siteid}' as Site_ID
 ,cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Users"
@@ -27,7 +27,7 @@ from dim_user ;
 
 
 -- APPLICATION COUNTS
-/*{{save:bq_appid_counts.csv}}*/
+/*{{save:bq--appid_counts.csv}}*/
 select
  '{siteid}' as Site_ID
 ,cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Applications"
@@ -38,7 +38,7 @@ from dim_App ;
 
 
 -- CONCURRENCY COUNTS
-/*{{save:bq_concurrency.csv}}*/
+/*{{save:bq--concurrency.csv}}*/
 select
  '{siteid}' as Site_ID
 ,cast(cast(avg(Concurrency_Avg) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Concurrency Average" --2
@@ -49,7 +49,7 @@ from concurrency ;
 
 
 -- DBQL CORE QUERY COUNTS
-/*{{save:bq_query_counts.csv}}*/
+/*{{save:bq--query_counts.csv}}*/
 select
  '{siteid}'  as Site_ID
 ,cast(cast(LogDayCnt as format 'ZZZ,ZZ9') as varchar(32)) as "Day Count"
@@ -91,7 +91,7 @@ from dbql_core_hourly
 
 
 -- QUERIES PER APPLICATION
-/*{{save:bq_appid_detail.csv}}*/
+/*{{save:bq--appid_detail.csv}}*/
 select
  app.App_Bucket
 ,(DATE-1) - (DATE-15)(INT) as DayCount
@@ -119,7 +119,7 @@ order by 1 ;
 
 
 -- DISK SPACE
-/*{{save:bq_diskspace.csv}}*/
+/*{{save:bq--diskspace.csv}}*/
 select
  '{siteid}' as Site_ID
 ,cast(cast((MaxPermGB) as Decimal(18,2) format'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "Max Available Space (GB)"
@@ -133,7 +133,7 @@ qualify LogDate = max(LogDate)over() ;
 
 
 -- OBJECT COUNTS
-/*{{save:bq_object_counts.csv}}*/
+/*{{save:bq--object_counts.csv}}*/
 Select
  '{siteid}' as Site_ID
 ,cast(cast(sum(TableCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Table Count"
@@ -144,7 +144,7 @@ from db_objects_counts ;
 
 
 -- COLUMN FORMATS
-/*{{save:bq_column_formats.csv}}*/
+/*{{save:bq--column_formats.csv}}*/
 select
  '{siteid}' as Site_ID
 ,cast(cast(sum(case when FormatInd = 'Y' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Formatted Columns"
@@ -159,7 +159,7 @@ from column_types ;
 
 
 -- CONSTRAINTS
-/*{{save:bq_constraints.csv}}*/
+/*{{save:bq--constraints.csv}}*/
 select top 10
  '{siteid}' as Site_ID
 ,cast(cast(sum(case when ConstraintType in('Primary Key','Unique') then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Unique PI Constraint"
@@ -221,8 +221,8 @@ order by avg(Request_Count) desc ;
 -- FORMATTED COLUMNS
 /*{{save:bq--column_format_state.csv}}*/
 SELECT '{siteid}' as Site_ID
-,sum(CASE WHEN ColumnFormat IS NOT NULL THEN 1 ELSE 0 END) AS "FORMATTED"
-,sum(CASE WHEN ColumnFormat IS     NULL THEN 1 ELSE 0 END) AS "UNFORMATTED"
+,cast(cast(sum(CASE WHEN ColumnFormat IS NOT NULL THEN 1 ELSE 0 END) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "FORMATTED"
+,cast(cast(sum(CASE WHEN ColumnFormat IS     NULL THEN 1 ELSE 0 END) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "UNFORMATTED"
 from DBC.COlumnsV group by 1 ;
 
 
