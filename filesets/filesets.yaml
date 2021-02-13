@@ -294,17 +294,13 @@ compete_bigquery:
       dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/zbigquery.v2.pdcr.coa.sql"
     compete_bigquery_graph_queries:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/bq--daily_query_throughput.py"
     compete_bigquery_graph_traffic:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/bq--data_transfer.py"
     compete_bigquery_graph_1500dml:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/bq--tablecount_over_1500_dml.py"
+    compete_bigquery_graph_joinfreq:
+      gitfile:      "compete_bigquery/bq--join_frequency.py"
 
     final_pptx:
       gitfile:      "compete_bigquery/!BigQuery_Migration.pptx"

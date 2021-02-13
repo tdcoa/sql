@@ -253,17 +253,74 @@ create volatile table vt_queryid_by_joincount as
 primary index (QueryID, LogDate) -- Match PI for DBQL
 on commit preserve rows;
 
+collect stats on vt_queryid_by_joincount column(QueryID, LogDate);
+
+create volatile table vt_query_n_cpu_by_joincount as
+(
+  Select
+   CASE WHEN JoinCount <= 5 THEN (JoinCount (FORMAT 'Z9') (CHAR(2))) ELSE ' 6+' END as Join_Label
+  ,cast(cast(count(*) as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Request_Count
+  ,cast(cast(sum(dbql.ParserCPUTime+dbql.AMPCPUtime) as decimal(32,2) format 'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as CPU_Sec -- "CPU Seconds--#636363" --line
+  from pdcrinfo.dbqlogtbl_hst as dbql
+  join vt_queryid_by_joincount as j
+    on dbql.LogDate = j.LogDate
+   and dbql.QueryID = j.QueryID
+  group by 1
+) with data
+primary index (QueryID, LogDate) -- Match PI for DBQL
+on commit preserve rows;
+
 /*{{save:bq--join_frequency.csv}}*/
 Select
- CASE WHEN JoinCount <= 5 THEN (JoinCount (FORMAT 'Z9') (CHAR(2))) ELSE ' 6+' END as "Number of Joins" --xaxis
-,cast(cast(count(*) as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Number of Queries" --bars
-,cast(cast(sum(dbql.ParserCPUTime+dbql.AMPCPUtime) as decimal(32,2) format 'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as "CPU Seconds--#E77109" --line
-from pdcrinfo.dbqlogtbl_hst as dbql
-join vt_queryid_by_joincount as j
-  on dbql.LogDate = j.LogDate
- and dbql.QueryID = j.QueryID
-group by 1
-order by 1 asc ;
+ join_label || case when join_label=1 then ' Join' else ' Joins' end  as "Number of Joins" --xaxis
+,Request_Count as "Number of Queries--#27C1BD" --bars
+,CPU_Sec       as "CPU Seconds--#636363" --line
+from vt_query_n_cpu_by_joincount order by 1 asc ;
+
+/*{{save:bq--join_frequency_horz.csv}}*/
+Select
+ cast(cast(sum(case when join_label=1 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join1_Mrequest_count --1
+,cast(cast(sum(case when join_label=2 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join2_Mrequest_count --2
+,cast(cast(sum(case when join_label=3 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join3_Mrequest_count --3
+,cast(cast(sum(case when join_label=4 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join4_Mrequest_count --4
+,cast(cast(sum(case when join_label=5 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join5_Mrequest_count --5
+,cast(cast(sum(case when join_label=6 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join6_Mrequest_count --6
+,cast(cast(sum(request_count)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as total_Mrequest_count --7
+,cast(cast(cast(sum(case when join_label=1 then request_count else 0 end) as decimal(32,4))
+/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join1_request_pct --8
+,cast(cast(cast(sum(case when join_label=2 then request_count else 0 end) as decimal(32,4))
+/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join2_request_pct --9
+,cast(cast(cast(sum(case when join_label=3 then request_count else 0 end) as decimal(32,4))
+/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join3_request_pct --10
+,cast(cast(cast(sum(case when join_label=4 then request_count else 0 end) as decimal(32,4))
+/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join4_request_pct --11
+,cast(cast(cast(sum(case when join_label=5 then request_count else 0 end) as decimal(32,4))
+/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join5_request_pct --12
+,cast(cast(cast(sum(case when join_label=6 then request_count else 0 end) as decimal(32,4))
+/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join6_request_pct --13
+
+,cast(cast(sum(case when join_label=1 then cpu_sec else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join1_Mcpu_sec --14
+,cast(cast(sum(case when join_label=2 then cpu_sec else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join2_Mcpu_sec --15
+,cast(cast(sum(case when join_label=3 then cpu_sec else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join3_Mcpu_sec --16
+,cast(cast(sum(case when join_label=4 then cpu_sec else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join4_Mcpu_sec --17
+,cast(cast(sum(case when join_label=5 then cpu_sec else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join5_Mcpu_sec --18
+,cast(cast(sum(case when join_label=6 then cpu_sec else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join6_Mcpu_sec --19
+,cast(cast(sum(cpu_sec)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as total_Mcpu_sec --20
+,cast(cast(cast(sum(case when join_label=1 then cpu_sec else 0 end) as decimal(32,4))
+/cast(sum(cpu_sec) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join1_cpu_pct --21
+,cast(cast(cast(sum(case when join_label=2 then cpu_sec else 0 end) as decimal(32,4))
+/cast(sum(cpu_sec) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join2_cpu_pct --22
+,cast(cast(cast(sum(case when join_label=3 then cpu_sec else 0 end) as decimal(32,4))
+/cast(sum(cpu_sec) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join3_cpu_pct --23
+,cast(cast(cast(sum(case when join_label=4 then cpu_sec else 0 end) as decimal(32,4))
+/cast(sum(cpu_sec) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join4_cpu_pct --24
+,cast(cast(cast(sum(case when join_label=5 then cpu_sec else 0 end) as decimal(32,4))
+/cast(sum(cpu_sec) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join5_cpu_pct --25
+,cast(cast(cast(sum(case when join_label=6 then cpu_sec else 0 end) as decimal(32,4))
+/cast(sum(cpu_sec) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join6_cpu_pct --26
+
+from vt_query_n_cpu_by_joincount ;
+
 
 drop table vt_queryid_by_joincount;
 
