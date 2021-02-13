@@ -97,7 +97,7 @@ select
 ,(DATE-1) - (DATE-15)(INT) as DayCount
 ,cast(cast(sum(dbql.Query_Cnt)/DayCount as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Queries"
 ,cast(cast(sum(dbql.Returned_Row_Cnt)/DayCount as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Fetched Rows"
-,zeroifnull(cast(cast("Total Fetched Rows" / nullifzero("Total Queries") as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))) as "Rows Per Query"
+,cast(cast(zeroifnull("Total Fetched Rows" / nullifzero("Total Queries")) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Rows Per Query"
 ,'nothing' as debug_string_please_ignore
 from dbql_core_hourly dbql
 join dim_app as app
