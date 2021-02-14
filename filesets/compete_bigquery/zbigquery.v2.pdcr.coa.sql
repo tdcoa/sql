@@ -260,17 +260,18 @@ create volatile table vt_query_n_cpu_by_joincount as
   Select
    CASE WHEN JoinCount <= 5 THEN (JoinCount (FORMAT 'Z9') (CHAR(2))) ELSE ' 6+' END as Join_Label
   ,cast(cast(count(*) as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Request_Count
-  ,cast(cast(sum(dbql.ParserCPUTime+dbql.AMPCPUtime) as decimal(32,2) format 'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as CPU_Sec -- "CPU Seconds--#636363" --line
+  ,cast(cast(sum(dbql.ParserCPUTime+dbql.AMPCPUtime) as decimal(32,2) format 'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as CPU_Sec
+  ,count(distinct j.LogDate) as DateCount
   from pdcrinfo.dbqlogtbl_hst as dbql
   join vt_queryid_by_joincount as j
     on dbql.LogDate = j.LogDate
    and dbql.QueryID = j.QueryID
   group by 1
-) with data
-primary index (QueryID, LogDate) -- Match PI for DBQL
+) with data no primary index
 on commit preserve rows;
 
 /*{{save:bq--join_frequency.csv}}*/
+/*{{vis:bq--join_frequency.csv}}*/
 Select
  join_label || case when join_label=1 then ' Join' else ' Joins' end  as "Number of Joins" --xaxis
 ,Request_Count as "Number of Queries--#27C1BD" --bars
@@ -318,7 +319,7 @@ Select
 /cast(sum(cpu_sec) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join5_cpu_pct --25
 ,cast(cast(cast(sum(case when join_label=6 then cpu_sec else 0 end) as decimal(32,4))
 /cast(sum(cpu_sec) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join6_cpu_pct --26
-
+,max(DateCount)(INT) as DateCount -- 27
 from vt_query_n_cpu_by_joincount ;
 
 
