@@ -193,11 +193,11 @@ concurrency:
   files: &concurrency
     concurrency_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
       gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
     concurrency_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
       gitfile:      "concurrency/concurrency.1620dbc.v03.coa.sql"
     concurrency_vis:
       gitfile:      "concurrency/concurrency.py"
