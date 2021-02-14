@@ -210,12 +210,12 @@ customer_data_space:
     cds_by_database_dbc_sql:
       spoolpct:     "0.20"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00", "15.10", "15.00"]
       gitfile:      "db_objects/objects_cds_by_database.v01.dbc.coa.sql"
     cds_by_database_pdcr_sql:
       spoolpct:     "0.20"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00", "15.10", "15.00"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00", "15.10", "15.00"]
       gitfile:      "db_objects/objects_cds_by_database.v01.pdcr.coa.sql"
       startdate:    "Current_Date - 7"
       enddate:      "Current_Date - 1"
