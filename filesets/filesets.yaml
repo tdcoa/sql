@@ -53,11 +53,11 @@ dim_user:
       gitfile:      "dims/dim_user_override.sql"
     dim_user_sql_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_user.pdcr.coa.sql"
     dim_user_sql_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_user.dbc.coa.sql"
 
 dim_app:
@@ -71,13 +71,13 @@ dim_app:
       gitfile:      "dims/dim_app.csv"
     dim_app_sql_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_app.pdcr.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dim_app_sql_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_app.dbc.coa.sql"
       startdate:    "Current_Date - 7" # 6 weeks
       enddate:      "Current_Date"
@@ -93,13 +93,13 @@ dim_statement:
       gitfile:  "dims/dim_statement.csv"
     dim_statement_sql_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_statement.pdcr.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dim_statement_sql_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_statement.dbc.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
@@ -148,19 +148,17 @@ dbql_core:
     <<: *dim_app
     dbql_core_pdcr16:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core--CVT.1620pdcr.v09.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dbql_core_dbc16:
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core--CVT.1620dbc.v09.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dbql_core_select:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core--SEL.v09.coa.sql"
 
 
@@ -230,23 +228,23 @@ db_objects:
     <<: *customer_data_space
     object_counts_by_database_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_counts_by_database.v01.coa.sql"
     indices_v01_coa_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_indices_by_database.v01.coa.sql"
     tables_v01_coa_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_tables_by_database.v01.coa.sql"
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_columns.v01.coa.sql"
     constraints_v01_coa_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_constraints_by_database.v01.coa.sql"
 
 compete_snowflake:
@@ -287,11 +285,11 @@ compete_bigquery:
     compete_bigquery_overwrite01:
       note: this simply overwrites dbql_core export to skip the big data dump at the end.  this file is empty.
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/dbql_core--SEL.v09.coa.sql"
     compete_bigquery_newfinal:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/zbigquery.v2.pdcr.coa.sql"
     compete_bigquery_graph_queries:
       gitfile:      "compete_bigquery/bq--daily_query_throughput.py"
@@ -301,7 +299,6 @@ compete_bigquery:
       gitfile:      "compete_bigquery/bq--tablecount_over_1500_dml.py"
     compete_bigquery_graph_joinfreq:
       gitfile:      "compete_bigquery/bq--join_frequency.py"
-
     final_pptx:
       gitfile:      "compete_bigquery/!BigQuery_Migration.pptx"
     # these go last, so the above can override (one filename not picked up twice)
