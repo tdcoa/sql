@@ -230,8 +230,8 @@ from DBC.COlumnsV group by 1 ;
 /*{{save:bq--data_transfer.csv}}*/
 /*{{vis:bq--data_transfer.csv}}*/
 SELECT TheDate AS LogDate
-      ,SUM(HostReadKB)/1e9 as "Inbound TB--#27C1BD"
-      ,SUM(HostWriteKB)/1e9 as "Outbound TB--#636363"
+      ,cast(SUM(HostReadKB)*1e3 as bigint)  as "Inbound Bytes--#27C1BD"
+      ,cast(SUM(HostWriteKB)*1e3 as bigint) as "Outbound Bytes--#636363"
 FROM PDCRINFO.ResUsageSPMA
 WHERE TheDate BETWEEN {startdate} and {enddate}
 GROUP BY LogDate ORDER BY LogDate;
