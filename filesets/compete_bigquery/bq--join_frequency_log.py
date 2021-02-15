@@ -108,4 +108,4 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(current_dir)
 
 # coaviz_line_xDate_ySimple('graph--data_traffic (in TB).csv', 6,12)
-coaviz_barline_X_Yb_Yln_log('bq--join_frequency_log.csv', save=True, height=4, width=9)
+coaviz_barline_X_Yb_Yln_log('bq--join_frequency_log.csv', title='Join Frequency', height=4, width=9)
