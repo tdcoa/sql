@@ -1,15 +1,3 @@
-prework:
-  active: "True"
-  fileset_version:  "1.0"
-  fileset_type:  "setup"
-  show_in_gui: "False"
-  description: "handles common pre-work activities common to all filesets."
-  files:  &prework
-    get_environment_details:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
-      gitfile:      "prework/_!setup.16xx.v1.coa.sql"
-
 demo:
   active:     "True"
   fileset_version: "1.15"
@@ -53,11 +41,11 @@ dim_user:
       gitfile:      "dims/dim_user_override.sql"
     dim_user_sql_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_user.pdcr.coa.sql"
     dim_user_sql_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_user.dbc.coa.sql"
 
 dim_app:
@@ -71,13 +59,13 @@ dim_app:
       gitfile:      "dims/dim_app.csv"
     dim_app_sql_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_app.pdcr.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dim_app_sql_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_app.dbc.coa.sql"
       startdate:    "Current_Date - 7" # 6 weeks
       enddate:      "Current_Date"
@@ -93,13 +81,13 @@ dim_statement:
       gitfile:  "dims/dim_statement.csv"
     dim_statement_sql_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_statement.pdcr.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dim_statement_sql_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "dims/_dim_statement.dbc.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
@@ -131,11 +119,11 @@ autotune_check:
   files: &autotune_check
     autotune_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "autotune/autotune_check.coa.sql"
     autotune_pptx:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "autotune/autotune_check.pptx"
 
 dbql_core:
@@ -148,13 +136,13 @@ dbql_core:
     <<: *dim_app
     dbql_core_pdcr16:
       collection:   ["pdcr"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core--CVT.1620pdcr.v09.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dbql_core_dbc16:
       collection:   ["dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "dbql_core/dbql_core--CVT.1620dbc.v09.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
@@ -169,7 +157,7 @@ top_users:
     <<: *dim_user
     topuser_sql01:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "top_users/top_users.pdcr.16x.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
@@ -193,11 +181,11 @@ concurrency:
   files: &concurrency
     concurrency_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "concurrency/concurrency.1620pdcr.v03.coa.sql"
     concurrency_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "concurrency/concurrency.1620dbc.v03.coa.sql"
     concurrency_vis:
       gitfile:      "concurrency/concurrency.py"
@@ -210,12 +198,12 @@ customer_data_space:
     cds_by_database_dbc_sql:
       spoolpct:     "0.20"
       collection:   ["dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00", "15.10", "15.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00", "15.10", "15.00"]
       gitfile:      "db_objects/objects_cds_by_database.v01.dbc.coa.sql"
     cds_by_database_pdcr_sql:
       spoolpct:     "0.20"
       collection:   ["pdcr"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00", "15.10", "15.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00", "15.10", "15.00"]
       gitfile:      "db_objects/objects_cds_by_database.v01.pdcr.coa.sql"
       startdate:    "Current_Date - 7"
       enddate:      "Current_Date - 1"
@@ -228,23 +216,23 @@ db_objects:
     <<: *customer_data_space
     object_counts_by_database_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_counts_by_database.v01.coa.sql"
     indices_v01_coa_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_indices_by_database.v01.coa.sql"
     tables_v01_coa_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_tables_by_database.v01.coa.sql"
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_columns.v01.coa.sql"
     constraints_v01_coa_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00","15.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10"]
       gitfile:      "db_objects/objects_constraints_by_database.v01.coa.sql"
 
 compete_snowflake:
@@ -254,21 +242,21 @@ compete_snowflake:
     <<: *db_objects
     compete01_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       iopernode_90pct: 0
       gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
       startdate:    "Current_Date - 7"
       enddate:      "Current_Date - 1"
     compete01_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       iopernode_90pct: 0
       gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
       startdate:    "Current_Date - 7"
       enddate:      "Current_Date - 1"
     compete_pptx:
       collection:   ["dbc","pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "compete_snowflake/snowflake_pptx.coa.sql"
     pptx_migration_blockers:
       gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
@@ -285,12 +273,16 @@ compete_bigquery:
     compete_bigquery_overwrite01:
       note: this simply overwrites dbql_core export to skip the big data dump at the end.  this file is empty.
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/dbql_core--SEL.v09.coa.sql"
-    compete_bigquery_newfinal:
-      collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.00","16.20", "16.10", "16.00"]
+    compete_bigquery_newfinal_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "compete_bigquery/zbigquery.v2.pdcr.coa.sql"
+    compete_bigquery_newfinal_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
+      gitfile:      "compete_bigquery/zbigquery.v2.dbc.coa.sql"
     compete_bigquery_graph_queries:
       gitfile:      "compete_bigquery/bq--daily_query_throughput.py"
     compete_bigquery_graph_traffic:
@@ -316,19 +308,19 @@ feature_usage:
     <<: *dim_user
     feature_usage_CVT01_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       dbqlogtbl:    "dbc.dbqlogtbl"
       logdate:      "CAST(Starttime as Date) as LogDate"
       gitfile:      "feature_usage/feature_usage--CVT.dbc.v07.coa.sql"
     feature_usage_CVT01_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       dbqlogtbl:    "pdcrinfo.dbqlogtbl_hst"
       logdate:      "LogDate"
       gitfile:      "feature_usage/feature_usage--CVT.pdcr.v07.coa.sql"
     feature_usage_SEL:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "feature_usage/feature_usage--SEL.default.v02.coa.sql"
 
 
@@ -346,28 +338,28 @@ level1_how_much:
   files: &level1_how_much
     cpu_trend_pdcr16:
       collection: ["pdcr"]
-      dbsversion: ["16.20", "16.10", "16.00"]
+      dbsversion: ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
       resusagespma: "pdcrinfo.ResUsageSpma_Hst"
     io_trend_pdcr16:
       collection: ["pdcr"]
-      dbsversion: ["16.20", "16.10", "16.00"]
+      dbsversion: ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
       resusagesldv: "pdcrinfo.ResUsageSldv_Hst"
     storage_trend_pdcr16:
       collection: ["pdcr"]
-      dbsversion: ["16.20", "16.10", "16.00"]
+      dbsversion: ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:    "level1_how_much/storage_trend.1620.pdcr.v11.coa.sql"
       databasespace: "pdcrinfo.DatabaseSpace_hst"
 
     cpu_trend_dbc16:
       collection: ["dbc"]
-      dbsversion: ["16.20", "16.10", "16.00"]
+      dbsversion: ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:    "level1_how_much/cpu_trend_spma.1620.pdcr.v11.coa.sql"
       resusagespma: "dbc.ResUsageSpma"
     io_trend_dbc16:
       collection: ["dbc"]
-      dbsversion: ["16.20", "16.10", "16.00"]
+      dbsversion: ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:    "level1_how_much/io_trend_sldv.1620.pdcr.v12.coa.sql"
       resusagesldv: "dbc.ResUsageSldv"
 
@@ -389,7 +381,7 @@ success_plan:
       gitfile:      "success_plan/z_build_success_plan.coa.sql"
     cpu_summary_sql:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00","14.10","14.00","13.10"]
       gitfile:      "success_plan/cpu_summary.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
@@ -409,156 +401,156 @@ vantage_health_check:
     vhc_sql01_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck001.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql01_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck001.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql02_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck002.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql02_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck002.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     <<: *feature_usage
     feature_usage_SEL:  # override normal export
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.00","17.0","16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "vantage_health_check/feature_usage_SEL.vhc.v01.coa.sql"
     vhc_sql04_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck004.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql04_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck004.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql06_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck006.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql06pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck006.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql07_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck007.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql07_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck007.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql08_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck008.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql09_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck009.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql09_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck009.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql13_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck013.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql13_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck013.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql14_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck014.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql14_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck014.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql15_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck015.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql15_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck015.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql16_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck016.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql16_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck016.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql17_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck017.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql17_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck017.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql18_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck018.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql18_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck018.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql19_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck019.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql19_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck019.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql20_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck020.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql20_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck020.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql21_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck021.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql21_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck021.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql22_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck022.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql22_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck022.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql23_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck023.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql23_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck023.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql24_dbc:
       gitfile:      "vantage_health_check/VantageHealthCheck024.16xx.dbc.v1.coa.sql"
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
     vhc_sql24_pdcr:
       gitfile:      "vantage_health_check/VantageHealthCheck024.16xx.pdcr.v1.coa.sql"
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
 
 biz_usage_decoded:
   active: "True"
@@ -570,29 +562,29 @@ biz_usage_decoded:
       notes:        "this is named to run between _dim_user and rest of BUD"
     BusGrpDataDomainCPUConsumption:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "biz_usage_decoded/busGrpDataDomainCPUConsumption.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     DepartmentCPUConsumption:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "biz_usage_decoded/departmentCPUConsumption.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     DeptDataDomainCPUConsumption:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "biz_usage_decoded/deptDataDomainCPUConsumption.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     SpaceByDomainSubject:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "biz_usage_decoded/spaceByDomainSubject.coa.sql"
     TopCPUUsers:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "biz_usage_decoded/topCPUUsers.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
@@ -609,37 +601,37 @@ telemetry_collection_agent_TCA:
   files: &tca
     spma_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "telemetry_collection_agent/resusage.spma.v1.coa.sql"
       tablename:    "PDCRInfo.ResUsageSPMA_hst"
       suffix:       "spma"
     spma_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "telemetry_collection_agent/resusage.spma.v1.coa.sql"
       tablename:    "DBC.ResUsageSPMA"
       suffix:       "spma"
     svpr_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "telemetry_collection_agent/resusage.svpr.v1.coa.sql"
       tablename:    "PDCRInfo.ResUsageSVPR_hst"
       suffix:       "svpr"
     svpr_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "telemetry_collection_agent/resusage.svpr.v1.coa.sql"
       tablename:    "DBC.ResUsageSVPR"
       suffix:       "svpr"
     spdsk_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "telemetry_collection_agent/resusage.spdsk.v1.coa.sql"
       tablename:    "PDCRInfo.ResUsageSPDsk_hst"
       suffix:       "spdsk"
     spdsk_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20", "16.10", "16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "telemetry_collection_agent/resusage.spdsk.v1.coa.sql"
       tablename:    "DBC.ResUsageSPDsk"
       suffix:       "spdsk"
@@ -737,11 +729,11 @@ consumption_pricing:
   files: &consumption_pricing
     vu_dbc:
       collection:   ["dbc"]
-      dbsversion:   ["16.20","16.10","16.0","16.00","15.10","15.00","15.0"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00","15.10","15.00","15.0"]
       gitfile:      "consumption_pricing/gss_vantage_units.dbc.coa.sql"
     vu_pdcr:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00","15.10","15.00","15.0"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00","15.10","15.00","15.0"]
       gitfile:      "consumption_pricing/gss_vantage_units.pdcr.coa.sql"
 
 
@@ -768,79 +760,79 @@ ms_opportunity_dashboard:
   files: &ms_opportunity_dashboard
     sql01:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/01.System_Config.coa.sql"
     sql02:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/02.Suspect_Query_Summary.coa.sql"
     sql03:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/03.ImpactCPU_Query_Summary.coa.sql"
     sql04:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/04.Assessment_Metrics.coa.sql"
     sql05:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/05.Cumulative_CPU_Short_Queries_Summary.coa.sql"
     sql06:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/06.Average_8hr_window.coa.sql"
     sql07:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/07.Answers_Database_Count.coa.sql"
     sql08:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/08.Answers_Table_Count.coa.sql"
     sql09:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/09.Answers_User_Count.coa.sql"
     sql10:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/10.Competitors_Query_Average_Per_Hour.coa.sql"
     sql11:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/11.Competitors_Query_Complexity.coa.sql"
     sql12:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/12.Consumption_Available_Space.coa.sql"
     sql13:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/13.Consumption_Cpu_Peak_Period.coa.sql"
     sql14:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/14.Consumption_Cpu_Utilization.coa.sql"
     sql15:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/15.Consumption_IO_Average.coa.sql"
     sql16:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/16.Consumption_IO_Max_Value.coa.sql"
     sql17:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/17.Consumption_Query_Count.coa.sql"
     sql18:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/18.Strategy_Database_Version.coa.sql"
     sql19:
       collection:   ["pdcr"]
-      dbsversion:   ["16.20","16.10","16.0","16.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20","16.10","16.0","16.00"]
       gitfile:      "ms_opportunity_dashboard/19.Workload_Suspect_CPU.coa.sql"
 
 

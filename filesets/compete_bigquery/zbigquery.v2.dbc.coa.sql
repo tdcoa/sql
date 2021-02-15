@@ -172,17 +172,21 @@ from constraint_details ;
 
 
 -- CALCULATE DML COUNTS (INS/UPD/DEL/MERGE) PER TABLE
+-- Note: LogDate == StartTime(DATE), not CollectTimeStamp(DATE)
+--       but dbqlobjtbl does not have StartTime, so join on CollectTimeStamp(DATE)
+---- DBC SPECIFIC
 create volatile table dml_count_per_table as
 (
-    Select l.LogDate, o.ObjectDatabaseName as DatabaseName, o.ObjectTableName as TableName, count(*) as Request_Count
-    from pdcrinfo.dbqlogtbl_hst as l
-    join pdcrinfo.dbqlobjtbl_hst as o
-      on l.LogDate = o.LogDate
-     and l.QueryID = o.QueryID
-    where l.logdate between {startdate} and {enddate}
-      and l.StatementType in ('Insert','Update','Delete','Merge')
-      and o.ObjectTableName is not null
-    group by 1,2,3
+  Select l.StartTime(DATE) as LogDate, o.ObjectDatabaseName as DatabaseName, o.ObjectTableName as TableName, count(*) as Request_Count
+  from DBC.dbqlogtbl as l
+  join DBC.dbqlobjtbl as o
+    on l.ProcID = o.ProcID
+   and l.QueryID = o.QueryID
+   and l.CollectTimeStamp(DATE) = o.CollectTimeStamp(DATE)
+  where l.StartTime(DATE) between DATE-91 and DATE
+    and l.StatementType in ('Insert','Update','Delete','Merge')
+    and o.ObjectTableName is not null
+  group by 1,2,3
 ) with data
 primary index(LogDate, TableName)
 on commit preserve rows ;
@@ -232,7 +236,7 @@ from DBC.COlumnsV group by 1 ;
 SELECT TheDate AS LogDate
       ,cast(SUM(HostReadKB)*1e3 as bigint)  as "Inbound Bytes--#27C1BD"
       ,cast(SUM(HostWriteKB)*1e3 as bigint) as "Outbound Bytes--#636363"
-FROM PDCRINFO.ResUsageSPMA
+FROM dbc.ResUsageSPMA
 WHERE TheDate BETWEEN {startdate} and {enddate}
 GROUP BY LogDate ORDER BY LogDate;
 
@@ -242,15 +246,17 @@ GROUP BY LogDate ORDER BY LogDate;
 create volatile table vt_queryid_by_joincount as
 (
     Select
-    QueryID, LogDate, Count(distinct ObjectTableName) as JoinCount
-    from pdcrinfo.DBQLObjTbl_Hst
+     QueryID
+    ,CollectTimeStamp(DATE) as LogDate
+    ,Count(distinct ObjectTableName) as JoinCount
+    from dbc.DBQLObjTbl
     where ObjectColumnName is null
       and ObjectTableName is not null
       and ObjectType in ('Tab', 'Viw')
-      and LogDate between DATE-91 and DATE
+      and LogDate BETWEEN DATE-112 and DATE
     group by 1,2
 ) with data
-primary index (QueryID, LogDate) -- Match PI for DBQL
+primary index (QueryID, LogDate)
 on commit preserve rows;
 
 collect stats on vt_queryid_by_joincount column(QueryID, LogDate);
@@ -262,9 +268,9 @@ create volatile table vt_query_n_cpu_by_joincount as
   ,cast(cast(count(*) as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Request_Count
   ,cast(cast(sum(dbql.ParserCPUTime+dbql.AMPCPUtime) as decimal(32,2) format 'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as CPU_Sec
   ,count(distinct j.LogDate) as DateCount
-  from pdcrinfo.dbqlogtbl_hst as dbql
+  from dbc.dbqlogtbl as dbql
   join vt_queryid_by_joincount as j
-    on dbql.LogDate = j.LogDate
+    on dbql.StartTime(DATE) = j.LogDate
    and dbql.QueryID = j.QueryID
   group by 1
 ) with data no primary index
