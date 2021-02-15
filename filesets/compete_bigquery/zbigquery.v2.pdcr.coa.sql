@@ -247,7 +247,7 @@ create volatile table vt_queryid_by_joincount as
     where ObjectColumnName is null
       and ObjectTableName is not null
       and ObjectType in ('Tab', 'Viw')
-      and LogDate between DATE-91 and DATE
+      and LogDate between {startdate} and {enddate}
     group by 1,2
 ) with data
 primary index (QueryID, LogDate) -- Match PI for DBQL

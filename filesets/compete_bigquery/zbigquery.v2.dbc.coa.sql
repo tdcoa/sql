@@ -183,7 +183,7 @@ create volatile table dml_count_per_table as
     on l.ProcID = o.ProcID
    and l.QueryID = o.QueryID
    and l.CollectTimeStamp(DATE) = o.CollectTimeStamp(DATE)
-  where l.StartTime(DATE) between DATE-91 and DATE
+  where l.StartTime(DATE) between {startdate} and {enddate}
     and l.StatementType in ('Insert','Update','Delete','Merge')
     and o.ObjectTableName is not null
   group by 1,2,3
@@ -253,7 +253,7 @@ create volatile table vt_queryid_by_joincount as
     where ObjectColumnName is null
       and ObjectTableName is not null
       and ObjectType in ('Tab', 'Viw')
-      and LogDate BETWEEN DATE-112 and DATE
+      and LogDate BETWEEN {startdate} and {enddate}
     group by 1,2
 ) with data
 primary index (QueryID, LogDate)
