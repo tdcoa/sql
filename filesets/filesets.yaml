@@ -291,6 +291,8 @@ compete_bigquery:
       gitfile:      "compete_bigquery/bq--tablecount_over_1500_dml.py"
     compete_bigquery_graph_joinfreq:
       gitfile:      "compete_bigquery/bq--join_frequency.py"
+    compete_bigquery_graph_joinfreq_log:
+      gitfile:      "compete_bigquery/bq--join_frequency_log.py"
     final_pptx:
       gitfile:      "compete_bigquery/!BigQuery_Migration.pptx"
     # these go last, so the above can override (one filename not picked up twice)
