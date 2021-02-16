@@ -263,10 +263,10 @@ compete_snowflake:
 
 compete_bigquery:
   active:           "True"
-  show_in_gui:      "False"
+  show_in_gui:      "True"
   fileset_version:  "1.0"
-  startdate:        "Current_Date - 90"
-  enddate:          "Current_Date - 1"
+  startdate:        "Current_Date - 92"
+  enddate:          "Current_Date - 2"
   your_name:        "<your name>"
   your_title:       "<your title>"
   files:
