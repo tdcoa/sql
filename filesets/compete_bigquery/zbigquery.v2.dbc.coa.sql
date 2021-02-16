@@ -94,7 +94,8 @@ from dbql_core_hourly
 /*{{save:bq--appid_detail.csv}}*/
 select
  app.App_Bucket
-,(DATE-1) - (DATE-15)(INT) as DayCount
+,max(cast(cast(LogTS as timestamp(0)) as DATE)) -
+ min(cast(cast(LogTS as timestamp(0)) as DATE)) as DayCount
 ,cast(cast(sum(dbql.Query_Cnt)/DayCount as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Queries"
 ,cast(cast(sum(dbql.Returned_Row_Cnt)/DayCount as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Fetched Rows"
 ,cast(cast(zeroifnull("Total Fetched Rows" / nullifzero("Total Queries")) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Rows Per Query"
@@ -103,7 +104,7 @@ from dbql_core_hourly dbql
 join dim_app as app
   on dbql.AppID = app.AppID
 group by 1
-Order by "Rows per Query" desc ;
+Order by cast("Rows per Query" as INT) desc ;
 
 
 -- FOR GRAPHING:  Queries per Day
