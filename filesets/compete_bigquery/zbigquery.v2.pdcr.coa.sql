@@ -95,7 +95,7 @@ from dbql_core_hourly
 select
  app.App_Bucket
 ,max(cast(cast(LogTS as timestamp(0)) as DATE)) -
- min(cast(cast(LogTS as timestamp(0)) as DATE)) as DayCount
+ min(cast(cast(LogTS as timestamp(0)) as DATE))+1 as DayCount
 ,cast(cast(sum(dbql.Query_Cnt)/nullifzero(DayCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Queries"
 ,cast(cast(sum(dbql.Returned_Row_Cnt)/ nullifzero(DayCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Fetched Rows"
 ,cast(cast(zeroifnull("Total Fetched Rows" / nullifzero("Total Queries")) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Rows Per Query"
