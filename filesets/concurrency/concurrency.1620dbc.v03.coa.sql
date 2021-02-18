@@ -1,8 +1,8 @@
 /* Returns Concurrency
 Parameters:
- - startdate:    Current_Date - 35
- - enddate:      Current_Date - 1
- - siteid:       APPLE50BLANEY
+- startdate:    {startdate}
+- enddate:      {enddate}
+- siteid:       {siteid}
 */
 Create Volatile Table Concurrency as
 (
