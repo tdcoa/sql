@@ -141,7 +141,8 @@ Select
 ,cast(cast(sum(ViewCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "View Count"
 ,cast(cast(sum(MacroCount+"SP&TrigCount"+UDObjectCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Program Count"
 ,cast(cast(sum(IndexCount+OtherCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Other Count"
-from db_objects_counts ;
+from db_objects_counts where DBName <>  '*** Total ***' -- there is a RollUp in DB_Objects
+;
 
 
 -- COLUMN FORMATS
