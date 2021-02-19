@@ -128,7 +128,7 @@ SELECT
   /* ====== Metrics: Other ====== */
   ,zeroifnull(cast(avg(NumOfActiveAMPs) as decimal(18,4))) as NumOfActiveAMPs_Avg
   ,zeroifnull(sum(SpoolUsage/1e9))  as Spool_GB
-  ,zeroifnull(avg(1-(ReqPhysIO/nullifzero(TotalIOCount)))) as CacheHit_Pct
+  ,zeroifnull(avg( cast(1-(ReqPhysIO/nullifzero(TotalIOCount)) as decimal(32,6)) )) as CacheHit_Pct
   ,zeroifnull(avg((AMPCPUTime / nullifzero(MaxAmpCPUTime*NumOfActiveAMPs))-1)) as CPUSec_Skew_AvgPCt
   ,zeroifnull(avg((TotalIOCount / nullifzero(MaxAmpIO*NumOfActiveAMPs))-1) )   as IOCnt_Skew_AvgPct
 
@@ -173,7 +173,7 @@ SELECT
   ,zeroifnull(sum(cast(smry.UsedIota/1e9 as decimal(18,2)))) as IOTA_Used_cntB
   ,cast(null as float) as NumOfActiveAMPs_Avg
   ,null as Spool_GB
-  ,zeroifnull(avg(1-(ReqPhysIO/nullifzero(TotalIOCount)))) as CacheHit_Pct
+  ,zeroifnull(avg( cast(1-(ReqPhysIO/nullifzero(TotalIOCount)) as decimal(32,6)) )) as CacheHit_Pct
   ,null as CPUSec_Skew_AvgPCt
   ,null as IOCnt_Skew_AvgPct
 
