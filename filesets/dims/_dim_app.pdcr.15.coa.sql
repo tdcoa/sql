@@ -23,12 +23,12 @@ create volatile table dim_app as
   ,coalesce(p.SiteID, 'None')        as SiteID_
   from (Select AppID, sum(Request_Cnt) as Request_Cnt
         from(
-                select AppID, count(*) as Request_Cnt from pdcrinfo.DBQLogTbl_Hst
-                where LogDate between {startdate} and {enddate}
+                select AppID, count(*) as Request_Cnt from DBC.QryLogV
+                where cast(StartTime as date) between {startdate} and {enddate}
                 group by 1
                 union
-                select AppID, count(*) as Request_Cnt from pdcrinfo.DBQLSummaryTbl_Hst
-                where LogDate between {startdate} and {enddate}
+                select AppID, count(*) as Request_Cnt from DBC.QryLogSummaryV
+                where cast(CollectTimeStamp as date) between {startdate} and {enddate}
                 group by 1
         ) as a
         group by 1

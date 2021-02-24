@@ -98,15 +98,15 @@ create volatile table dim_user as
                         where cast(starttime as DATE) between {startdate} and {enddate}
                         group by 1
                             union
-                        select UserName as Active_UserName
+                        select 'Summary' as Active_UserName
                         ,zeroifnull(sum(cast(QueryCount as BigInt))) as Query_Cnt
                         ,null as Query_Complexity_Score
                         ,zeroifnull(sum(cast(ParserCPUTime+AMPCPUTime as Decimal(32,2)))) as CPU_Sec
-                        ,zeroifnull(cast(sum(ReqPhysIOKB(BigInt))/1e6 as Decimal(32,3))) as IOGB
+                        ,zeroifnull(cast(0 as Decimal(32,3))) as IOGB
                         ,0 as Runtime_Sec
                         ,0 as Error_Cnt
                         from dbc.QryLogSummaryV
-                        where cast(starttime as DATE) between {startdate} and {enddate}
+                        where cast(CollectTimeStamp as DATE) between {startdate} and {enddate}
                         group by 1
                       ) as au1
                  group by Active_UserName

@@ -1,4 +1,4 @@
-\/* Start COA: Dim_App
+/* Start COA: Dim_App
    builds the dim_app volatile table
    requires the dim_app.csv file
 
@@ -28,7 +28,7 @@ create volatile table dim_app as
                 group by 1
                 union
                 select AppID, count(*) as Request_Cnt from DBC.QryLogSummaryV
-                where cast(StartTime as date) between {startdate} and {enddate}
+                where cast(CollectTimeStamp as date) between {startdate} and {enddate}
                 group by 1
         ) as a
         group by 1

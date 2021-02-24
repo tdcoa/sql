@@ -411,7 +411,7 @@ select
  ,cast(cast(sum(case when TableKindDesc = 'Join Index' then ObjectCount else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Join Index Count"
  ,cast(cast(sum(case when TableKindDesc = 'Queue Table' then ObjectCount else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Queue Table Count"
  ,cast(cast(sum(case when TableBucket = 'Table' and MultiSetInd = 'N' then ObjectCount else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "SET Table Count"
- ,cast(cast("SET Table Count" / "Total Count" * 100 as decimal(9,2) format 'ZZ9.99') as varchar(8))||'%' as "Set Table Pct"
+ ,cast(cast("SET Table Count" / nullifzero("Total Count") * 100 as decimal(9,2) format 'ZZ9.99') as varchar(8))||'%' as "Set Table Pct"
  ,cast(cast(sum(GTTableCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Global Temp Table Count"
 FROM vt_table_kinds_by_database
 WHERE DatabaseName NOT IN  (select dbname from dim_tdinternal_databases)

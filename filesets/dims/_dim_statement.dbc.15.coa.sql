@@ -22,8 +22,8 @@ create volatile table dim_statement as
   from (select distinct StatementType from dbc.QryLogV
         where CAST(StartTime AS DATE) between {startdate} and {enddate}
         union all
-        select distinct 'Summary' from dbc.QryLogSummaryV 
-        where CAST(StartTime AS DATE) between {startdate} and {enddate}) as o
+        select distinct 'Summary' from dbc.QryLogSummaryV
+        where CAST(CollectTimeStamp AS DATE) between {startdate} and {enddate}) as o
   left join "dim_statement.csv"  as p
     on (case
         when p.Pattern_Type = 'Equal' and lower(o.StatementType) = lower(p.Pattern) then 1

@@ -123,7 +123,7 @@ SELECT
   ,zeroifnull(sum( cast(TotalIOCount/1e6      as decimal(18,2)))) as IOCntM_Total
   ,zeroifnull(sum( cast(ReqPhysIOKB/1e6       as decimal(18,2)))) as IOGB_Physical
   ,zeroifnull(sum( cast(ReqIOKB/1e6           as decimal(18,2)))) as IOGB_Total
-  ,zeroifnull(sum( cast(dbql.UsedIOTA/1e9     as decimal(18,2)))) as IOTA_Used_cntB
+  ,null as IOTA_Used_cntB
 
   /* ====== Metrics: Other ====== */
   ,zeroifnull(cast(avg(NumOfActiveAMPs) as decimal(18,4))) as NumOfActiveAMPs_Avg
@@ -143,9 +143,9 @@ SELECT
 union all
 
 SELECT
-   cast(cast(starttime as format 'YYYY-MM-DDBHH') AS CHAR(13)) || ':00:00' as LogTS
+   cast(cast(CollectTimeStamp as format 'YYYY-MM-DDBHH') AS CHAR(13)) || ':00:00' as LogTS
   ,HashAmp() + 1 as Total_AMPs
-  ,username
+  ,'Summary' as UserName
   ,appid
   ,'Summary' as StatementType
   ,zeroifnull(sum(cast(smry.QueryCount as decimal(18,2)))) as Request_Cnt
@@ -157,7 +157,7 @@ SELECT
   ,null as Query_InMem_Cnt
   ,null as Query_PhysIO_Cnt
   ,null as Query_Tactical_Cnt
-  ,cast(null as float) as Query_Complexity_Score_Avg
+  ,null as Query_Complexity_Score_Avg
   ,null as Returned_Row_Cnt
   ,null as DelayTime_Sec
   ,null as RunTime_Parse_Sec
@@ -166,19 +166,18 @@ SELECT
   ,null as TransferTime_Sec
   ,zeroifnull(sum(cast(smry.ParserCPUTime as decimal(18,2)))) as CPU_Parse_Sec
   ,zeroifnull(sum(cast(smry.AMPCPUTime as decimal(18,2)))) as CPU_AMP_Sec
-  ,zeroifnull(sum(cast(smry.ReqPhysIO/1e6 as decimal(18,2)))) as IOCntM_Physical
+  ,null as IOCntM_Physical
   ,zeroifnull(sum(cast(smry.TotalIOCount/1e6 as decimal(18,2)))) as IOCntM_Total
-  ,zeroifnull(sum(cast(smry.ReqPhysIOKB/1e6 as decimal(18,2)))) as IOGB_Physical
+  ,null as IOGB_Physical
   ,null as IOGB_Total
-  ,zeroifnull(sum(cast(smry.UsedIota/1e9 as decimal(18,2)))) as IOTA_Used_cntB
-  ,cast(null as float) as NumOfActiveAMPs_Avg
+  ,null as IOTA_Used_cntB
+  ,null as NumOfActiveAMPs_Avg
   ,null as Spool_GB
-  ,zeroifnull(avg( cast(1-(ReqPhysIO/nullifzero(TotalIOCount)) as decimal(32,6)) )) as CacheHit_Pct
+  ,null as CacheHit_Pct
   ,null as CPUSec_Skew_AvgPCt
   ,null as IOCnt_Skew_AvgPct
-
   From dbc.QryLogSummaryV smry
-  where cast(smry.StartTime as date) between {startdate} and {enddate}
+  where cast(smry.CollectTimeStamp as date) between {startdate} and {enddate}
   Group by
    LogTS
   ,username

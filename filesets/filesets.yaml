@@ -181,13 +181,13 @@ dbql_core:
     dbql_core_pdcr15:
       collection:   ["pdcr"]
       dbsversion:   ["15.10","15.00"]
-      gitfile:      "dbql_core/dbql_core--CVT.1620pdcr.v09.coa.sql"
+      gitfile:      "dbql_core/dbql_core--CVT.15pdcr.v09.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dbql_core_dbc15:
       collection:   ["dbc"]
       dbsversion:   ["15.10","15.00"]
-      gitfile:      "dbql_core/dbql_core--CVT.1620dbc.v09.coa.sql"
+      gitfile:      "dbql_core/dbql_core--CVT.15dbc.v09.coa.sql"
       startdate:    "Current_Date - 43" # 6 weeks
       enddate:      "Current_Date - 1"
     dbql_core_select:

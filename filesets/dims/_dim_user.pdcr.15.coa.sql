@@ -94,19 +94,19 @@ create volatile table dim_user as
                         ,zeroifnull(cast(sum(ReqIOKB(BigInt))/1e6 as Decimal(32,3))) as IOGB
                         ,zeroifnull(sum(cast(TotalFirstRespTime as Decimal(32,6)))) as Runtime_Sec
                         ,zeroifnull(sum(cast((case when ErrorCode not in(0,3158) then 1 else 0 end) as decimal(32,0)))) as Error_Cnt
-                        from pdcrinfo.dbqLogTbl_Hst
-                        where LogDate between {startdate} and {enddate}
+                        from dbc.QryLogV
+                        where cast(starttime as DATE) between {startdate} and {enddate}
                         group by 1
                             union
-                        select UserName as Active_UserName
+                        select 'Summary' as Active_UserName
                         ,zeroifnull(sum(cast(QueryCount as BigInt))) as Query_Cnt
                         ,null as Query_Complexity_Score
                         ,zeroifnull(sum(cast(ParserCPUTime+AMPCPUTime as Decimal(32,2)))) as CPU_Sec
-                        ,zeroifnull(cast(sum(ReqPhysIOKB(BigInt))/1e6 as Decimal(32,3))) as IOGB
+                        ,zeroifnull(cast(0 as Decimal(32,3))) as IOGB
                         ,0 as Runtime_Sec
                         ,0 as Error_Cnt
-                        from pdcrinfo.dbqlSummaryTbl_Hst
-                        where LogDate between {startdate} and {enddate}
+                        from dbc.QryLogSummaryV
+                        where cast(CollectTimeStamp as DATE) between {startdate} and {enddate}
                         group by 1
                       ) as au1
                  group by Active_UserName
@@ -121,7 +121,7 @@ create volatile table dim_user as
         when p.Pattern_Type = 'RegEx'
          and character_length(regexp_substr(o.UserName, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
-    and (lower(SiteID_) in('default','none') or lower('TRANSCEND02') like lower(SiteID_))
+    and (lower(SiteID_) in('default','none') or lower('{siteid}') like lower(SiteID_))
   qualify Priority_ = min(Priority_)over(partition by o.UserName)
 ) with data
 primary index (UserName)
