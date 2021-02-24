@@ -94,7 +94,7 @@ create volatile table dim_user as
                         ,zeroifnull(cast(sum(ReqIOKB(BigInt))/1e6 as Decimal(32,3))) as IOGB
                         ,zeroifnull(sum(cast(TotalFirstRespTime as Decimal(32,6)))) as Runtime_Sec
                         ,zeroifnull(sum(cast((case when ErrorCode not in(0,3158) then 1 else 0 end) as decimal(32,0)))) as Error_Cnt
-                        from dbc.QryLogV
+                        from pdcrinfo.dbqLogTbl_Hst
                         where cast(starttime as DATE) between {startdate} and {enddate}
                         group by 1
                             union
@@ -105,7 +105,7 @@ create volatile table dim_user as
                         ,zeroifnull(cast(0 as Decimal(32,3))) as IOGB
                         ,0 as Runtime_Sec
                         ,0 as Error_Cnt
-                        from dbc.QryLogSummaryV
+                        from pdcrinfo.dbqlSummaryTbl_Hst
                         where cast(CollectTimeStamp as DATE) between {startdate} and {enddate}
                         group by 1
                       ) as au1

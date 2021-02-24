@@ -38,16 +38,27 @@ Group by LogDate, LogHour
 no primary index on commit preserve rows;
 
 
-/* ResUsage_MaxCPU
-   This information is saved and loaded into Transcend, then
-   joined back to the DBQL_Core process in the view tier
-*/
-
-
 
 SET TIME ZONE 'GMT'
 /* allows for local-time adjusted 'business hours' analysis  */
 ;
+
+
+
+/*
+ DBQL_CORE ()
+=========================
+Aggregates DBQL into a per-day, per-hour, per-DIM (app/statement/user) buckets
+as defined above.  The intention is this to be a smaller table than the
+detail, however, this assumption largely relies on how well the bucketing
+logic is defined / setup above.  If the result set is too large, try
+revisiting the Bucket definitions above, and make groups smaller / less varied.
+
+Also - many compound metrics have been stripped, to minimize transfer file
+size.  As these fields are easily calculated, they will be re-constituted
+in Transcend.
+*/
+
 
 create volatile table dbql_core_hourly as
 (
@@ -108,7 +119,7 @@ SELECT
   ,zeroifnull(sum( cast(TotalIOCount/1e6      as decimal(18,2)))) as IOCntM_Total
   ,zeroifnull(sum( cast(ReqPhysIOKB/1e6       as decimal(18,2)))) as IOGB_Physical
   ,zeroifnull(sum( cast(ReqIOKB/1e6           as decimal(18,2)))) as IOGB_Total
-  ,zeroifnull(sum( cast(dbql.UsedIOTA/1e9     as decimal(18,2)))) as IOTA_Used_cntB
+  ,null as IOTA_Used_cntB
 
   /* ====== Metrics: Other ====== */
   ,zeroifnull(cast(avg(NumOfActiveAMPs) as decimal(18,4))) as NumOfActiveAMPs_Avg
@@ -118,7 +129,7 @@ SELECT
   ,zeroifnull(avg((TotalIOCount / nullifzero(MaxAmpIO*NumOfActiveAMPs))-1) )   as IOCnt_Skew_AvgPct
 
   From pdcrinfo.DBQLogTbl_Hst as dbql
-  where dbql.LogDate between {startdate} and {enddate}
+  where cast(dbql.StartTime as date) between {startdate} and {enddate}
   Group by
    LogTS
   ,username
@@ -128,9 +139,9 @@ SELECT
 union all
 
 SELECT
-   cast(cast(starttime as format 'YYYY-MM-DDBHH') AS CHAR(13)) || ':00:00' as LogTS
+   cast(cast(CollectTimeStamp as format 'YYYY-MM-DDBHH') AS CHAR(13)) || ':00:00' as LogTS
   ,HashAmp() + 1 as Total_AMPs
-  ,username
+  ,'Summary' as UserName
   ,appid
   ,'Summary' as StatementType
   ,zeroifnull(sum(cast(smry.QueryCount as decimal(18,2)))) as Request_Cnt
@@ -142,7 +153,7 @@ SELECT
   ,null as Query_InMem_Cnt
   ,null as Query_PhysIO_Cnt
   ,null as Query_Tactical_Cnt
-  ,cast(null as float) as Query_Complexity_Score_Avg
+  ,null as Query_Complexity_Score_Avg
   ,null as Returned_Row_Cnt
   ,null as DelayTime_Sec
   ,null as RunTime_Parse_Sec
@@ -151,19 +162,18 @@ SELECT
   ,null as TransferTime_Sec
   ,zeroifnull(sum(cast(smry.ParserCPUTime as decimal(18,2)))) as CPU_Parse_Sec
   ,zeroifnull(sum(cast(smry.AMPCPUTime as decimal(18,2)))) as CPU_AMP_Sec
-  ,zeroifnull(sum(cast(smry.ReqPhysIO/1e6 as decimal(18,2)))) as IOCntM_Physical
+  ,null as IOCntM_Physical
   ,zeroifnull(sum(cast(smry.TotalIOCount/1e6 as decimal(18,2)))) as IOCntM_Total
-  ,zeroifnull(sum(cast(smry.ReqPhysIOKB/1e6 as decimal(18,2)))) as IOGB_Physical
+  ,null as IOGB_Physical
   ,null as IOGB_Total
-  ,zeroifnull(sum(cast(smry.UsedIota/1e9 as decimal(18,2)))) as IOTA_Used_cntB
-  ,cast(null as float) as NumOfActiveAMPs_Avg
+  ,null as IOTA_Used_cntB
+  ,null as NumOfActiveAMPs_Avg
   ,null as Spool_GB
-  ,zeroifnull(avg( cast(1-(ReqPhysIO/nullifzero(TotalIOCount)) as decimal(32,6)) )) as CacheHit_Pct
+  ,null as CacheHit_Pct
   ,null as CPUSec_Skew_AvgPCt
   ,null as IOCnt_Skew_AvgPct
-
   From PDCRINFO.DBQLSummaryTbl_Hst smry
-  where smry.LogDate between {startdate} and {enddate}
+  where cast(smry.CollectTimeStamp as date) between {startdate} and {enddate}
   Group by
    LogTS
   ,username
@@ -174,19 +184,6 @@ no primary index on commit preserve rows
 ;
 
 
-/*
- DBQL_CORE ()
-=========================
-Aggregates DBQL into a per-day, per-hour, per-DIM (app/statement/user) buckets
-as defined above.  The intention is this to be a smaller table than the
-detail, however, this assumption largely relies on how well the bucketing
-logic is defined / setup above.  If the result set is too large, try
-revisiting the Bucket definitions above, and make groups smaller / less varied.
-
-Also - many compound metrics have been stripped, to minimize transfer file
-size.  As these fields are easily calculated, they will be re-constituted
-in Transcend.
-*/
 
 
 /* Query_Breakouts by User Buckets */
@@ -195,7 +192,7 @@ create volatile table dbql_core_breakout as
 (
   SELECT /*dbql_core*/
    '{siteid}'  as Site_ID
-  ,cast(LogDate as format 'Y4-MM-DD') as LogDate
+  ,cast(cast(dbql.StartTime as date) as format 'Y4-MM-DD') as LogDate
   ,usr.User_Bucket
   ,usr.User_Department
   ,usr.User_SubDepartment
@@ -271,10 +268,9 @@ create volatile table dbql_core_breakout as
 
 
   From pdcrinfo.DBQLogTbl_Hst as dbql
-  /* TODO: union with DBQL_Summary table - Paul */
   join dim_user usr
     on dbql.UserName = usr.UserName
-  where dbql.LogDate between {startdate} and {enddate}
+  where cast(dbql.StartTime as date) between {startdate} and {enddate}
   Group by
    LogDate
   ,usr.User_Bucket
@@ -283,7 +279,6 @@ create volatile table dbql_core_breakout as
 ) with data
 no primary index on commit preserve rows
 ;
-
 
 
 

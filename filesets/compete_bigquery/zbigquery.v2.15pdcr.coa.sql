@@ -180,8 +180,8 @@ from constraint_details ;
 create volatile table dml_count_per_table as
 (
   Select l.StartTime(DATE) as LogDate, o.ObjectDatabaseName as DatabaseName, o.ObjectTableName as TableName, count(*) as Request_Count
-  from DBC.dbqlogtbl as l
-  join DBC.dbqlobjtbl as o
+  from pdcrinfo.dbqlogtbl_hst as l
+  join pdcrinfo.dbqlobjtbl_hst as o
     on l.ProcID = o.ProcID
    and l.QueryID = o.QueryID
    and l.CollectTimeStamp(DATE) = o.CollectTimeStamp(DATE)
@@ -238,7 +238,7 @@ from DBC.COlumnsV group by 1 ;
 SELECT TheDate AS LogDate
       ,cast(SUM(HostReadKB)*1e3 as bigint)  as "Inbound Bytes--#27C1BD"
       ,cast(SUM(HostWriteKB)*1e3 as bigint) as "Outbound Bytes--#636363"
-FROM dbc.ResUsageSPMA
+FROM pdcrinfo.ResUsageSPMA
 WHERE TheDate BETWEEN {startdate} and {enddate}
 GROUP BY LogDate ORDER BY LogDate;
 
@@ -251,7 +251,7 @@ create volatile table vt_queryid_by_joincount as
      QueryID
     ,CollectTimeStamp(DATE) as LogDate
     ,Count(distinct ObjectTableName) as JoinCount
-    from dbc.DBQLObjTbl
+    from pdcrinfo.DBQLObjTbl_Hst
     where ObjectColumnName is null
       and ObjectTableName is not null
       and ObjectType in ('Tab', 'Viw')
@@ -270,7 +270,7 @@ create volatile table vt_query_n_cpu_by_joincount as
   ,cast(cast(count(*) as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Request_Count
   ,cast(cast(sum(dbql.ParserCPUTime+dbql.AMPCPUtime) as decimal(32,2) format 'ZZZ,ZZZ,ZZZ,ZZ9.99') as varchar(32)) as CPU_Sec
   ,count(distinct j.LogDate) as DateCount
-  from dbc.dbqlogtbl as dbql
+  from pdcrinfo.dbqlogtbl_hst as dbql
   join vt_queryid_by_joincount as j
     on dbql.StartTime(DATE) = j.LogDate
    and dbql.QueryID = j.QueryID
