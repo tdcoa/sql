@@ -280,8 +280,12 @@ db_objects:
       gitfile:      "db_objects/objects_tables_by_database.v01.coa.sql"
     columns_v01_coa_sql:
       collection:   ["pdcr","dbc"]
-      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
       gitfile:      "db_objects/objects_columns.v01.coa.sql"
+    columns15_v01_coa_sql:
+      collection:   ["pdcr","dbc"]
+      dbsversion:   ["15.10","15.00"]
+      gitfile:      "db_objects/objects_columns.15.v01.coa.sql"
     constraints_v01_coa_sql:
       collection:   ["pdcr","dbc"]
       dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00"]
