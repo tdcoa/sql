@@ -37,8 +37,6 @@ create volatile table dim_app as
     on (case
         when p.Pattern_Type = 'Equal' and lower(o.AppID) = lower(p.Pattern) then 1
         when p.Pattern_Type = 'Like'  and lower(o.AppID) like lower(p.Pattern) then 1
-        when p.Pattern_Type = 'RegEx'
-         and character_length(regexp_substr(o.AppID, p.Pattern,1,1,'i'))>0 then 1
         else 0 end) = 1
   qualify Priority_ = min(Priority_)over(partition by o.AppID)
   where (lower(SiteID_) in('default','none') or lower('{siteid}') like lower(SiteID_))
