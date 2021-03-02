@@ -96,7 +96,7 @@ SELECT
   ,zeroifnull(sum(cast(dbql.NumResultRows as BigInt) )) as Returned_Row_Cnt
 
   /* ====== Metrics: RunTimes ====== */
-  ,sum(cast(zeroifnull(dbql.DelayTime) as decimal(18,2))) as DelayTime_Sec
+  ,Null as DelayTime_Sec
   ,sum(ZEROIFNULL(CAST(
      (EXTRACT(HOUR   FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) * 3600)
     +(EXTRACT(MINUTE FROM ((FirstStepTime - StartTime) HOUR(3) TO SECOND(6)) ) *   60)
@@ -107,7 +107,7 @@ SELECT
     +(EXTRACT(MINUTE FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *   60)
     +(EXTRACT(SECOND FROM ((FirstRespTime - FirstStepTime) HOUR(3) TO SECOND(6)) ) *    1)
      as FLOAT))) as Runtime_AMP_Sec
-  ,sum(TotalFirstRespTime)  as RunTime_Total_Sec
+  ,sum(extract(Second from ElapsedTime))  as RunTime_Total_Sec
   ,sum(ZEROIFNULL(CAST(
      case when LastRespTime is not null then
      (EXTRACT(HOUR   FROM ((LastRespTime - FirstRespTime) HOUR(3) TO SECOND(6)) ) * 3600)
@@ -202,73 +202,71 @@ create volatile table dbql_core_breakout as
   ,usr.User_SubDepartment
 
   /* Query Runtime by [query count | cpu | iogb] */
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0000_0001
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0001_0005
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0005_0010
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0010_0030
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0030_0060
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0060_0300
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0300_0600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0600_1800
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_1800_3600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_3600_plus
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  is NULL OR  extract(Second from ElapsedTime) <1     THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0000_0001
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=1    AND  extract(Second from ElapsedTime) <5     THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0001_0005
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=5    AND  extract(Second from ElapsedTime) <10    THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0005_0010
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=10   AND  extract(Second from ElapsedTime) <30    THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0010_0030
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=30   AND  extract(Second from ElapsedTime) <60    THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0030_0060
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=60   AND  extract(Second from ElapsedTime) <300   THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0060_0300
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=300  AND  extract(Second from ElapsedTime) <600   THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0300_0600
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=600  AND  extract(Second from ElapsedTime) <1800  THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_0600_1800
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=1800 AND  extract(Second from ElapsedTime) <3600  THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_1800_3600
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >3600                                      THEN dbql.Statements ELSE 0 END AS INTEGER)))   as qrycnt_in_runtime_3600_plus
 
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0000_0001
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0001_0005
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0005_0010
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0010_0030
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0030_0060
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0060_0300
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0300_0600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0600_1800
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_1800_3600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_3600_plus
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  is NULL OR  extract(Second from ElapsedTime) <1     THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0000_0001
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=1    AND  extract(Second from ElapsedTime) <5     THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0001_0005
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=5    AND  extract(Second from ElapsedTime) <10    THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0005_0010
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=10   AND  extract(Second from ElapsedTime) <30    THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0010_0030
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=30   AND  extract(Second from ElapsedTime) <60    THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0030_0060
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=60   AND  extract(Second from ElapsedTime) <300   THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0060_0300
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=300  AND  extract(Second from ElapsedTime) <600   THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0300_0600
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=600  AND  extract(Second from ElapsedTime) <1800  THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_0600_1800
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=1800 AND  extract(Second from ElapsedTime) <3600  THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_1800_3600
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >3600                                      THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER)))  as cpusec_in_runtime_3600_plus
 
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  is NULL OR  dbql.TotalFirstRespTime <1     THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0000_0001
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=1    AND  dbql.TotalFirstRespTime <5     THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0001_0005
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=5    AND  dbql.TotalFirstRespTime <10    THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0005_0010
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=10   AND  dbql.TotalFirstRespTime <30    THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0010_0030
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=30   AND  dbql.TotalFirstRespTime <60    THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0030_0060
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=60   AND  dbql.TotalFirstRespTime <300   THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0060_0300
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=300  AND  dbql.TotalFirstRespTime <600   THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0300_0600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=600  AND  dbql.TotalFirstRespTime <1800  THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0600_1800
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >=1800 AND  dbql.TotalFirstRespTime <3600  THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_1800_3600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.TotalFirstRespTime  >3600                                      THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_3600_plus
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  is NULL OR  extract(Second from ElapsedTime) <1     THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0000_0001
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=1    AND  extract(Second from ElapsedTime) <5     THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0001_0005
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=5    AND  extract(Second from ElapsedTime) <10    THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0005_0010
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=10   AND  extract(Second from ElapsedTime) <30    THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0010_0030
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=30   AND  extract(Second from ElapsedTime) <60    THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0030_0060
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=60   AND  extract(Second from ElapsedTime) <300   THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0060_0300
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=300  AND  extract(Second from ElapsedTime) <600   THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0300_0600
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=600  AND  extract(Second from ElapsedTime) <1800  THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_0600_1800
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >=1800 AND  extract(Second from ElapsedTime) <3600  THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_1800_3600
+  ,zeroifnull(SUM(CAST(CASE WHEN  extract(Second from ElapsedTime)  >3600                                      THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER)))   as iogb_in_runtime_3600_plus
 
 
   /* delaytime by [query count | cpu | iogb] */
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_0000_0001
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_0001_0005
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_0005_0010
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_0010_0030
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_0030_0060
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_0060_0300
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_0300_0600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_0600_1800
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_1800_3600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >3600                             THEN dbql.Statements ELSE 0 END AS INTEGER))) as qrycnt_in_delaytime_3600_plus
-
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_0000_0001
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_0001_0005
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_0005_0010
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_0010_0030
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_0030_0060
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_0060_0300
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_0300_0600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_0600_1800
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_1800_3600
-  ,zeroifnull(SUM(CAST(CASE WHEN  dbql.delaytime  >3600                             THEN dbql.AMPCPUtime + dbql.ParserCPUTime ELSE 0 END AS INTEGER))) as cpusec_in_delaytime_3600_plus
-
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  is NULL OR  dbql.delaytime <1     THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_0000_0001
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >=1    AND  dbql.delaytime <5     THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_0001_0005
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >=5    AND  dbql.delaytime <10    THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_0005_0010
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >=10   AND  dbql.delaytime <30    THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_0010_0030
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >=30   AND  dbql.delaytime <60    THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_0030_0060
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >=60   AND  dbql.delaytime <300   THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_0060_0300
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >=300  AND  dbql.delaytime <600   THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_0300_0600
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >=600  AND  dbql.delaytime <1800  THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_0600_1800
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >=1800 AND  dbql.delaytime <3600  THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_1800_3600
-  ,zeroifnull(SUM(CAST(CASE WHEN dbql.delaytime  >3600                             THEN ReqIOKB/1e6 ELSE 0 END AS INTEGER))) as iogb_in_delaytime_3600_plus
+  ,null as qrycnt_in_delaytime_0000_0001
+  ,null as qrycnt_in_delaytime_0001_0005
+  ,null as qrycnt_in_delaytime_0005_0010
+  ,null as qrycnt_in_delaytime_0010_0030
+  ,null as qrycnt_in_delaytime_0030_0060
+  ,null as qrycnt_in_delaytime_0060_0300
+  ,null as qrycnt_in_delaytime_0300_0600
+  ,null as qrycnt_in_delaytime_0600_1800
+  ,null as qrycnt_in_delaytime_1800_3600
+  ,null as qrycnt_in_delaytime_3600_plus
+  ,null as cpusec_in_delaytime_0000_0001
+  ,null as cpusec_in_delaytime_0001_0005
+  ,null as cpusec_in_delaytime_0005_0010
+  ,null as cpusec_in_delaytime_0010_0030
+  ,null as cpusec_in_delaytime_0030_0060
+  ,null as cpusec_in_delaytime_0060_0300
+  ,null as cpusec_in_delaytime_0300_0600
+  ,null as cpusec_in_delaytime_0600_1800
+  ,null as cpusec_in_delaytime_1800_3600
+  ,null as cpusec_in_delaytime_3600_plus
+  ,null as iogb_in_delaytime_0000_0001
+  ,null as iogb_in_delaytime_0001_0005
+  ,null as iogb_in_delaytime_0005_0010
+  ,null as iogb_in_delaytime_0010_0030
+  ,null as iogb_in_delaytime_0030_0060
+  ,null as iogb_in_delaytime_0060_0300
+  ,null as iogb_in_delaytime_0300_0600
+  ,null as iogb_in_delaytime_0600_1800
+  ,null as iogb_in_delaytime_1800_3600
+  ,null as iogb_in_delaytime_3600_plus
 
 
   From dbc.QryLogV as dbql

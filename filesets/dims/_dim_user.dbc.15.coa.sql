@@ -92,7 +92,7 @@ create volatile table dim_user as
                         ,zeroifnull(avg(cast(NumSteps as BigInt))) as Query_Complexity_Score
                         ,zeroifnull(sum(cast(ParserCPUTime+AMPCPUTime as Decimal(32,2)))) as CPU_Sec
                         ,zeroifnull(cast(sum(ReqIOKB(BigInt))/1e6 as Decimal(32,3))) as IOGB
-                        ,zeroifnull(sum(cast(TotalFirstRespTime as Decimal(32,6)))) as Runtime_Sec
+                        ,zeroifnull(sum(cast(extract(Second from ElapsedTime) as Decimal(32,6)))) as Runtime_Sec
                         ,zeroifnull(sum(cast((case when ErrorCode not in(0,3158) then 1 else 0 end) as decimal(32,0)))) as Error_Cnt
                         from dbc.QryLogV
                         where cast(starttime as DATE) between {startdate} and {enddate}
