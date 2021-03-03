@@ -21,6 +21,7 @@ def coaviz_line_xDate_ySimple(csvfile, title='', height=6, width=16, save=True):
     # BUILD OUT X-AXIS (always first column // index 0)
     df = pd.read_csv(csvfile)
     df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
+    df = df.sort_values(by=df.columns[0])
     x = df[df.columns[0]]
     if title=='': title = csvfile.split('.')[0].split('--')[-1].replace('_',' ').upper()
     coaprint('x axis column: ', title)
