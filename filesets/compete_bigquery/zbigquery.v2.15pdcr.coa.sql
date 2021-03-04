@@ -278,10 +278,11 @@ create volatile table vt_query_n_cpu_by_joincount as
 ) with data no primary index
 on commit preserve rows;
 
+
 /*{{save:bq--join_frequency_log.csv}}*/
 /*{{vis:bq--join_frequency_log.csv}}*/
 Select
- join_label || case when join_label=1 then ' Join' else ' Joins' end  as "Number of Joins" --xaxis
+ join_label || case when join_label=1 then ' Table' else ' Tables' end  as "Number of Tables" --xaxis
 ,Request_Count as "Number of Queries (LOG Scale)--#27C1BD" --bars
 ,cast(cast(CPU_Sec / sum(CPU_Sec)over()*100 as decimal(9,2)) as varchar(16))  as "CPU Consumed %--#636363" --line
 from vt_query_n_cpu_by_joincount order by 1 asc ;
@@ -290,10 +291,11 @@ from vt_query_n_cpu_by_joincount order by 1 asc ;
 /*{{save:bq--join_frequency.csv}}*/
 /*{{vis:bq--join_frequency.csv}}*/
 Select
- join_label || case when join_label=1 then ' Join' else ' Joins' end  as "Number of Joins" --xaxis
+ join_label || case when join_label=1 then ' Table' else ' Tables' end  as "Number of Tables" --xaxis
 ,Request_Count as "Number of Queries--#27C1BD" --bars
 ,cast(cast(CPU_Sec / sum(CPU_Sec)over()*100 as decimal(9,2)) as varchar(16))  as "CPU Consumed %--#636363" --line
 from vt_query_n_cpu_by_joincount order by 1 asc ;
+
 
 /*{{save:bq--join_frequency_horz.csv}}*/
 Select
