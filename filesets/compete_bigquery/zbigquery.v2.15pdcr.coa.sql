@@ -219,10 +219,10 @@ from (
 -- DATABASES WITH MOST DML PER TABLE
 /*{{save:bq--databases_most_dml_tables.csv}}*/
 Select DatabaseName
-,cast(cast(avg(Request_Count) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Avg DML Request Count per Table"
+,cast(cast(avg(cast(Request_Count as BigInt)) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Avg DML Request Count per Table"
 from dml_count_per_table
 group by 1
-order by avg(Request_Count) desc ;
+order by avg(cast(Request_Count as BigInt)) desc ;
 
 
 -- FORMATTED COLUMNS
