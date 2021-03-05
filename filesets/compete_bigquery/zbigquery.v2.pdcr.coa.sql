@@ -33,8 +33,9 @@ select
 ,cast(cast(count(*) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Applications"
 ,cast(cast(count(distinct App_Bucket) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total App Buckets"
 ,cast(cast(count(case when App_Bucket <> 'Unknown' then AppID end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Total Recognized Applications"
-,cast(cast(average(Request_Cnt)/(DATE-1 - DATE-15) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Average Requests per Application per Day"
+,cast(cast(average(cast(Request_Cnt as bigint))/cast(({enddate}) - ({startdate}) as BigInt) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Average Requests per Application per Day"
 from dim_App ;
+
 
 
 -- CONCURRENCY COUNTS
