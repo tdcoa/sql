@@ -23,12 +23,12 @@ select
  cast(coalesce(vu1.logdate, vu4.logdate) as format 'Y4-MM-DD') (char(10)) as LogDate,
  coalesce(vu1.loghr, vu4.loghr) as LogHour,
  zeroifnull(vu1.vantageunithrs) + zeroifnull(vu4.vantageunitutilityhrs) (Decimal(18,2)) as CPU_VU,
- zeroifnull(vu1.vantageunitTB) + zeroifnull(vu4.vantageunitutilityTB) (Decimal(18,2)) as IO_VU
+ zeroifnull(vu1.vantageunitTB)/ (1024*1024*1024) + zeroifnull(vu4.vantageunitutilityTB/ (1024*1024*1024)) (format 'ZZ9.999') as IO_VU
 from
     (select cast(firstresptime as date) as LogDate,
       extract(hour from firstresptime) as LogHr,
       zeroifnull(sum(ampcputime + parsercputime + discputime)) / 3600 (format 'ZZ9.999') as VantageUnitHrs,
-      zeroifnull(sum(ReqIOKB)) / (1024*1024*1024) (format 'ZZ9.999') as VantageUnitTB
+      zeroifnull(sum(ReqIOKB)) (format 'ZZ9.999') as VantageUnitTB
      from dbc.dbqlogtbl
      where logdate between {startdate_rollingyear} and {enddate_rollingyear}
        and errorcode not in (2631, 2646, 3610, 3702, 3710, 3711, 5405, 7453, 7487, 7583, 7596, 9124, 9990)
