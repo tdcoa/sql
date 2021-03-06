@@ -295,25 +295,25 @@ from vt_query_n_cpu_by_joincount order by 1 asc ;
 
 /*{{save:bq--join_frequency_horz.csv}}*/
 Select
- cast(cast(sum(case when join_label=1 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join1_Mrequest_count --1
-,cast(cast(sum(case when join_label=2 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join2_Mrequest_count --2
-,cast(cast(sum(case when join_label=3 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join3_Mrequest_count --3
-,cast(cast(sum(case when join_label=4 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join4_Mrequest_count --4
-,cast(cast(sum(case when join_label=5 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join5_Mrequest_count --5
-,cast(cast(sum(case when join_label=6 then request_count else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join6_Mrequest_count --6
-,cast(cast(sum(request_count)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as total_Mrequest_count --7
-,cast(cast(cast(sum(case when join_label=1 then request_count else 0 end) as decimal(32,4))
-/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join1_request_pct --8
-,cast(cast(cast(sum(case when join_label=2 then request_count else 0 end) as decimal(32,4))
-/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join2_request_pct --9
-,cast(cast(cast(sum(case when join_label=3 then request_count else 0 end) as decimal(32,4))
-/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join3_request_pct --10
-,cast(cast(cast(sum(case when join_label=4 then request_count else 0 end) as decimal(32,4))
-/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join4_request_pct --11
-,cast(cast(cast(sum(case when join_label=5 then request_count else 0 end) as decimal(32,4))
-/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join5_request_pct --12
-,cast(cast(cast(sum(case when join_label=6 then request_count else 0 end) as decimal(32,4))
-/cast(sum(request_count) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join6_request_pct --13
+ cast(cast(sum(case when join_label=1 then cast(Request_Count as bigint) else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join1_Mrequest_count --1
+,cast(cast(sum(case when join_label=2 then cast(request_count as bigint) else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join2_Mrequest_count --2
+,cast(cast(sum(case when join_label=3 then cast(request_count as bigint) else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join3_Mrequest_count --3
+,cast(cast(sum(case when join_label=4 then cast(request_count as bigint) else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join4_Mrequest_count --4
+,cast(cast(sum(case when join_label=5 then cast(request_count as bigint) else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join5_Mrequest_count --5
+,cast(cast(sum(case when join_label=6 then cast(request_count as bigint) else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join6_Mrequest_count --6
+,cast(cast(sum(cast(Request_Count as bigint))/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as total_Mrequest_count --7
+,cast(cast(cast(sum(case when join_label=1 then cast(Request_Count as bigint) else 0 end) as decimal(32,4))
+/cast(sum(cast(Request_Count as bigint)) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join1_request_pct --8
+,cast(cast(cast(sum(case when join_label=2 then cast(Request_Count as bigint) else 0 end) as decimal(32,4))
+/cast(sum(cast(Request_Count as bigint)) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join2_request_pct --9
+,cast(cast(cast(sum(case when join_label=3 then cast(Request_Count as bigint) else 0 end) as decimal(32,4))
+/cast(sum(cast(Request_Count as bigint)) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join3_request_pct --10
+,cast(cast(cast(sum(case when join_label=4 then cast(Request_Count as bigint) else 0 end) as decimal(32,4))
+/cast(sum(cast(Request_Count as bigint)) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join4_request_pct --11
+,cast(cast(cast(sum(case when join_label=5 then cast(Request_Count as bigint) else 0 end) as decimal(32,4))
+/cast(sum(cast(Request_Count as bigint)) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join5_request_pct --12
+,cast(cast(cast(sum(case when join_label=6 then cast(Request_Count as bigint) else 0 end) as decimal(32,4))
+/cast(sum(cast(Request_Count as bigint)) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join6_request_pct --13
 
 ,cast(cast(sum(case when join_label=1 then cpu_sec else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join1_Mcpu_sec --14
 ,cast(cast(sum(case when join_label=2 then cpu_sec else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join2_Mcpu_sec --15
