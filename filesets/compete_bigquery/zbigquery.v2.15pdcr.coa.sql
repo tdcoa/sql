@@ -197,7 +197,8 @@ on commit preserve rows ;
 -- NUMBER OF TABLES THAT EXCEED 1500 INSERTS/UPDATES/DELETES PER DAY (Graph)
 /*{{save:bq--tablecount_over_1500_dml.csv}}*/
 /*{{vis:bq--tablecount_over_1500_dml.csv}}*/
-Select LogDate, Count(TableName) as "Table Count--#27C1BD"
+Select cast(cast(LogDate as date format 'yyyy-mm-dd') as char(10)) AS LogDate
+,Count(TableName) as "Table Count--#27C1BD"
 from dml_count_per_table
 where Request_Count > 1500
 group by 1
@@ -236,7 +237,7 @@ from DBC.COlumnsV group by 1 ;
 -- DATA TRANSFER NUMBERS
 /*{{save:bq--data_transfer.csv}}*/
 /*{{vis:bq--data_transfer.csv}}*/
-SELECT TheDate AS LogDate
+SELECT cast(cast(TheDate as date format 'yyyy-mm-dd') as char(10)) AS LogDate
       ,cast(SUM(HostReadKB)*1e3 as bigint)  as "Inbound Bytes--#27C1BD"
       ,cast(SUM(HostWriteKB)*1e3 as bigint) as "Outbound Bytes--#636363"
 FROM pdcrinfo.ResUsageSPMA
