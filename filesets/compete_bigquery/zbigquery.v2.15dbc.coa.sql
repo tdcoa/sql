@@ -163,7 +163,7 @@ from column_types ;
 
 -- CONSTRAINTS
 /*{{save:bq--constraints.csv}}*/
-select top 10
+select  
  '{siteid}' as Site_ID
 ,cast(cast(sum(case when ConstraintType in('Primary Key','Unique') then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Unique PI Constraint"
 ,cast(cast(sum(case when ConstraintType = 'Primary Key' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Primary Key Constraint"
