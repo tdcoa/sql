@@ -293,6 +293,7 @@ db_objects:
 
 compete_snowflake:
   active:           "True"
+  show_in_gui:      "False"
   fileset_version:  "1.0"
   files: &compete_snowflake
     <<: *db_objects
