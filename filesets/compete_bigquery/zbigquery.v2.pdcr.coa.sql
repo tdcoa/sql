@@ -49,6 +49,53 @@ select
 from concurrency ;
 
 
+-- NEW: SubSecond QueryCount
+/*{{save:bq--subsecond_query.csv}}*/
+Select
+   '{siteid}'  as Site_ID
+  ,count(distinct LogDate) as DayCount
+  ,sum(qrycnt_in_runtime_0000_0001) / DayCount as SubSecond_Queries
+  ,cast(cast(SubSecond_Queries as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as SubSecond_Queries_Formatted
+  ,sum(qrycnt_in_runtime_0000_0001
+     + qrycnt_in_runtime_0001_0005
+     + qrycnt_in_runtime_0005_0010
+     + qrycnt_in_runtime_0010_0030
+     + qrycnt_in_runtime_0030_0060
+     + qrycnt_in_runtime_0060_0300
+     + qrycnt_in_runtime_0300_0600
+     + qrycnt_in_runtime_0600_1800
+     + qrycnt_in_runtime_1800_3600
+     + qrycnt_in_runtime_3600_plus) / DayCount as Total_Queries
+  ,cast(cast(Total_Queries as BigInt format 'ZZZZ,ZZZZ,ZZZ,ZZ9') as varchar(32)) as Total_Queries_Formatted
+  ,cast(cast(
+    cast(SubSecond_Queries as decimal(32,4)) / cast(Total_Queries as decimal(32,4)) * 100.00
+   as decimal(32,2)) as varchar(32)) as  SubSecond_Queries_Pct
+from dbql_core_breakout
+;
+
+
+
+-- FOR GRAPHING:  Queries per Day
+/*{{save:bq--daily_query_throughput.csv}}*/
+/*{{vis:bq--daily_query_throughput.csv}}*/
+Select
+   LogDate as "Log Date"
+  ,sum(qrycnt_in_runtime_0000_0001) as "SubSecond Queries--#636363"
+  ,sum(qrycnt_in_runtime_0000_0001
+     + qrycnt_in_runtime_0001_0005
+     + qrycnt_in_runtime_0005_0010
+     + qrycnt_in_runtime_0010_0030
+     + qrycnt_in_runtime_0030_0060
+     + qrycnt_in_runtime_0060_0300
+     + qrycnt_in_runtime_0300_0600
+     + qrycnt_in_runtime_0600_1800
+     + qrycnt_in_runtime_1800_3600
+     + qrycnt_in_runtime_3600_plus) as "Total Queries--#27C1BD"
+from dbql_core_breakout
+group by LogDate
+order by LogDate
+;
+
 -- DBQL CORE QUERY COUNTS
 /*{{save:bq--query_counts.csv}}*/
 select
@@ -108,17 +155,6 @@ group by 1
 Order by cast("Rows per Query" as INT) desc ;
 
 
--- FOR GRAPHING:  Queries per Day
-/*{{save:bq--daily_query_throughput.csv}}*/
-/*{{vis:bq--daily_query_throughput.csv}}*/
-select
- cast(LogTS as char(10)) as "Log Date"
-,sum(Query_Cnt) (BigInt) as "Total Queries--#27C1BD"
-,sum(Query_Tactical_Cnt)(BigInt) as "Tactical Queries--#636363"
-from dbql_core_hourly
-group by cast(LogTS as char(10))
-order by 1 ;
-
 
 -- DISK SPACE
 /*{{save:bq--diskspace.csv}}*/
@@ -164,7 +200,7 @@ from column_types ;
 
 -- CONSTRAINTS
 /*{{save:bq--constraints.csv}}*/
-select  
+select
  '{siteid}' as Site_ID
 ,cast(cast(sum(case when ConstraintType in('Primary Key','Unique') then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Unique PI Constraint"
 ,cast(cast(sum(case when ConstraintType = 'Primary Key' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Primary Key Constraint"

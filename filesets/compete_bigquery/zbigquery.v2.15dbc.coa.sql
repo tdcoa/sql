@@ -49,6 +49,53 @@ select
 from concurrency ;
 
 
+-- NEW: SubSecond QueryCount
+/*{{save:bq--subsecond_query.csv}}*/
+Select
+   '{siteid}'  as Site_ID
+  ,count(distinct LogDate) as DayCount
+  ,sum(qrycnt_in_runtime_0000_0001) / DayCount as SubSecond_Queries
+  ,cast(cast(SubSecond_Queries as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as SubSecond_Queries_Formatted
+  ,sum(qrycnt_in_runtime_0000_0001
+     + qrycnt_in_runtime_0001_0005
+     + qrycnt_in_runtime_0005_0010
+     + qrycnt_in_runtime_0010_0030
+     + qrycnt_in_runtime_0030_0060
+     + qrycnt_in_runtime_0060_0300
+     + qrycnt_in_runtime_0300_0600
+     + qrycnt_in_runtime_0600_1800
+     + qrycnt_in_runtime_1800_3600
+     + qrycnt_in_runtime_3600_plus) / DayCount as Total_Queries
+  ,cast(cast(Total_Queries as BigInt format 'ZZZZ,ZZZZ,ZZZ,ZZ9') as varchar(32)) as Total_Queries_Formatted
+  ,cast(cast(
+    cast(SubSecond_Queries as decimal(32,4)) / cast(Total_Queries as decimal(32,4)) * 100.00
+   as decimal(32,2)) as varchar(32)) as  SubSecond_Queries_Pct
+from dbql_core_breakout
+;
+
+
+
+-- FOR GRAPHING:  Queries per Day
+/*{{save:bq--daily_query_throughput.csv}}*/
+/*{{vis:bq--daily_query_throughput.csv}}*/
+Select
+   LogDate as "Log Date"
+  ,sum(qrycnt_in_runtime_0000_0001) as "SubSecond Queries--#636363"
+  ,sum(qrycnt_in_runtime_0000_0001
+     + qrycnt_in_runtime_0001_0005
+     + qrycnt_in_runtime_0005_0010
+     + qrycnt_in_runtime_0010_0030
+     + qrycnt_in_runtime_0030_0060
+     + qrycnt_in_runtime_0060_0300
+     + qrycnt_in_runtime_0300_0600
+     + qrycnt_in_runtime_0600_1800
+     + qrycnt_in_runtime_1800_3600
+     + qrycnt_in_runtime_3600_plus) as "Total Queries--#27C1BD"
+from dbql_core_breakout
+group by LogDate
+order by LogDate
+;
+
 -- DBQL CORE QUERY COUNTS
 /*{{save:bq--query_counts.csv}}*/
 select
@@ -108,17 +155,6 @@ group by 1
 Order by cast("Rows per Query" as INT) desc ;
 
 
--- FOR GRAPHING:  Queries per Day
-/*{{save:bq--daily_query_throughput.csv}}*/
-/*{{vis:bq--daily_query_throughput.csv}}*/
-select
- cast(LogTS as char(10)) as "Log Date"
-,sum(Query_Cnt) (BigInt) as "Total Queries--#27C1BD"
-,sum(Query_Tactical_Cnt)(BigInt) as "Tactical Queries--#636363"
-from dbql_core_hourly
-group by cast(LogTS as char(10))
-order by 1 ;
-
 
 -- DISK SPACE
 /*{{save:bq--diskspace.csv}}*/
@@ -142,7 +178,8 @@ Select
 ,cast(cast(sum(ViewCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "View Count"
 ,cast(cast(sum(MacroCount+"SP&TrigCount"+UDObjectCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Program Count"
 ,cast(cast(sum(IndexCount+OtherCount) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Other Count"
-from db_objects_counts where DBName <>  '*** Total ***' -- there is a RollUp in DB_Objects
+from db_objects_counts
+where DBName <>  '*** Total ***' -- there is a RollUp in DB_Objects
 ;
 
 
@@ -163,7 +200,7 @@ from column_types ;
 
 -- CONSTRAINTS
 /*{{save:bq--constraints.csv}}*/
-select  
+select
  '{siteid}' as Site_ID
 ,cast(cast(sum(case when ConstraintType in('Primary Key','Unique') then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Unique PI Constraint"
 ,cast(cast(sum(case when ConstraintType = 'Primary Key' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Primary Key Constraint"
@@ -172,7 +209,6 @@ select
 ,cast(cast(sum(case when ConstraintType = 'Column Constraint' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Column Constraint"
 ,cast(cast(sum(case when ConstraintType = 'Table Constraint' then 1 else 0 end) as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as "Table Constraint"
 from constraint_details ;
-
 
 -- CALCULATE DML COUNTS (INS/UPD/DEL/MERGE) PER TABLE
 -- Note: LogDate == StartTime(DATE), not CollectTimeStamp(DATE)
@@ -183,8 +219,7 @@ create volatile table dml_count_per_table as
   Select l.StartTime(DATE) as LogDate, o.ObjectDatabaseName as DatabaseName, o.ObjectTableName as TableName, count(*) as Request_Count
   from DBC.dbqlogtbl as l
   join DBC.dbqlobjtbl as o
-    on l.ProcID = o.ProcID
-   and l.QueryID = o.QueryID
+    on l.ProcID = o.ProcID and l.QueryID = o.QueryID
    and l.CollectTimeStamp(DATE) = o.CollectTimeStamp(DATE)
   where l.StartTime(DATE) between {startdate} and {enddate}
     and l.StatementType in ('Insert','Update','Delete','Merge')
@@ -250,9 +285,7 @@ GROUP BY LogDate ORDER BY LogDate;
 create volatile table vt_queryid_by_joincount as
 (
     Select
-     QueryID
-    ,CollectTimeStamp(DATE) as LogDate
-    ,Count(distinct ObjectTableName) as JoinCount
+     QueryID, CollectTimeStamp(DATE) as LogDate, Count(distinct ObjectTableName) as JoinCount
     from dbc.DBQLObjTbl
     where ObjectColumnName is null
       and ObjectTableName is not null
@@ -299,7 +332,6 @@ Select
 from vt_query_n_cpu_by_joincount order by 1 asc ;
 
 
-
 /*{{save:bq--join_frequency_horz.csv}}*/
 Select
  cast(cast(sum(case when join_label=1 then cast(Request_Count as bigint) else 0 end)/1e6 as BigInt format'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32))||'M' as join1_Mrequest_count --1
@@ -343,7 +375,6 @@ Select
 /cast(sum(cpu_sec) as decimal(32,4)) *100 as decimal(9,2)) as varchar(16))||'%' as join6_cpu_pct --26
 ,max(DateCount)(INT) as DateCount -- 27
 from vt_query_n_cpu_by_joincount ;
-
 
 
 drop table vt_queryid_by_joincount;
