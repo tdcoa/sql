@@ -296,27 +296,8 @@ compete_snowflake:
   show_in_gui:      "False"
   fileset_version:  "1.0"
   files: &compete_snowflake
-    <<: *db_objects
-    compete01_pdcr:
-      collection:   ["pdcr"]
-      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
-      iopernode_90pct: 0
-      gitfile:      "compete_snowflake/snowflake.pdcr.coa.sql"
-      startdate:    "Current_Date - 7"
-      enddate:      "Current_Date - 1"
-    compete01_dbc:
-      collection:   ["dbc"]
-      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
-      iopernode_90pct: 0
-      gitfile:      "compete_snowflake/snowflake.dbc.coa.sql"
-      startdate:    "Current_Date - 7"
-      enddate:      "Current_Date - 1"
-    compete_pptx:
-      collection:   ["dbc","pdcr"]
-      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
-      gitfile:      "compete_snowflake/snowflake_pptx.coa.sql"
-    pptx_migration_blockers:
-      gitfile:      "compete_snowflake/snowflake_migration_blockers.pptx"
+    <<: *compete_bigquery
+    
 
 compete_bigquery:
   active:           "True"
@@ -326,7 +307,7 @@ compete_bigquery:
   enddate:          "Current_Date - 2"
   your_name:        "<your name>"
   your_title:       "<your title>"
-  files:
+  files: &compete_bigquery
     compete_bigquery_overwrite01:
       note: this simply overwrites dbql_core export to skip the big data dump at the end.  this file is empty.
       gitfile:      "compete_bigquery/dbql_core--SEL.v09.coa.sql"
