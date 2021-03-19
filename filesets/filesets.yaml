@@ -24,6 +24,22 @@ demo:
     final_pptx:
       gitfile:  "demo/AgeReport.pptx"
 
+tdcoa_v2_UAT:
+  active: "True"
+  show_in_gui: "False"
+  files:
+    wheel:
+      gitfile: "tdcoa_uat/wheel/tdcoa-0.6.2-py3-none-any.whl"
+    installer:
+      gitfile: "tdcoa_uat/coa_installer.py"
+    readme:
+      gitfile: "tdcoa_uat/README.txt"
+    cmd_mac:
+      gitfile: "tdcoa_uat/run-MacOS.command"
+    cmd_win:
+      gitfile: "tdcoa_uat/run-Windows.cmd"
+
+
 dim_user:
   active:           "True"
   fileset_version:  "1.0"
@@ -344,7 +360,7 @@ compete_snowflake:
   fileset_version:  "1.0"
   files: &compete_snowflake
     <<: *compete_bigquery
-    
+
 
 feature_usage:
   active:           "True"
