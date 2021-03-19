@@ -291,13 +291,6 @@ db_objects:
       dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00","15.10","15.00"]
       gitfile:      "db_objects/objects_constraints_by_database.v01.coa.sql"
 
-compete_snowflake:
-  active:           "True"
-  show_in_gui:      "False"
-  fileset_version:  "1.0"
-  files: &compete_snowflake
-    <<: *compete_bigquery
-    
 
 compete_bigquery:
   active:           "True"
@@ -344,6 +337,14 @@ compete_bigquery:
     <<: *db_objects
     <<: *concurrency
 
+
+compete_snowflake:
+  active:           "True"
+  show_in_gui:      "False"
+  fileset_version:  "1.0"
+  files: &compete_snowflake
+    <<: *compete_bigquery
+    
 
 feature_usage:
   active:           "True"
