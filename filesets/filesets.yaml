@@ -38,6 +38,8 @@ tdcoa_v2_UAT:
       gitfile: "tdcoa_uat/run-MacOS.command"
     cmd_win:
       gitfile: "tdcoa_uat/run-Windows.cmd"
+    launcher:
+      gitfile: "tdcoa_uat/launcher.coa.sql"
 
 
 dim_user:
