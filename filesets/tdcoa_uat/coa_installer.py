@@ -25,9 +25,9 @@ print("\n\nFiles successfully copied!  Horray Technology!")
 
 os.chdir(path_tdcoa.absolute())
 if sys.platform == "darwin":  #MacOS
-    cmdfile = 'mac--run.command'
+    cmdfile = 'run-MacOS.command'
 else: # Windows - i don't care about Linux, sorry
-    cmdfile = 'win--run.cmd'
+    cmdfile = 'run-Windows.cmd'
 
 print("Starting the application...")
 os.system('chmod 777 %s' %Path(path_tdcoa / cmdfile).absolute())
