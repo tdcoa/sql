@@ -356,12 +356,47 @@ compete_bigquery:
     <<: *concurrency
 
 
+
 compete_snowflake:
   active:           "True"
   show_in_gui:      "False"
   fileset_version:  "1.0"
   files: &compete_snowflake
-    <<: *compete_bigquery
+    compete_snowflake_overwrite01:
+      note: this simply overwrites dbql_core export to skip the big data dump at the end.  this file is empty.
+      gitfile:      "compete_snowflake/dbql_core--SEL.v09.coa.sql"
+    compete_snowflake_newfinal_pdcr:
+      collection:   ["pdcr"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/zddcm.v2.pdcr.coa.sql"
+    compete_snowflake_newfinal_dbc:
+      collection:   ["dbc"]
+      dbsversion:   ["17.10","17.05","17.00","16.20", "16.10", "16.00"]
+      gitfile:      "compete_snowflake/zddcm.v2.dbc.coa.sql"
+    compete_snowflake_newfinal_pdcr15:
+      collection:   ["pdcr"]
+      dbsversion:   ["15.10", "15.00"]
+      gitfile:      "compete_snowflake/zddcm.v2.15pdcr.coa.sql"
+    compete_snowflake_newfinal_dbc15:
+      collection:   ["dbc"]
+      dbsversion:   ["15.10","15.00"]
+      gitfile:      "compete_snowflake/zddcm.v2.15dbc.coa.sql"
+    compete_snowflake_graph_queries:
+      gitfile:      "compete_snowflake/sf--daily_query_throughput.py"
+    compete_snowflake_graph_traffic:
+      gitfile:      "compete_snowflake/sf--data_transfer.py"
+    compete_snowflake_graph_1500dml:
+      gitfile:      "compete_snowflake/sf--tablecount_over_1500_dml.py"
+    compete_snowflake_graph_joinfreq:
+      gitfile:      "compete_snowflake/sf--join_frequency.py"
+    compete_snowflake_graph_joinfreq_log:
+      gitfile:      "compete_snowflake/sf--join_frequency_log.py"
+    final_pptx:
+      gitfile:      "compete_snowflake/!DataDriven_Cloud_Migration.pptx"
+    # these go last, so the above can override (one filename not picked up twice)
+    <<: *dbql_core
+    <<: *db_objects
+    <<: *concurrency
 
 
 feature_usage:
