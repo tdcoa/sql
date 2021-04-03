@@ -70,6 +70,7 @@ Select
   ,cast(cast(
     cast(SubSecond_Queries as decimal(32,4)) / cast(Total_Queries as decimal(32,4)) * 100.00
    as decimal(32,2)) as varchar(32)) as  SubSecond_Queries_Pct
+  ,cast(cast(cast(Total_Queries as decimal(18,2))/1e6 as decimal(18,2) format 'ZZZ,ZZ9.9') as varchar(32)) as Total_Queries_Formatted_Mil
 from dbql_core_breakout
 ;
 
