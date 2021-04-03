@@ -359,7 +359,7 @@ compete_bigquery:
 
 compete_snowflake:
   active:           "True"
-  show_in_gui:      "False"
+  show_in_gui:      "True"
   fileset_version:  "1.0"
   files: &compete_snowflake
     compete_snowflake_overwrite01:
