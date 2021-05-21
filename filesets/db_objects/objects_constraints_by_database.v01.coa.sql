@@ -2,8 +2,19 @@
 Details and counts by DB
 */
 
-create volatile table constraint_details as
-(
+
+CREATE MULTISET VOLATILE TABLE constraint_details
+    (
+     DatabaseName   VARCHAR(128) CHARACTER SET UNICODE NOT CASESPECIFIC,
+     TableName      VARCHAR(128) CHARACTER SET UNICODE NOT CASESPECIFIC,
+     ConstraintType VARCHAR(30)  CHARACTER SET UNICODE NOT CASESPECIFIC,
+     Details        VARCHAR(255) CHARACTER SET UNICODE NOT CASESPECIFIC)
+NO PRIMARY INDEX
+ON COMMIT PRESERVE ROWS;
+
+
+
+INSERT INTO constraint_details
         SELECT
               DatabaseName,
               TableName,
@@ -55,7 +66,6 @@ create volatile table constraint_details as
         AND     TAB.TableName = COL.TableName
         AND     TAB.TableKind = 'T'
         WHERE   COL.DefaultValue IS NOT NULL
-) with data no primary index on commit preserve rows
 ;
 
 /*{{save:dat_dbobject_constraint_detail.csv}}*/
