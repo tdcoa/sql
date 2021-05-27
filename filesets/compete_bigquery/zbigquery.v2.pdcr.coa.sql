@@ -53,24 +53,24 @@ from concurrency ;
 /*{{save:bq--subsecond_query.csv}}*/
 Select
    '{siteid}'  as Site_ID
-  ,count(distinct LogDate) as DayCount
-  ,sum(qrycnt_in_runtime_0000_0001) / DayCount as SubSecond_Queries
-  ,cast(cast(SubSecond_Queries as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as SubSecond_Queries_Formatted
-  ,sum(qrycnt_in_runtime_0000_0001
-     + qrycnt_in_runtime_0001_0005
-     + qrycnt_in_runtime_0005_0010
-     + qrycnt_in_runtime_0010_0030
-     + qrycnt_in_runtime_0030_0060
-     + qrycnt_in_runtime_0060_0300
-     + qrycnt_in_runtime_0300_0600
-     + qrycnt_in_runtime_0600_1800
-     + qrycnt_in_runtime_1800_3600
-     + qrycnt_in_runtime_3600_plus) / DayCount as Total_Queries
-  ,cast(cast(Total_Queries as BigInt format 'ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Total_Queries_Formatted
+  ,cast(count(distinct LogDate) as integer) as DayCount
+  ,sum(cast(qrycnt_in_runtime_0000_0001 as bigint)) / DayCount as SubSecond_Queries
+  ,cast(cast(SubSecond_Queries as BigInt format 'ZZZ,ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as SubSecond_Queries_Formatted
+  ,sum(cast(qrycnt_in_runtime_0000_0001 as bigint)
+     + cast(qrycnt_in_runtime_0001_0005 as bigint)
+     + cast(qrycnt_in_runtime_0005_0010 as bigint)
+     + cast(qrycnt_in_runtime_0010_0030 as bigint)
+     + cast(qrycnt_in_runtime_0030_0060 as bigint)
+     + cast(qrycnt_in_runtime_0060_0300 as bigint)
+     + cast(qrycnt_in_runtime_0300_0600 as bigint)
+     + cast(qrycnt_in_runtime_0600_1800 as bigint)
+     + cast(qrycnt_in_runtime_1800_3600 as bigint)
+     + cast(qrycnt_in_runtime_3600_plus as bigint)) / DayCount as Total_Queries
+  ,cast(cast(Total_Queries as BigInt format 'ZZZ,ZZZ,ZZZ,ZZZ,ZZ9') as varchar(32)) as Total_Queries_Formatted
   ,cast(cast(
     cast(SubSecond_Queries as decimal(32,4)) / cast(Total_Queries as decimal(32,4)) * 100.00
    as decimal(32,2)) as varchar(32)) as  SubSecond_Queries_Pct
-  ,cast(cast(cast(Total_Queries as decimal(18,2))/1e6 as decimal(18,2) format 'ZZZ,ZZ9.9') as varchar(32)) as Total_Queries_Formatted_Mil
+  ,cast(cast(cast(Total_Queries as decimal(18,2))/1e6 as decimal(18,2) format 'ZZZ,ZZZ,ZZZ,ZZ9.9') as varchar(32)) as Total_Queries_Formatted_Mil
 from dbql_core_breakout
 ;
 
